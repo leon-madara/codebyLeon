@@ -1,0 +1,818 @@
+/* =============================================
+   CODE BY LEON - Hero Section Styles
+   4-Layer Architecture Implementation
+   ============================================= */
+
+/* =============================================
+   CSS CUSTOM PROPERTIES (Theme Tokens)
+   ============================================= */
+:root {
+  /* Light Mode (Default) */
+  --canvas-base: #F2EFFD;
+
+  /* Orb Colors - Light Mode */
+  --orb-purple: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+  --orb-orange: linear-gradient(135deg, #FDBA74 0%, #FB923C 100%);
+  --orb-blue: linear-gradient(135deg, #93C5FD 0%, #60A5FA 100%);
+
+  /* Dot Grid */
+  --dot-color: rgba(150, 150, 150, 0.15);
+
+  /* Glass Card */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-border: rgba(200, 200, 200, 0.35);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  /* Typography */
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+
+  /* Brand */
+  --accent: #D9751A;
+  --accent-hover: #A45711;
+}
+
+[data-theme="dark"] {
+  /* Dark Mode */
+  --canvas-base: #021127;
+
+  /* Orb Colors - Dark Mode */
+  --orb-purple: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  --orb-orange: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  --orb-blue: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+
+  /* Dot Grid */
+  --dot-color: rgba(255, 255, 255, 0.06);
+
+  /* Glass Card */
+  --glass-bg: rgba(2, 17, 39, 0.55);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Typography */
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b5;
+}
+
+/* =============================================
+   BASE RESET & TYPOGRAPHY
+   ============================================= */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--canvas-base);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+/* =============================================
+   NAVIGATION
+   ============================================= */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: 1rem 2rem;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+[data-theme="dark"] .navbar {
+  background: rgba(2, 17, 39, 0.3);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo-svg {
+  height: 40px;
+  width: auto;
+  transition: transform 0.3s ease;
+}
+
+.logo-svg:hover {
+  transform: scale(1.05);
+}
+
+/* Dark mode logo filter - invert colors for visibility */
+[data-theme="dark"] .logo-svg {
+  filter: brightness(1.2);
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+}
+
+.cta-button {
+  background: var(--accent);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.cta-button:hover {
+  background: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+/* =============================================
+   THEME TOGGLE (Animated Sun/Moon)
+   ============================================= */
+.theme-toggle-wrapper {
+  margin-left: 1rem;
+}
+
+.toggle-switch {
+  width: 60px;
+  height: 30px;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+.toggle-background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
+  transition: all 0.4s ease;
+}
+
+.toggle-switch.active .toggle-background {
+  background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 100%);
+}
+
+.toggle-knob {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.toggle-switch.active .toggle-knob {
+  left: 33px;
+  background: linear-gradient(135deg, #f0f0f0 0%, #d0d0d0 100%);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.crater {
+  position: absolute;
+  background: rgba(150, 150, 150, 0.3);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.toggle-switch.active .crater {
+  opacity: 1;
+}
+
+.crater-1 {
+  width: 6px;
+  height: 6px;
+  top: 4px;
+  left: 8px;
+}
+
+.crater-2 {
+  width: 4px;
+  height: 4px;
+  top: 12px;
+  left: 4px;
+}
+
+.crater-3 {
+  width: 5px;
+  height: 5px;
+  top: 14px;
+  left: 12px;
+}
+
+.scenery {
+  position: absolute;
+  inset: 0;
+  transition: opacity 0.4s ease;
+}
+
+.day-scenery {
+  opacity: 1;
+}
+
+.night-scenery {
+  opacity: 0;
+}
+
+.toggle-switch.active .day-scenery {
+  opacity: 0;
+}
+
+.toggle-switch.active .night-scenery {
+  opacity: 1;
+}
+
+.cloud {
+  position: absolute;
+  background: white;
+  border-radius: 10px;
+  opacity: 0.8;
+}
+
+.cloud-1 {
+  width: 15px;
+  height: 5px;
+  top: 8px;
+  left: 35px;
+}
+
+.cloud-2 {
+  width: 10px;
+  height: 4px;
+  top: 15px;
+  left: 40px;
+}
+
+.cloud-3 {
+  width: 12px;
+  height: 4px;
+  top: 20px;
+  left: 32px;
+}
+
+.star {
+  position: absolute;
+  color: white;
+  font-size: 6px;
+}
+
+.star-1 {
+  top: 6px;
+  left: 8px;
+}
+
+.star-2 {
+  top: 12px;
+  left: 18px;
+}
+
+.star-3 {
+  top: 20px;
+  left: 10px;
+}
+
+/* =============================================
+   HERO SECTION - 4 LAYER ARCHITECTURE
+   ============================================= */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  /* LAYER 1: Canvas Base */
+  background: var(--canvas-base);
+  transition: background 0.4s ease;
+}
+
+/* =============================================
+   LAYER 2: ABSTRACT ORBS (CSS Animated)
+   ============================================= */
+.orbs-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  animation: morph 15s ease-in-out infinite;
+}
+
+.orb-purple {
+  width: 45vw;
+  height: 45vw;
+  background: var(--orb-purple);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.orb-orange {
+  width: 55vw;
+  height: 55vw;
+  background: var(--orb-orange);
+  top: 20%;
+  left: 30%;
+  animation-delay: -5s;
+}
+
+.orb-blue {
+  width: 40vw;
+  height: 40vw;
+  background: var(--orb-blue);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+@keyframes morph {
+
+  0%,
+  100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+
+  25% {
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+    transform: translate(2%, 3%) rotate(3deg) scale(1.02);
+  }
+
+  50% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: translate(5%, 5%) rotate(5deg) scale(1.05);
+  }
+
+  75% {
+    border-radius: 50% 40% 50% 60% / 35% 45% 55% 65%;
+    transform: translate(3%, 2%) rotate(2deg) scale(1.03);
+  }
+}
+
+/* =============================================
+   LAYER 3: FULL-SCREEN FROSTED OVERLAY
+   ============================================= */
+.frosted-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  /* Frosted effect - Corrected order for linting */
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+
+  /* Dot-grid pattern */
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 12px 12px;
+
+  pointer-events: none;
+}
+
+/* =============================================
+   LAYER 4: CONTENT (BOLD TYPOGRAPHY)
+   ============================================= */
+.hero-content.main-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 900px;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* =============================================
+   BADGE / PILL (TAPED STICKER LOOK) - Fixed & Visible
+   ============================================= */
+/* =============================================
+   BADGE / PILL (TAPED STICKER LOOK) - Fixed & Visible
+   ============================================= */
+.hero-badge {
+  position: relative;
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  color: #333333;
+  /* Dark text for contrast against paper */
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 0;
+
+  /* Tilted slightly for "stuck" effect */
+  transform: rotate(-2deg);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  z-index: 10;
+
+  /* Add a distinct drop-shadow to the whole element layout */
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+}
+
+/* The Sticker Body (Zig-Zag / Torn Paper) */
+.hero-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  /* Make background color distinct (Paper-like - SOLID) */
+  background-color: #f4f4f4;
+  opacity: 1;
+  border: none;
+
+  /* Robust Clip-Path for Torn Paper Effect
+     This creates an irregular polygon shape that looks like torn paper */
+  clip-path: polygon(0% 0%,
+      5% 2%, 10% 0%, 15% 3%, 20% 0%, 25% 2%, 30% 0%, 35% 3%, 40% 0%, 45% 2%, 50% 0%, 55% 3%, 60% 0%, 65% 2%, 70% 0%, 75% 3%, 80% 0%, 85% 2%, 90% 0%, 95% 3%, 100% 0%,
+      100% 0%,
+      98% 5%, 100% 10%, 97% 15%, 100% 20%, 98% 25%, 100% 30%, 97% 35%, 100% 40%, 98% 45%, 100% 50%, 97% 55%, 100% 60%, 98% 65%, 100% 70%, 97% 75%, 100% 80%, 98% 85%, 100% 90%, 97% 95%, 100% 100%,
+      100% 100%,
+      95% 98%, 90% 100%, 85% 97%, 80% 100%, 75% 98%, 70% 100%, 65% 97%, 60% 100%, 55% 98%, 50% 100%, 45% 97%, 40% 100%, 35% 98%, 30% 100%, 25% 97%, 20% 100%, 15% 98%, 10% 100%, 5% 97%, 0% 100%,
+      0% 100%,
+      2% 95%, 0% 90%, 3% 85%, 0% 80%, 2% 75%, 0% 70%, 3% 65%, 0% 60%, 2% 55%, 0% 50%, 3% 45%, 0% 40%, 2% 35%, 0% 30%, 3% 25%, 0% 20%, 2% 15%, 0% 10%, 3% 5%, 0% 0%);
+
+  /* Ensure no other masks are interfering */
+  mask: none;
+  -webkit-mask: none;
+}
+
+/* Fallback for background visibility if mask fails */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  .hero-badge::after {
+    mask: none;
+    -webkit-mask: none;
+    border: 1px dashed var(--text-secondary);
+  }
+}
+
+/* Tape Effect */
+.hero-badge::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%) rotate(2deg);
+  width: 50px;
+  height: 20px;
+  background-color: rgba(255, 255, 255, 0.4);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  -webkit-backdrop-filter: blur(2px);
+  backdrop-filter: blur(2px);
+  z-index: 11;
+
+  /* Mask for torn edges on tape */
+  -webkit-mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
+  mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
+}
+
+/* =============================================
+   FONTS
+   ============================================= */
+@font-face {
+  font-family: 'TheHandwrittenFont';
+  src: url('../assets/fonts/the-handwritten-font/THEHANDWRITTENFONT-DEMOVERSION.otf') format('opentype'),
+    url('../assets/fonts/the-handwritten-font/THEHANDWRITTENFONT-DEMOVERSION.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'MyKidsHandwritten';
+  src: url('../assets/fonts/my-kids-handwritten/My Kids Handwritten.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Quikhand';
+  src: url('../assets/fonts/quikhand/Quikhand.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'VTKSNoise';
+  src: url('../assets/fonts/vtks-noise/vtks noise.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'ChristmasCandyInline';
+  src: url('../assets/fonts/christmas-candy-demo/ChristmasCandy-Inline.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* =============================================
+   MAIN HEADLINE
+   ============================================= */
+.hero-headline {
+  /* Base font for "websites for" and "brands" */
+  font-family: 'MyKidsHandwritten', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #09054D;
+  max-width: 14ch;
+  margin: 0;
+}
+
+/* Individual highlights */
+.highlight-bold {
+  /* Font for "BOLD" */
+  font-family: 'Quikhand', sans-serif;
+  color: #fc5b45;
+  text-transform: uppercase;
+}
+
+.highlight-ambitious {
+  /* Font for "AMBITIOUS" */
+  font-family: 'ChristmasCandyInline', sans-serif;
+  /* Updated to Christmas Candy */
+  color: #902207;
+  text-transform: uppercase;
+}
+
+/* Dark Mode Overrides for Accessibility */
+[data-theme='dark'] .hero-headline {
+  color: #ffffff;
+  /* Revert to white for base text in dark mode */
+}
+
+[data-theme='dark'] .highlight-bold {
+  color: #ff8a75;
+  /* Lighter orange for dark background */
+}
+
+[data-theme='dark'] .highlight-ambitious {
+  color: #ff6b4a;
+  /* Lighter red/orange for dark background */
+}
+
+/* =============================================
+   SUBHEADLINE
+   ============================================= */
+.hero-subheadline {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 45ch;
+  margin-bottom: 2rem;
+}
+
+/* =============================================
+   TAGLINE (Beyond the Blueprint)
+   ============================================= */
+.hero-tag-wrapper {
+  position: relative;
+  display: flex;
+  /* Changed to flex to control stacking */
+  flex-direction: column;
+  /* Stack text and underline vertically */
+  align-items: center;
+  /* Center them */
+  margin-bottom: 2.5rem;
+  width: fit-content;
+  margin-inline: auto;
+  /* Ensure it stays centered in the parent */
+}
+
+.hero-tag {
+  font-family: 'VTKSNoise', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: #fc5b45;
+  text-transform: none;
+  /* Removed uppercase */
+  letter-spacing: 0.02em;
+  /* Reduced spacing slightly for normal case */
+
+  /* Gradient Text Effect */
+  background: linear-gradient(90deg, #fc5b45, #902207);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+
+  padding-bottom: 0.25rem;
+  /* Space between text and underline */
+}
+
+/* Hand-Drawn SVG Underline */
+.underline-svg {
+  width: 100%;
+  max-width: 200px;
+  height: 12px;
+  margin-top: 4px;
+  color: var(--accent);
+}
+
+.underline-path {
+  stroke-dasharray: 250;
+  stroke-dashoffset: 250;
+  animation: drawUnderline 1.2s ease-out 1.5s forwards;
+}
+
+@keyframes drawUnderline {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* =============================================
+   STAGGERED REVEAL ANIMATION
+   ============================================= */
+.anim-item {
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeInUp 0.7s ease-out forwards;
+}
+
+.anim-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.anim-item:nth-child(2) {
+  animation-delay: 0.25s;
+}
+
+.anim-item:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.anim-item:nth-child(4) {
+  animation-delay: 0.55s;
+}
+
+.anim-item:nth-child(5) {
+  animation-delay: 0.7s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .anim-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .underline-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* CTA BUTTONS */
+.hero-ctas {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.5rem;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 1.25rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: white;
+  border: 2px solid var(--accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(217, 117, 26, 0.3);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
+  opacity: 0.8;
+}
+
+.btn-secondary:hover {
+  background: var(--text-primary);
+  color: var(--canvas-base);
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+/* =============================================
+   RESPONSIVE DESIGN
+   ============================================= */
+@media (max-width: 900px) {
+  .nav-links {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    padding: 1rem;
+  }
+
+  .hero-ctas {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
+  .cta-button {
+    padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+  }
+}

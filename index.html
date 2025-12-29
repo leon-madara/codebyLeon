@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Code by Leon | Nairobi-Based Design Studio</title>
+  <meta name="description"
+    content="Premium web development and design solutions for Kenyan businesses. Crafting digital experiences with African soul and global impact.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="src/styles/hero.css">
+</head>
+
+<body>
+  <!-- ========================================
+       LAYER 0: NAVIGATION
+       ======================================== -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="/" class="logo">
+        <img src="src/assets/icons/main SVG.svg" alt="Code by Leon" class="logo-svg">
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#portfolio">PORTFOLIO</a></li>
+        <li><a href="#about">ABOUT</a></li>
+        <li><a href="#services">SERVICES</a></li>
+        <li><a href="#blog">BLOG</a></li>
+      </ul>
+
+      <a href="get-started.html" class="cta-button">GET IN TOUCH</a>
+
+      <!-- Theme Toggle -->
+      <div class="theme-toggle-wrapper">
+        <div class="toggle-switch" id="themeToggle">
+          <div class="toggle-background">
+            <div class="scenery day-scenery">
+              <div class="cloud cloud-1"></div>
+              <div class="cloud cloud-2"></div>
+              <div class="cloud cloud-3"></div>
+              <div class="cloud cloud-4"></div>
+              <div class="cloud cloud-5"></div>
+            </div>
+            <div class="scenery night-scenery">
+              <div class="star star-1">✦</div>
+              <div class="star star-2">★</div>
+              <div class="star star-3">✦</div>
+            </div>
+          </div>
+          <div class="toggle-knob">
+            <div class="crater crater-1"></div>
+            <div class="crater crater-2"></div>
+            <div class="crater crater-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================================
+       HERO SECTION (4-Layer Architecture)
+       ======================================== -->
+  <section class="hero">
+    <!-- LAYER 1: Canvas Base (handled by CSS) -->
+
+    <!-- LAYER 2: Abstract Orbs -->
+    <div class="orbs-container">
+      <div class="orb orb-purple"></div>
+      <div class="orb orb-orange"></div>
+      <div class="orb orb-blue"></div>
+    </div>
+
+    <!-- LAYER 3: Full-Screen Frosted Overlay with Dot Grid -->
+    <div class="frosted-overlay"></div>
+
+    <!-- LAYER 4: Content (Bold Typography) -->
+    <div class="hero-content main-content">
+      <div class="hero-text-wrapper">
+        <!-- Badge -->
+        <span class="hero-badge anim-item">Nairobi-based design studio</span>
+
+        <!-- Main Headline -->
+        <h1 class="hero-headline anim-item">
+          <span class="highlight-bold">Bold</span> websites for <span class="highlight-ambitious">ambitious</span> brands
+        </h1>
+
+        <!-- Subheadline -->
+        <p class="hero-subheadline anim-item">Websites and design that make your business<br>look as professional as it
+          is.</p>
+
+        <!-- Tag with Gradient + SVG Underline -->
+        <div class="hero-tag-wrapper anim-item">
+          <span class="hero-tag gradient-text">Beyond the Blueprint</span>
+          <svg class="underline-svg" viewBox="0 0 200 12" preserveAspectRatio="none">
+            <path class="underline-path" d="M2 8 Q50 2 100 8 T198 6" fill="none" stroke="currentColor" stroke-width="3"
+              stroke-linecap="round" />
+          </svg>
+        </div>
+
+        <!-- CTAs -->
+        <div class="hero-ctas anim-item">
+          <a href="get-started.html" class="btn-primary">START YOUR PROJECT</a>
+          <a href="#portfolio" class="btn-secondary">VIEW PORTFOLIO</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Theme Toggle Logic
+    const themeToggle = document.getElementById('themeToggle');
+    const html = document.documentElement;
+
+    // Check for saved theme preference
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    html.setAttribute('data-theme', savedTheme);
+    if (savedTheme === 'dark') {
+      themeToggle.classList.add('active');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = html.getAttribute('data-theme');
+      const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+      html.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      themeToggle.classList.toggle('active');
+    });
+  </script>
+</body>
+
+</html>

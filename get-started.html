@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started | Code by Leon</title>
+    <meta name="description"
+        content="Tell us about your project and get a personalized recommendation for your perfect web solution.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles/configurator.css">
+</head>
+
+<body>
+    <!-- NAVIGATION -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="src/assets/icons/main SVG.svg" alt="Code by Leon" class="logo-svg">
+            </a>
+
+            <a href="index.html" class="back-link">← Back to Home</a>
+
+            <!-- Theme Toggle -->
+            <div class="theme-toggle-wrapper">
+                <div class="toggle-switch" id="themeToggle">
+                    <div class="toggle-background">
+                        <div class="scenery day-scenery">
+                            <div class="cloud cloud-1"></div>
+                            <div class="cloud cloud-2"></div>
+                            <div class="cloud cloud-3"></div>
+                        </div>
+                        <div class="scenery night-scenery">
+                            <div class="star star-1">✦</div>
+                            <div class="star star-2">★</div>
+                            <div class="star star-3">✦</div>
+                        </div>
+                    </div>
+                    <div class="toggle-knob">
+                        <div class="crater crater-1"></div>
+                        <div class="crater crater-2"></div>
+                        <div class="crater crater-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- CONFIGURATOR CONTAINER -->
+    <main class="configurator-container">
+        <!-- Background Orbs (same as homepage) -->
+        <div class="orbs-container">
+            <div class="orb orb-purple"></div>
+            <div class="orb orb-orange"></div>
+            <div class="orb orb-blue"></div>
+        </div>
+
+        <!-- Frosted Overlay -->
+        <div class="frosted-overlay"></div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-dots">
+                <div class="dot active" data-step="1"></div>
+                <div class="dot" data-step="2"></div>
+                <div class="dot" data-step="3"></div>
+                <div class="dot" data-step="4"></div>
+                <div class="dot" data-step="5"></div>
+                <div class="dot" data-step="6"></div>
+            </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="configurator-content">
+
+            <!-- STEP 1: Business Identity -->
+            <div class="step active" data-step="1">
+                <div class="step-header">
+                    <h1 class="step-title">First, tell us about yourself</h1>
+                    <p class="step-subtitle">This helps us understand your needs</p>
+                </div>
+
+                <div class="options-grid">
+                    <button class="option-card" data-value="small-business">
+                        <span class="option-icon">🏢</span>
+                        <h3 class="option-title">Small Business Owner</h3>
+                        <p class="option-description">I run a local shop or service business</p>
+                    </button>
+
+                    <button class="option-card" data-value="creative">
+                        <span class="option-icon">🎨</span>
+                        <h3 class="option-title">Creative Professional</h3>
+                        <p class="option-description">I'm a photographer, designer, or artist</p>
+                    </button>
+
+                    <button class="option-card" data-value="startup">
+                        <span class="option-icon">🚀</span>
+                        <h3 class="option-title">Startup Founder</h3>
+                        <p class="option-description">I'm launching something new</p>
+                    </button>
+
+                    <button class="option-card" data-value="growing">
+                        <span class="option-icon">🔄</span>
+                        <h3 class="option-title">Growing Brand</h3>
+                        <p class="option-description">I have an established business that's scaling</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 2: Current Presence -->
+            <div class="step" data-step="2">
+                <div class="step-header">
+                    <h1 class="step-title">Where are you starting from?</h1>
+                    <p class="step-subtitle">We'll build on what you have—or start fresh</p>
+                </div>
+
+                <div class="options-grid">
+                    <button class="option-card" data-value="no-website">
+                        <span class="option-icon">❌</span>
+                        <h3 class="option-title">No Website Yet</h3>
+                        <p class="option-description">I'm starting from scratch</p>
+                    </button>
+
+                    <button class="option-card" data-value="diy-site">
+                        <span class="option-icon">🛠️</span>
+                        <h3 class="option-title">DIY Website</h3>
+                        <p class="option-description">I built it on Wix, WordPress, or Squarespace</p>
+                    </button>
+
+                    <button class="option-card" data-value="outdated">
+                        <span class="option-icon">📉</span>
+                        <h3 class="option-title">Outdated Website</h3>
+                        <p class="option-description">I have a site, but it looks old or doesn't work well</p>
+                    </button>
+
+                    <button class="option-card" data-value="modern">
+                        <span class="option-icon">✅</span>
+                        <h3 class="option-title">Modern Site</h3>
+                        <p class="option-description">My site looks good—I just need support or features</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 3: Primary Goal -->
+            <div class="step" data-step="3">
+                <div class="step-header">
+                    <h1 class="step-title">What's most important to you?</h1>
+                    <p class="step-subtitle">Choose your top priority</p>
+                </div>
+
+                <div class="options-grid">
+                    <button class="option-card" data-value="leads">
+                        <span class="option-icon">🎯</span>
+                        <h3 class="option-title">Generate More Leads</h3>
+                        <p class="option-description">I want people to contact me or sign up</p>
+                    </button>
+
+                    <button class="option-card" data-value="credibility">
+                        <span class="option-icon">💼</span>
+                        <h3 class="option-title">Establish Credibility</h3>
+                        <p class="option-description">I need to look professional and trustworthy</p>
+                    </button>
+
+                    <button class="option-card" data-value="ecommerce">
+                        <span class="option-icon">📱</span>
+                        <h3 class="option-title">Sell Products/Services Online</h3>
+                        <p class="option-description">I want an online store or booking system</p>
+                    </button>
+
+                    <button class="option-card" data-value="portfolio">
+                        <span class="option-icon">🎨</span>
+                        <h3 class="option-title">Showcase My Portfolio</h3>
+                        <p class="option-description">I need a beautiful gallery for my work</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 4: Timeline -->
+            <div class="step" data-step="4">
+                <div class="step-header">
+                    <h1 class="step-title">How soon do you need this live?</h1>
+                    <p class="step-subtitle">We offer rush options for urgent launches</p>
+                </div>
+
+                <div class="options-grid">
+                    <button class="option-card" data-value="asap">
+                        <span class="option-icon">⚡</span>
+                        <h3 class="option-title">ASAP (1-2 Weeks)</h3>
+                        <p class="option-description">I need it yesterday—rush pricing applies</p>
+                    </button>
+
+                    <button class="option-card" data-value="month">
+                        <span class="option-icon">📅</span>
+                        <h3 class="option-title">Within a Month</h3>
+                        <p class="option-description">Next 2-4 weeks is ideal</p>
+                    </button>
+
+                    <button class="option-card" data-value="flexible">
+                        <span class="option-icon">🕐</span>
+                        <h3 class="option-title">Flexible (2-3 Months)</h3>
+                        <p class="option-description">I'm planning ahead—no rush</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 5: Budget -->
+            <div class="step" data-step="5">
+                <div class="step-header">
+                    <h1 class="step-title">What's your budget for this project?</h1>
+                    <p class="step-subtitle">Be honest—we have options for every stage</p>
+                </div>
+
+                <div class="options-grid">
+                    <button class="option-card" data-value="budget-low">
+                        <span class="option-icon">💰</span>
+                        <h3 class="option-title">KES 30,000 - 50,000</h3>
+                        <p class="option-description">Launch Site Package</p>
+                    </button>
+
+                    <button class="option-card" data-value="budget-mid">
+                        <span class="option-icon">💵</span>
+                        <h3 class="option-title">KES 50,000 - 100,000</h3>
+                        <p class="option-description">Brand Refresh or Custom Build</p>
+                    </button>
+
+                    <button class="option-card" data-value="budget-high">
+                        <span class="option-icon">💎</span>
+                        <h3 class="option-title">KES 100,000+</h3>
+                        <p class="option-description">Premium or E-Commerce Solution</p>
+                    </button>
+
+                    <button class="option-card" data-value="budget-unsure">
+                        <span class="option-icon">🤔</span>
+                        <h3 class="option-title">Not Sure Yet</h3>
+                        <p class="option-description">Let's discuss what makes sense</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 6: Recommendation -->
+            <div class="step" data-step="6">
+                <div class="recommendation-container">
+                    <div class="recommendation-header">
+                        <span class="recommendation-badge">✨ Your Perfect Fit</span>
+                        <h1 class="recommendation-title" id="packageName">10-Day Launch Site</h1>
+                        <p class="recommendation-price" id="packagePrice">KES 35,000 - KES 45,000</p>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <h3 class="section-heading">Why This Works for You:</h3>
+                        <ul class="recommendation-list" id="whyList">
+                            <li>Starting fresh (no old code to fix)</li>
+                            <li>Fast timeline (ASAP launch)</li>
+                            <li>Budget-friendly starter package</li>
+                        </ul>
+                    </div>
+
+                    <div class="recommendation-section">
+                        <h3 class="section-heading">What's Included:</h3>
+                        <ul class="recommendation-list" id="includedList">
+                            <li>✓ 3-5 Page Custom Site</li>
+                            <li>✓ Mobile-Responsive Design</li>
+                            <li>✓ Contact Forms & WhatsApp Integration</li>
+                            <li>✓ Google Maps & Social Links</li>
+                            <li>✓ 1 Month Free Support</li>
+                        </ul>
+                    </div>
+
+                    <div class="recommendation-ctas">
+                        <a href="https://calendly.com/your-link" class="cta-primary" target="_blank">
+                            📞 Book Your Free Strategy Call
+                        </a>
+                        <a href="https://wa.me/254YOUR-NUMBER" class="cta-secondary" target="_blank">
+                            💬 WhatsApp Leon Directly
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Navigation Controls -->
+        <div class="nav-controls">
+            <button class="btn-back" id="btnBack">← Back</button>
+            <button class="btn-continue" id="btnContinue" disabled>Continue</button>
+        </div>
+    </main>
+
+    <script src="src/scripts/configurator.js"></script>
+    <script>
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        if (savedTheme === 'dark') {
+            themeToggle.classList.add('active');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>
