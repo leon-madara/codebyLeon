@@ -63,6 +63,10 @@
   --glass-bg: rgba(2, 17, 39, 0.55);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Typography */
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b5;
 }
 
 /* Rainbow Utility Classes */
@@ -84,11 +88,6 @@
 
 .rainbow-color-5 {
   color: var(--rainbow-5);
-}
-
-/* Typography */
---text-primary: #f0f0f5;
---text-secondary: #a0a0b5;
 }
 
 /* =============================================
@@ -520,9 +519,8 @@ body {
   z-index: -1;
 
   /* Make background color distinct (Paper-like - SOLID) */
-  background-color: #f4f4f4;
+  background-color: #cad7fb;
   opacity: 1;
-  border: none;
 
   /* Robust Clip-Path for Torn Paper Effect
      This creates an irregular polygon shape that looks like torn paper */
@@ -550,24 +548,27 @@ body {
   }
 }
 
-/* Tape Effect */
+/* Tape Effect - Top Right and Bottom Left */
 .hero-badge::before {
   content: '';
   position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%) rotate(2deg);
-  width: 50px;
-  height: 20px;
-  background-color: rgba(255, 255, 255, 0.4);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  -webkit-backdrop-filter: blur(2px);
-  backdrop-filter: blur(2px);
+  /* Top-right tape */
+  top: -8px;
+  right: -8px;
+  transform: rotate(45deg);
+  width: 36px;
+  height: 12px;
+  background-color: #082549;
   z-index: 11;
 
   /* Mask for torn edges on tape */
   -webkit-mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
   mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
+  
+  /* Second tape at bottom-left using box-shadow */
+  /* Position relative to badge: move to bottom-left corner */
+  box-shadow: 
+    -271px 47px 0 0 #082549;
 }
 
 /* =============================================
@@ -726,7 +727,7 @@ body {
 .hero-subheadline {
   font-size: clamp(1rem, 2vw, 1.25rem);
   line-height: 1.6;
-  color: var(--text-secondary);
+  color: #15447F;
   max-width: 45ch;
   margin-bottom: 2rem;
 }
@@ -921,5 +922,414 @@ body {
   .cta-button {
     padding: 0.6rem 1rem;
     font-size: 0.75rem;
+  }
+}
+
+/* =============================================
+   CONTENT SECTIONS (Services, Portfolio, About, etc.)
+   ============================================= */
+.content-section {
+  position: relative;
+  min-height: 80vh;
+  width: 100%;
+  padding: 8rem 2rem 6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--canvas-base);
+  transition: background 0.4s ease;
+}
+
+.section-content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-headline {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.section-subheadline {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--text-secondary);
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 4rem;
+  line-height: 1.6;
+}
+
+/* =============================================
+   SERVICES PREVIEW SECTION
+   ============================================= */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.service-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.service-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.service-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.card-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.card-link:hover {
+  color: var(--accent-hover);
+}
+
+/* =============================================
+   PORTFOLIO SECTION
+   ============================================= */
+.portfolio-filters {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 2px solid var(--glass-border);
+  border-radius: 50px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.portfolio-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.portfolio-item {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease;
+}
+
+.portfolio-item:hover {
+  transform: translateY(-5px);
+}
+
+.portfolio-image-placeholder {
+  width: 100%;
+  height: 250px;
+  background: var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.portfolio-item h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+
+.portfolio-type {
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 0.9rem;
+  padding: 0 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.portfolio-results {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding: 0 1.5rem 1.5rem;
+}
+
+/* =============================================
+   ABOUT SECTION
+   ============================================= */
+.about-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.about-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+}
+
+.about-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.about-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.process-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 1rem;
+}
+
+.process-list li {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.process-list li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* =============================================
+   SERVICES PACKAGES SECTION
+   ============================================= */
+.services-packages {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 3rem;
+}
+
+.package-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.package-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.package-card h3 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+}
+
+.package-for,
+.package-outcome {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.package-benefits {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+}
+
+.package-benefits li {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.package-benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+  font-weight: bold;
+}
+
+.package-pricing {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 1.5rem 0;
+}
+
+.package-card .btn-primary {
+  width: 100%;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+/* =============================================
+   BLOG SECTION
+   ============================================= */
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.blog-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  transition: transform 0.3s ease;
+}
+
+.blog-card:hover {
+  transform: translateY(-5px);
+}
+
+.blog-category {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--accent);
+  color: white;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.blog-card h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  line-height: 1.3;
+}
+
+.blog-card p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+/* =============================================
+   SECTION CTAs
+   ============================================= */
+.section-cta {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 3rem;
+  flex-wrap: wrap;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN FOR SECTIONS
+   ============================================= */
+@media (max-width: 900px) {
+  .content-section {
+    padding: 6rem 1.5rem 4rem;
+  }
+
+  .services-grid,
+  .portfolio-grid,
+  .about-content,
+  .services-packages,
+  .blog-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .section-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .section-cta .btn-primary,
+  .section-cta .btn-secondary {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+
+@media (max-width: 600px) {
+  .content-section {
+    padding: 5rem 1rem 3rem;
+  }
+
+  .service-card,
+  .package-card,
+  .about-card,
+  .blog-card {
+    padding: 2rem;
   }
 }
