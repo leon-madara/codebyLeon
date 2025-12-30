@@ -11,9 +11,18 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="src/styles/configurator.css">
+    <link rel="stylesheet" href="src/styles/mouse-trail.css">
 </head>
 
 <body>
+    <!-- BACKGROUND LAYERS -->
+    <div class="orbs-container">
+        <div class="orb orb-purple"></div>
+        <div class="orb orb-orange"></div>
+        <div class="orb orb-blue"></div>
+    </div>
+    <div class="frosted-overlay"></div>
+
     <!-- CONFIGURATOR CONTAINER -->
     <main class="configurator">
         <!-- Header -->
@@ -371,6 +380,7 @@
     <!-- GSAP Core -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="src/scripts/configurator.js"></script>
+    <script src="src/js/mouse-trail.js"></script>
     <script>
         // Theme Toggle Logic
         const themeToggle = document.getElementById('themeToggle');
@@ -394,7 +404,7 @@
         // =============================================
         // CLOSE BUTTON ANIMATIONS
         // =============================================
-        (function() {
+        (function () {
             // Check for reduced motion preference
             const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             if (prefersReducedMotion) {
@@ -501,7 +511,7 @@
             // Click: Vapor effect + navigation
             closeBtn.addEventListener('click', (e) => {
                 isClicked = true;
-                
+
                 // Kill hover animation
                 if (hoverTimeline) {
                     hoverTimeline.kill();

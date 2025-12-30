@@ -1,13 +1,21 @@
 // =============================================
-// SERVICE CONFIGURATOR - State Management
+// SERVICE CONFIGURATOR - Minimal 8-Step Flow
 // Code by Leon
 // =============================================
 
 class ServiceConfigurator {
     constructor() {
-        this.currentStep = 1;
-        this.totalSteps = 6;
+        // Step flow: 1, feedback-1, 2, 3, feedback-2, 4, 5, feedback-3, 6, 7, processing, 8
+        this.stepFlow = [
+            '1', 'feedback-1',
+            '2', '3', 'feedback-2',
+            '4', '5', 'feedback-3',
+            '6', '7', 'processing', '8'
+        ];
+        this.currentIndex = 0;
+        this.totalDataSteps = 8; // For progress calculation
         this.answers = {};
+        this.additionalNeeds = [];
 
         this.init();
     }
@@ -19,234 +27,382 @@ class ServiceConfigurator {
     }
 
     setupEventListeners() {
-        // Option card selection
-        document.querySelectorAll('.option-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                this.selectOption(e.currentTarget);
-            });
+        // Option cards (single select)
+        document.querySelectorAll('.option-card:not(.multi-select)').forEach(card => {
+            card.addEventListener('click', () => this.selectOption(card));
         });
 
-        // Navigation buttons
-        document.getElementById('btnContinue').addEventListener('click', () => {
-            this.nextStep();
+        // Multi-select cards (Step 6)
+        document.querySelectorAll('.option-card.multi-select').forEach(card => {
+            card.addEventListener('click', () => this.toggleMultiSelect(card));
         });
 
-        document.getElementById('btnBack').addEventListener('click', () => {
-            this.previousStep();
-        });
+        // Continue button
+        const continueBtn = document.getElementById('btnContinue');
+        if (continueBtn) {
+            continueBtn.addEventListener('click', () => this.nextStep());
+        }
 
-        // Progress dots click
-        document.querySelectorAll('.dot').forEach(dot => {
-            dot.addEventListener('click', (e) => {
-                const step = parseInt(e.target.dataset.step);
-                if (step <= this.currentStep) {
-                    this.goToStep(step);
+        // Back link
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+            backLink.addEventListener('click', (e) => {
+                if (this.currentIndex > 0) {
+                    e.preventDefault();
+                    this.previousStep();
                 }
             });
-        });
+        }
+
+        // Form validation for Step 7
+        const form = document.getElementById('contactForm');
+        if (form) {
+            form.addEventListener('input', () => this.validateForm());
+        }
     }
 
     selectOption(card) {
-        const step = this.currentStep;
-        const stepContainer = document.querySelector(`.step[data-step="${step}"]`);
+        const step = card.closest('.step');
+        const stepId = step.dataset.step;
 
-        // Remove selected class from all cards in this step
-        stepContainer.querySelectorAll('.option-card').forEach(c => {
-            c.classList.remove('selected');
-        });
+        // Deselect other cards in this step
+        step.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
 
-        // Add selected class to clicked card
+        // Select this card
         card.classList.add('selected');
 
-        // Store answer
-        const value = card.dataset.value;
-        this.answers[`step${step}`] = value;
+        // Save answer
+        this.answers[stepId] = card.dataset.value;
+        this.saveProgress();
 
         // Enable continue button
-        document.getElementById('btnContinue').disabled = false;
+        this.enableContinue();
+    }
 
-        // Save progress
+    toggleMultiSelect(card) {
+        card.classList.toggle('selected');
+
+        // Update additionalNeeds array
+        const value = card.dataset.value;
+        if (card.classList.contains('selected')) {
+            if (!this.additionalNeeds.includes(value)) {
+                this.additionalNeeds.push(value);
+            }
+        } else {
+            this.additionalNeeds = this.additionalNeeds.filter(v => v !== value);
+        }
+
         this.saveProgress();
+        // Multi-select step always allows continue (even with 0 selections)
+        this.enableContinue();
+    }
+
+    validateForm() {
+        const name = document.getElementById('userName')?.value.trim();
+        const email = document.getElementById('userEmail')?.value.trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (name && email && emailRegex.test(email)) {
+            this.enableContinue();
+        } else {
+            this.disableContinue();
+        }
+    }
+
+    enableContinue() {
+        const btn = document.getElementById('btnContinue');
+        if (btn) btn.disabled = false;
+    }
+
+    disableContinue() {
+        const btn = document.getElementById('btnContinue');
+        if (btn) btn.disabled = true;
     }
 
     nextStep() {
-        if (this.currentStep < this.totalSteps) {
-            this.currentStep++;
-            this.updateUI();
-            this.saveProgress();
+        const currentStepId = this.stepFlow[this.currentIndex];
 
-            // If we're on the last step, generate recommendation
-            if (this.currentStep === 6) {
-                this.generateRecommendation();
+        // If on contact form, save the data
+        if (currentStepId === '7') {
+            this.answers.contact = {
+                name: document.getElementById('userName')?.value.trim(),
+                email: document.getElementById('userEmail')?.value.trim(),
+                phone: document.getElementById('userPhone')?.value.trim(),
+                business: document.getElementById('businessName')?.value.trim()
+            };
+            this.saveProgress();
+        }
+
+        // Move to next step
+        if (this.currentIndex < this.stepFlow.length - 1) {
+            this.currentIndex++;
+            this.updateUI();
+
+            // If we're now on processing, run the animation
+            if (this.stepFlow[this.currentIndex] === 'processing') {
+                this.runProcessingAnimation();
             }
         }
     }
 
     previousStep() {
-        if (this.currentStep > 1) {
-            this.currentStep--;
+        if (this.currentIndex > 0) {
+            this.currentIndex--;
             this.updateUI();
         }
     }
 
-    goToStep(step) {
-        this.currentStep = step;
-        this.updateUI();
-    }
-
     updateUI() {
-        // Update step visibility
+        const currentStepId = this.stepFlow[this.currentIndex];
+
+        // Hide all steps
         document.querySelectorAll('.step').forEach(step => {
             step.classList.remove('active');
         });
-        document.querySelector(`.step[data-step="${this.currentStep}"]`).classList.add('active');
 
-        // Update progress dots
-        document.querySelectorAll('.dot').forEach((dot, index) => {
-            const dotStep = index + 1;
-            dot.classList.remove('active', 'completed');
+        // Show current step
+        const currentStep = document.querySelector(`.step[data-step="${currentStepId}"]`);
+        if (currentStep) {
+            currentStep.classList.add('active');
+        }
 
-            if (dotStep === this.currentStep) {
-                dot.classList.add('active');
-            } else if (dotStep < this.currentStep) {
-                dot.classList.add('completed');
+        // Update progress bar
+        this.updateProgress();
+
+        // Update back link text
+        const backLink = document.querySelector('.back-link');
+        if (backLink) {
+            if (this.currentIndex === 0) {
+                backLink.textContent = '← Back';
+                backLink.href = 'index.html';
+            } else {
+                backLink.textContent = '← Back';
+                backLink.href = '#';
             }
-        });
+        }
 
-        // Update navigation buttons
-        const btnBack = document.getElementById('btnBack');
-        const btnContinue = document.getElementById('btnContinue');
+        // Update continue button state
+        this.updateContinueState(currentStepId);
 
-        btnBack.disabled = this.currentStep === 1;
+        // Hide nav controls on certain steps
+        const navControls = document.querySelector('.nav-controls');
+        if (navControls) {
+            if (currentStepId === '8' || currentStepId === 'processing') {
+                navControls.style.display = 'none';
+            } else {
+                navControls.style.display = 'flex';
+            }
+        }
+    }
 
-        // Check if current step has a selection
-        const currentAnswer = this.answers[`step${this.currentStep}`];
-        btnContinue.disabled = !currentAnswer;
+    updateProgress() {
+        const progressFill = document.getElementById('progressFill');
+        if (!progressFill) return;
 
-        // Hide continue button on last step
-        if (this.currentStep === 6) {
-            btnContinue.style.display = 'none';
+        // Calculate progress based on data steps completed
+        const dataStepIndex = this.getDataStepIndex();
+        const progress = (dataStepIndex / this.totalDataSteps) * 100;
+        progressFill.style.width = `${Math.min(progress, 100)}%`;
+    }
+
+    getDataStepIndex() {
+        // Map current position to data step (1-8)
+        const stepId = this.stepFlow[this.currentIndex];
+        const dataStepMapping = {
+            '1': 1, 'feedback-1': 1,
+            '2': 2, '3': 3, 'feedback-2': 3,
+            '4': 4, '5': 5, 'feedback-3': 5,
+            '6': 6, '7': 7, 'processing': 7, '8': 8
+        };
+        return dataStepMapping[stepId] || 1;
+    }
+
+    updateContinueState(stepId) {
+        const btn = document.getElementById('btnContinue');
+        if (!btn) return;
+
+        // Check if it's a feedback step (auto-enable)
+        if (stepId.startsWith('feedback')) {
+            this.enableContinue();
+            return;
+        }
+
+        // Check if it's the multi-select step (always enabled)
+        if (stepId === '6') {
+            this.enableContinue();
+            return;
+        }
+
+        // Check if it's the form step
+        if (stepId === '7') {
+            this.validateForm();
+            return;
+        }
+
+        // Check if selection exists for this step
+        if (this.answers[stepId]) {
+            this.enableContinue();
+            // Re-select the card
+            const step = document.querySelector(`.step[data-step="${stepId}"]`);
+            const card = step?.querySelector(`.option-card[data-value="${this.answers[stepId]}"]`);
+            if (card) card.classList.add('selected');
         } else {
-            btnContinue.style.display = 'block';
+            this.disableContinue();
         }
+    }
 
-        // Restore selected state for current step
-        if (currentAnswer) {
-            const stepContainer = document.querySelector(`.step[data-step="${this.currentStep}"]`);
-            const selectedCard = stepContainer.querySelector(`[data-value="${currentAnswer}"]`);
-            if (selectedCard) {
-                selectedCard.classList.add('selected');
+    runProcessingAnimation() {
+        const items = document.querySelectorAll('.checklist-item');
+        let index = 0;
+
+        const animate = () => {
+            if (index < items.length) {
+                const icon = items[index].querySelector('.checklist-icon');
+                icon.textContent = '✓';
+                icon.classList.remove('pending');
+                icon.classList.add('complete');
+                index++;
+                setTimeout(animate, 800);
+            } else {
+                // All done, show recommendation
+                setTimeout(() => {
+                    this.generateRecommendation();
+                    this.currentIndex++;
+                    this.updateUI();
+                }, 600);
             }
-        }
+        };
 
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setTimeout(animate, 500);
     }
 
     generateRecommendation() {
-        const { step1, step2, step3, step4, step5 } = this.answers;
+        // Package recommendation logic
+        const presence = this.answers['2'];
+        const goal = this.answers['3'];
+        const timeline = this.answers['4'];
+        const budget = this.answers['5'];
 
-        let packageName = "Custom Solution";
-        let price = "Contact for Pricing";
-        let whyList = [];
-        let includedList = [];
+        let packageName = '';
+        let priceRange = '';
+        let whyReasons = [];
+        let features = [];
 
-        // Simple recommendation logic
-        // Budget-based recommendations
-        if (step5 === 'budget-low') {
-            packageName = "10-Day Launch Site";
-            price = "KES 35,000 - KES 45,000";
-            includedList = [
-                "✓ 3-5 Page Custom Site",
-                "✓ Mobile-Responsive Design",
-                "✓ Contact Forms & WhatsApp Integration",
-                "✓ Google Maps & Social Links",
-                "✓ 1 Month Free Support"
+        // Determine package based on budget primarily
+        if (budget === 'budget-low') {
+            packageName = '10-Day Launch Site';
+            priceRange = 'KES 35,000 - KES 45,000';
+            features = [
+                '✓ 3-5 Page Custom Site',
+                '✓ Mobile-Responsive Design',
+                '✓ Contact Forms & WhatsApp',
+                '✓ Google Maps & Social Links',
+                '✓ 1 Month Free Support'
             ];
-        } else if (step5 === 'budget-mid') {
-            packageName = "Brand Refresh Package";
-            price = "KES 65,000 - KES 85,000";
-            includedList = [
-                "✓ Full Brand Redesign",
-                "✓ 5-10 Page Custom Site",
-                "✓ Content Management System (CMS)",
-                "✓ SEO Optimization",
-                "✓ 2 Months Free Support"
+        } else if (budget === 'budget-mid') {
+            packageName = 'Brand Refresh Package';
+            priceRange = 'KES 60,000 - KES 90,000';
+            features = [
+                '✓ 5-8 Page Custom Site',
+                '✓ Brand Identity Consultation',
+                '✓ SEO Optimization',
+                '✓ Analytics Dashboard',
+                '✓ 3 Months Support'
             ];
-        } else if (step5 === 'budget-high') {
-            packageName = "Premium E-Commerce Solution";
-            price = "KES 120,000+";
-            includedList = [
-                "✓ Custom E-Commerce Platform",
-                "✓ Payment Gateway Integration (M-Pesa, Cards)",
-                "✓ Inventory Management",
-                "✓ Advanced Analytics Dashboard",
-                "✓ 3 Months Premium Support"
+        } else if (budget === 'budget-high') {
+            packageName = 'Premium Solution';
+            priceRange = 'KES 120,000+';
+            features = [
+                '✓ Full Custom Development',
+                '✓ E-Commerce Integration',
+                '✓ Advanced SEO & Marketing',
+                '✓ Admin Dashboard',
+                '✓ 6 Months Priority Support'
             ];
         } else {
-            packageName = "Let's Craft Your Solution";
-            price = "Custom Quote";
-            includedList = [
-                "✓ Free 30-Minute Strategy Call",
-                "✓ Tailored Proposal Based on Your Needs",
-                "✓ Flexible Payment Options",
-                "✓ Transparent Pricing Breakdown"
+            packageName = 'Custom Consultation';
+            priceRange = "Let's discuss!";
+            features = [
+                '✓ Free 20-Minute Strategy Call',
+                '✓ Personalized Quote',
+                '✓ Flexible Payment Options',
+                '✓ No Obligation'
             ];
         }
 
-        // Why it works (based on other answers)
-        if (step2 === 'no-website') {
-            whyList.push("Starting fresh with a clean slate");
-        }
-        if (step4 === 'asap') {
-            whyList.push("Fast timeline with rush delivery");
-        }
-        if (step3 === 'leads') {
-            whyList.push("Optimized for lead generation");
-        }
-        if (step3 === 'credibility') {
-            whyList.push("Professional design builds trust");
-        }
-        if (step3 === 'ecommerce') {
-            whyList.push("E-commerce ready with payment integration");
-        }
-        if (step3 === 'portfolio') {
-            whyList.push("Beautiful portfolio showcase");
+        // Generate why reasons
+        if (presence === 'no-website') {
+            whyReasons.push('Starting fresh—no old code to fix');
+        } else if (presence === 'outdated') {
+            whyReasons.push('Modernizing your existing presence');
+        } else if (presence === 'diy-site') {
+            whyReasons.push('Upgrading from DIY to professional');
         }
 
-        // Default why if none match
-        if (whyList.length === 0) {
-            whyList = [
-                "Tailored to your business needs",
-                "Professional Nairobi-based team",
-                "Ongoing support included"
-            ];
+        if (timeline === 'asap') {
+            whyReasons.push('Fast timeline with rush delivery');
+        } else if (timeline === 'flexible') {
+            whyReasons.push('Flexible timeline for quality focus');
         }
 
-        // Update DOM
+        if (goal === 'leads') {
+            whyReasons.push('Optimized for lead generation');
+        } else if (goal === 'credibility') {
+            whyReasons.push('Professional design builds trust');
+        } else if (goal === 'ecommerce') {
+            whyReasons.push('E-commerce ready for online sales');
+        } else if (goal === 'portfolio') {
+            whyReasons.push('Beautiful gallery to showcase work');
+        }
+
+        // Update the UI
         document.getElementById('packageName').textContent = packageName;
-        document.getElementById('packagePrice').textContent = price;
+        document.getElementById('packagePrice').textContent = priceRange;
 
-        const whyListEl = document.getElementById('whyList');
-        whyListEl.innerHTML = whyList.map(item => `<li>${item}</li>`).join('');
+        const whyList = document.getElementById('whyList');
+        whyList.innerHTML = whyReasons.map(r => `<li>${r}</li>`).join('');
 
-        const includedListEl = document.getElementById('includedList');
-        includedListEl.innerHTML = includedList.map(item => `<li>${item}</li>`).join('');
+        const includedList = document.getElementById('includedList');
+        includedList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
     }
 
     saveProgress() {
-        localStorage.setItem('configurator_progress', JSON.stringify({
-            currentStep: this.currentStep,
-            answers: this.answers
-        }));
+        const data = {
+            currentIndex: this.currentIndex,
+            answers: this.answers,
+            additionalNeeds: this.additionalNeeds
+        };
+        localStorage.setItem('configurator_progress', JSON.stringify(data));
     }
 
     loadSavedProgress() {
         const saved = localStorage.getItem('configurator_progress');
         if (saved) {
-            const data = JSON.parse(saved);
-            this.currentStep = data.currentStep || 1;
-            this.answers = data.answers || {};
+            try {
+                const data = JSON.parse(saved);
+                this.currentIndex = data.currentIndex || 0;
+                this.answers = data.answers || {};
+                this.additionalNeeds = data.additionalNeeds || [];
+
+                // Restore multi-select selections
+                this.additionalNeeds.forEach(value => {
+                    const card = document.querySelector(`.option-card[data-value="${value}"]`);
+                    if (card) card.classList.add('selected');
+                });
+
+                // Restore contact form if on step 7
+                if (this.answers.contact) {
+                    const { name, email, phone, business } = this.answers.contact;
+                    if (document.getElementById('userName')) {
+                        document.getElementById('userName').value = name || '';
+                        document.getElementById('userEmail').value = email || '';
+                        document.getElementById('userPhone').value = phone || '';
+                        document.getElementById('businessName').value = business || '';
+                    }
+                }
+            } catch (e) {
+                console.error('Error loading saved progress:', e);
+            }
         }
     }
 }

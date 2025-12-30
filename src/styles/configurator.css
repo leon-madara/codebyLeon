@@ -36,6 +36,14 @@
     /* Progress */
     --progress-track: #e5e7eb;
     --progress-fill: #1a1a2e;
+
+    /* Hero Background Variables */
+    --canvas-base: #F2EFFD;
+    --orb-purple: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+    --orb-orange: linear-gradient(135deg, #FDBA74 0%, #FB923C 100%);
+    --orb-blue: linear-gradient(135deg, #93C5FD 0%, #60A5FA 100%);
+    --glass-bg: rgba(255, 255, 255, 0.45);
+    --glass-border: rgba(200, 200, 200, 0.35);
 }
 
 [data-theme="dark"] {
@@ -57,6 +65,14 @@
 
     --progress-track: #2d2d2d;
     --progress-fill: #f0f0f5;
+
+    /* Hero Background Variables - Dark */
+    --canvas-base: #021127;
+    --orb-purple: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+    --orb-orange: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+    --orb-blue: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    --glass-bg: rgba(2, 17, 39, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 /* =============================================
@@ -70,10 +86,12 @@
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: var(--bg-primary);
+    background: var(--canvas-base);
     color: var(--text-primary);
     min-height: 100vh;
-    transition: background 0.3s ease, color 0.3s ease;
+    transition: background 0.4s ease, color 0.4s ease;
+    position: relative;
+    overflow-x: hidden;
 }
 
 /* =============================================
@@ -83,6 +101,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    position: relative;
+    z-index: 10;
 }
 
 /* =============================================
@@ -95,7 +115,7 @@ body {
     padding: 1.5rem 2rem;
     position: sticky;
     top: 0;
-    background: var(--bg-primary);
+    background: transparent;
     z-index: 100;
     border-bottom: 1px solid var(--border-color);
 }
@@ -406,6 +426,85 @@ body {
     height: 3px;
     top: 8px;
     left: 14px;
+}
+
+/* =============================================
+   HERO BACKGROUND ELEMENTS (Orbs & Frost)
+   ============================================= */
+.orbs-container {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.7;
+    animation: morph 15s ease-in-out infinite;
+}
+
+.orb-purple {
+    width: 45vw;
+    height: 45vw;
+    background: var(--orb-purple);
+    top: -10%;
+    left: -10%;
+    animation-delay: 0s;
+}
+
+.orb-orange {
+    width: 55vw;
+    height: 55vw;
+    background: var(--orb-orange);
+    top: 20%;
+    left: 30%;
+    animation-delay: -5s;
+}
+
+.orb-blue {
+    width: 40vw;
+    height: 40vw;
+    background: var(--orb-blue);
+    bottom: -15%;
+    right: -10%;
+    animation-delay: -10s;
+}
+
+@keyframes morph {
+
+    0%,
+    100% {
+        border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+        transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+
+    25% {
+        border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+        transform: translate(2%, 3%) rotate(3deg) scale(1.02);
+    }
+
+    50% {
+        border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+        transform: translate(5%, 5%) rotate(5deg) scale(1.05);
+    }
+
+    75% {
+        border-radius: 50% 40% 50% 60% / 35% 45% 55% 65%;
+        transform: translate(3%, 2%) rotate(2deg) scale(1.03);
+    }
+}
+
+.frosted-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    -webkit-backdrop-filter: blur(30px);
+    backdrop-filter: blur(30px);
+    pointer-events: none;
 }
 
 /* =============================================
