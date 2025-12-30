@@ -4,11 +4,19 @@
    ============================================= */
 
 /* =============================================
-   CSS CUSTOM PROPERTIES (Theme Tokens)
+/* =============================================
+   THEME VARIABLES
    ============================================= */
 :root {
   /* Light Mode (Default) */
   --canvas-base: #F2EFFD;
+
+  /* Rainbow Typewriter Colors (Light Mode - Original) */
+  --rainbow-1: #372CE9;
+  --rainbow-2: #902207;
+  --rainbow-3: #15447F;
+  --rainbow-4: #250A54;
+  --rainbow-5: #313137;
 
   /* Orb Colors - Light Mode */
   --orb-purple: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
@@ -36,6 +44,13 @@
   /* Dark Mode */
   --canvas-base: #021127;
 
+  /* Rainbow Typewriter Colors (Dark Mode - Pastels) */
+  --rainbow-1: #918ef6;
+  --rainbow-2: #fc5b45;
+  --rainbow-3: #cad7fb;
+  --rainbow-4: #d1c6f9;
+  --rainbow-5: #fed7d4;
+
   /* Orb Colors - Dark Mode */
   --orb-purple: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
   --orb-orange: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
@@ -48,10 +63,32 @@
   --glass-bg: rgba(2, 17, 39, 0.55);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
 
-  /* Typography */
-  --text-primary: #f0f0f5;
-  --text-secondary: #a0a0b5;
+/* Rainbow Utility Classes */
+.rainbow-color-1 {
+  color: var(--rainbow-1);
+}
+
+.rainbow-color-2 {
+  color: var(--rainbow-2);
+}
+
+.rainbow-color-3 {
+  color: var(--rainbow-3);
+}
+
+.rainbow-color-4 {
+  color: var(--rainbow-4);
+}
+
+.rainbow-color-5 {
+  color: var(--rainbow-5);
+}
+
+/* Typography */
+--text-primary: #f0f0f5;
+--text-secondary: #a0a0b5;
 }
 
 /* =============================================
@@ -140,6 +177,10 @@ body {
   font-weight: 500;
   letter-spacing: 0.02em;
   transition: color 0.3s ease;
+}
+
+[data-theme='dark'] .nav-links a {
+  color: #d1c6f9;
 }
 
 .nav-links a:hover {
@@ -579,7 +620,8 @@ body {
   letter-spacing: 0.02em;
   line-height: 1.1;
   color: #09054D;
-  max-width: 14ch;
+  max-width: 100%;
+  /* Relaxed to allow "Bold websites for" on one line */
   margin: 0;
 }
 
@@ -589,6 +631,37 @@ body {
   font-family: 'Quikhand', sans-serif;
   color: #fc5b45;
   text-transform: uppercase;
+  position: relative;
+  /* For cursor/underline positioning */
+  z-index: 1;
+  /* Ensure text sits on top of underline */
+  display: inline-block;
+  /* Required for transform alignment */
+}
+
+/* Rough Torn-Paper Marker Underline */
+.highlight-bold::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  /* Sits at the baseline */
+  left: -5%;
+  width: 110%;
+  height: 0.35em;
+  /* Thick highlighter thickness */
+  background-color: #372CE9;
+  /* User specified blue */
+  z-index: -1;
+  transform: rotate(-2deg);
+  /* Organic tilt */
+
+  /* Rough edges via clip-path */
+  clip-path: polygon(0% 10%, 5% 0%, 15% 12%, 25% 0%, 35% 10%, 45% 0%, 55% 12%, 65% 0%, 75% 10%, 85% 0%, 95% 12%, 100% 0%,
+      /* Top zig-zag */
+      100% 90%, 95% 100%, 85% 92%, 75% 100%, 65% 90%, 55% 100%, 45% 92%, 35% 100%, 25% 85%, 15% 100%, 5% 90%, 0% 100%
+      /* Bottom zig-zag */
+    );
+  opacity: 0.9;
 }
 
 .highlight-ambitious {
@@ -597,6 +670,38 @@ body {
   /* Updated to Christmas Candy */
   color: #902207;
   text-transform: uppercase;
+  position: relative;
+  /* For cursor positioning if absolute */
+}
+
+/* Typewriter Cursor */
+.highlight-ambitious::after {
+  content: '|';
+  display: inline-block;
+  margin-left: 2px;
+  color: #333;
+  font-weight: 100;
+  /* Thin cursor */
+  animation: cursorBlink 1s step-end infinite;
+}
+
+@keyframes cursorBlink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+.highlight-dot {
+  color: #372CE9;
+  /* Matches the marker */
+  font-family: 'MyKidsHandwritten', sans-serif;
+  /* Keep consistent with 'brands' */
 }
 
 /* Dark Mode Overrides for Accessibility */
@@ -626,6 +731,10 @@ body {
   margin-bottom: 2rem;
 }
 
+[data-theme='dark'] .hero-subheadline {
+  color: #d1c6f9;
+}
+
 /* =============================================
    TAGLINE (Beyond the Blueprint)
    ============================================= */
@@ -647,20 +756,18 @@ body {
   font-family: 'VTKSNoise', sans-serif;
   font-size: 1.5rem;
   font-weight: 500;
-  color: #fc5b45;
+  color: #902207;
   text-transform: none;
   /* Removed uppercase */
   letter-spacing: 0.02em;
   /* Reduced spacing slightly for normal case */
 
-  /* Gradient Text Effect */
-  background: linear-gradient(90deg, #fc5b45, #902207);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-
   padding-bottom: 0.25rem;
   /* Space between text and underline */
+}
+
+[data-theme='dark'] .hero-tag {
+  color: #fed7d4;
 }
 
 /* Hand-Drawn SVG Underline */
