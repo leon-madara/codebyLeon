@@ -14,266 +14,347 @@
 </head>
 
 <body>
-    <!-- NAVIGATION -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <img src="src/assets/icons/main SVG.svg" alt="Code by Leon" class="logo-svg">
-            </a>
+    <!-- CONFIGURATOR CONTAINER -->
+    <main class="configurator">
+        <!-- Header -->
+        <header class="configurator-header">
+            <a href="index.html" class="back-link">— Back</a>
 
-            <a href="index.html" class="back-link">← Back to Home</a>
-
-            <!-- Theme Toggle -->
-            <div class="theme-toggle-wrapper">
-                <div class="toggle-switch" id="themeToggle">
-                    <div class="toggle-background">
-                        <div class="scenery day-scenery">
-                            <div class="cloud cloud-1"></div>
-                            <div class="cloud cloud-2"></div>
-                            <div class="cloud cloud-3"></div>
+            <!-- Right: Theme Toggle -->
+            <div class="header-right">
+                <div class="theme-toggle-wrapper">
+                    <div class="toggle-switch" id="themeToggle">
+                        <div class="toggle-background">
+                            <div class="scenery day-scenery">
+                                <div class="cloud cloud-1"></div>
+                                <div class="cloud cloud-2"></div>
+                                <div class="cloud cloud-3"></div>
+                                <div class="cloud cloud-4"></div>
+                                <div class="cloud cloud-5"></div>
+                            </div>
+                            <div class="scenery night-scenery">
+                                <div class="star star-1">✦</div>
+                                <div class="star star-2">★</div>
+                                <div class="star star-3">✦</div>
+                            </div>
                         </div>
-                        <div class="scenery night-scenery">
-                            <div class="star star-1">✦</div>
-                            <div class="star star-2">★</div>
-                            <div class="star star-3">✦</div>
+                        <div class="toggle-knob">
+                            <div class="crater crater-1"></div>
+                            <div class="crater crater-2"></div>
+                            <div class="crater crater-3"></div>
                         </div>
-                    </div>
-                    <div class="toggle-knob">
-                        <div class="crater crater-1"></div>
-                        <div class="crater crater-2"></div>
-                        <div class="crater crater-3"></div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
-
-    <!-- CONFIGURATOR CONTAINER -->
-    <main class="configurator-container">
-        <!-- Background Orbs (same as homepage) -->
-        <div class="orbs-container">
-            <div class="orb orb-purple"></div>
-            <div class="orb orb-orange"></div>
-            <div class="orb orb-blue"></div>
-        </div>
-
-        <!-- Frosted Overlay -->
-        <div class="frosted-overlay"></div>
-
-        <!-- Progress Indicator -->
-        <div class="progress-container">
-            <div class="progress-dots">
-                <div class="dot active" data-step="1"></div>
-                <div class="dot" data-step="2"></div>
-                <div class="dot" data-step="3"></div>
-                <div class="dot" data-step="4"></div>
-                <div class="dot" data-step="5"></div>
-                <div class="dot" data-step="6"></div>
-            </div>
-        </div>
+        </header>
 
         <!-- Content Area -->
         <div class="configurator-content">
+            <!-- Center: Progress Label & Track -->
+            <div class="progress-section">
+                <span class="progress-label">Get Started</span>
+                <div class="progress-bar">
+                    <div class="progress-track"></div>
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <!-- Close Button -->
+            <a href="index.html" class="close-btn" title="Exit">✕</a>
 
             <!-- STEP 1: Business Identity -->
             <div class="step active" data-step="1">
-                <div class="step-header">
-                    <h1 class="step-title">First, tell us about yourself</h1>
-                    <p class="step-subtitle">This helps us understand your needs</p>
-                </div>
+                <p class="step-label">How much does this sound like you?</p>
+                <h1 class="step-title">Tell us about yourself</h1>
 
-                <div class="options-grid">
+                <div class="options-grid options-4">
                     <button class="option-card" data-value="small-business">
-                        <span class="option-icon">🏢</span>
-                        <h3 class="option-title">Small Business Owner</h3>
-                        <p class="option-description">I run a local shop or service business</p>
+                        <span class="option-emoji">🏢</span>
+                        <span class="option-text">Small Business Owner</span>
                     </button>
-
                     <button class="option-card" data-value="creative">
-                        <span class="option-icon">🎨</span>
-                        <h3 class="option-title">Creative Professional</h3>
-                        <p class="option-description">I'm a photographer, designer, or artist</p>
+                        <span class="option-emoji">🎨</span>
+                        <span class="option-text">Creative Professional</span>
                     </button>
-
                     <button class="option-card" data-value="startup">
-                        <span class="option-icon">🚀</span>
-                        <h3 class="option-title">Startup Founder</h3>
-                        <p class="option-description">I'm launching something new</p>
+                        <span class="option-emoji">🚀</span>
+                        <span class="option-text">Startup Founder</span>
                     </button>
-
                     <button class="option-card" data-value="growing">
-                        <span class="option-icon">🔄</span>
-                        <h3 class="option-title">Growing Brand</h3>
-                        <p class="option-description">I have an established business that's scaling</p>
+                        <span class="option-emoji">🔄</span>
+                        <span class="option-text">Growing Brand</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 2: Current Presence -->
+            <!-- FEEDBACK 1: After Step 1 -->
+            <div class="step feedback-step" data-step="feedback-1">
+                <div class="feedback-content">
+                    <div class="feedback-icon">🎉</div>
+                    <p class="feedback-label">All set!</p>
+                    <h2 class="feedback-title">We've worked with <span class="highlight">47+ businesses</span> like
+                        yours</h2>
+                    <p class="feedback-message">Your <strong>business type</strong> is exactly what we specialize in.
+                        Just a few more questions and we'll <strong>match you</strong> with the <strong>perfect
+                            solution</strong>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 2: Current Digital Presence -->
             <div class="step" data-step="2">
-                <div class="step-header">
-                    <h1 class="step-title">Where are you starting from?</h1>
-                    <p class="step-subtitle">We'll build on what you have—or start fresh</p>
-                </div>
+                <p class="step-label">Where are you starting from?</p>
+                <h1 class="step-title">What's your current website situation?</h1>
 
-                <div class="options-grid">
+                <div class="options-grid options-4">
                     <button class="option-card" data-value="no-website">
-                        <span class="option-icon">❌</span>
-                        <h3 class="option-title">No Website Yet</h3>
-                        <p class="option-description">I'm starting from scratch</p>
+                        <span class="option-emoji">❌</span>
+                        <span class="option-text">No Website Yet</span>
                     </button>
-
                     <button class="option-card" data-value="diy-site">
-                        <span class="option-icon">🛠️</span>
-                        <h3 class="option-title">DIY Website</h3>
-                        <p class="option-description">I built it on Wix, WordPress, or Squarespace</p>
+                        <span class="option-emoji">🛠️</span>
+                        <span class="option-text">DIY Website</span>
                     </button>
-
                     <button class="option-card" data-value="outdated">
-                        <span class="option-icon">📉</span>
-                        <h3 class="option-title">Outdated Website</h3>
-                        <p class="option-description">I have a site, but it looks old or doesn't work well</p>
+                        <span class="option-emoji">📉</span>
+                        <span class="option-text">Outdated Site</span>
                     </button>
-
                     <button class="option-card" data-value="modern">
-                        <span class="option-icon">✅</span>
-                        <h3 class="option-title">Modern Site</h3>
-                        <p class="option-description">My site looks good—I just need support or features</p>
+                        <span class="option-emoji">✅</span>
+                        <span class="option-text">Modern Site</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 3: Primary Goal -->
+            <!-- STEP 3: Primary Business Goal -->
             <div class="step" data-step="3">
-                <div class="step-header">
-                    <h1 class="step-title">What's most important to you?</h1>
-                    <p class="step-subtitle">Choose your top priority</p>
-                </div>
+                <p class="step-label">What's most important to you?</p>
+                <h1 class="step-title">Choose your top priority</h1>
 
-                <div class="options-grid">
+                <div class="options-grid options-4">
                     <button class="option-card" data-value="leads">
-                        <span class="option-icon">🎯</span>
-                        <h3 class="option-title">Generate More Leads</h3>
-                        <p class="option-description">I want people to contact me or sign up</p>
+                        <span class="option-emoji">🎯</span>
+                        <span class="option-text">Generate Leads</span>
                     </button>
-
                     <button class="option-card" data-value="credibility">
-                        <span class="option-icon">💼</span>
-                        <h3 class="option-title">Establish Credibility</h3>
-                        <p class="option-description">I need to look professional and trustworthy</p>
+                        <span class="option-emoji">💼</span>
+                        <span class="option-text">Build Credibility</span>
                     </button>
-
                     <button class="option-card" data-value="ecommerce">
-                        <span class="option-icon">📱</span>
-                        <h3 class="option-title">Sell Products/Services Online</h3>
-                        <p class="option-description">I want an online store or booking system</p>
+                        <span class="option-emoji">🛒</span>
+                        <span class="option-text">Sell Online</span>
                     </button>
-
                     <button class="option-card" data-value="portfolio">
-                        <span class="option-icon">🎨</span>
-                        <h3 class="option-title">Showcase My Portfolio</h3>
-                        <p class="option-description">I need a beautiful gallery for my work</p>
+                        <span class="option-emoji">🖼️</span>
+                        <span class="option-text">Showcase Work</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 4: Timeline -->
+            <!-- FEEDBACK 2: After Step 3 -->
+            <div class="step feedback-step" data-step="feedback-2">
+                <div class="feedback-content">
+                    <div class="feedback-icon">💪</div>
+                    <p class="feedback-label">Excellent choice!</p>
+                    <h2 class="feedback-title">Businesses with <span class="highlight">clear goals</span> see 3x better
+                        results</h2>
+                    <p class="feedback-message">We're almost there! Just a few more details and we'll have everything
+                        needed to <strong>craft your perfect solution</strong>.</p>
+                </div>
+            </div>
+
+            <!-- STEP 4: Project Timeline -->
             <div class="step" data-step="4">
-                <div class="step-header">
-                    <h1 class="step-title">How soon do you need this live?</h1>
-                    <p class="step-subtitle">We offer rush options for urgent launches</p>
-                </div>
+                <p class="step-label">How soon do you need this live?</p>
+                <h1 class="step-title">What's your timeline?</h1>
 
-                <div class="options-grid">
+                <div class="options-grid options-3">
                     <button class="option-card" data-value="asap">
-                        <span class="option-icon">⚡</span>
-                        <h3 class="option-title">ASAP (1-2 Weeks)</h3>
-                        <p class="option-description">I need it yesterday—rush pricing applies</p>
+                        <span class="option-emoji">⚡</span>
+                        <span class="option-text">ASAP (1-2 Weeks)</span>
                     </button>
-
                     <button class="option-card" data-value="month">
-                        <span class="option-icon">📅</span>
-                        <h3 class="option-title">Within a Month</h3>
-                        <p class="option-description">Next 2-4 weeks is ideal</p>
+                        <span class="option-emoji">📅</span>
+                        <span class="option-text">Within a Month</span>
                     </button>
-
                     <button class="option-card" data-value="flexible">
-                        <span class="option-icon">🕐</span>
-                        <h3 class="option-title">Flexible (2-3 Months)</h3>
-                        <p class="option-description">I'm planning ahead—no rush</p>
+                        <span class="option-emoji">🕐</span>
+                        <span class="option-text">Flexible (2-3 Months)</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 5: Budget -->
+            <!-- STEP 5: Budget Range -->
             <div class="step" data-step="5">
-                <div class="step-header">
-                    <h1 class="step-title">What's your budget for this project?</h1>
-                    <p class="step-subtitle">Be honest—we have options for every stage</p>
-                </div>
+                <p class="step-label">Be honest—we have options for every stage</p>
+                <h1 class="step-title">What's your budget?</h1>
 
-                <div class="options-grid">
+                <div class="options-grid options-4">
                     <button class="option-card" data-value="budget-low">
-                        <span class="option-icon">💰</span>
-                        <h3 class="option-title">KES 30,000 - 50,000</h3>
-                        <p class="option-description">Launch Site Package</p>
+                        <span class="option-emoji">💰</span>
+                        <span class="option-text">KES 30K - 50K</span>
                     </button>
-
                     <button class="option-card" data-value="budget-mid">
-                        <span class="option-icon">💵</span>
-                        <h3 class="option-title">KES 50,000 - 100,000</h3>
-                        <p class="option-description">Brand Refresh or Custom Build</p>
+                        <span class="option-emoji">💵</span>
+                        <span class="option-text">KES 50K - 100K</span>
                     </button>
-
                     <button class="option-card" data-value="budget-high">
-                        <span class="option-icon">💎</span>
-                        <h3 class="option-title">KES 100,000+</h3>
-                        <p class="option-description">Premium or E-Commerce Solution</p>
+                        <span class="option-emoji">💎</span>
+                        <span class="option-text">KES 100K+</span>
                     </button>
-
                     <button class="option-card" data-value="budget-unsure">
-                        <span class="option-icon">🤔</span>
-                        <h3 class="option-title">Not Sure Yet</h3>
-                        <p class="option-description">Let's discuss what makes sense</p>
+                        <span class="option-emoji">🤔</span>
+                        <span class="option-text">Not Sure Yet</span>
                     </button>
                 </div>
             </div>
 
-            <!-- STEP 6: Recommendation -->
-            <div class="step" data-step="6">
-                <div class="recommendation-container">
-                    <div class="recommendation-header">
-                        <span class="recommendation-badge">✨ Your Perfect Fit</span>
-                        <h1 class="recommendation-title" id="packageName">10-Day Launch Site</h1>
-                        <p class="recommendation-price" id="packagePrice">KES 35,000 - KES 45,000</p>
-                    </div>
+            <!-- FEEDBACK 3: After Step 5 -->
+            <div class="step feedback-step" data-step="feedback-3">
+                <div class="feedback-content">
+                    <div class="feedback-icon">🙏</div>
+                    <p class="feedback-label">Thanks for being honest!</p>
+                    <h2 class="feedback-title">We'll recommend <span class="highlight">the best value</span> for your
+                        investment</h2>
+                    <p class="feedback-message">Every shilling counts—we're committed to <strong>delivering
+                            results</strong> that <strong>exceed expectations</strong>. Almost done!</p>
+                </div>
+            </div>
 
-                    <div class="recommendation-section">
-                        <h3 class="section-heading">Why This Works for You:</h3>
-                        <ul class="recommendation-list" id="whyList">
-                            <li>Starting fresh (no old code to fix)</li>
-                            <li>Fast timeline (ASAP launch)</li>
+            <!-- STEP 6: Additional Needs (Multi-select) -->
+            <div class="step" data-step="6">
+                <p class="step-label">Select all that apply</p>
+                <h1 class="step-title">What else matters to you?</h1>
+
+                <div class="options-grid options-multi">
+                    <button class="option-card multi-select" data-value="mobile-first">
+                        <span class="option-emoji">📱</span>
+                        <span class="option-text">Mobile-First Design</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="seo">
+                        <span class="option-emoji">🔍</span>
+                        <span class="option-text">SEO Optimization</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="whatsapp">
+                        <span class="option-emoji">💬</span>
+                        <span class="option-text">WhatsApp Integration</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="analytics">
+                        <span class="option-emoji">📊</span>
+                        <span class="option-text">Analytics & Tracking</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="branding">
+                        <span class="option-emoji">🎨</span>
+                        <span class="option-text">Brand Identity</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="email">
+                        <span class="option-emoji">📧</span>
+                        <span class="option-text">Email Marketing</span>
+                    </button>
+                    <button class="option-card multi-select" data-value="support">
+                        <span class="option-emoji">🔄</span>
+                        <span class="option-text">Ongoing Support</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- STEP 7: Contact Information -->
+            <div class="step" data-step="7">
+                <p class="step-label">Almost there! We'll send your personalized recommendation</p>
+                <h1 class="step-title">How can we reach you?</h1>
+
+                <form class="contact-form" id="contactForm">
+                    <div class="form-group">
+                        <label for="userName">Your Name *</label>
+                        <input type="text" id="userName" name="name" placeholder="John Doe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userEmail">Email Address *</label>
+                        <input type="email" id="userEmail" name="email" placeholder="john@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="userPhone">Phone (WhatsApp)</label>
+                        <input type="tel" id="userPhone" name="phone" placeholder="+254 7XX XXX XXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="businessName">Business Name</label>
+                        <input type="text" id="businessName" name="business" placeholder="Your Business Ltd">
+                    </div>
+                </form>
+
+                <div class="trust-badges">
+                    <div class="trust-badge">
+                        <span class="badge-check">✓</span>
+                        <span>We do not send spam</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="badge-check">✓</span>
+                        <span>We do not share your info</span>
+                    </div>
+                    <div class="trust-badge">
+                        <span class="badge-check">✓</span>
+                        <span>Free 20-min call—no obligation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PROCESSING: Animated Loading -->
+            <div class="step processing-step" data-step="processing">
+                <div class="processing-content">
+                    <div class="spinner"></div>
+                    <h2 class="processing-title">Finding your perfect solution...</h2>
+
+                    <div class="processing-checklist">
+                        <div class="checklist-item" data-item="1">
+                            <span class="checklist-icon pending">○</span>
+                            <span>Analyzing your needs</span>
+                        </div>
+                        <div class="checklist-item" data-item="2">
+                            <span class="checklist-icon pending">○</span>
+                            <span>Matching with packages</span>
+                        </div>
+                        <div class="checklist-item" data-item="3">
+                            <span class="checklist-icon pending">○</span>
+                            <span>Preparing recommendation</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STEP 8: Final Recommendation -->
+            <div class="step" data-step="8">
+                <div class="result-content">
+                    <div class="result-icon">🎉</div>
+                    <p class="result-label">All set!</p>
+                    <h2 class="result-title">Your perfect fit: <span class="highlight" id="packageName">10-Day Launch
+                            Site</span></h2>
+                    <p class="result-price" id="packagePrice">KES 35,000 - KES 45,000</p>
+
+                    <div class="result-section">
+                        <h3>Why this works for you:</h3>
+                        <ul class="result-list" id="whyList">
+                            <li>Starting fresh—no old code to fix</li>
+                            <li>Fast timeline matches your needs</li>
                             <li>Budget-friendly starter package</li>
                         </ul>
                     </div>
 
-                    <div class="recommendation-section">
-                        <h3 class="section-heading">What's Included:</h3>
-                        <ul class="recommendation-list" id="includedList">
+                    <div class="result-section">
+                        <h3>What's included:</h3>
+                        <ul class="result-list features" id="includedList">
                             <li>✓ 3-5 Page Custom Site</li>
                             <li>✓ Mobile-Responsive Design</li>
-                            <li>✓ Contact Forms & WhatsApp Integration</li>
+                            <li>✓ Contact Forms & WhatsApp</li>
                             <li>✓ Google Maps & Social Links</li>
                             <li>✓ 1 Month Free Support</li>
                         </ul>
                     </div>
 
-                    <div class="recommendation-ctas">
+                    <div class="result-ctas">
                         <a href="https://calendly.com/your-link" class="cta-primary" target="_blank">
-                            📞 Book Your Free Strategy Call
+                            📞 Book Free Strategy Call
                         </a>
                         <a href="https://wa.me/254YOUR-NUMBER" class="cta-secondary" target="_blank">
-                            💬 WhatsApp Leon Directly
+                            💬 WhatsApp Leon
                         </a>
                     </div>
                 </div>
@@ -283,11 +364,12 @@
 
         <!-- Navigation Controls -->
         <div class="nav-controls">
-            <button class="btn-back" id="btnBack">← Back</button>
             <button class="btn-continue" id="btnContinue" disabled>Continue</button>
         </div>
     </main>
 
+    <!-- GSAP Core -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="src/scripts/configurator.js"></script>
     <script>
         // Theme Toggle Logic
@@ -308,6 +390,130 @@
             localStorage.setItem('theme', newTheme);
             themeToggle.classList.toggle('active');
         });
+
+        // =============================================
+        // CLOSE BUTTON ANIMATIONS
+        // =============================================
+        (function() {
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            if (prefersReducedMotion) {
+                return; // Skip animations if user prefers reduced motion
+            }
+
+            const closeBtn = document.querySelector('.close-btn');
+            if (!closeBtn) return;
+
+            let hoverTimeline = null;
+            let isClicked = false;
+            let vaporContainer = null;
+
+            // Initialize vapor container
+            function initVaporContainer() {
+                if (!vaporContainer) {
+                    vaporContainer = document.createElement('div');
+                    vaporContainer.className = 'vapor-container';
+                    document.body.appendChild(vaporContainer);
+                }
+                return vaporContainer;
+            }
+
+            // Create vapor particle effect
+            function createVaporEffect(event) {
+                const container = initVaporContainer();
+                const rect = closeBtn.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                // Create 12-15 particles
+                const particleCount = 12 + Math.floor(Math.random() * 4);
+                const particles = [];
+
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.className = 'vapor-particle';
+                    container.appendChild(particle);
+                    particles.push(particle);
+
+                    // Random direction and distance
+                    const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
+                    const distance = 40 + Math.random() * 30;
+                    const targetX = centerX + Math.cos(angle) * distance;
+                    const targetY = centerY + Math.sin(angle) * distance;
+
+                    // Random size variation
+                    const size = 4 + Math.random() * 4;
+                    particle.style.width = size + 'px';
+                    particle.style.height = size + 'px';
+
+                    // Random opacity
+                    const opacity = 0.4 + Math.random() * 0.4;
+                    particle.style.background = `rgba(220, 38, 38, ${opacity})`;
+
+                    // Set initial position
+                    gsap.set(particle, {
+                        x: centerX,
+                        y: centerY,
+                        opacity: opacity,
+                        scale: 0.5
+                    });
+
+                    // Animate particle
+                    gsap.to(particle, {
+                        x: targetX,
+                        y: targetY,
+                        opacity: 0,
+                        scale: 1.5 + Math.random() * 0.5,
+                        duration: 0.6 + Math.random() * 0.2,
+                        ease: 'power2.out',
+                        onComplete: () => {
+                            particle.remove();
+                        }
+                    });
+                }
+            }
+
+            // Hover enter: Start rotation animation
+            closeBtn.addEventListener('mouseenter', () => {
+                if (isClicked) return;
+
+                // Kill any existing timeline
+                if (hoverTimeline) {
+                    hoverTimeline.kill();
+                }
+
+                // Create new timeline for 4 rotations (fast to slow)
+                hoverTimeline = gsap.timeline();
+                hoverTimeline.to(closeBtn, {
+                    rotation: 1440, // 4 full rotations
+                    duration: 1.2,
+                    ease: 'power2.out' // Fast start, slow end
+                });
+            });
+
+            // Mouse leave: Reverse rotation if not clicked
+            closeBtn.addEventListener('mouseleave', () => {
+                if (!isClicked && hoverTimeline) {
+                    hoverTimeline.reverse();
+                }
+            });
+
+            // Click: Vapor effect + navigation
+            closeBtn.addEventListener('click', (e) => {
+                isClicked = true;
+                
+                // Kill hover animation
+                if (hoverTimeline) {
+                    hoverTimeline.kill();
+                }
+
+                // Create vapor effect
+                createVaporEffect(e);
+
+                // Navigation happens immediately (browser default behavior)
+                // The vapor effect will continue playing during navigation
+            });
+        })();
     </script>
 </body>
 
