@@ -781,8 +781,8 @@ body {
 }
 
 .underline-path {
-  stroke-dasharray: 250;
-  stroke-dashoffset: 250;
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
   animation: drawUnderline 1.2s ease-out 1.5s forwards;
 }
 
@@ -1021,29 +1021,57 @@ body {
    PORTFOLIO SECTION
    ============================================= */
 .portfolio-filters {
-  display: flex;
+  display: inline-flex;
   justify-content: center;
-  gap: 1rem;
+  align-items: center;
+  gap: 0;
   margin-bottom: 3rem;
   flex-wrap: wrap;
+  background: rgba(180, 180, 180, 0.4);
+  border-radius: 12px;
+  padding: 0.5rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+[data-theme="dark"] .portfolio-filters {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .filter-btn {
-  padding: 0.75rem 1.5rem;
+  padding: 0.625rem 1.25rem;
   background: transparent;
-  border: 2px solid var(--glass-border);
-  border-radius: 50px;
+  border: none;
+  border-radius: 8px;
   color: var(--text-secondary);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
-.filter-btn:hover,
+[data-theme="dark"] .filter-btn {
+  color: #a0a0b5;
+}
+
+.filter-btn:hover {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .filter-btn:hover {
+  color: #f0f0f5;
+}
+
 .filter-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: var(--text-primary);
+  color: white;
+  font-weight: 600;
+}
+
+[data-theme="dark"] .filter-btn.active {
+  background: #2d2d2d;
   color: white;
 }
 
