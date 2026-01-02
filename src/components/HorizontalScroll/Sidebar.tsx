@@ -11,20 +11,30 @@ const Sidebar = ({ currentStep, totalSteps }: SidebarProps) => {
   const [isBlogVisible, setIsBlogVisible] = useState(false);
 
   useEffect(() => {
-    const blogSection = document.querySelector('#blog');
-    if (!blogSection) return;
+    // Wait for DOM to be ready, then find blog section
+    const findAndObserveBlog = () => {
+      const blogSection = document.querySelector('#blog');
+      if (!blogSection) {
+        // Retry after a short delay if blog section not found
+        setTimeout(findAndObserveBlog, 100);
+        return;
+      }
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          setIsBlogVisible(entry.isIntersecting);
-        });
-      },
-      { threshold: 0.1 } // Trigger when 10% of blog section is visible
-    );
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            setIsBlogVisible(entry.isIntersecting);
+          });
+        },
+        { threshold: 0.1 } // Trigger when 10% of blog section is visible
+      );
 
-    observer.observe(blogSection);
-    return () => observer.disconnect();
+      observer.observe(blogSection);
+      return () => observer.disconnect();
+    };
+
+    const cleanup = findAndObserveBlog();
+    return cleanup;
   }, []);
 
   // Conditionally apply positioning: fixed when blog not visible, absolute when blog visible
