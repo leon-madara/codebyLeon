@@ -1,0 +1,443 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 150 30% 98%;
+    --foreground: 150 40% 10%;
+
+    --card: 150 25% 95%;
+    --card-foreground: 150 40% 10%;
+
+    --popover: 150 30% 98%;
+    --popover-foreground: 150 40% 10%;
+
+    --primary: 152 45% 25%;
+    --primary-foreground: 150 30% 98%;
+
+    --secondary: 145 35% 88%;
+    --secondary-foreground: 150 40% 15%;
+
+    --muted: 145 20% 92%;
+    --muted-foreground: 150 15% 45%;
+
+    --accent: 85 55% 50%;
+    --accent-foreground: 150 40% 10%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 145 25% 85%;
+    --input: 145 25% 85%;
+    --ring: 152 45% 25%;
+
+    --radius: 0.75rem;
+
+    /* Custom design tokens */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Forest gradient colors (Card 1 - Launch) */
+    --forest-dark: 152 45% 18%;
+    --forest-mid: 145 40% 35%;
+    --forest-light: 140 35% 55%;
+    --sage: 135 30% 75%;
+    --mint: 130 35% 88%;
+
+    /* Cyan/Blue colors (Card 2 - Brand Refresh) */
+    --cyan-dark: 195 70% 20%;
+    --cyan-mid: 195 65% 38%;
+    --cyan-light: 190 60% 55%;
+    --sky: 185 55% 72%;
+    --ice: 180 50% 88%;
+
+    /* Emerald/Green colors (Card 3 - Ongoing Support) */
+    --emerald-dark: 160 65% 18%;
+    --emerald-mid: 155 58% 35%;
+    --emerald-light: 150 52% 52%;
+    --teal: 145 45% 70%;
+    --seafoam: 140 40% 88%;
+
+    /* Card 1 - Forest/Nature beat gradients */
+    --card1-beat-1-start: 152 45% 22%;
+    --card1-beat-1-end: 145 38% 35%;
+    --card1-beat-2-start: 145 38% 35%;
+    --card1-beat-2-end: 140 35% 50%;
+    --card1-beat-3-start: 140 35% 50%;
+    --card1-beat-3-end: 135 32% 65%;
+    --card1-beat-4-start: 135 32% 65%;
+    --card1-beat-4-end: 130 30% 80%;
+
+    /* Card 2 - Cyan/Blue beat gradients */
+    --card2-beat-1-start: 195 70% 20%;
+    --card2-beat-1-end: 195 62% 35%;
+    --card2-beat-2-start: 195 62% 35%;
+    --card2-beat-2-end: 190 55% 48%;
+    --card2-beat-3-start: 190 55% 48%;
+    --card2-beat-3-end: 185 50% 62%;
+    --card2-beat-4-start: 185 50% 62%;
+    --card2-beat-4-end: 180 45% 78%;
+
+    /* Card 3 - Emerald/Green beat gradients */
+    --card3-beat-1-start: 160 65% 18%;
+    --card3-beat-1-end: 155 55% 32%;
+    --card3-beat-2-start: 155 55% 32%;
+    --card3-beat-2-end: 150 50% 45%;
+    --card3-beat-3-start: 150 50% 45%;
+    --card3-beat-3-end: 145 45% 60%;
+    --card3-beat-4-start: 145 45% 60%;
+    --card3-beat-4-end: 140 40% 76%;
+
+    /* Legacy beat gradients (fallback) */
+    --beat-1-start: 152 45% 22%;
+    --beat-1-end: 145 38% 35%;
+    --beat-2-start: 145 38% 35%;
+    --beat-2-end: 140 35% 50%;
+    --beat-3-start: 140 35% 50%;
+    --beat-3-end: 135 32% 65%;
+    --beat-4-start: 135 32% 65%;
+    --beat-4-end: 130 30% 80%;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(152 45% 25% / 0.15);
+    --shadow-medium: 0 8px 30px -6px hsl(152 45% 25% / 0.25);
+    --shadow-glow: 0 0 40px hsl(85 55% 50% / 0.3);
+
+    --sidebar-background: 150 30% 98%;
+    --sidebar-foreground: 150 40% 15%;
+    --sidebar-primary: 152 45% 25%;
+    --sidebar-primary-foreground: 150 30% 98%;
+    --sidebar-accent: 145 35% 88%;
+    --sidebar-accent-foreground: 150 40% 15%;
+    --sidebar-border: 145 25% 85%;
+    --sidebar-ring: 152 45% 25%;
+  }
+
+  .dark {
+    --background: 152 35% 8%;
+    --foreground: 145 25% 92%;
+
+    --card: 152 30% 12%;
+    --card-foreground: 145 25% 92%;
+
+    --popover: 152 30% 12%;
+    --popover-foreground: 145 25% 92%;
+
+    --primary: 140 40% 65%;
+    --primary-foreground: 152 35% 8%;
+
+    --secondary: 150 25% 18%;
+    --secondary-foreground: 145 25% 92%;
+
+    --muted: 150 20% 15%;
+    --muted-foreground: 145 15% 60%;
+
+    --accent: 85 50% 55%;
+    --accent-foreground: 152 35% 8%;
+
+    --destructive: 0 62.8% 50%;
+    --destructive-foreground: 145 25% 92%;
+
+    --border: 150 25% 20%;
+    --input: 150 25% 20%;
+    --ring: 140 40% 65%;
+
+    --sidebar-background: 152 30% 10%;
+    --sidebar-foreground: 145 25% 92%;
+    --sidebar-primary: 140 40% 65%;
+    --sidebar-primary-foreground: 152 35% 8%;
+    --sidebar-accent: 150 25% 18%;
+    --sidebar-accent-foreground: 145 25% 92%;
+    --sidebar-border: 150 25% 20%;
+    --sidebar-ring: 140 40% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-body);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer components {
+  .beat-card {
+    @apply relative flex flex-col items-center justify-center text-center p-8 lg:p-12;
+  }
+
+  .progress-marker {
+    @apply relative flex flex-col items-center gap-2 transition-all duration-300;
+  }
+
+  .progress-marker-dot {
+    @apply w-3 h-3 rounded-full border-2 border-muted-foreground/30 bg-transparent transition-all duration-300;
+  }
+
+  .progress-marker-dot.active {
+    @apply border-primary bg-primary scale-125;
+  }
+
+  .progress-marker-dot.completed {
+    @apply border-primary bg-primary;
+  }
+
+  .progress-marker-label {
+    @apply text-xs font-semibold uppercase tracking-wider text-muted-foreground/60 transition-all duration-300;
+  }
+
+  .progress-marker-label.active {
+    @apply text-primary scale-105;
+  }
+
+  .wave-divider {
+    @apply absolute left-0 right-0 h-24 pointer-events-none;
+  }
+
+  .scroll-hint {
+    @apply fixed bottom-8 right-8 flex items-center gap-2 px-4 py-2 rounded-full bg-primary/90 text-primary-foreground text-sm font-medium shadow-lg backdrop-blur-sm transition-opacity duration-500;
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .gradient-forest {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--forest-dark)) 0%,
+      hsl(var(--forest-mid)) 50%,
+      hsl(var(--forest-light)) 100%
+    );
+  }
+
+  .gradient-cyan {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--cyan-dark)) 0%,
+      hsl(var(--cyan-mid)) 50%,
+      hsl(var(--cyan-light)) 100%
+    );
+  }
+
+  .gradient-emerald {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--emerald-dark)) 0%,
+      hsl(var(--emerald-mid)) 50%,
+      hsl(var(--emerald-light)) 100%
+    );
+  }
+
+  /* Card 1 - Forest beat gradients (legacy) */
+  .gradient-beat-1 {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--beat-1-start)) 0%,
+      hsl(var(--beat-1-end)) 100%
+    );
+  }
+
+  .gradient-beat-2 {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--beat-2-start)) 0%,
+      hsl(var(--beat-2-end)) 100%
+    );
+  }
+
+  .gradient-beat-3 {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--beat-3-start)) 0%,
+      hsl(var(--beat-3-end)) 100%
+    );
+  }
+
+  .gradient-beat-4 {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--beat-4-start)) 0%,
+      hsl(var(--beat-4-end)) 100%
+    );
+  }
+
+  /* Card 1 - Forest beats */
+  .card1-beat-1 {
+    background: linear-gradient(135deg, hsl(var(--card1-beat-1-start)) 0%, hsl(var(--card1-beat-1-end)) 100%);
+  }
+  .card1-beat-2 {
+    background: linear-gradient(135deg, hsl(var(--card1-beat-2-start)) 0%, hsl(var(--card1-beat-2-end)) 100%);
+  }
+
+  /* Reduce content wrapper size in all card1 beats by 30% */
+  .card1-beat-1 > div.max-w-2xl,
+  .card1-beat-2 > div.max-w-2xl,
+  .card1-beat-3 > div.max-w-2xl,
+  .card1-beat-4 > div.max-w-2xl {
+    max-width: 29.4rem !important; /* 70% of max-w-2xl (42rem) */
+    transform: scale(0.7);
+    transform-origin: center;
+  }
+  .card1-beat-3 {
+    background: linear-gradient(135deg, hsl(var(--card1-beat-3-start)) 0%, hsl(var(--card1-beat-3-end)) 100%);
+  }
+  .card1-beat-4 {
+    background: linear-gradient(135deg, hsl(var(--card1-beat-4-start)) 0%, hsl(var(--card1-beat-4-end)) 100%);
+  }
+
+  /* Card 2 - Cyan/Blue beats */
+  .card2-beat-1 {
+    background: linear-gradient(135deg, hsl(var(--card2-beat-1-start)) 0%, hsl(var(--card2-beat-1-end)) 100%);
+  }
+  .card2-beat-2 {
+    background: linear-gradient(135deg, hsl(var(--card2-beat-2-start)) 0%, hsl(var(--card2-beat-2-end)) 100%);
+    min-width: 80vw !important;
+    width: 80vw !important;
+    min-height: 80vh !important;
+  }
+  .card2-beat-3 {
+    background: linear-gradient(135deg, hsl(var(--card2-beat-3-start)) 0%, hsl(var(--card2-beat-3-end)) 100%);
+  }
+  .card2-beat-4 {
+    background: linear-gradient(135deg, hsl(var(--card2-beat-4-start)) 0%, hsl(var(--card2-beat-4-end)) 100%);
+  }
+
+  /* Card 3 - Emerald/Green beats */
+  .card3-beat-1 {
+    background: linear-gradient(135deg, hsl(var(--card3-beat-1-start)) 0%, hsl(var(--card3-beat-1-end)) 100%);
+  }
+  .card3-beat-2 {
+    background: linear-gradient(135deg, hsl(var(--card3-beat-2-start)) 0%, hsl(var(--card3-beat-2-end)) 100%);
+  }
+  .card3-beat-3 {
+    background: linear-gradient(135deg, hsl(var(--card3-beat-3-start)) 0%, hsl(var(--card3-beat-3-end)) 100%);
+  }
+  .card3-beat-4 {
+    background: linear-gradient(135deg, hsl(var(--card3-beat-4-start)) 0%, hsl(var(--card3-beat-4-end)) 100%);
+  }
+
+  /* Portfolio-style background layers for beat cards */
+  /* Morph animation for orbs */
+  @keyframes morph {
+    0%,
+    100% {
+      border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+    25% {
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      transform: translate(2%, 3%) rotate(3deg) scale(1.02);
+    }
+    50% {
+      border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+      transform: translate(5%, 5%) rotate(5deg) scale(1.05);
+    }
+    75% {
+      border-radius: 50% 40% 50% 60% / 35% 45% 55% 65%;
+      transform: translate(3%, 2%) rotate(2deg) scale(1.03);
+    }
+  }
+
+  /* Layer 2: Abstract Orbs Container - ::before pseudo-element */
+  .beat-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+    
+    /* Stack 3 radial gradients for orbs at different positions */
+    background-image: 
+      /* Purple orb - top-left */
+      radial-gradient(circle at -10% -10%, 
+        rgba(196, 181, 253, 0.7) 0%, 
+        rgba(167, 139, 250, 0.7) 50%, 
+        transparent 70%),
+      /* Orange orb - center */
+      radial-gradient(circle at 30% 20%, 
+        rgba(253, 186, 116, 0.7) 0%, 
+        rgba(251, 146, 60, 0.7) 50%, 
+        transparent 70%),
+      /* Blue orb - bottom-right */
+      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%), 
+        rgba(147, 197, 253, 0.7) 0%, 
+        rgba(96, 165, 250, 0.7) 50%, 
+        transparent 70%);
+    
+    background-size: 45vw 45vw, 55vw 55vw, 40vw 40vw;
+    background-repeat: no-repeat;
+    filter: blur(80px);
+    opacity: 0.7;
+    animation: morph 15s ease-in-out infinite;
+  }
+
+  /* Dark theme orb colors */
+  [data-theme="dark"] .beat-card::before {
+    background-image: 
+      /* Purple orb - top-left */
+      radial-gradient(circle at -10% -10%, 
+        rgba(139, 92, 246, 0.7) 0%, 
+        rgba(109, 40, 217, 0.7) 50%, 
+        transparent 70%),
+      /* Orange orb - center */
+      radial-gradient(circle at 30% 20%, 
+        rgba(249, 115, 22, 0.7) 0%, 
+        rgba(234, 88, 12, 0.7) 50%, 
+        transparent 70%),
+      /* Blue orb - bottom-right */
+      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%), 
+        rgba(59, 130, 246, 0.7) 0%, 
+        rgba(37, 99, 235, 0.7) 50%, 
+        transparent 70%);
+  }
+
+  /* Layer 3: Frosted Overlay with Dot-Grid - ::after pseudo-element */
+  .beat-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    
+    /* Frosted effect */
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    
+    /* Dot-grid pattern */
+    background-image: radial-gradient(circle, rgba(150, 150, 150, 0.15) 1px, transparent 1px);
+    background-size: 12px 12px;
+  }
+
+  /* Dark theme dot-grid color */
+  [data-theme="dark"] .beat-card::after {
+    background-image: radial-gradient(circle, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+  }
+
+  /* Ensure content is above overlay (Layer 4) */
+  .beat-card > div {
+    position: relative;
+    z-index: 3;
+  }
+}
