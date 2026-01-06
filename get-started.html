@@ -63,13 +63,21 @@
             <div class="progress-section">
                 <span class="progress-label">Get Started</span>
                 <div class="progress-bar">
-                    <div class="progress-track"></div>
+                    <div class="progress-track progress-circle-purple-1"></div>
+                    <div class="progress-track progress-circle-purple-2"></div>
+                    <div class="progress-track progress-circle-blue-1"></div>
+                    <div class="progress-track progress-circle-blue-2"></div>
+                    <div class="progress-track progress-circle-green-1"></div>
+                    <div class="progress-track progress-circle-green-2"></div>
+                    <div class="progress-track progress-circle-orange-1"></div>
+                    <div class="progress-track progress-circle-orange-2"></div>
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
             </div>
 
             <!-- Close Button -->
-            <a href="index.html" class="close-btn" title="Exit">✕</a>
+            <a href="#" class="close-btn" title="Exit">✕</a>
+            <div class="close-btn-tooltip">Your progress will be saved</div>
 
             <!-- STEP 1: Business Identity -->
             <div class="step active" data-step="1">
@@ -373,7 +381,16 @@
 
         <!-- Navigation Controls -->
         <div class="nav-controls">
-            <button class="btn-continue" id="btnContinue" disabled>Continue</button>
+            <div class="btn-continue-wrapper">
+                <div class="btn-continue-bg">
+                    <div class="bg-shape bg-shape-1"></div>
+                    <div class="bg-shape bg-shape-2"></div>
+                    <div class="bg-shape bg-shape-3"></div>
+                    <div class="bg-shape bg-shape-4"></div>
+                    <div class="bg-shape bg-shape-5"></div>
+                </div>
+                <button class="btn-continue" id="btnContinue" disabled>Continue</button>
+            </div>
         </div>
     </main>
 
@@ -525,6 +542,20 @@
             });
         })();
     </script>
+
+    <!-- Save Info Modal -->
+    <div id="saveInfoModal" class="save-info-modal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <h3 class="modal-title">Save your information?</h3>
+            <p class="modal-message">Would you like to save your contact information before exiting?</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" id="saveAndExitBtn">Save & Exit</button>
+                <button class="modal-btn modal-btn-secondary" id="exitAndResetBtn">Exit & Reset</button>
+                <button class="modal-btn modal-btn-cancel" id="cancelModalBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>

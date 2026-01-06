@@ -59,6 +59,37 @@ class ServiceConfigurator {
         if (form) {
             form.addEventListener('input', () => this.validateForm());
         }
+
+        // Close button
+        const closeBtn = document.querySelector('.close-btn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.handleClose();
+            });
+        }
+
+        // Modal buttons
+        const saveAndExitBtn = document.getElementById('saveAndExitBtn');
+        if (saveAndExitBtn) {
+            saveAndExitBtn.addEventListener('click', () => this.handleSaveAndExit());
+        }
+
+        const exitAndResetBtn = document.getElementById('exitAndResetBtn');
+        if (exitAndResetBtn) {
+            exitAndResetBtn.addEventListener('click', () => this.handleExitAndReset());
+        }
+
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        if (cancelModalBtn) {
+            cancelModalBtn.addEventListener('click', () => this.hideSaveInfoModal());
+        }
+
+        // Close modal on backdrop click
+        const modalBackdrop = document.querySelector('.modal-backdrop');
+        if (modalBackdrop) {
+            modalBackdrop.addEventListener('click', () => this.hideSaveInfoModal());
+        }
     }
 
     selectOption(card) {
@@ -193,6 +224,28 @@ class ServiceConfigurator {
                 navControls.style.display = 'flex';
             }
         }
+
+        // Update tooltip visibility based on step
+        this.updateCloseButtonTooltip();
+    }
+
+    updateCloseButtonTooltip() {
+        const closeBtn = document.querySelector('.close-btn');
+        const tooltip = document.querySelector('.close-btn-tooltip');
+        if (!closeBtn || !tooltip) return;
+
+        const currentDataStep = this.getCurrentDataStep();
+        
+        // Show tooltip only for steps 1-6
+        if (currentDataStep <= 6) {
+            closeBtn.setAttribute('data-tooltip', 'true');
+            closeBtn.setAttribute('title', 'Your progress will be saved');
+            tooltip.style.display = 'block';
+        } else {
+            closeBtn.removeAttribute('data-tooltip');
+            closeBtn.removeAttribute('title');
+            tooltip.style.display = 'none';
+        }
     }
 
     updateProgress() {
@@ -215,6 +268,11 @@ class ServiceConfigurator {
             '6': 6, '7': 7, 'processing': 7, '8': 8
         };
         return dataStepMapping[stepId] || 1;
+    }
+
+    getCurrentDataStep() {
+        // Returns the actual data step number (1-8) for close button logic
+        return this.getDataStepIndex();
     }
 
     updateContinueState(stepId) {
@@ -404,6 +462,67 @@ class ServiceConfigurator {
                 console.error('Error loading saved progress:', e);
             }
         }
+    }
+
+    handleClose() {
+        const currentDataStep = this.getCurrentDataStep();
+        const currentStepId = this.stepFlow[this.currentIndex];
+
+        // Step 8: Show save modal
+        if (currentDataStep === 8) {
+            this.showSaveInfoModal();
+            return;
+        }
+
+        // Step 7+ (not 8): Clear progress and exit
+        if (currentDataStep === 7 || currentStepId === 'processing') {
+            this.clearProgress();
+            window.location.href = 'index.html';
+            return;
+        }
+
+        // Steps 1-6: Preserve progress and exit
+        this.saveProgress();
+        window.location.href = 'index.html';
+    }
+
+    clearProgress() {
+        localStorage.removeItem('configurator_progress');
+        this.currentIndex = 0;
+        this.answers = {};
+        this.additionalNeeds = [];
+    }
+
+    showSaveInfoModal() {
+        const modal = document.getElementById('saveInfoModal');
+        if (modal) {
+            modal.style.display = 'flex';
+        }
+    }
+
+    hideSaveInfoModal() {
+        const modal = document.getElementById('saveInfoModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    saveContactInfo() {
+        // Save only contact information separately
+        if (this.answers.contact) {
+            localStorage.setItem('configurator_contact', JSON.stringify(this.answers.contact));
+        }
+    }
+
+    handleSaveAndExit() {
+        this.saveContactInfo();
+        this.clearProgress();
+        window.location.href = 'index.html';
+    }
+
+    handleExitAndReset() {
+        this.clearProgress();
+        window.location.href = 'index.html';
     }
 }
 

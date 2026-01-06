@@ -77,7 +77,7 @@ const MultiCardScrollSection = () => {
   useEffect(() => {
     checkMobile();
     setIsReady(true);
-    
+
     let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(resizeTimer);
@@ -111,6 +111,7 @@ const MultiCardScrollSection = () => {
     }
   };
 
+
   // GSAP ScrollTrigger setup
   useLayoutEffect(() => {
     if (!isReady || isMobile) return;
@@ -125,7 +126,7 @@ const MultiCardScrollSection = () => {
 
           if (!section || !beatsContainer) return;
 
-          const scrollDistance = (TOTAL_BEATS - 1) * window.innerWidth;
+          const scrollDistance = (TOTAL_BEATS - 1) * window.innerWidth * 0.8;
 
           // Main horizontal scroll animation
           const mainTl = gsap.timeline({
@@ -135,13 +136,14 @@ const MultiCardScrollSection = () => {
               pinSpacing: true,
               start: 'top top',
               end: `+=${scrollDistance}`,
-              scrub: 1,
+              scrub: 0.5,
               anticipatePin: 1,
+              invalidateOnRefresh: true,
               snap: {
                 snapTo: 1 / (TOTAL_BEATS - 1),
-                duration: { min: 0.2, max: 0.6 },
-                delay: 0,
-                ease: 'power1.inOut',
+                duration: { min: 0.3, max: 0.8 },
+                delay: 0.05,
+                ease: 'power2.inOut',
               },
               onEnter: () => setActiveCard(cardIndex),
               onEnterBack: () => setActiveCard(cardIndex),
@@ -167,8 +169,8 @@ const MultiCardScrollSection = () => {
             ease: 'none',
           });
 
-          // Beat-specific animations
-          beatRefsArray.forEach((beat) => {
+          // Beat-specific animations with smoother easing
+          beatRefsArray.forEach((beat, beatIndex) => {
             if (!beat) return;
 
             const elements = {
@@ -179,53 +181,61 @@ const MultiCardScrollSection = () => {
               content: beat.querySelector('.beat-content'),
             };
 
+            // First beat should be visible immediately
+            if (beatIndex === 0) {
+              gsap.set([elements.icon, elements.title, elements.subtitle, elements.description, elements.content].filter(Boolean), {
+                opacity: 1, y: 0, scale: 1
+              });
+              return;
+            }
+
             const beatTl = gsap.timeline({
               scrollTrigger: {
                 trigger: beat,
                 containerAnimation: mainTl,
-                start: 'left center',
-                end: 'right center',
-                scrub: 1,
+                start: 'left 70%',
+                end: 'left 30%',
+                scrub: 0.3,
               },
             });
 
             if (elements.icon) {
-              beatTl.fromTo(elements.icon, 
-                { scale: 0.5, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.3 },
+              beatTl.fromTo(elements.icon,
+                { scale: 0.8, opacity: 0 },
+                { scale: 1, opacity: 1, duration: 0.4, ease: 'power2.out' },
                 0
               );
             }
 
             if (elements.title) {
               beatTl.fromTo(elements.title,
-                { y: 30, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.3 },
-                0.1
+                { y: 20, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                0.05
               );
             }
 
             if (elements.subtitle) {
               beatTl.fromTo(elements.subtitle,
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.3 },
-                0.2
+                { y: 15, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                0.1
               );
             }
 
             if (elements.description) {
               beatTl.fromTo(elements.description,
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.3 },
-                0.3
+                { y: 15, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
+                0.15
               );
             }
 
             if (elements.content) {
               beatTl.fromTo(elements.content,
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4 },
-                0.4
+                { y: 15, opacity: 0 },
+                { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
+                0.2
               );
             }
           });
@@ -268,17 +278,15 @@ const MultiCardScrollSection = () => {
     return () => ctx.revert();
   }, [isReady, isMobile]);
 
+
   return (
-    <div ref={containerRef} className="relative">
+    <div ref={containerRef} className="relative pb-24">
       {/* Service tabs navigation */}
-      <ServiceTabs 
+      <ServiceTabs
         cards={CARDS_CONFIG}
         activeCard={activeCard}
         onCardClick={handleCardClick}
       />
-
-      {/* Spacer for sticky tabs */}
-      <div className="h-14" />
 
       {/* Card 1 - Launch */}
       <section
@@ -287,17 +295,19 @@ const MultiCardScrollSection = () => {
         id="service-launch"
         data-story-card="launch"
       >
-        <div className="sticky top-14 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 py-4">
-          <ProgressIndicator 
-            currentBeat={currentBeats[0]}
-            totalBeats={TOTAL_BEATS}
-            progress={cardProgress[0]}
-            labels={CARDS_CONFIG[0].labels}
-          />
-        </div>
+        {activeCard === 0 && (
+          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
+            <ProgressIndicator
+              currentBeat={currentBeats[0]}
+              totalBeats={TOTAL_BEATS}
+              progress={cardProgress[0]}
+              labels={CARDS_CONFIG[0].labels}
+            />
+          </div>
+        )}
 
         <div className="relative overflow-hidden">
-          <div 
+          <div
             ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[0] = el; }}
             className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
           >
@@ -308,9 +318,11 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
+        {!isMobile && <Sidebar currentStep={currentBeats[0]} totalSteps={TOTAL_BEATS} />}
+
         {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t border-border/50 z-50">
-            <div className="text-center text-sm text-muted-foreground">
+          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
+            <div className="text-center text-xs text-muted-foreground">
               Launch • Step {currentBeats[0] + 1} of {TOTAL_BEATS}
             </div>
           </div>
@@ -328,18 +340,20 @@ const MultiCardScrollSection = () => {
         data-story-card="brand-refresh"
       >
         <WaveDivider position="top" color={CARDS_CONFIG[0].waveColor} />
-        
-        <div className="sticky top-14 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 py-4">
-          <ProgressIndicator 
-            currentBeat={currentBeats[1]}
-            totalBeats={TOTAL_BEATS}
-            progress={cardProgress[1]}
-            labels={CARDS_CONFIG[1].labels}
-          />
-        </div>
+
+        {activeCard === 1 && (
+          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
+            <ProgressIndicator
+              currentBeat={currentBeats[1]}
+              totalBeats={TOTAL_BEATS}
+              progress={cardProgress[1]}
+              labels={CARDS_CONFIG[1].labels}
+            />
+          </div>
+        )}
 
         <div className="relative overflow-hidden">
-          <div 
+          <div
             ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[1] = el; }}
             className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
           >
@@ -350,9 +364,11 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
+        {!isMobile && <Sidebar currentStep={currentBeats[1]} totalSteps={TOTAL_BEATS} />}
+
         {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t border-border/50 z-50">
-            <div className="text-center text-sm text-muted-foreground">
+          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
+            <div className="text-center text-xs text-muted-foreground">
               Brand Refresh • Step {currentBeats[1] + 1} of {TOTAL_BEATS}
             </div>
           </div>
@@ -369,18 +385,20 @@ const MultiCardScrollSection = () => {
         data-story-card="ongoing-support"
       >
         <WaveDivider position="top" color={CARDS_CONFIG[1].waveColor} />
-        
-        <div className="sticky top-14 z-50 bg-background/80 backdrop-blur-md border-b border-border/50 py-4">
-          <ProgressIndicator 
-            currentBeat={currentBeats[2]}
-            totalBeats={TOTAL_BEATS}
-            progress={cardProgress[2]}
-            labels={CARDS_CONFIG[2].labels}
-          />
-        </div>
+
+        {activeCard === 2 && (
+          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
+            <ProgressIndicator
+              currentBeat={currentBeats[2]}
+              totalBeats={TOTAL_BEATS}
+              progress={cardProgress[2]}
+              labels={CARDS_CONFIG[2].labels}
+            />
+          </div>
+        )}
 
         <div className="relative overflow-hidden">
-          <div 
+          <div
             ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[2] = el; }}
             className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
           >
@@ -391,9 +409,11 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
+        {!isMobile && <Sidebar currentStep={currentBeats[2]} totalSteps={TOTAL_BEATS} />}
+
         {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-4 bg-background/80 backdrop-blur-md border-t border-border/50 z-50">
-            <div className="text-center text-sm text-muted-foreground">
+          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
+            <div className="text-center text-xs text-muted-foreground">
               Ongoing Support • Step {currentBeats[2] + 1} of {TOTAL_BEATS}
             </div>
           </div>
@@ -401,9 +421,6 @@ const MultiCardScrollSection = () => {
 
         <WaveDivider position="bottom" color={CARDS_CONFIG[2].waveColor} />
       </section>
-
-      {/* Single shared Sidebar for all cards */}
-      {!isMobile && <Sidebar currentStep={currentBeats[activeCard]} totalSteps={TOTAL_BEATS} />}
     </div>
   );
 };
