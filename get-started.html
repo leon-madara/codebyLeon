@@ -76,7 +76,7 @@
             </div>
 
             <!-- Close Button -->
-            <a href="#" class="close-btn" title="Exit">✕</a>
+            <a href="#" class="close-btn">✕</a>
             <div class="close-btn-tooltip">Your progress will be saved</div>
 
             <!-- STEP 1: Business Identity -->
@@ -512,9 +512,9 @@
                 // Create new timeline for 4 rotations (fast to slow)
                 hoverTimeline = gsap.timeline();
                 hoverTimeline.to(closeBtn, {
-                    rotation: 1440, // 4 full rotations
-                    duration: 1.2,
-                    ease: 'power2.out' // Fast start, slow end
+                    rotation: 180, // 180 degree spin
+                    duration: 0.5,
+                    ease: 'power2.out' // Smooth UI rotation
                 });
             });
 
