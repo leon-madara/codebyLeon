@@ -26,14 +26,21 @@ export function Hero() {
         if (!isInitializedRef.current && self.progress > 0.01 && typingRef.current) {
           isInitializedRef.current = true;
 
-          // 1. Stop the typing animation
+          // 1. Stop the typing animation immediately
           stopTyping();
 
-          // 2. Get current FULL target word (forces complete word even if typing was mid-way)
-          const wordToAnimate = currentWord || "AMBITIOUS"; // Fallback just in case
+          // 2. Get the state of the CURRENTLY typed letters
+          const existingSpans = typingRef.current.querySelectorAll('span');
+          const numExisting = existingSpans.length;
 
-          // 3. Create a temporary measurement element to get accurate dimensions
-          // Append to section to match inherited styles (font, etc)
+          // 3. Get the FULL target word
+          const wordToAnimate = currentWord || "AMBITIOUS";
+
+          // 4. Create separate lists for "preserved" and "new" letters to animate
+          const lettersToAnimate: HTMLSpanElement[] = [];
+
+          // ... ( Measurement Logic stays mostly the same ) ... 
+          // Re-implementing measurement for context
           const measureElement = document.createElement('div');
           Object.assign(measureElement.style, {
             position: 'absolute',
@@ -47,39 +54,28 @@ export function Hero() {
             color: '#D9751A'
           });
           measureElement.textContent = wordToAnimate;
-
           sectionRef.current?.appendChild(measureElement);
-
-          // Force a reflow to ensure measurement
           const initialWidth = measureElement.getBoundingClientRect().width;
           const initialHeight = measureElement.getBoundingClientRect().height;
-
-          // Remove measurement element
           if (measureElement.parentNode) measureElement.parentNode.removeChild(measureElement);
 
-          // 4. Get the current position of the typing element relative to the section
           const typingRect = typingRef.current.getBoundingClientRect();
           const sectionRect = sectionRef.current!.getBoundingClientRect();
-
-          // Calculate exact relative position
           const initialX = typingRect.left - sectionRect.left;
           const initialY = typingRect.top - sectionRect.top;
 
-          // 5. Calculate target dimensions and scale
-          const targetWidth = window.innerWidth * 0.8; // 80vw
+          const targetWidth = window.innerWidth * 0.8;
           const scaleFactor = targetWidth / initialWidth;
 
-          // 6. Create the word container that will grow
           const wordContainer = document.createElement('div');
           wordContainer.className = 'word-grow-container';
-
           Object.assign(wordContainer.style, {
             position: 'absolute',
-            left: `${initialX}px`, // exact top-left match
+            left: `${initialX}px`,
             top: `${initialY}px`,
-            width: `${initialWidth * scaleFactor}px`, // Render HUUUGE natively
+            width: `${initialWidth * scaleFactor}px`,
             height: `${initialHeight * scaleFactor}px`,
-            transformOrigin: 'top left', // Crucial for "Invert Scale" math
+            transformOrigin: 'top left',
             willChange: 'transform',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
@@ -89,34 +85,57 @@ export function Hero() {
           sectionRef.current?.appendChild(wordContainer);
           wordContainerRef.current = wordContainer;
 
-          // 7. Hide the original typing element
+          // HIDE original
           gsap.set(typingRef.current, { opacity: 0, visibility: 'hidden' });
 
-          // 8. Create spans for each letter
-          const chars: HTMLSpanElement[] = [];
+          // BUILD SPANS
           const computedStyle = getComputedStyle(typingRef.current);
           const originalFontSize = parseFloat(computedStyle.fontSize);
-          const largeFontSize = originalFontSize * scaleFactor; // Scale font size up!
+          const largeFontSize = originalFontSize * scaleFactor;
 
-          wordToAnimate.split('').forEach(char => {
+          const colorIndices = [1, 2, 3, 4, 5]; // From config
+
+          wordToAnimate.split('').forEach((char, index) => {
             const span = document.createElement('span');
             span.textContent = char;
+
+            // Determine Color and Opacity
+            let colorClass = '';
+            let initialOpacity = "0";
+
+            if (index < numExisting) {
+              // Preserved letter: Copy class and force visible
+              colorClass = existingSpans[index].className;
+              initialOpacity = "1";
+            } else {
+              // New letter: Pick random color (simple logic for now)
+              // Filter to avoid repeating last color if possible
+              const idx = colorIndices[Math.floor(Math.random() * colorIndices.length)];
+              colorClass = `rainbow-color-${idx}`;
+              initialOpacity = "0";
+            }
+
+            span.className = colorClass; // Applying the class for color
+
             Object.assign(span.style, {
-              opacity: "0",
+              opacity: initialOpacity,
               display: "inline-block",
               fontFamily: 'ChristmasCandyInline, sans-serif',
-              fontSize: `${largeFontSize}px`, // Apply large font size
+              fontSize: `${largeFontSize}px`,
               fontWeight: computedStyle.fontWeight,
-              letterSpacing: computedStyle.letterSpacing, // Might need adjustment? Usually scales with em
+              letterSpacing: computedStyle.letterSpacing,
               textTransform: 'uppercase',
-              color: "#D9751A",
+              // color is handled by className, but we can set a fallback or rely on CSS
               textShadow: "0px 10px 20px rgba(0,0,0,0.1)"
             });
+
             wordContainer.appendChild(span);
-            chars.push(span);
+
+            if (index >= numExisting) {
+              lettersToAnimate.push(span);
+            }
           });
 
-          // 9. Create the animation timeline
           const tl = gsap.timeline({ paused: true });
 
           // Fade out elements (instant)
@@ -127,18 +146,20 @@ export function Hero() {
             pointerEvents: "none"
           }, 0);
 
-          // Animate letters appearing
-          const letterRevealProgress = 0.6;
-          const letterCount = chars.length;
-          const staggerDuration = letterRevealProgress / letterCount;
+          // Animate ONLY the new letters appearing
+          // We distribute them over a portion of the scroll
+          if (lettersToAnimate.length > 0) {
+            const letterRevealDuration = 0.5; // Portion of timeline
+            const stagger = letterRevealDuration / lettersToAnimate.length;
 
-          chars.forEach((char, index) => {
-            tl.to(char, {
-              opacity: 1,
-              duration: staggerDuration,
-              ease: "none"
-            }, index * staggerDuration);
-          });
+            lettersToAnimate.forEach((char, i) => {
+              tl.to(char, {
+                opacity: 1,
+                duration: stagger,
+                ease: "none"
+              }, i * stagger);
+            });
+          }
 
           // Grow word and center it
           const wordGrowthStart = 0.1;
@@ -181,10 +202,10 @@ export function Hero() {
 
           Object.assign(designsLabel.style, {
             position: 'absolute',
-            fontSize: `${originalFontSize * 0.5}px`, // Relative to base font
-            left: '50%',
-            top: '80%', // Below the word
-            transform: 'translate(-30%, 0) rotate(-6deg)', // Centering + Tilt
+            fontSize: `310px`, // Increased by 2.5x from 124px
+            left: '50%', // Center horizontally
+            top: 'calc(80% - 15vh)', // Moved up by 15vh
+            transform: 'translate(-50%, 0) rotate(-6deg)', // True center alignment + Tilt
             color: '#1a1a1a',
             zIndex: '15',
             whiteSpace: 'nowrap',
