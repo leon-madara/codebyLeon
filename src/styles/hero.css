@@ -3,6 +3,8 @@
    4-Layer Architecture Implementation
    ============================================= */
 
+@import url('https://fonts.googleapis.com/css2?family=Euphoria+Script&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap');
+
 /* =============================================
 /* =============================================
    THEME VARIABLES
@@ -597,6 +599,14 @@ body {
   font-style: normal;
 }
 
+
+
+.euphoria-script-regular {
+  font-family: "Euphoria Script", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
 @font-face {
   font-family: 'MyKidsHandwritten';
   src: url('../assets/fonts/my-kids-handwritten/My Kids Handwritten.otf') format('opentype');
@@ -1092,45 +1102,43 @@ h2 {
   margin-left: calc(-50vw + 50%);
   margin-right: calc(-50vw + 50%);
   /* Torn bottom edge using clip-path - more pronounced irregular pattern */
-  clip-path: polygon(
-    0% 0%,
-    100% 0%,
-    100% calc(100% - 10px),
-    /* More pronounced torn edge pattern - larger variations */
-    98% calc(100% - 12px),
-    100% calc(100% - 8px),
-    95% calc(100% - 15px),
-    100% calc(100% - 5px),
-    92% 100%,
-    88% calc(100% - 10px),
-    85% 100%,
-    82% calc(100% - 12px),
-    78% 100%,
-    75% calc(100% - 8px),
-    72% 100%,
-    68% calc(100% - 14px),
-    65% 100%,
-    62% calc(100% - 9px),
-    58% 100%,
-    55% calc(100% - 13px),
-    52% 100%,
-    48% calc(100% - 7px),
-    45% 100%,
-    42% calc(100% - 11px),
-    38% 100%,
-    35% calc(100% - 15px),
-    32% 100%,
-    28% calc(100% - 9px),
-    25% 100%,
-    22% calc(100% - 12px),
-    18% 100%,
-    15% calc(100% - 8px),
-    12% 100%,
-    8% calc(100% - 14px),
-    5% 100%,
-    2% calc(100% - 10px),
-    0% 100%
-  );
+  clip-path: polygon(0% 0%,
+      100% 0%,
+      100% calc(100% - 10px),
+      /* More pronounced torn edge pattern - larger variations */
+      98% calc(100% - 12px),
+      100% calc(100% - 8px),
+      95% calc(100% - 15px),
+      100% calc(100% - 5px),
+      92% 100%,
+      88% calc(100% - 10px),
+      85% 100%,
+      82% calc(100% - 12px),
+      78% 100%,
+      75% calc(100% - 8px),
+      72% 100%,
+      68% calc(100% - 14px),
+      65% 100%,
+      62% calc(100% - 9px),
+      58% 100%,
+      55% calc(100% - 13px),
+      52% 100%,
+      48% calc(100% - 7px),
+      45% 100%,
+      42% calc(100% - 11px),
+      38% 100%,
+      35% calc(100% - 15px),
+      32% 100%,
+      28% calc(100% - 9px),
+      25% 100%,
+      22% calc(100% - 12px),
+      18% 100%,
+      15% calc(100% - 8px),
+      12% 100%,
+      8% calc(100% - 14px),
+      5% 100%,
+      2% calc(100% - 10px),
+      0% 100%);
   /* Ensure content is above the card background */
   z-index: 1;
 }
@@ -1145,42 +1153,40 @@ h2 {
   height: 10px;
   background-color: #fc5b45;
   /* Match the more pronounced torn edge shape from the card */
-  clip-path: polygon(
-    0% 0%,
-    98% 20%,
-    100% 40%,
-    95% 60%,
-    100% 50%,
-    92% 100%,
-    88% 0%,
-    85% 100%,
-    82% 20%,
-    78% 100%,
-    75% 40%,
-    72% 100%,
-    68% 60%,
-    65% 100%,
-    62% 10%,
-    58% 100%,
-    55% 30%,
-    52% 100%,
-    48% 30%,
-    45% 100%,
-    42% 10%,
-    38% 100%,
-    35% 50%,
-    32% 100%,
-    28% 20%,
-    25% 100%,
-    22% 40%,
-    18% 100%,
-    15% 20%,
-    12% 100%,
-    8% 60%,
-    5% 100%,
-    2% 0%,
-    0% 50%
-  );
+  clip-path: polygon(0% 0%,
+      98% 20%,
+      100% 40%,
+      95% 60%,
+      100% 50%,
+      92% 100%,
+      88% 0%,
+      85% 100%,
+      82% 20%,
+      78% 100%,
+      75% 40%,
+      72% 100%,
+      68% 60%,
+      65% 100%,
+      62% 10%,
+      58% 100%,
+      55% 30%,
+      52% 100%,
+      48% 30%,
+      45% 100%,
+      42% 10%,
+      38% 100%,
+      35% 50%,
+      32% 100%,
+      28% 20%,
+      25% 100%,
+      22% 40%,
+      18% 100%,
+      15% 20%,
+      12% 100%,
+      8% 60%,
+      5% 100%,
+      2% 0%,
+      0% 50%);
   z-index: 0;
 }
 

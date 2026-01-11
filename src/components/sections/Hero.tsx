@@ -18,7 +18,7 @@ export function Hero() {
     ScrollTrigger.create({
       trigger: sectionRef.current,
       start: "top top",
-      end: "+=500%",
+      end: "+=700%", // Extended for extra animation step
       pin: true,
       scrub: 0.1,
       onUpdate: (self) => {
@@ -67,29 +67,19 @@ export function Hero() {
 
           // 5. Calculate target dimensions and scale
           const targetWidth = window.innerWidth * 0.8; // 80vw
-          const targetScale = targetWidth / initialWidth;
-
-          // Calculate vector to center
-          // We want the center of the word to move to the center of the viewport
-          const wordCenterX = initialX + initialWidth / 2;
-          const wordCenterY = initialY + initialHeight / 2;
-
-          const viewportCenterX = window.innerWidth / 2 - sectionRect.left; // Adjust for pinned section offset if any (usually 0 if pinned)
-          const viewportCenterY = window.innerHeight / 2 - sectionRect.top;
-
-          const xMove = viewportCenterX - wordCenterX;
-          const yMove = viewportCenterY - wordCenterY;
+          const scaleFactor = targetWidth / initialWidth;
 
           // 6. Create the word container that will grow
           const wordContainer = document.createElement('div');
           wordContainer.className = 'word-grow-container';
+
           Object.assign(wordContainer.style, {
             position: 'absolute',
             left: `${initialX}px`, // exact top-left match
             top: `${initialY}px`,
-            width: `${initialWidth}px`, // explicit width for correct center transform
-            height: `${initialHeight}px`,
-            transformOrigin: 'center center',
+            width: `${initialWidth * scaleFactor}px`, // Render HUUUGE natively
+            height: `${initialHeight * scaleFactor}px`,
+            transformOrigin: 'top left', // Crucial for "Invert Scale" math
             willChange: 'transform',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
@@ -105,6 +95,9 @@ export function Hero() {
           // 8. Create spans for each letter
           const chars: HTMLSpanElement[] = [];
           const computedStyle = getComputedStyle(typingRef.current);
+          const originalFontSize = parseFloat(computedStyle.fontSize);
+          const largeFontSize = originalFontSize * scaleFactor; // Scale font size up!
+
           wordToAnimate.split('').forEach(char => {
             const span = document.createElement('span');
             span.textContent = char;
@@ -112,9 +105,9 @@ export function Hero() {
               opacity: "0",
               display: "inline-block",
               fontFamily: 'ChristmasCandyInline, sans-serif',
-              fontSize: computedStyle.fontSize,
+              fontSize: `${largeFontSize}px`, // Apply large font size
               fontWeight: computedStyle.fontWeight,
-              letterSpacing: computedStyle.letterSpacing,
+              letterSpacing: computedStyle.letterSpacing, // Might need adjustment? Usually scales with em
               textTransform: 'uppercase',
               color: "#D9751A",
               textShadow: "0px 10px 20px rgba(0,0,0,0.1)"
@@ -126,13 +119,12 @@ export function Hero() {
           // 9. Create the animation timeline
           const tl = gsap.timeline({ paused: true });
 
-          // Fade out elements - Use scoped string selectors!
-          // This ensures we get everything inside the section that matches
+          // Fade out elements (instant)
           tl.to('.navbar, .hero-badge, .hero-subheadline, .hero-tag-wrapper, .hero-ctas, .headline-line-1, .headline-line-3', {
             autoAlpha: 0,
-            duration: 0, // Instant vanish
+            duration: 0,
             ease: "none",
-            pointerEvents: "none" // prevent clicking while faded
+            pointerEvents: "none"
           }, 0);
 
           // Animate letters appearing
@@ -152,23 +144,65 @@ export function Hero() {
           const wordGrowthStart = 0.1;
           const wordGrowthDuration = 0.7;
 
+          // Initial State: Tiny Scale (looks normal size)
           gsap.set(wordContainer, {
-            transformOrigin: "center center",
+            scale: 1 / scaleFactor,
             x: 0,
-            y: 0,
-            scale: 1
+            y: 0
           });
+
+          // Target Calculations for Centering
+          const viewportCenterX = window.innerWidth / 2 - sectionRect.left;
+          const viewportCenterY = window.innerHeight / 2 - sectionRect.top;
+
+          // Since transformOrigin is 'top left', we move the top-left corner
+          // so that the center of the HUGE element aligns with viewport center
+          const finalWidth = initialWidth * scaleFactor; // equals targetWidth
+          const finalHeight = initialHeight * scaleFactor;
+
+          const targetLeft = viewportCenterX - (finalWidth / 2);
+          const targetTop = viewportCenterY - (finalHeight / 2);
+
+          const xMove = targetLeft - initialX;
+          const yMove = targetTop - initialY;
 
           tl.to(wordContainer, {
             x: xMove,
             y: yMove,
-            scale: targetScale,
+            scale: 1, // Go to "natural" huge size (crisp!)
             duration: wordGrowthDuration,
             ease: "power2.inOut"
           }, wordGrowthStart);
 
+          // 10. Create "designs" label (Handwritten style)
+          const designsLabel = document.createElement('div');
+          designsLabel.textContent = "designs";
+          designsLabel.className = "euphoria-script-regular";
+
+          Object.assign(designsLabel.style, {
+            position: 'absolute',
+            fontSize: `${originalFontSize * 0.5}px`, // Relative to base font
+            left: '50%',
+            top: '80%', // Below the word
+            transform: 'translate(-30%, 0) rotate(-6deg)', // Centering + Tilt
+            color: '#1a1a1a',
+            zIndex: '15',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            opacity: '1',
+            clipPath: 'polygon(0 0, 0 100%, 0 100%, 0 0)' // Initially hidden
+          });
+
+          wordContainer.appendChild(designsLabel);
+
+          // Animate "designs" appearing (Handwritten Wipe)
+          tl.to(designsLabel, {
+            clipPath: 'polygon(0 0, 0 100%, 150% 100%, 150% 0)', // Reveal fully
+            duration: 0.5,
+            ease: "power1.inOut"
+          }, ">");
+
           // TRANSITION: "Curtain" effect
-          // Pull the portfolio section up to cover the hero
           const portfolioSection = document.querySelector('#portfolio');
           if (portfolioSection) {
             gsap.set(portfolioSection, { zIndex: 10, position: 'relative' });
@@ -180,7 +214,7 @@ export function Hero() {
                 duration: 0.5,
                 ease: "power2.inOut"
               },
-              ">-=0.1" // Overlap slightly with end of growth
+              ">+=0.2" // Wait a beat after "designs" writes
             );
           }
 
