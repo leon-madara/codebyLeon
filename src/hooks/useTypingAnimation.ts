@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import gsap from 'gsap';
 
 interface TypingConfig {
@@ -24,10 +24,15 @@ const DEFAULT_CONFIG: TypingConfig = {
 export function useTypingAnimation(config: Partial<TypingConfig> = {}) {
   const elementRef = useRef<HTMLSpanElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const [isActive, setIsActive] = useState(true);
 
   const finalConfig = { ...DEFAULT_CONFIG, ...config };
 
+  const [currentWord, setCurrentWord] = useState(DEFAULT_CONFIG.words[0]);
+
   useEffect(() => {
+    if (!isActive) return;
+
     const element = elementRef.current;
     if (!element) return;
 
@@ -37,11 +42,16 @@ export function useTypingAnimation(config: Partial<TypingConfig> = {}) {
     const random = (min: number, max: number) => Math.random() * (max - min) + min;
 
     const typeLoop = (wordIndex: number) => {
-      const currentWord = finalConfig.words[wordIndex % finalConfig.words.length];
-      const charArray = currentWord.split('');
+      if (!isActive) return; // double check
+
+      const targetWord = finalConfig.words[wordIndex % finalConfig.words.length];
+      setCurrentWord(targetWord); // Update the current target word
+      const charArray = targetWord.split('');
 
       const tl = gsap.timeline({
-        onComplete: () => typeLoop(wordIndex + 1),
+        onComplete: () => {
+          if (isActive) typeLoop(wordIndex + 1)
+        },
       });
 
       timelineRef.current = tl;
@@ -49,6 +59,7 @@ export function useTypingAnimation(config: Partial<TypingConfig> = {}) {
       // Typing phase
       let lastIndex: number | null = null;
 
+      // ... rest of typing logic uses charArray ...
       charArray.forEach((char) => {
         let availableIndices = finalConfig.colorIndices;
         if (lastIndex !== null) {
@@ -98,7 +109,20 @@ export function useTypingAnimation(config: Partial<TypingConfig> = {}) {
         timelineRef.current.kill();
       }
     };
-  }, [finalConfig]);
+  }, [finalConfig, isActive]);
 
-  return elementRef;
+  const stop = useCallback(() => {
+    setIsActive(false);
+    if (timelineRef.current) {
+      timelineRef.current.pause();
+      timelineRef.current.kill();
+      timelineRef.current = null;
+    }
+  }, []);
+
+  const start = useCallback(() => {
+    setIsActive(true);
+  }, []);
+
+  return { elementRef, stop, start, currentWord };
 }

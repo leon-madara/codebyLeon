@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
 @import './styles/mouse-trail.css';
+@import './styles/hero.css';
 
 @tailwind base;
 @tailwind components;
@@ -40,7 +41,6 @@
     /* Custom design tokens */
     --font-display: 'Playfair Display', serif;
     --font-body: 'Inter', sans-serif;
-
     /* Forest gradient colors (Card 1 - Launch) */
     --forest-dark: 152 45% 18%;
     --forest-mid: 145 40% 35%;
@@ -167,7 +167,12 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display);
   }
 }
@@ -246,85 +251,75 @@
   }
 
   .gradient-forest {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--forest-dark)) 0%,
-      hsl(var(--forest-mid)) 50%,
-      hsl(var(--forest-light)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--forest-dark)) 0%,
+        hsl(var(--forest-mid)) 50%,
+        hsl(var(--forest-light)) 100%);
   }
 
   .gradient-cyan {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--cyan-dark)) 0%,
-      hsl(var(--cyan-mid)) 50%,
-      hsl(var(--cyan-light)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--cyan-dark)) 0%,
+        hsl(var(--cyan-mid)) 50%,
+        hsl(var(--cyan-light)) 100%);
   }
 
   .gradient-emerald {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--emerald-dark)) 0%,
-      hsl(var(--emerald-mid)) 50%,
-      hsl(var(--emerald-light)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--emerald-dark)) 0%,
+        hsl(var(--emerald-mid)) 50%,
+        hsl(var(--emerald-light)) 100%);
   }
 
   /* Card 1 - Forest beat gradients (legacy) */
   .gradient-beat-1 {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--beat-1-start)) 0%,
-      hsl(var(--beat-1-end)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--beat-1-start)) 0%,
+        hsl(var(--beat-1-end)) 100%);
   }
 
   .gradient-beat-2 {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--beat-2-start)) 0%,
-      hsl(var(--beat-2-end)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--beat-2-start)) 0%,
+        hsl(var(--beat-2-end)) 100%);
   }
 
   .gradient-beat-3 {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--beat-3-start)) 0%,
-      hsl(var(--beat-3-end)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--beat-3-start)) 0%,
+        hsl(var(--beat-3-end)) 100%);
   }
 
   .gradient-beat-4 {
-    background: linear-gradient(
-      135deg,
-      hsl(var(--beat-4-start)) 0%,
-      hsl(var(--beat-4-end)) 100%
-    );
+    background: linear-gradient(135deg,
+        hsl(var(--beat-4-start)) 0%,
+        hsl(var(--beat-4-end)) 100%);
   }
 
   /* Card 1 - Forest beats */
   .card1-beat-1 {
     background: linear-gradient(135deg, hsl(var(--card1-beat-1-start)) 0%, hsl(var(--card1-beat-1-end)) 100%);
   }
+
   .card1-beat-2 {
     background: linear-gradient(135deg, hsl(var(--card1-beat-2-start)) 0%, hsl(var(--card1-beat-2-end)) 100%);
   }
 
   /* Reduce content wrapper size in all card1 beats by 30% */
-  .card1-beat-1 > div.max-w-2xl,
-  .card1-beat-2 > div.max-w-2xl,
-  .card1-beat-3 > div.max-w-2xl,
-  .card1-beat-4 > div.max-w-2xl {
-    max-width: 29.4rem !important; /* 70% of max-w-2xl (42rem) */
+  .card1-beat-1>div.max-w-2xl,
+  .card1-beat-2>div.max-w-2xl,
+  .card1-beat-3>div.max-w-2xl,
+  .card1-beat-4>div.max-w-2xl {
+    max-width: 29.4rem !important;
+    /* 70% of max-w-2xl (42rem) */
     transform: scale(0.7);
     transform-origin: center;
   }
+
   .card1-beat-3 {
     background: linear-gradient(135deg, hsl(var(--card1-beat-3-start)) 0%, hsl(var(--card1-beat-3-end)) 100%);
   }
+
   .card1-beat-4 {
     background: linear-gradient(135deg, hsl(var(--card1-beat-4-start)) 0%, hsl(var(--card1-beat-4-end)) 100%);
   }
@@ -333,15 +328,18 @@
   .card2-beat-1 {
     background: linear-gradient(135deg, hsl(var(--card2-beat-1-start)) 0%, hsl(var(--card2-beat-1-end)) 100%);
   }
+
   .card2-beat-2 {
     background: linear-gradient(135deg, hsl(var(--card2-beat-2-start)) 0%, hsl(var(--card2-beat-2-end)) 100%);
     min-width: 80vw !important;
     width: 80vw !important;
     min-height: 80vh !important;
   }
+
   .card2-beat-3 {
     background: linear-gradient(135deg, hsl(var(--card2-beat-3-start)) 0%, hsl(var(--card2-beat-3-end)) 100%);
   }
+
   .card2-beat-4 {
     background: linear-gradient(135deg, hsl(var(--card2-beat-4-start)) 0%, hsl(var(--card2-beat-4-end)) 100%);
   }
@@ -350,12 +348,15 @@
   .card3-beat-1 {
     background: linear-gradient(135deg, hsl(var(--card3-beat-1-start)) 0%, hsl(var(--card3-beat-1-end)) 100%);
   }
+
   .card3-beat-2 {
     background: linear-gradient(135deg, hsl(var(--card3-beat-2-start)) 0%, hsl(var(--card3-beat-2-end)) 100%);
   }
+
   .card3-beat-3 {
     background: linear-gradient(135deg, hsl(var(--card3-beat-3-start)) 0%, hsl(var(--card3-beat-3-end)) 100%);
   }
+
   .card3-beat-4 {
     background: linear-gradient(135deg, hsl(var(--card3-beat-4-start)) 0%, hsl(var(--card3-beat-4-end)) 100%);
   }
@@ -363,19 +364,23 @@
   /* Portfolio-style background layers for beat cards */
   /* Morph animation for orbs */
   @keyframes morph {
+
     0%,
     100% {
       border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
       transform: translate(0, 0) rotate(0deg) scale(1);
     }
+
     25% {
       border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
       transform: translate(2%, 3%) rotate(3deg) scale(1.02);
     }
+
     50% {
       border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
       transform: translate(5%, 5%) rotate(5deg) scale(1.05);
     }
+
     75% {
       border-radius: 50% 40% 50% 60% / 35% 45% 55% 65%;
       transform: translate(3%, 2%) rotate(2deg) scale(1.03);
@@ -390,25 +395,25 @@
     z-index: 1;
     pointer-events: none;
     overflow: hidden;
-    
+
     /* Stack 3 radial gradients for orbs at different positions */
-    background-image: 
+    background-image:
       /* Purple orb - top-left */
-      radial-gradient(circle at -10% -10%, 
-        rgba(196, 181, 253, 0.7) 0%, 
-        rgba(167, 139, 250, 0.7) 50%, 
+      radial-gradient(circle at -10% -10%,
+        rgba(196, 181, 253, 0.7) 0%,
+        rgba(167, 139, 250, 0.7) 50%,
         transparent 70%),
       /* Orange orb - center */
-      radial-gradient(circle at 30% 20%, 
-        rgba(253, 186, 116, 0.7) 0%, 
-        rgba(251, 146, 60, 0.7) 50%, 
+      radial-gradient(circle at 30% 20%,
+        rgba(253, 186, 116, 0.7) 0%,
+        rgba(251, 146, 60, 0.7) 50%,
         transparent 70%),
       /* Blue orb - bottom-right */
-      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%), 
-        rgba(147, 197, 253, 0.7) 0%, 
-        rgba(96, 165, 250, 0.7) 50%, 
+      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%),
+        rgba(147, 197, 253, 0.7) 0%,
+        rgba(96, 165, 250, 0.7) 50%,
         transparent 70%);
-    
+
     background-size: 45vw 45vw, 55vw 55vw, 40vw 40vw;
     background-repeat: no-repeat;
     filter: blur(80px);
@@ -418,21 +423,21 @@
 
   /* Dark theme orb colors */
   [data-theme="dark"] .beat-card::before {
-    background-image: 
+    background-image:
       /* Purple orb - top-left */
-      radial-gradient(circle at -10% -10%, 
-        rgba(139, 92, 246, 0.7) 0%, 
-        rgba(109, 40, 217, 0.7) 50%, 
+      radial-gradient(circle at -10% -10%,
+        rgba(139, 92, 246, 0.7) 0%,
+        rgba(109, 40, 217, 0.7) 50%,
         transparent 70%),
       /* Orange orb - center */
-      radial-gradient(circle at 30% 20%, 
-        rgba(249, 115, 22, 0.7) 0%, 
-        rgba(234, 88, 12, 0.7) 50%, 
+      radial-gradient(circle at 30% 20%,
+        rgba(249, 115, 22, 0.7) 0%,
+        rgba(234, 88, 12, 0.7) 50%,
         transparent 70%),
       /* Blue orb - bottom-right */
-      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%), 
-        rgba(59, 130, 246, 0.7) 0%, 
-        rgba(37, 99, 235, 0.7) 50%, 
+      radial-gradient(circle at calc(100% + 10%) calc(100% + 15%),
+        rgba(59, 130, 246, 0.7) 0%,
+        rgba(37, 99, 235, 0.7) 50%,
         transparent 70%);
   }
 
@@ -443,11 +448,11 @@
     inset: 0;
     z-index: 2;
     pointer-events: none;
-    
+
     /* Frosted effect */
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    
+
     /* Dot-grid pattern */
     background-image: radial-gradient(circle, rgba(150, 150, 150, 0.15) 1px, transparent 1px);
     background-size: 12px 12px;
@@ -459,7 +464,7 @@
   }
 
   /* Ensure content is above overlay (Layer 4) */
-  .beat-card > div {
+  .beat-card>div {
     position: relative;
     z-index: 3;
   }
@@ -474,7 +479,8 @@
   min-height: 100vh;
   background: hsl(var(--background));
   color: hsl(var(--foreground));
-  padding-top: 80px; /* Account for fixed navigation */
+  padding-top: 80px;
+  /* Account for fixed navigation */
 }
 
 .blog-post-main {
@@ -528,8 +534,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Error State */
@@ -1408,11 +1419,9 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    hsl(var(--primary) / 0.1) 0%,
-    hsl(var(--accent) / 0.1) 100%
-  );
+  background: linear-gradient(135deg,
+      hsl(var(--primary) / 0.1) 0%,
+      hsl(var(--accent) / 0.1) 100%);
   border-radius: var(--radius);
   padding: 2rem;
   text-align: center;
@@ -1424,15 +1433,13 @@
 .gradient-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    45deg,
-    transparent 25%,
-    hsl(var(--primary) / 0.05) 25%,
-    hsl(var(--primary) / 0.05) 50%,
-    transparent 50%,
-    transparent 75%,
-    hsl(var(--primary) / 0.05) 75%
-  );
+  background: linear-gradient(45deg,
+      transparent 25%,
+      hsl(var(--primary) / 0.05) 25%,
+      hsl(var(--primary) / 0.05) 50%,
+      transparent 50%,
+      transparent 75%,
+      hsl(var(--primary) / 0.05) 75%);
   background-size: 20px 20px;
 }
 
@@ -1506,9 +1513,12 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.5;
   }
@@ -1539,6 +1549,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+
   .blog-post-error-actions,
   .blog-content-error-actions {
     flex-direction: column;
@@ -1557,6 +1568,7 @@
 }
 
 @media (max-width: 480px) {
+
   .error-boundary-content,
   .blog-post-error-content {
     padding: 2rem 1rem;
