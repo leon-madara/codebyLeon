@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 
 export interface MouseTrailProps {
   /** Number of trail elements (default: 3) */
@@ -44,6 +45,9 @@ export function MouseTrail({
   coalesceSpeed = 0.08,
   disabled = false,
 }: MouseTrailProps) {
+  const { theme } = useTheme();
+  const effectiveDisabled = disabled || theme === 'dark';
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const cursorRef = useRef<HTMLDivElement | null>(null);
   const trailElementsRef = useRef<HTMLDivElement[]>([]);
@@ -60,7 +64,7 @@ export function MouseTrail({
   });
 
   useEffect(() => {
-    if (disabled) return;
+    if (effectiveDisabled) return;
 
     // Check for reduced motion preference
     if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
@@ -197,7 +201,7 @@ export function MouseTrail({
       }
     };
   }, [
-    disabled,
+    effectiveDisabled,
     trailCount,
     colors,
     sizes,
