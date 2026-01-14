@@ -27,7 +27,7 @@
     <main class="configurator">
         <!-- Header -->
         <header class="configurator-header">
-            <a href="index.html" class="back-link">— Back</a>
+            <a href="/" class="back-link">— Back</a>
 
             <!-- Right: Theme Toggle -->
             <div class="header-right">
@@ -428,6 +428,11 @@
                 return; // Skip animations if user prefers reduced motion
             }
 
+            // Skip animation logic entirely if GSAP failed to load so navigation still works
+            if (typeof window.gsap === 'undefined') {
+                return;
+            }
+
             const closeBtn = document.querySelector('.close-btn');
             if (!closeBtn) return;
 
@@ -534,8 +539,13 @@
                     hoverTimeline.kill();
                 }
 
-                // Create vapor effect
-                createVaporEffect(e);
+                try {
+                    // Create vapor effect
+                    createVaporEffect(e);
+                } catch (err) {
+                    console.error('Close button animation error:', err);
+                    // Let the configurator handler continue and handle navigation
+                }
 
                 // Navigation happens immediately (browser default behavior)
                 // The vapor effect will continue playing during navigation

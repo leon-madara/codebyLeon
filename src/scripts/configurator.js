@@ -205,7 +205,7 @@ class ServiceConfigurator {
         if (backLink) {
             if (this.currentIndex === 0) {
                 backLink.textContent = '← Back';
-                backLink.href = 'index.html';
+                backLink.href = '/';
             } else {
                 backLink.textContent = '← Back';
                 backLink.href = '#';
@@ -477,13 +477,13 @@ class ServiceConfigurator {
         // Step 7+ (not 8): Clear progress and exit
         if (currentDataStep === 7 || currentStepId === 'processing') {
             this.clearProgress();
-            window.location.href = 'index.html';
+            window.location.href = '/';
             return;
         }
 
         // Steps 1-6: Preserve progress and exit
         this.saveProgress();
-        window.location.href = 'index.html';
+        window.location.href = '/';
     }
 
     clearProgress() {
