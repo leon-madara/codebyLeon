@@ -126,7 +126,7 @@ const MultiCardScrollSection = () => {
 
           if (!section || !beatsContainer) return;
 
-          const scrollDistance = (TOTAL_BEATS - 1) * window.innerWidth * 0.8;
+          const scrollDistance = TOTAL_BEATS * window.innerWidth * 0.8;
 
           // Main horizontal scroll animation
           const mainTl = gsap.timeline({
@@ -140,9 +140,15 @@ const MultiCardScrollSection = () => {
               anticipatePin: 1,
               invalidateOnRefresh: true,
               snap: {
-                snapTo: 1 / (TOTAL_BEATS - 1),
-                duration: { min: 0.3, max: 0.8 },
-                delay: 0.05,
+                snapTo: (value) => {
+                  const snapPoints = Array.from({ length: TOTAL_BEATS }, (_, i) => i / (TOTAL_BEATS - 1));
+                  const closest = snapPoints.reduce((prev, curr) => 
+                    Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev
+                  );
+                  return closest;
+                },
+                duration: { min: 0.4, max: 1.0 },
+                delay: 0.1,
                 ease: 'power2.inOut',
               },
               onEnter: () => setActiveCard(cardIndex),
