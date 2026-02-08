@@ -30,7 +30,7 @@ const logData = {
 };
 try {
   writeFileSync('.cursor/debug.log', JSON.stringify(logData) + '\n', { flag: 'a' });
-} catch (e) {}
+} catch (e) { }
 console.log('[DEBUG] Vite alias config:', logData.data);
 // #endregion
 
@@ -58,6 +58,10 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        getStarted: path.resolve(__dirname, 'get-started.html'),
+      },
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],

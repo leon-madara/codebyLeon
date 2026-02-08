@@ -27,7 +27,7 @@ export function Navigation() {
           <li><Link to="/blog" state={{ preserveScroll: true }} className={isActiveLink('/blog') ? 'active' : ''}>BLOG</Link></li>
         </ul>
 
-        <a href="mailto:hello@codebyleon.com" className="cta-button">GET IN TOUCH</a>
+        <a href="/get-started.html" className="cta-button">GET IN TOUCH</a>
 
         {/* Theme Toggle */}
         <div className="theme-toggle-wrapper">

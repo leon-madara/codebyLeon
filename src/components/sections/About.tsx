@@ -51,7 +51,7 @@ export function About() {
           <p style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
             Let's discuss how we can help your business
           </p>
-          <a href="mailto:hello@codebyleon.com" className="btn-primary">Book a free 20-minute call</a>
+          <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
         </div>
       </div>
     </section>

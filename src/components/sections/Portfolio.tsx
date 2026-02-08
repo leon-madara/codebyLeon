@@ -119,7 +119,7 @@ export function Portfolio() {
         </div>
 
         <div className="section-cta">
-          <a href="mailto:hello@codebyleon.com" className="btn-primary">Ready to Start Your Project?</a>
+          <a href="/get-started.html" className="btn-primary">Ready to Start Your Project?</a>
         </div>
       </div>
     </section>
