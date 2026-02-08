@@ -31,6 +31,7 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
   const finalConfig = useMemo(() => ({ ...DEFAULT_CONFIG, ...config }), [config]);
 
   const [currentWord, setCurrentWord] = useState(DEFAULT_CONFIG.words[0]);
+  const currentWordRef = useRef(DEFAULT_CONFIG.words[0]);
 
   useEffect(() => {
     if (!isActive) return;
@@ -48,6 +49,7 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
 
       const targetWord = finalConfig.words[wordIndex % finalConfig.words.length];
       setCurrentWord(targetWord); // Update the current target word
+      currentWordRef.current = targetWord;
       const charArray = targetWord.split('');
 
       const tl = gsap.timeline({
@@ -126,5 +128,5 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
     setIsActive(true);
   }, []);
 
-  return { elementRef, stop, start, currentWord };
+  return { elementRef, stop, start, currentWord, currentWordRef };
 }

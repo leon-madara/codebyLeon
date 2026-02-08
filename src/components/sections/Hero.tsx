@@ -7,7 +7,7 @@ import { useTypingAnimation } from '../../hooks/useTypingAnimation';
 gsap.registerPlugin(ScrollTrigger);
 
 export function Hero() {
-  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord } = useTypingAnimation();
+  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef } = useTypingAnimation();
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -34,7 +34,7 @@ export function Hero() {
           const numExisting = existingSpans.length;
 
           // 3. Get the FULL target word
-          const wordToAnimate = currentWord || "AMBITIOUS";
+          const wordToAnimate = currentWordRef.current || "AMBITIOUS";
 
           // 4. Create separate lists for "preserved" and "new" letters to animate
           const lettersToAnimate: HTMLSpanElement[] = [];
