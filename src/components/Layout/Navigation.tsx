@@ -17,21 +17,21 @@ export function Navigation() {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="logo">
-          <img src="/src/assets/icons/main SVG.svg" alt="Code by Leon" className="logo-svg" />
+          <img src="/icons/main-logo.svg" alt="Code by Leon" className="logo-svg" />
         </Link>
 
         <ul className="nav-links">
           <li><a href="#portfolio" className={location.pathname === '/' ? 'active' : ''}>PORTFOLIO</a></li>
           <li><a href="#about" className={location.pathname === '/' ? 'active' : ''}>ABOUT</a></li>
           <li><a href="#services" className={location.pathname === '/' ? 'active' : ''}>SERVICES</a></li>
-          <li><Link to="/blog" className={isActiveLink('/blog') ? 'active' : ''}>BLOG</Link></li>
+          <li><Link to="/blog" state={{ preserveScroll: true }} className={isActiveLink('/blog') ? 'active' : ''}>BLOG</Link></li>
         </ul>
 
         <a href="/get-started.html" className="cta-button">GET IN TOUCH</a>
 
         {/* Theme Toggle */}
         <div className="theme-toggle-wrapper">
-          <div 
+          <div
             className={`toggle-switch ${theme === 'dark' ? 'active' : ''}`}
             onClick={toggleTheme}
           >

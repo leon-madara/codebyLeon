@@ -239,11 +239,10 @@ class ServiceConfigurator {
         // Show tooltip only for steps 1-6
         if (currentDataStep <= 6) {
             closeBtn.setAttribute('data-tooltip', 'true');
-            closeBtn.setAttribute('title', 'Your progress will be saved');
+            // Removed title attribute to prevent native browser tooltip (we use custom tooltip)
             tooltip.style.display = 'block';
         } else {
             closeBtn.removeAttribute('data-tooltip');
-            closeBtn.removeAttribute('title');
             tooltip.style.display = 'none';
         }
     }
@@ -474,16 +473,20 @@ class ServiceConfigurator {
             return;
         }
 
-        // Step 7+ (not 8): Clear progress and exit
-        if (currentDataStep === 7 || currentStepId === 'processing') {
-            this.clearProgress();
+        // Delay navigation to allow vapor effect to be visible
+        const navigateHome = () => {
+            // Step 7+ (not 8): Clear progress and exit
+            if (currentDataStep === 7 || currentStepId === 'processing') {
+                this.clearProgress();
+            } else {
+                // Steps 1-6: Preserve progress and exit
+                this.saveProgress();
+            }
             window.location.href = '/';
-            return;
-        }
+        };
 
-        // Steps 1-6: Preserve progress and exit
-        this.saveProgress();
-        window.location.href = '/';
+        // Wait 400ms for vapor effect animation to be visible before navigating
+        setTimeout(navigateHome, 400);
     }
 
     clearProgress() {

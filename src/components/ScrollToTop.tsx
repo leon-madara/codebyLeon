@@ -11,8 +11,9 @@ export function ScrollToTop() {
   useEffect(() => {
     // Only scroll to top for new navigation (not browser back/forward)
     // Browser back/forward navigation is handled by the browser's scroll restoration
-    if (location.state?.scrollToTop !== false) {
-      window.scrollTo(0, 0);
+    // Skip scrolling for direct navigation to avoid disrupting horizontal scroll
+    if (location.state?.scrollToTop !== false && location.state?.preserveScroll !== true) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     }
   }, [location.pathname, location.search]);
 

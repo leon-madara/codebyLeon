@@ -450,15 +450,15 @@
                 return vaporContainer;
             }
 
-            // Create vapor particle effect
+            // Create vapor particle effect (dust effect)
             function createVaporEffect(event) {
                 const container = initVaporContainer();
                 const rect = closeBtn.getBoundingClientRect();
                 const centerX = rect.left + rect.width / 2;
                 const centerY = rect.top + rect.height / 2;
 
-                // Create 12-15 particles
-                const particleCount = 12 + Math.floor(Math.random() * 4);
+                // Create 15-20 particles for more visible dust effect
+                const particleCount = 15 + Math.floor(Math.random() * 6);
                 const particles = [];
 
                 for (let i = 0; i < particleCount; i++) {
@@ -469,34 +469,34 @@
 
                     // Random direction and distance
                     const angle = (Math.PI * 2 * i) / particleCount + (Math.random() - 0.5) * 0.5;
-                    const distance = 40 + Math.random() * 30;
+                    const distance = 50 + Math.random() * 40; // Increased distance for more spread
                     const targetX = centerX + Math.cos(angle) * distance;
                     const targetY = centerY + Math.sin(angle) * distance;
 
-                    // Random size variation
-                    const size = 4 + Math.random() * 4;
+                    // Random size variation (slightly larger for visibility)
+                    const size = 5 + Math.random() * 5;
                     particle.style.width = size + 'px';
                     particle.style.height = size + 'px';
 
-                    // Random opacity
-                    const opacity = 0.4 + Math.random() * 0.4;
+                    // Random opacity (more visible)
+                    const opacity = 0.6 + Math.random() * 0.3;
                     particle.style.background = `rgba(220, 38, 38, ${opacity})`;
 
-                    // Set initial position
+                    // Set initial position using GSAP
                     gsap.set(particle, {
                         x: centerX,
                         y: centerY,
                         opacity: opacity,
-                        scale: 0.5
+                        scale: 0.3
                     });
 
-                    // Animate particle
+                    // Animate particle outward (dust effect)
                     gsap.to(particle, {
                         x: targetX,
                         y: targetY,
                         opacity: 0,
-                        scale: 1.5 + Math.random() * 0.5,
-                        duration: 0.6 + Math.random() * 0.2,
+                        scale: 1.2 + Math.random() * 0.8,
+                        duration: 0.5 + Math.random() * 0.3,
                         ease: 'power2.out',
                         onComplete: () => {
                             particle.remove();
