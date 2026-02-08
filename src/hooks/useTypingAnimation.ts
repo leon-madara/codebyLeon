@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
 
 interface TypingConfig {
@@ -21,12 +21,14 @@ const DEFAULT_CONFIG: TypingConfig = {
   pauseBeforeType: 0.5,
 };
 
-export function useTypingAnimation(config: Partial<TypingConfig> = {}) {
+const EMPTY_CONFIG = {};
+
+export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG) {
   const elementRef = useRef<HTMLSpanElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const [isActive, setIsActive] = useState(true);
 
-  const finalConfig = { ...DEFAULT_CONFIG, ...config };
+  const finalConfig = useMemo(() => ({ ...DEFAULT_CONFIG, ...config }), [config]);
 
   const [currentWord, setCurrentWord] = useState(DEFAULT_CONFIG.words[0]);
 
