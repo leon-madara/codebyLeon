@@ -336,7 +336,7 @@ export function Hero() {
 
           {/* CTAs */}
           <div className="hero-ctas anim-item">
-            <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
+            <a href="mailto:hello@codebyleon.com" className="btn-primary">Book a free 20-minute call</a>
             <a href="#portfolio" className="btn-secondary">VIEW PORTFOLIO</a>
           </div>
         </div>

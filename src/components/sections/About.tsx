@@ -15,7 +15,7 @@ export function About() {
       <div className="section-content">
         <h2 className="section-headline">Helping Kenyan Businesses Look Professional Online</h2>
         <p className="section-subheadline">
-          I design websites and visuals that help Kenyan businesses look professional, get more inquiries, 
+          I design websites and visuals that help Kenyan businesses look professional, get more inquiries,
           and build trust online.
         </p>
 
@@ -23,15 +23,15 @@ export function About() {
           <div className="about-card">
             <h3>Mission</h3>
             <p>
-              Code by Leon helps small businesses and creators build modern websites and consistent visuals 
-              so they can look professional online, attract better clients, and stop losing opportunities 
+              Code by Leon helps small businesses and creators build modern websites and consistent visuals
+              so they can look professional online, attract better clients, and stop losing opportunities
               because of weak design.
             </p>
           </div>
           <div className="about-card">
             <h3>Technology Stack</h3>
             <p>
-              Modern, fast, mobile-first approaches with SEO and performance optimization. We use the latest 
+              Modern, fast, mobile-first approaches with SEO and performance optimization. We use the latest
               web technologies to ensure your site loads quickly and ranks well.
             </p>
           </div>
@@ -51,7 +51,7 @@ export function About() {
           <p style={{ textAlign: 'center', marginBottom: '1rem', color: 'var(--text-secondary)' }}>
             Let's discuss how we can help your business
           </p>
-          <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
+          <a href="mailto:hello@codebyleon.com" className="btn-primary">Book a free 20-minute call</a>
         </div>
       </div>
     </section>

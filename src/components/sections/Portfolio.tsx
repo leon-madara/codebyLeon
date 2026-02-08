@@ -26,8 +26,8 @@ export function Portfolio() {
     { id: 3, category: 'small-business', name: 'Client Name', type: 'Small Service Business' },
   ];
 
-  const filteredItems = activeFilter === 'all' 
-    ? portfolioItems 
+  const filteredItems = activeFilter === 'all'
+    ? portfolioItems
     : portfolioItems.filter(item => item.category === activeFilter);
 
   const updateSliderPosition = (filter: FilterType) => {
@@ -119,7 +119,7 @@ export function Portfolio() {
         </div>
 
         <div className="section-cta">
-          <a href="/get-started.html" className="btn-primary">Ready to Start Your Project?</a>
+          <a href="mailto:hello@codebyleon.com" className="btn-primary">Ready to Start Your Project?</a>
         </div>
       </div>
     </section>
