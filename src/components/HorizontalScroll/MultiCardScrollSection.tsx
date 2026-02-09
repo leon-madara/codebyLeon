@@ -132,6 +132,10 @@ const MultiCardScrollSection = () => {
   };
 
 
+
+  // Sidebar visibility
+  const [showSidebar, setShowSidebar] = useState(false);
+
   // GSAP ScrollTrigger setup
   useLayoutEffect(() => {
     if (!isReady || isMobile) return;
@@ -139,7 +143,10 @@ const MultiCardScrollSection = () => {
     // Small delay to ensure DOM is ready
     const timer = setTimeout(() => {
       const ctx = gsap.context(() => {
+        // ... (existing timeline setup)
+
         CARDS_CONFIG.forEach((_, cardIndex) => {
+          // ... (existing card loop)
           const section = cardSectionRefs.current[cardIndex];
           const beatsContainer = beatsContainerRefs.current[cardIndex];
           const beatRefsArray = getBeatRefs(cardIndex);
@@ -196,6 +203,7 @@ const MultiCardScrollSection = () => {
 
           // Beat-specific animations with smoother easing
           beatRefsArray.forEach((beat, beatIndex) => {
+            // ... keys
             if (!beat) return;
 
             const elements = {
@@ -265,6 +273,18 @@ const MultiCardScrollSection = () => {
             }
           });
         });
+
+        // Toggle Sidebar visibility based on container intersection
+        ScrollTrigger.create({
+          trigger: containerRef.current,
+          start: 'top center',
+          end: 'bottom center',
+          onEnter: () => setShowSidebar(true),
+          onLeave: () => setShowSidebar(false),
+          onEnterBack: () => setShowSidebar(true),
+          onLeaveBack: () => setShowSidebar(false),
+        });
+
       }, containerRef);
 
       return () => ctx.revert();
@@ -442,7 +462,7 @@ const MultiCardScrollSection = () => {
       </section>
 
       {!isMobile && (
-        <Sidebar currentStep={currentBeats[activeCard]} totalSteps={TOTAL_BEATS} />
+        <Sidebar currentStep={currentBeats[activeCard]} totalSteps={TOTAL_BEATS} visible={showSidebar} />
       )}
     </div>
   );

@@ -41,6 +41,8 @@
   /* Brand */
   --accent: #D9751A;
   --accent-hover: #A45711;
+  --hero-accent: #D9751A;
+  --hero-accent-hover: #A45711;
 }
 
 [data-theme="dark"] {
@@ -75,6 +77,8 @@
   /* Brand - Dark Mode */
   --accent: #D9751A;
   --accent-hover: #F58C2F;
+  --hero-accent: #D9751A;
+  --hero-accent-hover: #F58C2F;
 }
 
 /* Rainbow Utility Classes */
@@ -186,12 +190,17 @@ body {
   transition: color 0.3s ease;
 }
 
-[data-theme='dark'] .nav-links a {
+/* Use html[data-theme='dark'] for higher specificity without !important */
+html[data-theme='dark'] .nav-links a {
   color: #ffffff;
 }
 
-[data-theme='dark'] .nav-links a:hover {
-  color: #ff8a75;
+html[data-theme='dark'] .nav-links a:hover {
+  color: #fc5b45;
+}
+
+html[data-theme='dark'] .nav-links a.active {
+  color: #fc5b45;
 }
 
 .nav-links a:hover {
@@ -225,15 +234,7 @@ body {
   color: black !important;
 }
 
-[data-theme="dark"] .navbar .cta-button {
-  background: var(--hero-accent) !important;
-  color: white !important;
-}
 
-[data-theme="dark"] .navbar .cta-button:hover {
-  background: var(--hero-accent-hover) !important;
-  color: white !important;
-}
 
 /* =============================================
    THEME TOGGLE (Animated Sun/Moon)
