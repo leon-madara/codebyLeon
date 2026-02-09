@@ -45,12 +45,13 @@ const MultiCardScrollSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardSectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const beatsContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
-  
+  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
+
   // Beat refs - separate arrays for each card
   const card1BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
   const card2BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
   const card3BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  
+
   const [activeCard, setActiveCard] = useState(0);
   const [cardProgress, setCardProgress] = useState([0, 0, 0]);
   const [currentBeats, setCurrentBeats] = useState([0, 0, 0]);
@@ -105,9 +106,28 @@ const MultiCardScrollSection = () => {
 
   // Scroll to card on tab click
   const handleCardClick = (index: number) => {
-    const cardSection = cardSectionRefs.current[index];
-    if (cardSection) {
-      cardSection.scrollIntoView({ behavior: 'smooth' });
+    if (isMobile) {
+      // Fallback for mobile or if ScrollTrigger isn't ready
+      const cardSection = cardSectionRefs.current[index];
+      if (cardSection) {
+        cardSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
+    const st = scrollTriggersRef.current[index];
+    if (st) {
+      // Use scroll position from ScrollTrigger for pinned sections
+      window.scrollTo({
+        top: st.start,
+        behavior: 'smooth'
+      });
+    } else {
+      // Fallback
+      const cardSection = cardSectionRefs.current[index];
+      if (cardSection) {
+        cardSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -163,6 +183,11 @@ const MultiCardScrollSection = () => {
               },
             },
           });
+
+          // Store ScrollTrigger instance for navigation
+          if (mainTl.scrollTrigger) {
+            scrollTriggersRef.current[cardIndex] = mainTl.scrollTrigger;
+          }
 
           mainTl.to(beatsContainer, {
             x: -scrollDistance,
@@ -318,8 +343,6 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
-        {!isMobile && <Sidebar currentStep={currentBeats[0]} totalSteps={TOTAL_BEATS} />}
-
         {isMobile && (
           <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
             <div className="text-center text-xs text-muted-foreground">
@@ -364,8 +387,6 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
-        {!isMobile && <Sidebar currentStep={currentBeats[1]} totalSteps={TOTAL_BEATS} />}
-
         {isMobile && (
           <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
             <div className="text-center text-xs text-muted-foreground">
@@ -409,8 +430,6 @@ const MultiCardScrollSection = () => {
           </div>
         </div>
 
-        {!isMobile && <Sidebar currentStep={currentBeats[2]} totalSteps={TOTAL_BEATS} />}
-
         {isMobile && (
           <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
             <div className="text-center text-xs text-muted-foreground">
@@ -421,6 +440,10 @@ const MultiCardScrollSection = () => {
 
         <WaveDivider position="bottom" color={CARDS_CONFIG[2].waveColor} />
       </section>
+
+      {!isMobile && (
+        <Sidebar currentStep={currentBeats[activeCard]} totalSteps={TOTAL_BEATS} />
+      )}
     </div>
   );
 };
