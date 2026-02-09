@@ -187,7 +187,11 @@ body {
 }
 
 [data-theme='dark'] .nav-links a {
-  color: #d1c6f9;
+  color: #ffffff;
+}
+
+[data-theme='dark'] .nav-links a:hover {
+  color: #ff8a75;
 }
 
 .nav-links a:hover {
@@ -200,8 +204,8 @@ body {
 }
 
 .navbar .cta-button {
-  background: var(--hero-accent) !important;
-  color: white !important;
+  background: #fc5b45 !important;
+  color: black !important;
   padding: 0.75rem 1.5rem;
   border-radius: 50px;
   text-decoration: none;
@@ -215,8 +219,19 @@ body {
 }
 
 .navbar .cta-button:hover {
-  background: var(--hero-accent-hover) !important;
+  background: #e04a35 !important;
+  /* Slightly darker shade for hover */
   transform: translateY(-2px);
+  color: black !important;
+}
+
+[data-theme="dark"] .navbar .cta-button {
+  background: var(--hero-accent) !important;
+  color: white !important;
+}
+
+[data-theme="dark"] .navbar .cta-button:hover {
+  background: var(--hero-accent-hover) !important;
   color: white !important;
 }
 
