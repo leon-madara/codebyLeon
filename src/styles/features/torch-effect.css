@@ -1,0 +1,27 @@
+/**
+ * Torch Effect Feature Styles
+ * 
+ * Dark mode torch/spotlight effect with animated cursor
+ */
+
+.torch-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 150;
+  pointer-events: none;
+  transition: opacity var(--duration-slower) var(--easing-ease-in-out);
+  background: rgba(5, 5, 5, 0.85);
+  mask-image: radial-gradient(circle var(--radius, 250px) at var(--x, 50%) var(--y, 50%), transparent 0%, black 100%);
+  -webkit-mask-image: radial-gradient(circle var(--radius, 250px) at var(--x, 50%) var(--y, 50%), transparent 0%, black 100%);
+}
+
+.torch-cursor {
+  position: fixed;
+  z-index: 101;
+  pointer-events: none;
+  width: 6rem;
+  height: 6rem;
+  transform: translate(-50%, -50%);
+  left: var(--cursor-x, 50%);
+  top: var(--cursor-y, 50%);
+}

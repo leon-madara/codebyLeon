@@ -1,0 +1,346 @@
+/* =============================================
+   SERVICES SECTION - BEM Structure
+   Code by Leon - CSS Architecture Refactor
+   ============================================= */
+
+/* =============================================
+   SERVICES SECTION CONTAINER
+   ============================================= */
+
+/* Services section headline with Gladolia DEMO font */
+.services .services__headline {
+  font-family: 'Gladolia DEMO', 'Inter', sans-serif;
+  font-size: clamp(1.92rem, 8vw, 3.36rem);
+  font-weight: 400;
+}
+
+/* =============================================
+   SERVICES HEADER CARD WITH TORN BOTTOM EDGE
+   ============================================= */
+
+.services__header-card {
+  position: absolute;
+  top: -8rem;
+  left: 0;
+  background-color: #902207;
+  /* Increased padding: added 4rem (64px) to top and bottom = 128px total height increase */
+  padding: var(--spacing-4xl) var(--spacing-xl) 7rem;
+  margin-bottom: var(--spacing-xl);
+  /* Vertically center content using flexbox */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* Extend to section edges - break out of section-content and section padding */
+  /* Section has padding: 8rem 2rem 6rem (8rem = 128px top padding) */
+  /* Position at top of section by moving up by section's top padding */
+  width: 100vw;
+  max-width: none;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  /* Torn bottom edge using clip-path - more pronounced irregular pattern */
+  clip-path: polygon(
+    0% 0%,
+    100% 0%,
+    100% calc(100% - 10px),
+    /* More pronounced torn edge pattern - larger variations */
+    98% calc(100% - 12px),
+    100% calc(100% - 8px),
+    95% calc(100% - 15px),
+    100% calc(100% - 5px),
+    92% 100%,
+    88% calc(100% - 10px),
+    85% 100%,
+    82% calc(100% - 12px),
+    78% 100%,
+    75% calc(100% - 8px),
+    72% 100%,
+    68% calc(100% - 14px),
+    65% 100%,
+    62% calc(100% - 9px),
+    58% 100%,
+    55% calc(100% - 13px),
+    52% 100%,
+    48% calc(100% - 7px),
+    45% 100%,
+    42% calc(100% - 11px),
+    38% 100%,
+    35% calc(100% - 15px),
+    32% 100%,
+    28% calc(100% - 9px),
+    25% 100%,
+    22% calc(100% - 12px),
+    18% 100%,
+    15% calc(100% - 8px),
+    12% 100%,
+    8% calc(100% - 14px),
+    5% 100%,
+    2% calc(100% - 10px),
+    0% 100%
+  );
+  /* Ensure content is above the card background */
+  z-index: 1;
+}
+
+/* Torn bottom border - 10px border with matching torn shape */
+.services__header-card::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-color: var(--color-nav-cta-bg);
+  /* Match the more pronounced torn edge shape from the card */
+  clip-path: polygon(
+    0% 0%,
+    98% 20%,
+    100% 40%,
+    95% 60%,
+    100% 50%,
+    92% 100%,
+    88% 0%,
+    85% 100%,
+    82% 20%,
+    78% 100%,
+    75% 40%,
+    72% 100%,
+    68% 60%,
+    65% 100%,
+    62% 10%,
+    58% 100%,
+    55% 30%,
+    52% 100%,
+    48% 30%,
+    45% 100%,
+    42% 10%,
+    38% 100%,
+    35% 50%,
+    32% 100%,
+    28% 20%,
+    25% 100%,
+    22% 40%,
+    18% 100%,
+    15% 20%,
+    12% 100%,
+    8% 60%,
+    5% 100%,
+    2% 0%,
+    0% 50%
+  );
+  z-index: 0;
+}
+
+/* Adjust headline and subheadline positioning within card */
+.services__header-card .services__headline {
+  margin-bottom: var(--spacing-lg);
+  position: relative;
+  z-index: 2;
+  /* Remove any default margins that might interfere with centering */
+  margin-top: 0;
+  color: #bcbafa;
+}
+
+.services__header-card .services__subheadline {
+  margin-bottom: 0;
+  position: relative;
+  z-index: 2;
+  /* Ensure subheadline is properly centered */
+  margin-top: 0;
+  color: #fed7d4;
+}
+
+/* =============================================
+   SERVICES GRID - Mobile First
+   ============================================= */
+
+.services__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-2xl);
+  align-items: center;
+}
+
+/* =============================================
+   SERVICE CARD
+   ============================================= */
+
+.services__item {
+  position: relative;
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--spacing-xl);
+  transition: transform var(--duration-normal) var(--easing-standard);
+}
+
+.services__item:hover {
+  transform: scale(1.05) rotate(-2deg);
+  filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.15));
+}
+
+/* =============================================
+   SERVICE CARD ELEMENTS
+   ============================================= */
+
+.services__item-bg-wrapper {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.services__item-bg-svg {
+  width: 115%;
+  height: 115%;
+  /* Use current color from parent/theme class */
+  fill: currentColor;
+  opacity: 0.9;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+}
+
+.services__item-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.services__item-title {
+  font-family: 'MyKidsHandwritten', 'Inter', sans-serif;
+  font-size: 2rem;
+  font-weight: 400;
+  /* Handwritten font is often bold enough */
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.1;
+  transform: rotate(-2deg);
+}
+
+.services__item-description {
+  display: block;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: var(--spacing-md);
+  max-width: 90%;
+  font-weight: 500;
+  color: #e7e6fd;
+}
+
+.services__item-link {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.4rem var(--spacing-md);
+  border-radius: 20px;
+  transition: background var(--duration-normal) var(--easing-standard);
+}
+
+.services__item-link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* =============================================
+   SERVICE CARD THEME VARIANTS
+   ============================================= */
+
+/* Card 1: Purple Theme */
+.services__item--purple {
+  color: var(--rainbow-1);
+  --item-bg-color: var(--rainbow-1);
+  --item-text-color: white;
+  --item-link-bg: rgba(255, 255, 255, 0.2);
+}
+
+/* Override fill for the SVG to be the background color, and text to be contrasting */
+.services__item--purple .services__item-bg-svg {
+  color: var(--item-bg-color);
+}
+
+.services__item--purple .services__item-title,
+.services__item--purple .services__item-link {
+  color: var(--item-text-color);
+}
+
+.services__item--purple .services__item-link {
+  background: var(--item-link-bg);
+}
+
+/* Card 2: Orange Theme */
+.services__item--orange {
+  color: var(--rainbow-2);
+  --item-bg-color: var(--rainbow-2);
+  --item-text-color: white;
+}
+
+.services__item--orange .services__item-bg-svg {
+  color: var(--item-bg-color);
+}
+
+.services__item--orange .services__item-title,
+.services__item--orange .services__item-link {
+  color: var(--item-text-color);
+}
+
+/* Card 3: Blue Theme */
+.services__item--blue {
+  color: var(--rainbow-3);
+  --item-bg-color: var(--rainbow-3);
+  --item-text-color: white;
+}
+
+.services__item--blue .services__item-bg-svg {
+  color: var(--item-bg-color);
+}
+
+.services__item--blue .services__item-title,
+.services__item--blue .services__item-link {
+  color: var(--item-text-color);
+}
+
+/* =============================================
+   DARK MODE ADJUSTMENTS
+   ============================================= */
+
+/* Dark mode - override CSS custom properties */
+[data-theme="dark"] .services__item--purple {
+  --item-bg-color: var(--rainbow-1);
+  --item-text-color: #1a1a2e;
+  --item-link-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .services__item--orange {
+  --item-bg-color: var(--rainbow-2);
+  --item-text-color: #1a1a2e;
+}
+
+[data-theme="dark"] .services__item--blue {
+  --item-bg-color: var(--rainbow-3);
+  --item-text-color: #1a1a2e;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================= */
+
+/* Desktop and up: multi-column grid */
+@media (min-width: 900px) {
+  .services__grid {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+  }
+}

@@ -73,6 +73,55 @@ Your homepage should answer three questions immediately:
 2. **Who is it for?** - Identify your target audience
 3. **Why should they care?** - The benefit, not just features
 
+\`\`\`tsx
+// Example: A high-converting Hero Section component
+const HeroSection = () => {
+  return (
+    <section className="relative bg-white py-20 lg:py-32">
+      <div className="container mx-auto px-6">
+        <div className="max-w-3xl">
+          {/* 1. Target Audience & Problem */}
+          <span className="text-orange-500 font-bold tracking-wider uppercase mb-4 block">
+            For Service-Based Businesses
+          </span>
+          
+          {/* 2. Clear Value Proposition (What & Why) */}
+          <h1 className="text-5xl font-bold mb-6 text-slate-900 leading-tight">
+            Turn Your Website Into a <span className="text-orange-500">24/7 Sales Machine</span>
+          </h1>
+          
+          <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+            We build high-converting websites that help you stop chasing leads 
+            and start closing more deals. Guaranteed to increase inquiries 
+            by 40% in 90 days.
+          </p>
+          
+          {/* 3. Clear Call-to-Action */}
+          <div className="flex gap-4">
+            <button className="bg-orange-500 text-white px-8 py-4 rounded-full font-bold hover:bg-orange-600 transition-colors">
+              Get Your Free Audit
+            </button>
+            <button className="text-slate-700 px-8 py-4 font-semibold hover:text-orange-500 transition-colors">
+              View Our Work
+            </button>
+          </div>
+          
+          {/* 4. Social Proof */}
+          <div className="mt-12 flex items-center gap-4 text-sm text-slate-500">
+            <div className="flex -space-x-2">
+              {[1,2,3,4].map(i => (
+                <div key={i} className="w-10 h-10 rounded-full bg-slate-200 border-2 border-white" />
+              ))}
+            </div>
+            <p>Trusted by 500+ business owners</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+\`\`\`
+
 **Before:**
 > "We provide innovative solutions for modern businesses"
 

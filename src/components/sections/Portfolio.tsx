@@ -18,6 +18,10 @@ export function Portfolio() {
     animateSubheadline: true,
     animateFilters: true,
     animateItems: true,
+    headlineSelector: '.portfolio__title',
+    subheadlineSelector: '.portfolio__subtitle',
+    filtersSelector: '.portfolio__filters',
+    itemsSelector: '.portfolio__item',
   });
 
   const portfolioItems = [
@@ -62,63 +66,63 @@ export function Portfolio() {
   };
 
   return (
-    <section id="portfolio" className="content-section" ref={sectionRef}>
+    <section id="portfolio" className="portfolio" ref={sectionRef}>
       {/* LAYER 2: Abstract Orbs */}
-      <div className="orbs-container">
-        <div className="orb orb-purple"></div>
-        <div className="orb orb-orange"></div>
-        <div className="orb orb-blue"></div>
+      <div className="portfolio__orbs">
+        <div className="portfolio__orb portfolio__orb--purple"></div>
+        <div className="portfolio__orb portfolio__orb--orange"></div>
+        <div className="portfolio__orb portfolio__orb--blue"></div>
       </div>
 
       {/* LAYER 3: Frosted Overlay */}
-      <div className="frosted-overlay"></div>
+      <div className="portfolio__overlay"></div>
 
       {/* LAYER 4: Content */}
-      <div className="section-content">
-        <h2 className="section-headline">Our Work</h2>
-        <p className="section-subheadline">
+      <div className="portfolio__container">
+        <h2 className="portfolio__title">Our Work</h2>
+        <p className="portfolio__subtitle">
           See how we've helped Kenyan businesses look professional and attract better clients.
         </p>
 
-        <div className="portfolio-filters" ref={filtersRef}>
-          <div className="filter-slider" ref={sliderRef}></div>
+        <div className="portfolio__filters" ref={filtersRef}>
+          <div className="portfolio__filter-slider" ref={sliderRef}></div>
           <button
             ref={el => el && buttonRefs.current.set('all', el)}
-            className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
+            className={`portfolio__filter-btn ${activeFilter === 'all' ? 'is-active' : ''}`}
             onClick={() => handleFilterClick('all')}
           >
             All Projects
           </button>
           <button
             ref={el => el && buttonRefs.current.set('small-business', el)}
-            className={`filter-btn ${activeFilter === 'small-business' ? 'active' : ''}`}
+            className={`portfolio__filter-btn ${activeFilter === 'small-business' ? 'is-active' : ''}`}
             onClick={() => handleFilterClick('small-business')}
           >
             Small Business
           </button>
           <button
             ref={el => el && buttonRefs.current.set('creative', el)}
-            className={`filter-btn ${activeFilter === 'creative' ? 'active' : ''}`}
+            className={`portfolio__filter-btn ${activeFilter === 'creative' ? 'is-active' : ''}`}
             onClick={() => handleFilterClick('creative')}
           >
             Creative Professional
           </button>
         </div>
 
-        <div className="portfolio-grid">
+        <div className="portfolio__grid">
           {filteredItems.map(item => (
-            <div key={item.id} className="portfolio-item">
-              <div className="portfolio-image-placeholder">
+            <div key={item.id} className="portfolio__item">
+              <div className="portfolio__image">
                 <p>Project Image</p>
               </div>
-              <h3>{item.name}</h3>
-              <p className="portfolio-type">{item.type}</p>
-              <p className="portfolio-results">Results summary will appear here</p>
+              <h3 className="portfolio__item-title">{item.name}</h3>
+              <p className="portfolio__item-type">{item.type}</p>
+              <p className="portfolio__item-description">Results summary will appear here</p>
             </div>
           ))}
         </div>
 
-        <div className="section-cta">
+        <div className="portfolio__cta">
           <a href="/get-started.html" className="btn-primary">Ready to Start Your Project?</a>
         </div>
       </div>

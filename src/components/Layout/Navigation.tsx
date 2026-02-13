@@ -14,45 +14,45 @@ export function Navigation() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="nav-container">
-        <Link to="/" className="logo">
-          <img src="/icons/main-logo.svg" alt="Code by Leon" className="logo-svg" />
+    <nav className="navigation">
+      <div className="navigation__container">
+        <Link to="/" className="navigation__logo">
+          <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
-        <ul className="nav-links">
-          <li><a href="#portfolio" className={location.pathname === '/' ? 'active' : ''}>PORTFOLIO</a></li>
-          <li><a href="#about" className={location.pathname === '/' ? 'active' : ''}>ABOUT</a></li>
-          <li><a href="#services" className={location.pathname === '/' ? 'active' : ''}>SERVICES</a></li>
-          <li><Link to="/blog" state={{ preserveScroll: true }} className={isActiveLink('/blog') ? 'active' : ''}>BLOG</Link></li>
+        <ul className="navigation__links">
+          <li><a href="#portfolio" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>PORTFOLIO</a></li>
+          <li><a href="#about" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>ABOUT</a></li>
+          <li><a href="#services" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>SERVICES</a></li>
+          <li><Link to="/blog" state={{ preserveScroll: true }} className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>BLOG</Link></li>
         </ul>
 
-        <a href="/get-started.html" className="cta-button">GET IN TOUCH</a>
+        <a href="/get-started.html" className="navigation__cta">GET IN TOUCH</a>
 
         {/* Theme Toggle */}
-        <div className="theme-toggle-wrapper">
+        <div className="navigation__theme-toggle">
           <div
-            className={`toggle-switch ${theme === 'dark' ? 'active' : ''}`}
+            className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
             onClick={toggleTheme}
           >
-            <div className="toggle-background">
-              <div className="scenery day-scenery">
-                <div className="cloud cloud-1"></div>
-                <div className="cloud cloud-2"></div>
-                <div className="cloud cloud-3"></div>
-                <div className="cloud cloud-4"></div>
-                <div className="cloud cloud-5"></div>
+            <div className="navigation__toggle-background">
+              <div className="navigation__scenery navigation__scenery--day">
+                <div className="navigation__cloud navigation__cloud--1"></div>
+                <div className="navigation__cloud navigation__cloud--2"></div>
+                <div className="navigation__cloud navigation__cloud--3"></div>
+                <div className="navigation__cloud navigation__cloud--4"></div>
+                <div className="navigation__cloud navigation__cloud--5"></div>
               </div>
-              <div className="scenery night-scenery">
-                <div className="star star-1">✦</div>
-                <div className="star star-2">★</div>
-                <div className="star star-3">✦</div>
+              <div className="navigation__scenery navigation__scenery--night">
+                <div className="navigation__star navigation__star--1">✦</div>
+                <div className="navigation__star navigation__star--2">★</div>
+                <div className="navigation__star navigation__star--3">✦</div>
               </div>
             </div>
-            <div className="toggle-knob">
-              <div className="crater crater-1"></div>
-              <div className="crater crater-2"></div>
-              <div className="crater crater-3"></div>
+            <div className="navigation__toggle-knob">
+              <div className="navigation__crater navigation__crater--1"></div>
+              <div className="navigation__crater navigation__crater--2"></div>
+              <div className="navigation__crater navigation__crater--3"></div>
             </div>
           </div>
         </div>

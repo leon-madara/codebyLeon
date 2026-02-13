@@ -15,6 +15,10 @@ interface ScrollAnimationConfig {
   animateSubheadline?: boolean;
   animateFilters?: boolean;
   animateItems?: boolean;
+  headlineSelector?: string;
+  subheadlineSelector?: string;
+  filtersSelector?: string;
+  itemsSelector?: string;
 }
 
 /**
@@ -55,17 +59,17 @@ export function useScrollAnimation(
     const section = sectionRef.current;
     if (!section) return;
 
-    const headline = section.querySelector('.section-headline') as HTMLElement;
-    const subheadline = section.querySelector('.section-subheadline') as HTMLElement;
-    const filters = section.querySelector('.portfolio-filters') as HTMLElement;
-    const items = section.querySelectorAll('.portfolio-item');
+    const headline = section.querySelector(config.headlineSelector ?? '.section-headline') as HTMLElement | null;
+    const subheadline = section.querySelector(config.subheadlineSelector ?? '.section-subheadline') as HTMLElement | null;
+    const filters = section.querySelector(config.filtersSelector ?? '.portfolio-filters') as HTMLElement | null;
+    const items = section.querySelectorAll(config.itemsSelector ?? '.portfolio-item');
 
     // Apply splitting
     if (config.animateHeadline && headline) splitTextToWords(headline);
     if (config.animateSubheadline && subheadline) splitTextToWords(subheadline);
 
     // Set initial visibility
-    gsap.set([headline, subheadline, filters], { opacity: 1 });
+    gsap.set([headline, subheadline, filters].filter(Boolean), { opacity: 1 });
 
     // Create timeline
     const tl = gsap.timeline({

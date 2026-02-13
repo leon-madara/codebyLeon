@@ -1,218 +1,111 @@
-import { useEffect, useRef } from 'react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
-export interface MouseTrailProps {
-  /** Number of trail elements (default: 3) */
+export interface MouseTrailConfig {
   trailCount?: number;
-  /** Colors for trail elements (default: blue, purple, coral) */
   colors?: string[];
-  /** Sizes for trail elements in pixels (default: [12, 9, 6]) */
   sizes?: number[];
-  /** Main cursor size in pixels (default: 14) */
   cursorSize?: number;
-  /** Main cursor color (default: dark navy) */
-  cursorColor?: string;
-  /** Smoothness factor for cursor (0-1, default: 0.25) */
-  cursorLerp?: number;
-  /** Smoothness factors for trail elements (default: [0.15, 0.12, 0.09]) */
-  trailLerps?: number[];
-  /** Time in ms before dots coalesce (default: 150) */
-  stationaryThreshold?: number;
-  /** Speed of coalescing (0-1, default: 0.08) */
-  coalesceSpeed?: number;
-  /** Disable the trail effect */
-  disabled?: boolean;
 }
 
-const DEFAULT_COLORS = [
-  'hsl(214, 90%, 59%)', // Blue
-  'hsl(262, 76%, 54%)', // Purple
-  'hsl(4, 96%, 79%)',   // Coral
-];
-
-const DEFAULT_SIZES = [12, 9, 6];
-const DEFAULT_TRAIL_LERPS = [0.15, 0.12, 0.09];
-
-export function MouseTrail({
+const MouseTrail = ({
   trailCount = 3,
-  colors = DEFAULT_COLORS,
-  sizes = DEFAULT_SIZES,
+  colors = ['hsl(214, 90%, 59%)', 'hsl(262, 76%, 54%)', 'hsl(4, 96%, 79%)'],
+  sizes = [12, 9, 6],
   cursorSize = 14,
-  cursorColor = 'hsl(243, 88%, 16%)',
-  cursorLerp = 0.25,
-  trailLerps = DEFAULT_TRAIL_LERPS,
-  stationaryThreshold = 150,
-  coalesceSpeed = 0.08,
-  disabled = false,
-}: MouseTrailProps) {
-  const { theme } = useTheme();
-  const effectiveDisabled = disabled || theme === 'dark';
-
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const cursorRef = useRef<HTMLDivElement | null>(null);
-  const trailElementsRef = useRef<HTMLDivElement[]>([]);
-  const stateRef = useRef({
-    mouseX: 0,
-    mouseY: 0,
-    cursorX: 0,
-    cursorY: 0,
-    trailPositions: [] as { x: number; y: number }[],
-    isStationary: false,
-    lastMoveTime: 0,
-    animationFrame: 0,
-    isEnabled: false,
-  });
+}: MouseTrailConfig) => {
+  const [trail, setTrail] = useState<{ x: number; y: number }[]>([]);
+  const [cursor, setCursor] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [isStationary, setStationary] = useState(false);
+  const lastMoveTime = useRef(Date.now());
 
   useEffect(() => {
-    if (effectiveDisabled) return;
-
-    // Check for reduced motion preference
-    if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
-      return;
-    }
-
-    const state = stateRef.current;
-
-    // Create container
-    const container = document.createElement('div');
-    container.className = 'mouse-trail-container';
-    document.body.appendChild(container);
-    containerRef.current = container;
-
-    // Create cursor element
-    const cursor = document.createElement('div');
-    cursor.className = 'mouse-cursor';
-    cursor.style.width = `${cursorSize}px`;
-    cursor.style.height = `${cursorSize}px`;
-    cursor.style.backgroundColor = cursorColor;
-    cursor.style.opacity = '0';
-    container.appendChild(cursor);
-    cursorRef.current = cursor;
-
-    // Create trail elements
-    trailElementsRef.current = [];
-    for (let i = 0; i < trailCount; i++) {
-      const element = document.createElement('div');
-      element.className = 'trail-element';
-      element.setAttribute('data-index', String(i));
-      element.style.width = `${sizes[i]}px`;
-      element.style.height = `${sizes[i]}px`;
-      element.style.backgroundColor = colors[i];
-      element.style.opacity = '0';
-      container.appendChild(element);
-      trailElementsRef.current.push(element);
-      state.trailPositions.push({ x: 0, y: 0 });
-    }
-
-    // Linear interpolation
-    const lerp = (start: number, end: number, factor: number) => {
-      return start + (end - start) * factor;
-    };
-
-    // Animation loop
-    const animate = () => {
-      if (!state.isEnabled) return;
-
-      const now = performance.now();
-      state.isStationary = now - state.lastMoveTime > stationaryThreshold;
-
-      // Smoothly interpolate cursor position
-      state.cursorX = lerp(state.cursorX, state.mouseX, cursorLerp);
-      state.cursorY = lerp(state.cursorY, state.mouseY, cursorLerp);
-
-      // Update cursor element
-      if (cursor) {
-        const offsetX = state.cursorX - cursorSize / 2;
-        const offsetY = state.cursorY - cursorSize / 2;
-        cursor.style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
-      }
-
-      // Update trail elements
-      for (let i = 0; i < trailCount; i++) {
-        let targetX: number, targetY: number, lerpFactor: number;
-
-        if (state.isStationary) {
-          targetX = state.cursorX;
-          targetY = state.cursorY;
-          lerpFactor = coalesceSpeed;
-        } else {
-          if (i === 0) {
-            targetX = state.cursorX;
-            targetY = state.cursorY;
-          } else {
-            targetX = state.trailPositions[i - 1].x;
-            targetY = state.trailPositions[i - 1].y;
-          }
-          lerpFactor = trailLerps[i];
-        }
-
-        state.trailPositions[i].x = lerp(state.trailPositions[i].x, targetX, lerpFactor);
-        state.trailPositions[i].y = lerp(state.trailPositions[i].y, targetY, lerpFactor);
-
-        const size = sizes[i];
-        const offsetX = state.trailPositions[i].x - size / 2;
-        const offsetY = state.trailPositions[i].y - size / 2;
-        trailElementsRef.current[i].style.transform = `translate3d(${offsetX}px, ${offsetY}px, 0)`;
-      }
-
-      state.animationFrame = requestAnimationFrame(animate);
-    };
-
-    // Event handlers
     const handleMouseMove = (e: MouseEvent) => {
-      state.mouseX = e.clientX;
-      state.mouseY = e.clientY;
-      state.lastMoveTime = performance.now();
-      state.isStationary = false;
+      setCursor({ x: e.clientX, y: e.clientY });
+      lastMoveTime.current = Date.now();
+      setStationary(false);
+    };
 
-      if (cursor.style.opacity === '0') {
-        cursor.style.opacity = '1';
-        state.cursorX = state.mouseX;
-        state.cursorY = state.mouseY;
+    const interval = setInterval(() => {
+      if (Date.now() - lastMoveTime.current > 100) {
+        setStationary(true);
+      }
+    }, 100);
 
+    window.addEventListener('mousemove', handleMouseMove);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      clearInterval(interval);
+    };
+  }, []);
+
+  useEffect(() => {
+    // Only update trail if we have a cursor movement or stationary check
+    // We use a functional update to avoid depending on 'trail' itself
+    setTrail(prevTrail => {
+      const newTrail = [...prevTrail];
+      let changed = false;
+
+      if (newTrail.length === 0) {
+        // Initialize trail
         for (let i = 0; i < trailCount; i++) {
-          state.trailPositions[i] = { x: state.mouseX, y: state.mouseY };
-          trailElementsRef.current[i].style.opacity = '1';
+          newTrail.push({ x: cursor.x, y: cursor.y });
+        }
+        changed = true;
+      } else {
+        // Update trail
+        for (let i = 0; i < trailCount; i++) {
+          const leader = i === 0 ? cursor : newTrail[i - 1];
+          const follower = newTrail[i];
+          const dx = leader.x - follower.x;
+          const dy = leader.y - follower.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (isStationary || distance > 2) {
+            const newX = follower.x + dx * 0.2;
+            const newY = follower.y + dy * 0.2;
+            newTrail[i] = { x: newX, y: newY };
+            changed = true;
+          }
         }
       }
-    };
 
-    const handleMouseLeave = () => {
-      if (cursor) cursor.style.opacity = '0';
-      trailElementsRef.current.forEach(el => (el.style.opacity = '0'));
-    };
+      return changed ? newTrail : prevTrail;
+    });
+  }, [cursor, isStationary, trailCount]);
 
-    document.addEventListener('mousemove', handleMouseMove, { passive: true });
-    document.addEventListener('mouseleave', handleMouseLeave);
+  if (typeof window === 'undefined') {
+    return null;
+  }
 
-    state.isEnabled = true;
-    animate();
+  return createPortal(
+    <div className="mouse-trail-container">
+      <div
+        className="mouse-cursor"
+        style={{
+          transform: `translate(${cursor.x - cursorSize / 2}px, ${cursor.y - cursorSize / 2}px)`,
+          width: `${cursorSize}px`,
+          height: `${cursorSize}px`,
+          opacity: trail.length === 0 ? '0' : '1', // Start hidden, become visible after first move
+        }}
+      />
+      {trail.map((pos, i) => (
+        <div
+          key={i}
+          className="trail-element"
+          data-index={i}
+          style={{
+            transform: `translate(${pos.x - sizes[i] / 2}px, ${pos.y - sizes[i] / 2}px)`,
+            width: `${sizes[i]}px`,
+            height: `${sizes[i]}px`,
+            opacity: trail.length === 0 ? '0' : '1', // Start hidden, become visible after first move
+          }}
+        />
+      ))}
+    </div>,
+    document.body
+  );
+};
 
-    // Cleanup
-    return () => {
-      state.isEnabled = false;
-      if (state.animationFrame) {
-        cancelAnimationFrame(state.animationFrame);
-      }
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      if (container.parentNode) {
-        container.parentNode.removeChild(container);
-      }
-    };
-  }, [
-    effectiveDisabled,
-    trailCount,
-    colors,
-    sizes,
-    cursorSize,
-    cursorColor,
-    cursorLerp,
-    trailLerps,
-    stationaryThreshold,
-    coalesceSpeed,
-  ]);
-
-  // Component renders nothing (effect is in DOM)
-  return null;
-}
+export default MouseTrail;

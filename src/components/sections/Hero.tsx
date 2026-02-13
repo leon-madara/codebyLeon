@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,8 +13,10 @@ export function Hero() {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isInitializedRef = useRef(false);
   const wordContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
 
   useGSAP(() => {
+    if (isMobile) return;
     ScrollTrigger.create({
       trigger: sectionRef.current,
       start: "top top",
@@ -68,7 +70,7 @@ export function Hero() {
           const scaleFactor = targetWidth / initialWidth;
 
           const wordContainer = document.createElement('div');
-          wordContainer.className = 'word-grow-container';
+          wordContainer.className = 'hero__word-grow-container';
           Object.assign(wordContainer.style, {
             position: 'absolute',
             left: `${initialX}px`,
@@ -139,7 +141,7 @@ export function Hero() {
           const tl = gsap.timeline({ paused: true });
 
           // Fade out elements (instant)
-          tl.to('.navbar, .hero-badge, .hero-subheadline, .hero-tag-wrapper, .hero-ctas, .headline-line-1, .headline-line-3', {
+          tl.to('.navigation, .hero__badge, .hero__subheadline, .hero__tag-wrapper, .hero__ctas, .headline-line-1, .headline-line-3', {
             autoAlpha: 0,
             duration: 0,
             ease: "none",
@@ -267,7 +269,7 @@ export function Hero() {
           }
 
           // Restore other elements
-          gsap.set('.navbar, .hero-badge, .hero-subheadline, .hero-tag-wrapper, .hero-ctas, .headline-line-1, .headline-line-3', {
+          gsap.set('.navigation, .hero__badge, .hero__subheadline, .hero__tag-wrapper, .hero__ctas, .headline-line-1, .headline-line-3', {
             autoAlpha: 1, // Restore autoAlpha
             pointerEvents: "auto"
           });
@@ -282,48 +284,68 @@ export function Hero() {
       }
     });
 
-  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef] });
+  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile] });
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 768);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
+
+  useEffect(() => {
+    if (!isMobile || !sectionRef.current || !contentRef.current) return;
+    const handleScroll = () => {
+      const rect = sectionRef.current!.getBoundingClientRect();
+      const translate = Math.min(Math.max(-rect.top, 0), window.innerHeight) * 0.1;
+      contentRef.current!.style.setProperty('--parallax-translate', `${translate}px`);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isMobile]);
 
   return (
     <section ref={sectionRef} className="hero">
       {/* LAYER 2: Abstract Orbs */}
-      <div className="orbs-container">
-        <div className="orb orb-purple"></div>
-        <div className="orb orb-orange"></div>
-        <div className="orb orb-blue"></div>
+      <div className="hero__orbs-container">
+        <div className="hero__orb hero__orb--purple"></div>
+        <div className="hero__orb hero__orb--orange"></div>
+        <div className="hero__orb hero__orb--blue"></div>
       </div>
 
       {/* LAYER 3: Full-Screen Frosted Overlay with Dot Grid */}
-      <div className="frosted-overlay"></div>
+      <div className="hero__frosted-overlay"></div>
 
       {/* LAYER 4: Content (Bold Typography) */}
-      <div ref={contentRef} className="hero-content main-content">
-        <div className="hero-text-wrapper">
+      <div ref={contentRef} className="hero__content">
+        <div className="hero__text-wrapper">
           {/* Badge */}
-          <span className="hero-badge anim-item">Nairobi-based design studio</span>
+          <span className="hero__badge hero__anim-item">Nairobi-based design studio</span>
 
           {/* Main Headline */}
-          <h1 className="hero-headline">
+          <h1 className="hero__headline">
             <div className="headline-line-1">
-              <span className="highlight-bold">Bold</span> websites for
+              <span className="hero__highlight--bold">Bold</span> websites for
             </div>
             <div className="headline-line-2">
-              <span ref={typingRef} className="highlight-ambitious"></span>
+              <span ref={typingRef} className="hero__highlight--ambitious"></span>
             </div>
-            <div className="headline-line-3">brands<span className="highlight-dot">.</span></div>
+            <div className="headline-line-3">brands<span className="hero__highlight--dot">.</span></div>
           </h1>
 
           {/* Subheadline */}
-          <p className="hero-subheadline anim-item">
+          <p className="hero__subheadline hero__anim-item">
             Websites and design that make your business<br />look as professional as it is.
           </p>
 
           {/* Tag with Gradient + SVG Underline */}
-          <div className="hero-tag-wrapper anim-item">
-            <span className="hero-tag gradient-text">Beyond the Blueprint</span>
-            <svg className="underline-svg" viewBox="0 0 200 12" preserveAspectRatio="none">
+          <div className="hero__tag-wrapper hero__anim-item">
+            <span className="hero__tag gradient-text">Beyond the Blueprint</span>
+            <svg className="hero__underline-svg" viewBox="0 0 200 12" preserveAspectRatio="none">
               <path
-                className="underline-path"
+                className="hero__underline-path"
                 d="M0 6 Q16.67 0.5 33.33 6 Q50 11.5 66.67 6 Q83.33 0.5 100 6 Q116.67 11.5 133.33 6 Q150 0.5 166.67 6 Q183.33 11.5 200 6"
                 fill="none"
                 stroke="currentColor"
@@ -335,9 +357,9 @@ export function Hero() {
           </div>
 
           {/* CTAs */}
-          <div className="hero-ctas anim-item">
-            <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
-            <a href="#portfolio" className="btn-secondary">VIEW PORTFOLIO</a>
+          <div className="hero__ctas hero__anim-item">
+            <a href="/get-started.html" className="hero__cta hero__cta--primary">Book a free 20-minute call</a>
+            <a href="#portfolio" className="hero__cta hero__cta--secondary">VIEW PORTFOLIO</a>
           </div>
         </div>
       </div>

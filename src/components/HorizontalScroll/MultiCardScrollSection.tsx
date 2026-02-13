@@ -1,14 +1,12 @@
 import { useRef, useState, useEffect, useCallback, useLayoutEffect } from 'react';
+import type { ForwardRefExoticComponent, RefAttributes, CSSProperties } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ServiceTabs from './ServiceTabs';
 import WaveDivider from './WaveDivider';
 
-// Card 1 beats
 import { Card1ProblemBeat, Card1PlanBeat, Card1BuildBeat, Card1LaunchBeat } from './beats/card1';
-// Card 2 beats
 import { Card2OutdatedBeat, Card2StrategyBeat, Card2ProcessBeat, Card2TransformationBeat } from './beats/card2';
-// Card 3 beats
 import { Card3BottlenecksBeat, Card3ModelBeat, Card3WorkflowBeat, Card3SuccessBeat } from './beats/card3';
 
 import ProgressIndicator from './ProgressIndicator';
@@ -17,75 +15,83 @@ import ScrollHint from './ScrollHint';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CARDS_CONFIG = [
+const DESKTOP_BREAKPOINT = 1024;
+const TOTAL_BEATS = 4;
+const FINAL_BEAT_SCROLL_MULTIPLIER = 1.2;
+
+type BeatComponent = ForwardRefExoticComponent<RefAttributes<HTMLDivElement>>;
+
+interface StoryConfig {
+  id: string;
+  title: string;
+  labels: string[];
+  waveColor: string;
+  beats: BeatComponent[];
+}
+
+const STORIES: StoryConfig[] = [
   {
     id: 'launch',
     title: 'Launch',
-    theme: 'forest' as const,
     labels: ['Problem', 'Plan', 'Build', 'Launch'],
     waveColor: 'hsl(195, 70%, 20%)',
+    beats: [Card1ProblemBeat, Card1PlanBeat, Card1BuildBeat, Card1LaunchBeat],
   },
   {
     id: 'brand-refresh',
     title: 'Brand Refresh',
-    theme: 'cyan' as const,
     labels: ['Outdated', 'Strategy', 'Process', 'Transformation'],
     waveColor: 'hsl(160, 65%, 18%)',
+    beats: [Card2OutdatedBeat, Card2StrategyBeat, Card2ProcessBeat, Card2TransformationBeat],
   },
   {
     id: 'ongoing-support',
     title: 'Ongoing Support',
-    theme: 'emerald' as const,
     labels: ['Bottlenecks', 'Model', 'Workflow', 'Success'],
     waveColor: 'hsl(var(--background))',
+    beats: [Card3BottlenecksBeat, Card3ModelBeat, Card3WorkflowBeat, Card3SuccessBeat],
   },
 ];
 
+const createProgressArray = () => STORIES.map(() => 0);
+const createBeatRefMatrix = () => STORIES.map(() => Array<HTMLDivElement | null>(TOTAL_BEATS).fill(null));
+
+const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
+
 const MultiCardScrollSection = () => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const cardSectionRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const beatsContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const scrollTriggersRef = useRef<ScrollTrigger[]>([]);
+  const topChromeRef = useRef<HTMLDivElement>(null);
+  const sidebarRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLElement | null)[]>([]);
+  const trackRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const scrollTriggersRef = useRef<(ScrollTrigger | null)[]>([]);
+  const beatRefs = useRef<(HTMLDivElement | null)[][]>(createBeatRefMatrix());
 
-  // Beat refs - separate arrays for each card
-  const card1BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  const card2BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-  const card3BeatRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null]);
-
-  const [activeCard, setActiveCard] = useState(0);
-  const [cardProgress, setCardProgress] = useState([0, 0, 0]);
-  const [currentBeats, setCurrentBeats] = useState([0, 0, 0]);
-  const [showScrollHint, setShowScrollHint] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [activeCard, setActiveCard] = useState(0);
+  const [cardProgress, setCardProgress] = useState<number[]>(createProgressArray());
+  const [currentBeats, setCurrentBeats] = useState<number[]>(createProgressArray());
+  const [showScrollHint, setShowScrollHint] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
+  const [topChromeHeight, setTopChromeHeight] = useState(168);
+  const [sidebarHeight, setSidebarHeight] = useState(0);
 
-  const TOTAL_BEATS = 4;
-
-  const getBeatRefs = (cardIndex: number) => {
-    switch (cardIndex) {
-      case 0: return card1BeatRefs.current;
-      case 1: return card2BeatRefs.current;
-      case 2: return card3BeatRefs.current;
-      default: return [];
-    }
-  };
-
-  // Check for mobile
-  const checkMobile = useCallback(() => {
-    setIsMobile(window.innerWidth < 900);
+  const syncViewportMode = useCallback(() => {
+    setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
   }, []);
 
   useEffect(() => {
-    checkMobile();
+    syncViewportMode();
     setIsReady(true);
 
     let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(() => {
-        checkMobile();
+        syncViewportMode();
         ScrollTrigger.refresh();
-      }, 250);
+      }, 180);
     };
 
     window.addEventListener('resize', handleResize);
@@ -93,376 +99,287 @@ const MultiCardScrollSection = () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimer);
     };
-  }, [checkMobile]);
+  }, [syncViewportMode]);
 
-  // Hide scroll hint on first scroll
   useEffect(() => {
-    const handleScroll = () => {
-      if (showScrollHint) setShowScrollHint(false);
-    };
+    if (!showScrollHint || !isDesktop) return;
+
+    const handleScroll = () => setShowScrollHint(false);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [showScrollHint]);
+  }, [showScrollHint, isDesktop]);
 
-  // Scroll to card on tab click
-  const handleCardClick = (index: number) => {
-    if (isMobile) {
-      // Fallback for mobile or if ScrollTrigger isn't ready
-      const cardSection = cardSectionRefs.current[index];
-      if (cardSection) {
-        cardSection.scrollIntoView({ behavior: 'smooth' });
-      }
+  useEffect(() => {
+    const element = topChromeRef.current;
+    if (!element) return;
+
+    const updateTopChromeHeight = () => {
+      const nextHeight = Math.ceil(element.getBoundingClientRect().height);
+      if (nextHeight > 0) setTopChromeHeight(nextHeight);
+    };
+
+    updateTopChromeHeight();
+
+    const resizeObserver = new ResizeObserver(updateTopChromeHeight);
+    resizeObserver.observe(element);
+    window.addEventListener('resize', updateTopChromeHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateTopChromeHeight);
+    };
+  }, [activeCard]);
+
+  useEffect(() => {
+    const element = sidebarRef.current;
+    if (!element) {
+      setSidebarHeight(0);
       return;
     }
 
-    const st = scrollTriggersRef.current[index];
-    if (st) {
-      // Use scroll position from ScrollTrigger for pinned sections
-      window.scrollTo({
-        top: st.start,
-        behavior: 'smooth'
-      });
-    } else {
-      // Fallback
-      const cardSection = cardSectionRefs.current[index];
-      if (cardSection) {
-        cardSection.scrollIntoView({ behavior: 'smooth' });
+    const updateSidebarHeight = () => {
+      if (!isDesktop || !showSidebar) {
+        setSidebarHeight(0);
+        return;
       }
+      const nextHeight = Math.ceil(element.getBoundingClientRect().height);
+      setSidebarHeight(nextHeight > 0 ? nextHeight : 0);
+    };
+
+    updateSidebarHeight();
+
+    const resizeObserver = new ResizeObserver(updateSidebarHeight);
+    resizeObserver.observe(element);
+    window.addEventListener('resize', updateSidebarHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateSidebarHeight);
+    };
+  }, [isDesktop, showSidebar, activeCard]);
+
+  const updateStoryProgress = useCallback((storyIndex: number, progressValue: number) => {
+    const clamped = clampProgress(progressValue);
+
+    setCardProgress((prev) => {
+      if (Math.abs(prev[storyIndex] - clamped) < 0.001) return prev;
+      const next = [...prev];
+      next[storyIndex] = clamped;
+      return next;
+    });
+
+    const normalized = clamped * TOTAL_BEATS;
+    const beatIndex = Math.min(TOTAL_BEATS - 1, Math.floor(normalized));
+
+    setCurrentBeats((prev) => {
+      if (prev[storyIndex] === beatIndex) return prev;
+      const next = [...prev];
+      next[storyIndex] = beatIndex;
+      return next;
+    });
+  }, []);
+
+  const handleCardClick = useCallback((index: number) => {
+    const trigger = scrollTriggersRef.current[index];
+    if (trigger) {
+      window.scrollTo({
+        top: trigger.start,
+        behavior: 'smooth',
+      });
+      return;
     }
-  };
 
+    const section = sectionRefs.current[index];
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, []);
 
-
-  // Sidebar visibility
-  const [showSidebar, setShowSidebar] = useState(false);
-
-  // GSAP ScrollTrigger setup
   useLayoutEffect(() => {
-    if (!isReady || isMobile) return;
-
-    // Small delay to ensure DOM is ready
-    const timer = setTimeout(() => {
-      const ctx = gsap.context(() => {
-        // ... (existing timeline setup)
-
-        CARDS_CONFIG.forEach((_, cardIndex) => {
-          // ... (existing card loop)
-          const section = cardSectionRefs.current[cardIndex];
-          const beatsContainer = beatsContainerRefs.current[cardIndex];
-          const beatRefsArray = getBeatRefs(cardIndex);
-
-          if (!section || !beatsContainer) return;
-
-          const scrollDistance = (TOTAL_BEATS - 1) * window.innerWidth * 0.8;
-
-          // Main horizontal scroll animation
-          const mainTl = gsap.timeline({
-            scrollTrigger: {
-              trigger: section,
-              pin: true,
-              pinSpacing: true,
-              start: 'top top',
-              end: `+=${scrollDistance}`,
-              scrub: 0.5,
-              anticipatePin: 1,
-              invalidateOnRefresh: true,
-              snap: {
-                snapTo: 1 / (TOTAL_BEATS - 1),
-                duration: { min: 0.3, max: 0.8 },
-                delay: 0.05,
-                ease: 'power2.inOut',
-              },
-              onEnter: () => setActiveCard(cardIndex),
-              onEnterBack: () => setActiveCard(cardIndex),
-              onUpdate: (self) => {
-                const progressValue = self.progress;
-                setCardProgress(prev => {
-                  const newProgress = [...prev];
-                  newProgress[cardIndex] = progressValue;
-                  return newProgress;
-                });
-                const beatIndex = Math.round(progressValue * (TOTAL_BEATS - 1));
-                setCurrentBeats(prev => {
-                  const newBeats = [...prev];
-                  newBeats[cardIndex] = beatIndex;
-                  return newBeats;
-                });
-              },
-            },
-          });
-
-          // Store ScrollTrigger instance for navigation
-          if (mainTl.scrollTrigger) {
-            scrollTriggersRef.current[cardIndex] = mainTl.scrollTrigger;
-          }
-
-          mainTl.to(beatsContainer, {
-            x: -scrollDistance,
-            ease: 'none',
-          });
-
-          // Beat-specific animations with smoother easing
-          beatRefsArray.forEach((beat, beatIndex) => {
-            // ... keys
-            if (!beat) return;
-
-            const elements = {
-              icon: beat.querySelector('.beat-icon'),
-              title: beat.querySelector('.beat-title'),
-              subtitle: beat.querySelector('.beat-subtitle'),
-              description: beat.querySelector('.beat-description'),
-              content: beat.querySelector('.beat-content'),
-            };
-
-            // First beat should be visible immediately
-            if (beatIndex === 0) {
-              gsap.set([elements.icon, elements.title, elements.subtitle, elements.description, elements.content].filter(Boolean), {
-                opacity: 1, y: 0, scale: 1
-              });
-              return;
-            }
-
-            const beatTl = gsap.timeline({
-              scrollTrigger: {
-                trigger: beat,
-                containerAnimation: mainTl,
-                start: 'left 70%',
-                end: 'left 30%',
-                scrub: 0.3,
-              },
-            });
-
-            if (elements.icon) {
-              beatTl.fromTo(elements.icon,
-                { scale: 0.8, opacity: 0 },
-                { scale: 1, opacity: 1, duration: 0.4, ease: 'power2.out' },
-                0
-              );
-            }
-
-            if (elements.title) {
-              beatTl.fromTo(elements.title,
-                { y: 20, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
-                0.05
-              );
-            }
-
-            if (elements.subtitle) {
-              beatTl.fromTo(elements.subtitle,
-                { y: 15, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
-                0.1
-              );
-            }
-
-            if (elements.description) {
-              beatTl.fromTo(elements.description,
-                { y: 15, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' },
-                0.15
-              );
-            }
-
-            if (elements.content) {
-              beatTl.fromTo(elements.content,
-                { y: 15, opacity: 0 },
-                { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' },
-                0.2
-              );
-            }
-          });
-        });
-
-        // Toggle Sidebar visibility based on container intersection
-        ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: 'top center',
-          end: 'bottom center',
-          onEnter: () => setShowSidebar(true),
-          onLeave: () => setShowSidebar(false),
-          onEnterBack: () => setShowSidebar(true),
-          onLeaveBack: () => setShowSidebar(false),
-        });
-
-      }, containerRef);
-
-      return () => ctx.revert();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [isReady, isMobile]);
-
-  // Mobile: Simple fade-in animations
-  useLayoutEffect(() => {
-    if (!isReady || !isMobile) return;
+    if (!isReady) return;
 
     const ctx = gsap.context(() => {
-      [card1BeatRefs, card2BeatRefs, card3BeatRefs].forEach(refs => {
-        refs.current.forEach((beat) => {
-          if (!beat) return;
+      STORIES.forEach((_, storyIndex) => {
+        const section = sectionRefs.current[storyIndex];
+        const track = trackRefs.current[storyIndex];
+        const beats = beatRefs.current[storyIndex].filter(
+          (beat): beat is HTMLDivElement => Boolean(beat)
+        );
 
-          gsap.fromTo(beat,
-            { opacity: 0, y: 50 },
-            {
-              opacity: 1,
-              y: 0,
-              duration: 0.8,
-              scrollTrigger: {
-                trigger: beat,
-                start: 'top 80%',
-                end: 'top 50%',
-                scrub: 1,
-              },
-            }
-          );
+        if (!section || !track || beats.length !== TOTAL_BEATS) return;
+
+        const getStepDistance = () => {
+          const firstBeat = beats[0];
+          const rect = firstBeat.getBoundingClientRect();
+          return isDesktop ? rect.width : rect.height;
+        };
+
+        const getBaseScrollDistance = () => getStepDistance() * (TOTAL_BEATS - 1);
+        const getFinalBeatHoldDistance = () => getStepDistance() * (FINAL_BEAT_SCROLL_MULTIPLIER - 1);
+        const getTotalScrollDistance = () => getBaseScrollDistance() + getFinalBeatHoldDistance();
+
+        gsap.set(track, { x: 0, y: 0 });
+
+        const timeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            pin: true,
+            pinSpacing: true,
+            start: 'top top',
+            end: () => `+=${getTotalScrollDistance()}`,
+            scrub: 0.35,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            snap: {
+              snapTo: (value: number) => Math.round(value * (TOTAL_BEATS - 1)) / (TOTAL_BEATS - 1),
+              duration: { min: 0.15, max: 0.45 },
+              delay: 0.05,
+              ease: 'power2.out',
+            },
+            onEnter: () => setActiveCard(storyIndex),
+            onEnterBack: () => setActiveCard(storyIndex),
+            onUpdate: (self) => {
+              const scrolledDistance = self.scroll() - self.start;
+              const baseDistance = getBaseScrollDistance();
+              const mappedProgress = baseDistance > 0 ? clampProgress(scrolledDistance / baseDistance) : 0;
+              updateStoryProgress(storyIndex, mappedProgress);
+            },
+          },
         });
+
+        const baseDistance = getBaseScrollDistance();
+        const finalHoldDistance = getFinalBeatHoldDistance();
+
+        if (isDesktop) {
+          timeline.to(track, {
+            x: -baseDistance,
+            ease: 'none',
+            duration: baseDistance,
+          });
+        } else {
+          timeline.to(track, {
+            y: -baseDistance,
+            ease: 'none',
+            duration: baseDistance,
+          });
+        }
+
+        timeline.to({}, { duration: Math.max(0, finalHoldDistance) });
+
+        scrollTriggersRef.current[storyIndex] = timeline.scrollTrigger ?? null;
+
+        beats.forEach((beat, beatIndex) => {
+          const revealNodes = beat.querySelectorAll<HTMLElement>('.hs-beat-reveal');
+          if (!revealNodes.length) return;
+
+          if (beatIndex === 0) {
+            gsap.set(revealNodes, { opacity: 1, y: 0 });
+            return;
+          }
+
+          gsap.set(revealNodes, { opacity: 0, y: 18 });
+
+          gsap.timeline({
+            scrollTrigger: {
+              trigger: beat,
+              containerAnimation: timeline,
+              start: isDesktop ? 'left 72%' : 'top 72%',
+              end: isDesktop ? 'left 45%' : 'top 45%',
+              scrub: 0.35,
+            },
+          }).to(revealNodes, {
+            opacity: 1,
+            y: 0,
+            stagger: 0.05,
+            duration: 0.3,
+            ease: 'power2.out',
+          });
+        });
+      });
+
+      ScrollTrigger.create({
+        trigger: containerRef.current,
+        start: 'top center',
+        end: 'bottom center',
+        onEnter: () => setShowSidebar(true),
+        onLeave: () => setShowSidebar(false),
+        onEnterBack: () => setShowSidebar(true),
+        onLeaveBack: () => setShowSidebar(false),
       });
     }, containerRef);
 
-    return () => ctx.revert();
-  }, [isReady, isMobile]);
+    return () => {
+      scrollTriggersRef.current = [];
+      ctx.revert();
+    };
+  }, [isDesktop, isReady, updateStoryProgress]);
 
+  const rootStyle = {
+    '--hs-top-chrome-height': `${topChromeHeight}px`,
+    '--hs-sidebar-height': `${sidebarHeight}px`,
+  } as CSSProperties;
 
   return (
-    <div ref={containerRef} className="relative pb-24">
-      {/* Service tabs navigation */}
-      <ServiceTabs
-        cards={CARDS_CONFIG}
-        activeCard={activeCard}
-        onCardClick={handleCardClick}
-      />
-
-      {/* Card 1 - Launch */}
-      <section
-        ref={(el: HTMLDivElement | null) => { cardSectionRefs.current[0] = el; }}
-        className="relative"
-        id="service-launch"
-        data-story-card="launch"
-      >
-        {activeCard === 0 && (
-          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
-            <ProgressIndicator
-              currentBeat={currentBeats[0]}
-              totalBeats={TOTAL_BEATS}
-              progress={cardProgress[0]}
-              labels={CARDS_CONFIG[0].labels}
-            />
+    <div id="services" ref={containerRef} className="hs" style={rootStyle}>
+      <div ref={topChromeRef} className="hs__top-chrome">
+        <ServiceTabs cards={STORIES} activeCard={activeCard} onCardClick={handleCardClick} />
+        <ProgressIndicator
+          className="hs__progress"
+          currentBeat={currentBeats[activeCard]}
+          totalBeats={TOTAL_BEATS}
+          progress={cardProgress[activeCard]}
+          labels={STORIES[activeCard].labels}
+        />
+        {!isDesktop && (
+          <div className="hs__mobile-step">
+            <span className="hs__mobile-step-title">{STORIES[activeCard].title}</span>
+            <span>
+              Step {currentBeats[activeCard] + 1} of {TOTAL_BEATS}
+            </span>
           </div>
         )}
+      </div>
 
-        <div className="relative overflow-hidden">
-          <div
-            ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[0] = el; }}
-            className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
-          >
-            <Card1ProblemBeat ref={(el: HTMLDivElement | null) => { card1BeatRefs.current[0] = el; }} />
-            <Card1PlanBeat ref={(el: HTMLDivElement | null) => { card1BeatRefs.current[1] = el; }} />
-            <Card1BuildBeat ref={(el: HTMLDivElement | null) => { card1BeatRefs.current[2] = el; }} />
-            <Card1LaunchBeat ref={(el: HTMLDivElement | null) => { card1BeatRefs.current[3] = el; }} />
-          </div>
-        </div>
-
-        {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
-            <div className="text-center text-xs text-muted-foreground">
-              Launch • Step {currentBeats[0] + 1} of {TOTAL_BEATS}
+      {STORIES.map((story, storyIndex) => (
+        <section
+          key={story.id}
+          ref={(el) => {
+            sectionRefs.current[storyIndex] = el;
+          }}
+          className={`hs__story ${isDesktop ? 'hs__story--horizontal' : 'hs__story--vertical'}`.trim()}
+          id={`service-${story.id}`}
+          data-story-card={story.id}
+        >
+          <div className="hs__viewport">
+            <div
+              ref={(el) => {
+                trackRefs.current[storyIndex] = el;
+              }}
+              className={`hs__track ${isDesktop ? 'hs__track--horizontal' : 'hs__track--vertical'}`.trim()}
+            >
+              {story.beats.map((BeatComponent, beatIndex) => (
+                <BeatComponent
+                  key={`${story.id}-beat-${beatIndex}`}
+                  ref={(el: HTMLDivElement | null) => {
+                    beatRefs.current[storyIndex][beatIndex] = el;
+                  }}
+                />
+              ))}
             </div>
           </div>
-        )}
 
-        <ScrollHint visible={showScrollHint && !isMobile} />
-        <WaveDivider position="bottom" color={CARDS_CONFIG[0].waveColor} />
-      </section>
+          {storyIndex === 0 && <ScrollHint visible={showScrollHint && isDesktop} />}
+          <WaveDivider position="bottom" color={story.waveColor} />
+        </section>
+      ))}
 
-      {/* Card 2 - Brand Refresh */}
-      <section
-        ref={(el: HTMLDivElement | null) => { cardSectionRefs.current[1] = el; }}
-        className="relative"
-        id="service-brand-refresh"
-        data-story-card="brand-refresh"
-      >
-        <WaveDivider position="top" color={CARDS_CONFIG[0].waveColor} />
-
-        {activeCard === 1 && (
-          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
-            <ProgressIndicator
-              currentBeat={currentBeats[1]}
-              totalBeats={TOTAL_BEATS}
-              progress={cardProgress[1]}
-              labels={CARDS_CONFIG[1].labels}
-            />
-          </div>
-        )}
-
-        <div className="relative overflow-hidden">
-          <div
-            ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[1] = el; }}
-            className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
-          >
-            <Card2OutdatedBeat ref={(el: HTMLDivElement | null) => { card2BeatRefs.current[0] = el; }} />
-            <Card2StrategyBeat ref={(el: HTMLDivElement | null) => { card2BeatRefs.current[1] = el; }} />
-            <Card2ProcessBeat ref={(el: HTMLDivElement | null) => { card2BeatRefs.current[2] = el; }} />
-            <Card2TransformationBeat ref={(el: HTMLDivElement | null) => { card2BeatRefs.current[3] = el; }} />
-          </div>
-        </div>
-
-        {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
-            <div className="text-center text-xs text-muted-foreground">
-              Brand Refresh • Step {currentBeats[1] + 1} of {TOTAL_BEATS}
-            </div>
-          </div>
-        )}
-
-        <WaveDivider position="bottom" color={CARDS_CONFIG[1].waveColor} />
-      </section>
-
-      {/* Card 3 - Ongoing Support */}
-      <section
-        ref={(el: HTMLDivElement | null) => { cardSectionRefs.current[2] = el; }}
-        className="relative"
-        id="service-ongoing-support"
-        data-story-card="ongoing-support"
-      >
-        <WaveDivider position="top" color={CARDS_CONFIG[1].waveColor} />
-
-        {activeCard === 2 && (
-          <div className="sticky top-[125px] z-40 bg-background/90 backdrop-blur-md border-b border-border/30 py-2">
-            <ProgressIndicator
-              currentBeat={currentBeats[2]}
-              totalBeats={TOTAL_BEATS}
-              progress={cardProgress[2]}
-              labels={CARDS_CONFIG[2].labels}
-            />
-          </div>
-        )}
-
-        <div className="relative overflow-hidden">
-          <div
-            ref={(el: HTMLDivElement | null) => { beatsContainerRefs.current[2] = el; }}
-            className={`flex ${isMobile ? 'flex-col' : 'flex-row'} will-change-transform`}
-          >
-            <Card3BottlenecksBeat ref={(el: HTMLDivElement | null) => { card3BeatRefs.current[0] = el; }} />
-            <Card3ModelBeat ref={(el: HTMLDivElement | null) => { card3BeatRefs.current[1] = el; }} />
-            <Card3WorkflowBeat ref={(el: HTMLDivElement | null) => { card3BeatRefs.current[2] = el; }} />
-            <Card3SuccessBeat ref={(el: HTMLDivElement | null) => { card3BeatRefs.current[3] = el; }} />
-          </div>
-        </div>
-
-        {isMobile && (
-          <div className="sticky bottom-0 left-0 right-0 p-3 bg-background/90 backdrop-blur-md border-t border-border/30 z-50">
-            <div className="text-center text-xs text-muted-foreground">
-              Ongoing Support • Step {currentBeats[2] + 1} of {TOTAL_BEATS}
-            </div>
-          </div>
-        )}
-
-        <WaveDivider position="bottom" color={CARDS_CONFIG[2].waveColor} />
-      </section>
-
-      {!isMobile && (
-        <Sidebar currentStep={currentBeats[activeCard]} totalSteps={TOTAL_BEATS} visible={showSidebar} />
+      {isDesktop && (
+        <Sidebar
+          ref={sidebarRef}
+          currentStep={currentBeats[activeCard]}
+          totalSteps={TOTAL_BEATS}
+          visible={showSidebar}
+        />
       )}
     </div>
   );

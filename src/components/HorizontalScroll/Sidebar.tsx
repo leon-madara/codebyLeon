@@ -1,31 +1,29 @@
 import { Phone } from 'lucide-react';
+import { forwardRef } from 'react';
 
 interface SidebarProps {
   currentStep: number;
   totalSteps: number;
+  visible: boolean;
 }
 
-const Sidebar = ({ currentStep, totalSteps }: SidebarProps) => {
+const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(({ currentStep, totalSteps, visible }, ref) => {
   return (
-    <div className="hidden lg:flex fixed bottom-0 left-0 right-0 h-auto w-full flex-row items-center justify-center bg-background/80 backdrop-blur-md border-t border-border/50 z-40">
-      <div className="flex flex-row items-center gap-8 p-6 max-w-4xl mx-auto">
-        {/* Yellow element - Step indicator */}
-        <div className="bg-yellow-400 text-black px-4 py-3 rounded-lg font-medium shadow-lg">
-          Step <span className="font-bold">{currentStep + 1}</span> of {totalSteps}
+    <div ref={ref} className={`hs-sidebar ${visible ? 'is-visible' : ''}`.trim()}>
+      <div className="hs-sidebar__inner">
+        <div className="hs-sidebar__step">
+          Step <strong>{currentStep + 1}</strong> of {totalSteps}
         </div>
 
-        {/* CTA Button - Red element */}
-        <button
-          className="group relative overflow-hidden bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-        >
-          <span className="flex items-center gap-2 font-semibold">
-            <Phone className="w-5 h-5" />
-            Book a Free Call
-          </span>
+        <button className="hs-sidebar__cta" type="button">
+          <Phone className="hs-sidebar__cta-icon" />
+          Book a Free Call
         </button>
       </div>
     </div>
   );
-};
+});
+
+Sidebar.displayName = 'Sidebar';
 
 export default Sidebar;

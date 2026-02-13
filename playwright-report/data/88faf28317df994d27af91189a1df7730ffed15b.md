@@ -1,0 +1,419 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - navigation [ref=e3]:
+    - generic [ref=e4]:
+      - link "Code by Leon" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img "Code by Leon" [ref=e6]
+      - list [ref=e7]:
+        - listitem [ref=e8]:
+          - link "PORTFOLIO" [ref=e9] [cursor=pointer]:
+            - /url: "#portfolio"
+        - listitem [ref=e10]:
+          - link "ABOUT" [ref=e11] [cursor=pointer]:
+            - /url: "#about"
+        - listitem [ref=e12]:
+          - link "SERVICES" [ref=e13] [cursor=pointer]:
+            - /url: "#services"
+        - listitem [ref=e14]:
+          - link "BLOG" [ref=e15] [cursor=pointer]:
+            - /url: /blog
+      - link "GET IN TOUCH" [ref=e16] [cursor=pointer]:
+        - /url: /get-started.html
+      - generic [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: ✦
+        - generic [ref=e28]: ★
+        - generic [ref=e29]: ✦
+  - generic [ref=e37]:
+    - generic [ref=e38]: Nairobi-based design studio
+    - heading "Bold websites for PIONEER | brands." [level=1] [ref=e39]:
+      - generic [ref=e40]:
+        - generic [ref=e41]: Bold
+        - text: websites for
+      - generic [ref=e43]: PIONEER |
+      - generic [ref=e44]: brands.
+    - paragraph [ref=e45]:
+      - text: Websites and design that make your business
+      - text: look as professional as it is.
+    - generic [ref=e46]:
+      - generic [ref=e47]: Beyond the Blueprint
+      - img [ref=e48]
+    - generic [ref=e50]:
+      - link "Book a free 20-minute call" [ref=e51] [cursor=pointer]:
+        - /url: /get-started.html
+      - link "VIEW PORTFOLIO" [ref=e52] [cursor=pointer]:
+        - /url: "#portfolio"
+  - generic [ref=e54]:
+    - heading "Our Work" [level=2] [ref=e55]:
+      - generic [ref=e57]: Our
+      - generic [ref=e59]: Work
+    - paragraph [ref=e60]:
+      - generic [ref=e62]: See
+      - generic [ref=e64]: how
+      - generic [ref=e66]: we've
+      - generic [ref=e68]: helped
+      - generic [ref=e70]: Kenyan
+      - generic [ref=e72]: businesses
+      - generic [ref=e74]: look
+      - generic [ref=e76]: professional
+      - generic [ref=e78]: and
+      - generic [ref=e80]: attract
+      - generic [ref=e82]: better
+      - generic [ref=e84]: clients.
+    - generic [ref=e85]:
+      - button "All Projects" [ref=e86] [cursor=pointer]
+      - button "Small Business" [ref=e87] [cursor=pointer]
+      - button "Creative Professional" [ref=e88] [cursor=pointer]
+    - generic [ref=e89]:
+      - generic [ref=e90]:
+        - paragraph [ref=e92]: Project Image
+        - heading "Client Name" [level=3] [ref=e93]
+        - paragraph [ref=e94]: Small Service Business
+        - paragraph [ref=e95]: Results summary will appear here
+      - generic [ref=e96]:
+        - paragraph [ref=e98]: Project Image
+        - heading "Client Name" [level=3] [ref=e99]
+        - paragraph [ref=e100]: Creative Professional
+        - paragraph [ref=e101]: Results summary will appear here
+      - generic [ref=e102]:
+        - paragraph [ref=e104]: Project Image
+        - heading "Client Name" [level=3] [ref=e105]
+        - paragraph [ref=e106]: Small Service Business
+        - paragraph [ref=e107]: Results summary will appear here
+    - link "Ready to Start Your Project?" [ref=e109] [cursor=pointer]:
+      - /url: /get-started.html
+  - generic [ref=e111]:
+    - heading "Helping Kenyan Businesses Look Professional Online" [level=2] [ref=e112]
+    - paragraph [ref=e113]: I design websites and visuals that help Kenyan businesses look professional, get more inquiries, and build trust online.
+    - generic [ref=e114]:
+      - generic [ref=e115]:
+        - heading "Mission" [level=3] [ref=e116]
+        - paragraph [ref=e117]: Code by Leon helps small businesses and creators build modern websites and consistent visuals so they can look professional online, attract better clients, and stop losing opportunities because of weak design.
+      - generic [ref=e118]:
+        - heading "Technology Stack" [level=3] [ref=e119]
+        - paragraph [ref=e120]: Modern, fast, mobile-first approaches with SEO and performance optimization. We use the latest web technologies to ensure your site loads quickly and ranks well.
+      - generic [ref=e121]:
+        - heading "Working Process" [level=3] [ref=e122]
+        - list [ref=e123]:
+          - listitem [ref=e124]: → Discovery call to understand your needs
+          - listitem [ref=e125]: → Proposal & agreement
+          - listitem [ref=e126]: → Design & development
+          - listitem [ref=e127]: → Revisions & refinement
+          - listitem [ref=e128]: → Launch & support
+    - generic [ref=e129]:
+      - paragraph [ref=e130]: Let's discuss how we can help your business
+      - link "Book a free 20-minute call" [ref=e131] [cursor=pointer]:
+        - /url: /get-started.html
+  - generic [ref=e132]:
+    - generic [ref=e135]:
+      - button "Launch" [ref=e136] [cursor=pointer]: Launch
+      - button "Brand Refresh" [ref=e138] [cursor=pointer]
+      - button "Ongoing Support" [ref=e139] [cursor=pointer]
+    - generic [ref=e141]:
+      - generic [ref=e144]:
+        - generic [ref=e146]:
+          - img [ref=e148]
+          - generic [ref=e150]: Problem
+        - generic [ref=e154]:
+          - generic [ref=e156]: "2"
+          - generic [ref=e157]: Plan
+        - generic [ref=e161]:
+          - generic [ref=e163]: "3"
+          - generic [ref=e164]: Build
+        - generic [ref=e168]:
+          - generic [ref=e170]: "4"
+          - generic [ref=e171]: Launch
+      - generic [ref=e173]:
+        - generic [ref=e175]:
+          - img [ref=e178]
+          - heading "The Problem" [level=2] [ref=e180]
+          - paragraph [ref=e181]: Your expertise deserves better visibility
+          - paragraph [ref=e182]: You're brilliant at what you do, but potential clients can only find you through word of mouth. Your skills are hidden behind a non-existent or outdated web presence.
+          - generic [ref=e184]:
+            - generic [ref=e185]: No website
+            - generic [ref=e186]: Outdated design
+            - generic [ref=e187]: Zero SEO
+            - generic [ref=e188]: Lost leads
+        - generic [ref=e190]:
+          - img [ref=e193]
+          - heading "The Plan" [level=2] [ref=e195]
+          - paragraph [ref=e196]: Strategy meets execution
+          - paragraph [ref=e197]: We map out your unique positioning, target audience, and goals. Every decision is intentional, every element serves a purpose.
+          - generic [ref=e199]:
+            - generic [ref=e200]:
+              - img [ref=e201]
+              - generic [ref=e205]: Define Goals
+              - generic [ref=e206]: Clear objectives
+            - generic [ref=e207]:
+              - img [ref=e208]
+              - generic [ref=e213]: Know Audience
+              - generic [ref=e214]: Target personas
+            - generic [ref=e215]:
+              - img [ref=e216]
+              - generic [ref=e218]: Plan Strategy
+              - generic [ref=e219]: Actionable roadmap
+        - generic [ref=e221]:
+          - img [ref=e224]
+          - heading "We Build" [level=2] [ref=e228]
+          - paragraph [ref=e229]: Crafted with precision
+          - paragraph [ref=e230]: Watch your vision come to life. Fast iterations, transparent progress, and pixel-perfect execution.
+          - generic [ref=e233]:
+            - generic [ref=e235]:
+              - img [ref=e237]
+              - generic [ref=e239]: Discovery & wireframes
+            - generic [ref=e240]:
+              - img [ref=e242]
+              - generic [ref=e244]: Visual design & branding
+            - generic [ref=e245]:
+              - img [ref=e247]
+              - generic [ref=e249]: Development & testing
+            - generic [ref=e250]:
+              - img [ref=e252]
+              - generic [ref=e254]: Content integration
+        - generic [ref=e256]:
+          - img [ref=e259]
+          - heading "Launch" [level=2] [ref=e264]
+          - paragraph [ref=e265]: Your moment to shine
+          - paragraph [ref=e266]: Go live with confidence. Your new digital presence is ready to attract, convert, and delight your ideal clients.
+          - generic [ref=e268]:
+            - generic [ref=e269]:
+              - generic [ref=e271]:
+                - img [ref=e272]
+                - text: Your Live Website
+              - generic [ref=e275]:
+                - img [ref=e277]
+                - img [ref=e281]
+            - generic [ref=e284]:
+              - generic [ref=e285]:
+                - generic [ref=e286]: <2s
+                - generic [ref=e287]: Load Time
+              - generic [ref=e288]:
+                - generic [ref=e289]: 100%
+                - generic [ref=e290]: Mobile Ready
+              - generic [ref=e291]:
+                - generic [ref=e292]: 95+
+                - generic [ref=e293]: SEO Score
+            - generic [ref=e295]:
+              - generic [ref=e296]: Starting at
+              - generic [ref=e297]: KES 35,000
+              - generic [ref=e298]: 10-day delivery
+              - button "Get Started" [ref=e299] [cursor=pointer]
+      - generic [ref=e300]:
+        - text: Scroll
+        - img [ref=e301]
+      - img [ref=e304]
+    - generic [ref=e309]:
+      - img [ref=e311]
+      - generic [ref=e316]:
+        - generic [ref=e318]:
+          - img [ref=e321]
+          - heading "The Outdated" [level=2] [ref=e323]
+          - paragraph [ref=e324]: Your brand no longer reflects who you are
+          - paragraph [ref=e325]: You've evolved, but your digital presence hasn't. Your website feels dated, your branding is inconsistent, and it's silently losing you credibility.
+          - generic [ref=e327]:
+            - generic [ref=e328]: Dated design
+            - generic [ref=e329]: Inconsistent branding
+            - generic [ref=e330]: Poor mobile UX
+            - generic [ref=e331]: Lost credibility
+        - generic [ref=e333]:
+          - img [ref=e336]
+          - heading "The Strategy" [level=2] [ref=e339]
+          - paragraph [ref=e340]: Brand Discovery
+          - paragraph [ref=e341]: We audit your current brand, analyze your competitors, and craft a strategy that positions you for growth. Your new identity starts here.
+          - generic [ref=e343]:
+            - generic [ref=e344]:
+              - img [ref=e345]
+              - generic [ref=e349]: Brand Audit
+              - generic [ref=e350]: What's working & not
+            - generic [ref=e351]:
+              - img [ref=e352]
+              - generic [ref=e355]: Competitor Analysis
+              - generic [ref=e356]: Market positioning
+            - generic [ref=e357]:
+              - img [ref=e358]
+              - generic [ref=e364]: Vision Board
+              - generic [ref=e365]: New direction
+        - generic [ref=e367]:
+          - img [ref=e370]
+          - heading "The Process" [level=2] [ref=e372]
+          - paragraph [ref=e373]: 3-4 Weeks
+          - paragraph [ref=e374]: We transform your visual identity from outdated to outstanding. A complete refresh that tells your new story.
+          - generic [ref=e377]:
+            - generic [ref=e379]:
+              - img [ref=e381]
+              - generic [ref=e383]: Logo & identity refresh
+            - generic [ref=e384]:
+              - img [ref=e386]
+              - generic [ref=e388]: Color & typography system
+            - generic [ref=e389]:
+              - img [ref=e391]
+              - generic [ref=e393]: Full website redesign
+            - generic [ref=e394]:
+              - img [ref=e396]
+              - generic [ref=e398]: Asset library & guidelines
+        - generic [ref=e400]:
+          - img [ref=e403]
+          - heading "The Transformation" [level=2] [ref=e405]
+          - paragraph [ref=e406]: New Era
+          - paragraph [ref=e407]: Emerge with a brand that turns heads, builds trust, and positions you as the leader you've become.
+          - generic [ref=e409]:
+            - generic [ref=e411]:
+              - generic [ref=e412]:
+                - generic [ref=e414]: 📦
+                - text: Before
+              - generic [ref=e415]: →
+              - generic [ref=e416]:
+                - img [ref=e418]
+                - text: After
+            - generic [ref=e421]:
+              - generic [ref=e422]:
+                - img [ref=e423]
+                - generic [ref=e426]: ↑ 85%
+                - generic [ref=e427]: Brand Recognition
+              - generic [ref=e428]:
+                - img [ref=e429]
+                - generic [ref=e432]: ↑ 70%
+                - generic [ref=e433]: Client Trust
+              - generic [ref=e434]:
+                - img [ref=e435]
+                - generic [ref=e437]: Leader
+                - generic [ref=e438]: Market Position
+            - generic [ref=e440]:
+              - generic [ref=e441]: Investment
+              - generic [ref=e442]: KES 75,000
+              - generic [ref=e443]: 3-4 week delivery
+              - button "Start Your Refresh" [ref=e444] [cursor=pointer]
+      - img [ref=e446]
+    - generic [ref=e451]:
+      - img [ref=e453]
+      - generic [ref=e458]:
+        - generic [ref=e460]:
+          - img [ref=e463]
+          - heading "The Bottlenecks" [level=2] [ref=e466]
+          - paragraph [ref=e467]: Design work piles up, campaigns wait
+          - paragraph [ref=e468]: You're growing fast, but design work piles up. Campaigns wait, launches get delayed, and you can't afford a full-time designer yet.
+          - generic [ref=e470]:
+            - generic [ref=e471]: Delayed campaigns
+            - generic [ref=e472]: Inconsistent visuals
+            - generic [ref=e473]: No bandwidth
+            - generic [ref=e474]: Missed deadlines
+        - generic [ref=e476]:
+          - img [ref=e479]
+          - heading "The Model" [level=2] [ref=e482]
+          - paragraph [ref=e483]: Monthly Retainer
+          - paragraph [ref=e484]: Get 10-20 hours of design work each month. Campaign graphics, landing pages, site updates—all handled without the overhead.
+          - generic [ref=e486]:
+            - generic [ref=e487]:
+              - img [ref=e488]
+              - generic [ref=e490]: Monthly Hours
+              - generic [ref=e491]: 10-20 hrs/month
+            - generic [ref=e492]:
+              - img [ref=e493]
+              - generic [ref=e496]: No Overhead
+              - generic [ref=e497]: Skip hiring costs
+            - generic [ref=e498]:
+              - img [ref=e499]
+              - generic [ref=e501]: Fast Turnaround
+              - generic [ref=e502]: 24-48hr delivery
+        - generic [ref=e504]:
+          - img [ref=e507]
+          - heading "The Workflow" [level=2] [ref=e512]
+          - paragraph [ref=e513]: Ongoing
+          - paragraph [ref=e514]: Submit requests, get fast turnarounds, and maintain brand consistency across all your marketing materials.
+          - generic [ref=e517]:
+            - generic [ref=e519]:
+              - img [ref=e521]
+              - generic [ref=e523]: Campaign graphics
+            - generic [ref=e524]:
+              - img [ref=e526]
+              - generic [ref=e528]: Landing pages
+            - generic [ref=e529]:
+              - img [ref=e531]
+              - generic [ref=e533]: Site updates
+            - generic [ref=e534]:
+              - img [ref=e536]
+              - generic [ref=e538]: Priority support
+        - generic [ref=e540]:
+          - img [ref=e543]
+          - heading "The Success" [level=2] [ref=e548]
+          - paragraph [ref=e549]: Scalable Growth
+          - paragraph [ref=e550]: Launch campaigns on time, maintain professional visuals, and scale your business without design holding you back.
+          - generic [ref=e552]:
+            - generic [ref=e553]:
+              - generic [ref=e554]:
+                - img [ref=e557]
+                - img [ref=e561]
+                - img [ref=e568]
+              - generic [ref=e571]: Consistent growth, zero bottlenecks
+            - generic [ref=e572]:
+              - generic [ref=e573]:
+                - generic [ref=e574]: 4-6
+                - generic [ref=e575]: Campaigns/mo
+              - generic [ref=e576]:
+                - generic [ref=e577]: 48hrs
+                - generic [ref=e578]: Turnaround
+              - generic [ref=e579]:
+                - generic [ref=e580]: 60%
+                - generic [ref=e581]: Cost Savings
+            - generic [ref=e583]:
+              - generic [ref=e584]: Monthly retainer
+              - generic [ref=e585]: KES 25,000 - 50,000
+              - generic [ref=e586]: Flexible monthly plans
+              - button "Start Monthly Support" [ref=e587] [cursor=pointer]
+      - img [ref=e589]
+    - generic [ref=e594]:
+      - generic [ref=e595]: Step 1 of 4
+      - button "Book a Free Call" [ref=e596] [cursor=pointer]:
+        - generic [ref=e597]:
+          - img [ref=e598]
+          - text: Book a Free Call
+  - generic [ref=e601]:
+    - heading "Insights for Growing Your Business Online" [level=2] [ref=e602]
+    - paragraph [ref=e603]: Practical tips, case studies, and design insights for Kenyan businesses.
+    - generic [ref=e604]:
+      - 'button "Read blog post: 3 Mistakes Your Business Website is Making" [ref=e605] [cursor=pointer]':
+        - generic:
+          - img "3 Mistakes Your Business Website is Making"
+        - generic [ref=e606]:
+          - generic [ref=e607]: Website Tips
+          - heading "3 Mistakes Your Business Website is Making" [level=3] [ref=e608]
+          - paragraph [ref=e609]: Common pitfalls that prevent your website from converting visitors into customers.
+          - generic [ref=e610]:
+            - generic [ref=e611]: January 15, 2025
+            - generic [ref=e612]: 5 min read
+          - generic [ref=e613]: Read More →
+      - 'button "Read blog post: Before/After: Website Transformation Case Studies" [ref=e614] [cursor=pointer]':
+        - generic:
+          - 'img "Before/After: Website Transformation Case Studies"'
+        - generic [ref=e615]:
+          - generic [ref=e616]: Case Studies
+          - 'heading "Before/After: Website Transformation Case Studies" [level=3] [ref=e617]'
+          - paragraph [ref=e618]: Real examples of how professional website redesigns transformed struggling businesses into thriving online presences.
+          - generic [ref=e619]:
+            - generic [ref=e620]: January 8, 2025
+            - generic [ref=e621]: 8 min read
+          - generic [ref=e622]: Read More →
+      - 'button "Read blog post: How a Professional Website Increases Inquiries by 300%" [ref=e623] [cursor=pointer]':
+        - generic:
+          - img "How a Professional Website Increases Inquiries by 300%"
+        - generic [ref=e624]:
+          - generic [ref=e625]: Business Growth
+          - heading "How a Professional Website Increases Inquiries by 300%" [level=3] [ref=e626]
+          - paragraph [ref=e627]: The data-driven approach to understanding why professional websites generate more leads and how to implement these strategies.
+          - generic [ref=e628]:
+            - generic [ref=e629]: January 1, 2025
+            - generic [ref=e630]: 7 min read
+          - generic [ref=e631]: Read More →
+    - link "Read More Articles" [ref=e633] [cursor=pointer]:
+      - /url: /blog
+  - generic [ref=e635]:
+    - heading "Ready to Transform Your Online Presence?" [level=2] [ref=e636]
+    - paragraph [ref=e637]: Let's discuss how we can help your business look professional and attract better clients.
+    - generic [ref=e638]:
+      - link "Book a free 20-minute call" [ref=e639] [cursor=pointer]:
+        - /url: /get-started.html
+      - link "View Our Work" [ref=e640] [cursor=pointer]:
+        - /url: "#portfolio"
+```

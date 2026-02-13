@@ -1,0 +1,463 @@
+/* =============================================
+   HERO SECTION - 4 LAYER ARCHITECTURE
+   BEM Naming Convention
+   ============================================= */
+
+/* =============================================
+   HERO CONTAINER (Layer 1: Canvas Base)
+   ============================================= */
+/* =============================================
+   HERO CONTAINER (Layer 1: Canvas Base)
+   ============================================= */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--canvas-base);
+  transition: background var(--duration-normal) ease;
+  z-index: 1;
+  /* Establishes Stacking Context */
+}
+
+/* =============================================
+   LAYER 2: ABSTRACT ORBS (CSS Animated)
+   ============================================= */
+.hero__orbs-container {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.hero__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  animation: morph 15s var(--easing-ease-in-out) infinite;
+}
+
+.hero__orb--purple {
+  width: 45vw;
+  height: 45vw;
+  background: var(--orb-purple);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.hero__orb--orange {
+  width: 55vw;
+  height: 55vw;
+  background: var(--orb-orange);
+  top: 20%;
+  left: 30%;
+  animation-delay: -5s;
+}
+
+.hero__orb--blue {
+  width: 40vw;
+  height: 40vw;
+  background: var(--orb-blue);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+/* =============================================
+   LAYER 3: FULL-SCREEN FROSTED OVERLAY
+   ============================================= */
+.hero__frosted-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+
+/* =============================================
+   LAYER 4: CONTENT (BOLD TYPOGRAPHY) - Mobile First
+   ============================================= */
+.hero__content {
+  position: relative;
+  z-index: 10;
+  /* Ensure above overlay (z-index: 2) and orbs */
+  width: 100%;
+  max-width: 900px;
+  padding: 0 var(--spacing-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transform: translateY(var(--parallax-translate, 0));
+  transition: transform 0.1s ease-out;
+}
+
+.hero__text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+/* =============================================
+   BADGE / PILL (TAPED STICKER LOOK)
+   ============================================= */
+.hero__badge {
+  position: relative;
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  background: transparent;
+  color: #333333;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border: none;
+  border-radius: 0;
+  transform: rotate(-2deg);
+  margin-top: var(--spacing-md);
+  margin-bottom: var(--spacing-sm);
+  z-index: 10;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.15));
+}
+
+/* Sticker Body (Zig-Zag / Torn Paper) */
+.hero__badge::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: #cad7fb;
+  opacity: 1;
+  clip-path: polygon(0% 0%,
+      5% 2%, 10% 0%, 15% 3%, 20% 0%, 25% 2%, 30% 0%, 35% 3%, 40% 0%, 45% 2%, 50% 0%, 55% 3%, 60% 0%, 65% 2%, 70% 0%, 75% 3%, 80% 0%, 85% 2%, 90% 0%, 95% 3%, 100% 0%,
+      100% 0%,
+      98% 5%, 100% 10%, 97% 15%, 100% 20%, 98% 25%, 100% 30%, 97% 35%, 100% 40%, 98% 45%, 100% 50%, 97% 55%, 100% 60%, 98% 65%, 100% 70%, 97% 75%, 100% 80%, 98% 85%, 100% 90%, 97% 95%, 100% 100%,
+      100% 100%,
+      95% 98%, 90% 100%, 85% 97%, 80% 100%, 75% 98%, 70% 100%, 65% 97%, 60% 100%, 55% 98%, 50% 100%, 45% 97%, 40% 100%, 35% 98%, 30% 100%, 25% 97%, 20% 100%, 15% 98%, 10% 100%, 5% 97%, 0% 100%,
+      0% 100%,
+      2% 95%, 0% 90%, 3% 85%, 0% 80%, 2% 75%, 0% 70%, 3% 65%, 0% 60%, 2% 55%, 0% 50%, 3% 45%, 0% 40%, 2% 35%, 0% 30%, 3% 25%, 0% 20%, 2% 15%, 0% 10%, 3% 5%, 0% 0%);
+  mask: none;
+  -webkit-mask: none;
+}
+
+/* Fallback for background visibility if mask fails */
+@media screen and (-ms-high-contrast: active),
+(-ms-high-contrast: none) {
+  .hero__badge::after {
+    mask: none;
+    -webkit-mask: none;
+    border: 1px dashed var(--text-secondary);
+  }
+}
+
+/* Tape Effect - Top Right and Bottom Left */
+.hero__badge::before {
+  content: '';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  transform: rotate(45deg);
+  width: 36px;
+  height: 12px;
+  background-color: #082549;
+  z-index: 11;
+  -webkit-mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
+  mask-image: linear-gradient(to right, transparent 5%, black 15%, black 85%, transparent 95%);
+  box-shadow: -271px 47px 0 0 #082549;
+}
+
+/* =============================================
+   MAIN HEADLINE
+   ============================================= */
+.hero__headline {
+  font-family: 'MyKidsHandwritten', sans-serif;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  color: #09054D;
+  max-width: 100%;
+  margin: 0;
+}
+
+/* Individual highlights */
+.hero__highlight--bold {
+  font-family: 'Quikhand', sans-serif;
+  color: rgba(252, 91, 69, 1);
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  display: inline-block;
+}
+
+/* Rough Torn-Paper Marker Underline */
+.hero__highlight--bold::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: -5%;
+  width: 110%;
+  height: 0.35em;
+  background-color: #372CE9;
+  z-index: -1;
+  transform: rotate(-2deg);
+  clip-path: polygon(0% 10%, 5% 0%, 15% 12%, 25% 0%, 35% 10%, 45% 0%, 55% 12%, 65% 0%, 75% 10%, 85% 0%, 95% 12%, 100% 0%,
+      100% 90%, 95% 100%, 85% 92%, 75% 100%, 65% 90%, 55% 100%, 45% 92%, 35% 100%, 25% 85%, 15% 100%, 5% 90%, 0% 100%);
+  opacity: 0.9;
+}
+
+.hero__highlight--ambitious {
+  font-family: 'ChristmasCandyInline', sans-serif;
+  color: #902207;
+  text-transform: uppercase;
+  position: relative;
+}
+
+/* Typewriter Cursor */
+.hero__highlight--ambitious::after {
+  content: '|';
+  display: inline-block;
+  margin-left: 2px;
+  color: #333;
+  font-weight: 100;
+  animation: cursorBlink var(--duration-slowest) step-end infinite;
+}
+
+.hero__highlight--dot {
+  color: #372CE9;
+  font-family: 'MyKidsHandwritten', sans-serif;
+}
+
+/* Rainbow typing colors */
+.rainbow-color-1 { color: var(--rainbow-1); }
+.rainbow-color-2 { color: var(--rainbow-2); }
+.rainbow-color-3 { color: var(--rainbow-3); }
+.rainbow-color-4 { color: var(--rainbow-4); }
+.rainbow-color-5 { color: var(--rainbow-5); }
+
+/* Dark Mode Overrides for Accessibility */
+[data-theme='dark'] .hero__headline {
+  color: #ffffff;
+}
+
+[data-theme='dark'] .hero__highlight--bold {
+  color: #ff8a75;
+}
+
+[data-theme='dark'] .hero__highlight--ambitious {
+  color: #ff6b4a;
+}
+
+/* =============================================
+   SUBHEADLINE
+   ============================================= */
+.hero__subheadline {
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  line-height: 1.6;
+  color: #15447F;
+  max-width: 45ch;
+  margin-bottom: var(--spacing-xl);
+}
+
+[data-theme='dark'] .hero__subheadline {
+  color: #d1c6f9;
+}
+
+/* =============================================
+   TAGLINE (Beyond the Blueprint)
+   ============================================= */
+.hero__tag-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: var(--spacing-2xl);
+  width: fit-content;
+  margin-inline: auto;
+}
+
+.hero__tag {
+  font-family: 'VTKSNoise', sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  color: rgba(205, 52, 15, 1);
+  text-transform: none;
+  letter-spacing: 0.02em;
+  padding-bottom: var(--spacing-xs);
+}
+
+[data-theme='dark'] .hero__tag {
+  color: #fed7d4;
+}
+
+/* Hand-Drawn SVG Underline */
+.hero__underline-svg {
+  width: 100%;
+  max-width: 200px;
+  height: 12px;
+  margin-top: 4px;
+  color: var(--hero-accent);
+}
+
+.hero__underline-path {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: drawUnderline 1.2s var(--easing-ease-out) 1.5s forwards;
+}
+
+/* =============================================
+   STAGGERED REVEAL ANIMATION
+   ============================================= */
+.hero__anim-item {
+  opacity: 0;
+  transform: translateY(25px);
+  animation: fadeInUp var(--duration-slow) var(--easing-ease-out) forwards;
+}
+
+.hero__anim-item:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.hero__anim-item:nth-child(2) {
+  animation-delay: 0.25s;
+}
+
+.hero__anim-item:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.hero__anim-item:nth-child(4) {
+  animation-delay: 0.55s;
+}
+
+.hero__anim-item:nth-child(5) {
+  animation-delay: 0.7s;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .hero__anim-item {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .hero__underline-path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+}
+
+/* =============================================
+   WORD GROW CONTAINER (Scroll Animation)
+   ============================================= */
+.hero__word-grow-container {
+  position: absolute;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero__word-grow-container span {
+  white-space: pre;
+  will-change: opacity;
+}
+
+/* Handwritten label */
+.euphoria-script-regular {
+  font-family: 'Euphoria Script', 'MyKidsHandwritten', cursive;
+  font-size: clamp(2rem, 2vw, 3rem);
+  color: var(--hero-accent);
+  letter-spacing: 0.08em;
+  text-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  mix-blend-mode: screen;
+}
+
+/* =============================================
+   CTA BUTTONS - Mobile First
+   ============================================= */
+.hero__ctas {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  margin-top: var(--spacing-sm);
+}
+
+.hero__cta {
+  padding: var(--spacing-lg) var(--spacing-2xl);
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  transition: all var(--duration-normal) var(--easing-standard);
+  width: 100%;
+}
+
+.hero__cta--primary {
+  background: #cd340f;
+  color: white;
+  border: 2px solid #cd340f;
+}
+
+.hero__cta--primary:hover {
+  background: var(--hero-accent-hover);
+  border-color: var(--hero-accent-hover);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 30px rgba(205, 52, 15, 0.3);
+  color: white;
+  font-weight: 800;
+}
+
+.hero__cta--secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
+  opacity: 0.8;
+}
+
+.hero__cta--secondary:hover {
+  background: var(--text-primary);
+  color: var(--canvas-base);
+  opacity: 1;
+  transform: translateY(-3px);
+}
+
+/* =============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================= */
+
+/* Tablet and up: horizontal CTAs, larger padding */
+@media (min-width: 640px) {
+  .hero__content {
+    padding: 0 var(--spacing-xl);
+  }
+
+  .hero__ctas {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: none;
+    width: auto;
+  }
+
+  .hero__cta {
+    width: auto;
+  }
+}

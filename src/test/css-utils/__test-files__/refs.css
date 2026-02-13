@@ -1,0 +1,6 @@
+
+.button {
+  padding: var(--spacing-md);
+  background: var(--color-primary);
+  color: var(--color-text);
+}

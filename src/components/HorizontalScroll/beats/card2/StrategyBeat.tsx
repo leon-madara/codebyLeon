@@ -22,7 +22,7 @@ const Card2StrategyBeat = forwardRef<HTMLDivElement>((_, ref) => {
           <div
             key={item.label}
             className="plan-item flex flex-col items-center gap-3 p-6 bg-background/10 backdrop-blur-sm rounded-2xl border border-background/20"
-            style={{ animationDelay: `${i * 0.15}s` }}
+            style={{ '--animation-delay': `${i * 0.15}s` } as React.CSSProperties}
           >
             <item.icon className="w-8 h-8 text-primary-foreground" />
             <span className="text-primary-foreground font-semibold">{item.label}</span>

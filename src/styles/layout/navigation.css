@@ -1,0 +1,306 @@
+/* =============================================
+   NAVIGATION COMPONENT
+   BEM naming: .navigation, .navigation__element, .navigation--modifier
+   ============================================= */
+
+/* Navigation Block - Mobile first: smaller padding */
+.navigation {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  padding: var(--spacing-md);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* Theme override for navigation */
+[data-theme="dark"] .navigation {
+  background: rgba(2, 17, 39, 0.3);
+}
+
+/* Navigation Container */
+.navigation__container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Navigation Logo */
+.navigation__logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.navigation__logo-svg {
+  height: 40px;
+  width: auto;
+  transition: transform var(--duration-normal) var(--easing-standard);
+}
+
+.navigation__logo-svg:hover {
+  transform: scale(1.05);
+}
+
+/* Dark mode logo filter - invert colors for visibility */
+[data-theme="dark"] .navigation__logo-svg {
+  filter: brightness(1.2);
+}
+
+/* Navigation Links Container - Mobile first: hidden by default */
+.navigation__links {
+  display: none;
+  gap: var(--spacing-2xl);
+  list-style: none;
+}
+
+/* Navigation Link */
+.navigation__link {
+  text-decoration: none;
+  color: black;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  transition: color var(--duration-normal) var(--easing-standard);
+  --link-hover-color: #fc5b45;
+  --link-active-color: #fc5b45;
+}
+
+.navigation__link:hover {
+  color: var(--link-hover-color);
+}
+
+/* Active state for navigation link */
+.navigation__link.is-active {
+  color: var(--link-active-color);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* Dark mode link styles - use CSS custom properties for hover/active colors */
+[data-theme="dark"] .navigation__link {
+  color: #ffffff;
+  --link-hover-color: #fc5b45;
+  --link-active-color: #fc5b45;
+}
+
+/* Navigation CTA Button - Mobile first: smaller size */
+.navigation__cta {
+  background: #fc5b45;
+  color: black;
+  padding: 0.6rem 1rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  transition: background var(--duration-normal) var(--easing-standard), 
+              transform var(--duration-fast) var(--easing-standard);
+  border: none;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.navigation__cta:hover {
+  background: rgba(252, 91, 69, 1);
+  transform: translateY(-2px);
+  color: black;
+}
+
+/* Scrolled state modifier (for future use) */
+.navigation.is-scrolled {
+  box-shadow: var(--shadow-soft);
+}
+
+/* =============================================
+   THEME TOGGLE (Part of Navigation)
+   ============================================= */
+.navigation__theme-toggle {
+  margin-left: var(--spacing-md);
+}
+
+.navigation__toggle-switch {
+  width: 60px;
+  height: 30px;
+  border-radius: 15px;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all var(--duration-slow) var(--easing-standard);
+}
+
+.navigation__toggle-background {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
+  transition: all var(--duration-slow) var(--easing-standard);
+}
+
+.is-active .navigation__toggle-background {
+  background: linear-gradient(180deg, #1a1a2e 0%, #2d2d44 100%);
+}
+
+.navigation__toggle-knob {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+  border-radius: 50%;
+  top: 3px;
+  left: 3px;
+  transition: all var(--duration-slow) var(--easing-standard);
+  box-shadow: 0 0 10px rgba(255, 165, 0, 0.5);
+}
+
+.is-active .navigation__toggle-knob {
+  left: 33px;
+  background: linear-gradient(135deg, #f0f0f0 0%, #d0d0d0 100%);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+.navigation__crater {
+  position: absolute;
+  background: rgba(150, 150, 150, 0.3);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity var(--duration-slow) var(--easing-standard);
+}
+
+.is-active .navigation__crater {
+  opacity: 1;
+}
+
+.navigation__crater--1 {
+  width: 6px;
+  height: 6px;
+  top: 4px;
+  left: 8px;
+}
+
+.navigation__crater--2 {
+  width: 4px;
+  height: 4px;
+  top: 12px;
+  left: 4px;
+}
+
+.navigation__crater--3 {
+  width: 5px;
+  height: 5px;
+  top: 14px;
+  left: 12px;
+}
+
+.navigation__scenery {
+  position: absolute;
+  inset: 0;
+  transition: opacity var(--duration-slow) var(--easing-standard);
+}
+
+.navigation__scenery--day {
+  opacity: 1;
+}
+
+.navigation__scenery--night {
+  opacity: 0;
+}
+
+.is-active .navigation__scenery--day {
+  opacity: 0;
+}
+
+.is-active .navigation__scenery--night {
+  opacity: 1;
+}
+
+/* Cloud elements for day scenery */
+.navigation__cloud {
+  position: absolute;
+  background: white;
+  border-radius: 10px;
+}
+
+.navigation__cloud--1 {
+  width: 15px;
+  height: 5px;
+  top: 8px;
+  left: 10px;
+}
+
+.navigation__cloud--2 {
+  width: 10px;
+  height: 4px;
+  top: 12px;
+  left: 25px;
+}
+
+.navigation__cloud--3 {
+  width: 8px;
+  height: 3px;
+  top: 18px;
+  left: 15px;
+}
+
+.navigation__cloud--4 {
+  width: 12px;
+  height: 4px;
+  top: 20px;
+  left: 35px;
+}
+
+.navigation__cloud--5 {
+  width: 6px;
+  height: 3px;
+  top: 10px;
+  left: 40px;
+}
+
+/* Star elements for night scenery */
+.navigation__star {
+  position: absolute;
+  color: #FFD700;
+  font-size: var(--font-size-xs);
+}
+
+.navigation__star--1 {
+  top: 8px;
+  left: 38px;
+}
+
+.navigation__star--2 {
+  top: 15px;
+  left: 45px;
+}
+
+.navigation__star--3 {
+  top: 20px;
+  left: 40px;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================= */
+
+/* Tablet and up: larger padding */
+@media (min-width: 640px) {
+  .navigation {
+    padding: var(--spacing-md) var(--spacing-xl);
+  }
+
+  .navigation__cta {
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Desktop and up: show navigation links */
+@media (min-width: 900px) {
+  .navigation__links {
+    display: flex;
+  }
+}

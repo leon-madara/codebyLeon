@@ -1,0 +1,220 @@
+/* =============================================
+   COLOR TOKENS - Single Source of Truth
+   Code by Leon - CSS Architecture Refactor
+   ============================================= */
+
+:root {
+  /* =============================================
+     BASE COLORS
+     ============================================= */
+  
+  /* Canvas/Background Base */
+  --color-canvas-light: #F2EFFD;
+  --color-canvas-dark: #0A0F0D;
+  --canvas-base: #F2EFFD;  /* Alias for compatibility */
+  
+  /* =============================================
+     SEMANTIC COLORS (Shadcn/UI System)
+     ============================================= */
+  
+  --background: 150 30% 98%;
+  --foreground: 150 40% 10%;
+
+  --card: 150 25% 95%;
+  --card-foreground: 150 40% 10%;
+
+  --popover: 150 30% 98%;
+  --popover-foreground: 150 40% 10%;
+
+  --primary: 152 45% 25%;
+  --primary-foreground: 150 30% 98%;
+
+  --secondary: 145 35% 88%;
+  --secondary-foreground: 150 40% 15%;
+
+  --muted: 145 20% 92%;
+  --muted-foreground: 150 15% 45%;
+
+  --accent: 85 55% 50%;
+  --accent-foreground: 150 40% 10%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 145 25% 85%;
+  --input: 145 25% 85%;
+  --ring: 152 45% 25%;
+
+  /* Sidebar Colors */
+  --sidebar-background: 150 30% 98%;
+  --sidebar-foreground: 150 40% 15%;
+  --sidebar-primary: 152 45% 25%;
+  --sidebar-primary-foreground: 150 30% 98%;
+  --sidebar-accent: 145 35% 88%;
+  --sidebar-accent-foreground: 150 40% 15%;
+  --sidebar-border: 145 25% 85%;
+  --sidebar-ring: 152 45% 25%;
+
+  /* =============================================
+     COMPONENT COLORS
+     ============================================= */
+  
+  /* Typography Colors */
+  --text-primary: #1a1a2e;
+  --text-secondary: #4a4a6a;
+  --text-muted: #9ca3af;
+  
+  /* Aliases for compatibility with global.css */
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #4a4a6a;
+  --color-primary: hsl(152, 45%, 25%);
+  --color-accent: #D9751A;
+  --color-code-bg: #f3f4f6;
+  --color-border: #e5e7eb;
+  --color-scrollbar-thumb: rgba(0, 0, 0, 0.2);
+  --color-scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+
+  /* Brand/Accent Colors */
+  --hero-accent: #D9751A;
+  --hero-accent-hover: #A45711;
+  --accent: #D9751A;  /* Alias for compatibility */
+  --accent-hover: #A45711;  /* Alias for compatibility */
+  --brand-orange: #D9751A;
+  --brand-orange-light: rgba(217, 117, 26, 0.1);
+  
+  /* Button Colors */
+  --color-button-primary-bg: #cd340f;
+  --color-button-primary-text: #ffffff;
+  --color-button-secondary-bg: transparent;
+  --color-button-secondary-text: #1a1a2e;
+  --color-nav-cta-bg: #fc5b45;
+  --color-nav-cta-text: #000000;
+
+  /* Card Colors */
+  --card-bg: #FFFFFF;
+  --card-hover: #F9FAFB;
+  --card-selected-bg: rgba(217, 117, 26, 0.08);
+  --card-selected-border: #D9751A;
+
+  /* Glass/Frosted UI */
+  --glass-bg: rgba(255, 255, 255, 0.45);
+  --glass-bg-hover: rgba(255, 255, 255, 0.65);
+  --glass-border: rgba(200, 200, 200, 0.35);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+
+  /* Dot Grid Pattern */
+  --dot-color: rgba(150, 150, 150, 0.15);
+
+  /* Highlight Colors */
+  --highlight-green: #22c55e;
+  --highlight-green-bg: rgba(34, 197, 94, 0.15);
+
+  /* =============================================
+     RAINBOW TYPEWRITER COLORS (Light Mode)
+     ============================================= */
+  
+  --rainbow-1: #372CE9;  /* Purple/Blue */
+  --rainbow-2: #902207;  /* Red/Orange */
+  --rainbow-3: #15447F;  /* Deep Blue */
+  --rainbow-4: #250A54;  /* Dark Purple */
+  --rainbow-5: #313137;  /* Dark Gray */
+
+  /* =============================================
+     GRADIENT COLORS - Forest/Nature Theme
+     ============================================= */
+  
+  /* Forest gradient colors (Card 1 - Launch) */
+  --forest-dark: 152 45% 18%;
+  --forest-mid: 145 40% 35%;
+  --forest-light: 140 35% 55%;
+  --sage: 135 30% 75%;
+  --mint: 130 35% 88%;
+
+  /* Cyan/Blue colors (Card 2 - Brand Refresh) */
+  --cyan-dark: 195 70% 20%;
+  --cyan-mid: 195 65% 38%;
+  --cyan-light: 190 60% 55%;
+  --sky: 185 55% 72%;
+  --ice: 180 50% 88%;
+
+  /* Emerald/Green colors (Card 3 - Ongoing Support) */
+  --emerald-dark: 160 65% 18%;
+  --emerald-mid: 155 58% 35%;
+  --emerald-light: 150 52% 52%;
+  --teal: 145 45% 70%;
+  --seafoam: 140 40% 88%;
+
+  /* =============================================
+     BEAT CARD GRADIENTS
+     ============================================= */
+  
+  /* Card 1 - Forest/Nature beat gradients */
+  --card1-beat-1-start: 152 45% 22%;
+  --card1-beat-1-end: 145 38% 35%;
+  --card1-beat-2-start: 145 38% 35%;
+  --card1-beat-2-end: 140 35% 50%;
+  --card1-beat-3-start: 140 35% 50%;
+  --card1-beat-3-end: 135 32% 65%;
+  --card1-beat-4-start: 135 32% 65%;
+  --card1-beat-4-end: 130 30% 80%;
+
+  /* Card 2 - Cyan/Blue beat gradients */
+  --card2-beat-1-start: 195 70% 20%;
+  --card2-beat-1-end: 195 62% 35%;
+  --card2-beat-2-start: 195 62% 35%;
+  --card2-beat-2-end: 190 55% 48%;
+  --card2-beat-3-start: 190 55% 48%;
+  --card2-beat-3-end: 185 50% 62%;
+  --card2-beat-4-start: 185 50% 62%;
+  --card2-beat-4-end: 180 45% 78%;
+
+  /* Card 3 - Emerald/Green beat gradients */
+  --card3-beat-1-start: 160 65% 18%;
+  --card3-beat-1-end: 155 55% 32%;
+  --card3-beat-2-start: 155 55% 32%;
+  --card3-beat-2-end: 150 50% 45%;
+  --card3-beat-3-start: 150 50% 45%;
+  --card3-beat-3-end: 145 45% 60%;
+  --card3-beat-4-start: 145 45% 60%;
+  --card3-beat-4-end: 140 40% 76%;
+
+  /* Legacy beat gradients (fallback) */
+  --beat-1-start: 152 45% 22%;
+  --beat-1-end: 145 38% 35%;
+  --beat-2-start: 145 38% 35%;
+  --beat-2-end: 140 35% 50%;
+  --beat-3-start: 140 35% 50%;
+  --beat-3-end: 135 32% 65%;
+  --beat-4-start: 135 32% 65%;
+  --beat-4-end: 130 30% 80%;
+
+  /* =============================================
+     ORB GRADIENT COLORS (Light Mode)
+     ============================================= */
+  
+  --orb-purple: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 100%);
+  --orb-orange: linear-gradient(135deg, #FDBA74 0%, #FB923C 100%);
+  --orb-blue: linear-gradient(135deg, #93C5FD 0%, #60A5FA 100%);
+
+  /* =============================================
+     CONFIGURATOR SPECIFIC COLORS
+     ============================================= */
+  
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F9FAFB;
+  --border-color: #e5e7eb;
+  
+  /* Button States */
+  --btn-primary-bg: #1a1a2e;
+  --btn-primary-text: #FFFFFF;
+  --btn-disabled-bg: #e5e7eb;
+  --btn-disabled-text: #9ca3af;
+
+  /* Progress Indicators */
+  --progress-track: #e5e7eb;
+  --progress-fill: #1a1a2e;
+  
+  /* Dynamic Animation Variables (set via JavaScript) */
+  --line-progress: 0%;
+  --beat-saturation: 0.3;
+}

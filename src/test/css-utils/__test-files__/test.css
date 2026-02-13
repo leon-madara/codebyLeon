@@ -1,0 +1,22 @@
+
+:root {
+  --color-primary: #cd340f;
+  --spacing-md: 1rem;
+}
+
+.button {
+  padding: var(--spacing-md);
+  background: var(--color-primary);
+}
+
+.button--primary {
+  color: white;
+}
+
+.navigation__link {
+  text-decoration: none;
+}
+
+#header {
+  position: fixed;
+}

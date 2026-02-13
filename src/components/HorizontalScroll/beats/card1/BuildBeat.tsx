@@ -23,14 +23,14 @@ const Card1BuildBeat = forwardRef<HTMLDivElement>((_, ref) => {
       <div className="mt-8 max-w-md mx-auto">
         <div className="relative pl-8">
           <div className="absolute left-3 top-0 bottom-0 w-0.5 bg-background/30 rounded-full">
-            <div className="timeline-progress absolute top-0 left-0 w-full bg-primary-foreground rounded-full transition-all duration-500" style={{ height: '0%' }} />
+            <div className="timeline-progress absolute top-0 left-0 w-full bg-primary-foreground rounded-full transition-all duration-500" />
           </div>
 
           {steps.map((step, i) => (
             <div
               key={step}
               className="timeline-item relative flex items-center gap-4 pb-6 last:pb-0"
-              style={{ animationDelay: `${i * 0.2}s` }}
+              style={{ '--animation-delay': `${i * 0.2}s` } as React.CSSProperties}
             >
               <div className="absolute left-0 w-6 h-6 rounded-full bg-background/20 border-2 border-primary-foreground/50 flex items-center justify-center">
                 <Check className="w-3 h-3 text-primary-foreground opacity-0 timeline-check" />

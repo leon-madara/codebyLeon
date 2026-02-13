@@ -98,10 +98,10 @@ const BlogFooter: React.FC<BlogFooterProps> = ({ currentPostId, relatedPosts }) 
             that converts visitors into customers.
           </p>
           <div className="cta-buttons">
-            <Link to="/#contact" className="cta-button cta-primary">
+            <Link to="/#contact" className="button button--primary">
               Get Started
             </Link>
-            <Link to="/#portfolio" className="cta-button cta-secondary">
+            <Link to="/#portfolio" className="button button--secondary">
               View Portfolio
             </Link>
           </div>

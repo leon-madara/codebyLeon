@@ -9,14 +9,15 @@ const WaveDivider = ({ position, color = 'hsl(var(--sage))', className = '' }: W
 
   return (
     <div
-      className={`wave-divider ${isTop ? '-top-1' : '-bottom-1'} ${className}`}
-      style={{ transform: isTop ? 'rotate(180deg)' : 'none' }}
+      className={`hs-wave-divider ${isTop ? 'hs-wave-divider--top' : 'hs-wave-divider--bottom'} ${className}`.trim()}
+      style={{ '--hs-wave-transform': isTop ? 'rotate(180deg)' : 'none' } as React.CSSProperties}
+      aria-hidden="true"
     >
       <svg
         viewBox="0 0 1440 120"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        className="w-full h-full"
+        className="hs-wave-divider__svg"
         preserveAspectRatio="none"
       >
         <path

@@ -1,0 +1,112 @@
+/* =============================================
+   FINAL CTA SECTION
+   ============================================= */
+
+.final-cta {
+  position: relative;
+  min-height: 70vh;
+  width: 100%;
+  padding: 5rem 1rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--canvas-base);
+  transition: background var(--duration-normal) ease;
+}
+
+/* Background orbs */
+.final-cta__orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.final-cta__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  animation: morph 15s var(--easing-ease-in-out) infinite;
+}
+
+.final-cta__orb--purple {
+  width: 45vw;
+  height: 45vw;
+  background: var(--orb-purple);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.final-cta__orb--orange {
+  width: 55vw;
+  height: 55vw;
+  background: var(--orb-orange);
+  top: 20%;
+  left: 30%;
+  animation-delay: -5s;
+}
+
+.final-cta__orb--blue {
+  width: 40vw;
+  height: 40vw;
+  background: var(--orb-blue);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+/* Frosted overlay */
+.final-cta__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+
+/* Content */
+.final-cta__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.final-cta__headline {
+  font-family: 'Gladolia DEMO', 'Inter', sans-serif;
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.2;
+}
+
+.final-cta__subheadline {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  max-width: 60ch;
+  margin: 0 auto var(--spacing-2xl);
+}
+
+.final-cta__cta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 640px) {
+  .final-cta__cta {
+    flex-direction: row;
+  }
+}

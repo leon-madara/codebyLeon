@@ -1,0 +1,39 @@
+/* =============================================
+   SHADOW TOKENS - Single Source of Truth
+   Code by Leon - CSS Architecture Refactor
+   ============================================= */
+
+:root {
+  /* =============================================
+     BOX SHADOWS
+     ============================================= */
+  
+  /* Soft Shadow - Subtle elevation */
+  --shadow-soft: 0 4px 20px -4px hsl(152 45% 25% / 0.15);
+  
+  /* Medium Shadow - Standard elevation */
+  --shadow-medium: 0 8px 30px -6px hsl(152 45% 25% / 0.25);
+  
+  /* Glow Shadow - Accent highlight */
+  --shadow-glow: 0 0 40px hsl(85 55% 50% / 0.3);
+
+  /* Additional Shadow Utilities */
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+  --shadow-none: 0 0 #0000;
+
+  /* =============================================
+     DROP SHADOWS (for filters)
+     ============================================= */
+  
+  --drop-shadow-sm: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.05));
+  --drop-shadow-md: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07)) drop-shadow(0 2px 2px rgba(0, 0, 0, 0.06));
+  --drop-shadow-lg: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.04)) drop-shadow(0 4px 3px rgba(0, 0, 0, 0.1));
+  --drop-shadow-xl: drop-shadow(0 20px 13px rgba(0, 0, 0, 0.03)) drop-shadow(0 8px 5px rgba(0, 0, 0, 0.08));
+  --drop-shadow-2xl: drop-shadow(0 25px 25px rgba(0, 0, 0, 0.15));
+  --drop-shadow-none: drop-shadow(0 0 #0000);
+}

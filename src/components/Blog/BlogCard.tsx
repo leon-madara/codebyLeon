@@ -33,21 +33,20 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
 
   return (
     <article
-      className="blog-card"
+      className="card card--blog"
       onClick={handleCardClick}
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="button"
       aria-label={`Read blog post: ${post.title}`}
-      style={{ cursor: 'pointer' }}
     >
       {/* Featured Image (if available) */}
       {post.featuredImage && (
-        <div className="blog-card-image">
+        <div className="card__media">
           <SafeImage
             src={post.featuredImage}
             alt={post.title}
-            className="card-featured-image"
+            className="card__image"
             fallbackType="gradient"
             placeholderText={post.category}
             onError={(error) => {
@@ -61,17 +60,17 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
         </div>
       )}
       
-      <div className="blog-card-content">
-        <span className="blog-category">{post.category}</span>
-        <h3>{post.title}</h3>
-        <p>{post.description}</p>
+      <div className="card__content">
+        <span className="card__category">{post.category}</span>
+        <h3 className="card__title">{post.title}</h3>
+        <p className="card__description">{post.description}</p>
         
-        <div className="blog-meta">
-          <span className="blog-date">{formatDate(post.publishedDate)}</span>
-          <span className="blog-read-time">{post.readTime} min read</span>
+        <div className="card__meta">
+          <span className="card__date">{formatDate(post.publishedDate)}</span>
+          <span className="card__read-time">{post.readTime} min read</span>
         </div>
         
-        <div className="card-link">Read More →</div>
+        <div className="card__link">Read More →</div>
       </div>
     </article>
   );

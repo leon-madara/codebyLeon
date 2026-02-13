@@ -8,7 +8,12 @@
     "build": "tsc && vite build",
     "preview": "vite preview",
     "test": "vitest --run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:visual": "playwright test",
+    "test:visual:ui": "playwright test --ui",
+    "test:visual:update": "playwright test --update-snapshots",
+    "css:baseline": "tsx src/test/css-utils/collect-baseline.ts",
+    "css:compare": "tsx src/test/css-utils/compare-metrics.ts"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -19,6 +24,8 @@
     "class-variance-authority": "^0.7.1",
     "gsap": "^3.14.2",
     "lucide-react": "^0.562.0",
+    "pixelmatch": "^7.1.0",
+    "pngjs": "^7.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
@@ -30,19 +37,25 @@
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.1",
     "@testing-library/user-event": "^14.6.1",
+    "@types/css-tree": "^2.3.11",
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.16",
+    "css-tree": "^3.1.0",
     "fast-check": "^4.5.3",
+    "glob": "^13.0.1",
     "jsdom": "^27.4.0",
     "postcss": "^8.4.31",
+    "postcss-reporter": "^7.1.0",
     "rollup-plugin-visualizer": "^6.0.5",
     "tailwindcss": "^3.3.5",
+    "tsx": "^4.21.0",
     "typescript": "^5.2.2",
     "vite": "^5.0.0",
     "vitest": "^4.0.16"

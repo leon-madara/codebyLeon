@@ -48,6 +48,12 @@ export default defineConfig({
       brotliSize: true,
     })
   ],
+  css: {
+    modules: {
+      localsConvention: 'camelCase',
+      generateScopedName: '[name]__[local]___[hash:base64:5]',
+    },
+  },
   resolve: {
     alias: [
       {

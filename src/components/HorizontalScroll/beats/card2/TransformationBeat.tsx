@@ -47,7 +47,7 @@ const Card2TransformationBeat = forwardRef<HTMLDivElement, Card2TransformationBe
             <div
               key={stat.label}
               className="text-center"
-              style={{ animationDelay: `${0.5 + i * 0.1}s` }}
+              style={{ '--animation-delay': `${0.5 + i * 0.1}s` } as React.CSSProperties}
             >
               <stat.icon className="w-6 h-6 text-primary-foreground/60 mx-auto mb-2" />
               <div className="text-xl font-bold text-primary-foreground">{stat.value}</div>

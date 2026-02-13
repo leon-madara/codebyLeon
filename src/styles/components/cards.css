@@ -1,0 +1,400 @@
+/* =============================================
+   CARD COMPONENTS - Reusable Card Styles
+   Code by Leon - CSS Architecture Refactor
+   ============================================= */
+
+/**
+ * This file contains all reusable card component styles.
+ * Cards are used across multiple sections (services, portfolio, blog, etc.)
+ * 
+ * NAMING CONVENTION: BEM (Block Element Modifier)
+ * - Block: .card
+ * - Elements: .card__title, .card__description
+ * - Modifiers: .card--featured, .card--blog, .card--beat
+ * - States: .card.is-active, .card.is-loading
+ * 
+ * SPECIFICITY: Maximum (0,0,2,0)
+ * - Single class selectors preferred
+ * - No compound selectors (e.g., div.card)
+ * - No !important declarations
+ * 
+ * REQUIREMENTS:
+ * - Requirement 8.2: Extract all card variants to components/cards.css
+ * - Requirement 4.1: Use BEM naming convention
+ */
+
+/* =============================================
+   BASE CARD
+   ============================================= */
+
+.card {
+  padding: var(--spacing-2xl);
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--duration-normal) var(--easing-standard),
+              box-shadow var(--duration-normal) var(--easing-standard);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================================
+   CARD ELEMENTS
+   ============================================= */
+
+.card__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.3;
+}
+
+.card__description {
+  font-family: var(--font-body);
+  font-size: var(--font-size-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-lg);
+}
+
+/* =============================================
+   CARD VARIANTS
+   ============================================= */
+
+/* Featured Card - Used for highlighted content */
+.card--featured {
+  border: 2px solid var(--hero-accent);
+  background: var(--glass-bg-hover);
+}
+
+/* Blog Card - Used in blog section - Mobile First */
+.card--blog {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: var(--spacing-xl);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--duration-normal) var(--easing-standard);
+}
+
+.card--blog:hover {
+  transform: translateY(-5px);
+}
+
+.card--blog:focus {
+  outline: 2px solid var(--hero-accent);
+  outline-offset: 2px;
+}
+
+.card--blog .card__title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+  line-height: 1.3;
+}
+
+.card--blog .card__description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-lg);
+}
+
+.card--blog .card__content {
+  max-width: 100%;
+  align-items: flex-start;
+}
+
+.card--blog .card__link {
+  color: var(--hero-accent);
+  background: var(--brand-orange-light);
+}
+
+.card--blog .card__link:hover {
+  background: rgba(217, 117, 26, 0.2);
+}
+
+/* Blog Card Media */
+.card__media {
+  width: 100%;
+  height: 220px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--glass-border);
+  margin-bottom: var(--spacing-lg);
+}
+
+.card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Beat Card - Used in horizontal scroll feature (story beats) */
+.card--beat {
+  min-width: 100%;
+  flex-shrink: 0;
+  scroll-snap-align: center;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-3xl) var(--spacing-2xl);
+  min-height: 400px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+.card--beat:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* =============================================
+   SERVICE CARD (Special card with brush SVG)
+   ============================================= */
+
+.card--service {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 320px;
+  padding: var(--spacing-2xl);
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  transition: transform var(--duration-normal) var(--easing-standard);
+}
+
+.card--service:hover {
+  transform: scale(1.05);
+  box-shadow: none;
+}
+
+.card--service .card__title {
+  font-family: 'MyKidsHandwritten', var(--font-body);
+  font-size: 2rem;
+  font-weight: 400;
+  margin-bottom: var(--spacing-sm);
+  line-height: 1.1;
+  transform: rotate(-2deg);
+  color: white;
+}
+
+.card--service .card__description {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  margin-bottom: var(--spacing-md);
+  max-width: 90%;
+  font-weight: 500;
+  color: #e7e6fd;
+}
+
+/* =============================================
+   PACKAGE CARD (Services packages)
+   ============================================= */
+
+.card--package {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: var(--spacing-xl);
+  box-shadow: var(--glass-shadow);
+  transition: transform var(--duration-normal) var(--easing-standard),
+              box-shadow var(--duration-normal) var(--easing-standard);
+}
+
+.card--package:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card--package .card__title {
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* =============================================
+   STORY CARD (Narrative journey card)
+   ============================================= */
+
+.card--story {
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+  grid-column: 1 / -1;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.card--story:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* =============================================
+   CARD CONTENT ELEMENTS
+   ============================================= */
+
+.card__content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.card__link {
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  transition: background var(--duration-normal) var(--easing-standard);
+  color: white;
+}
+
+.card__link:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+/* =============================================
+   BLOG CARD SPECIFIC ELEMENTS
+   ============================================= */
+
+.card__category {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--hero-accent);
+  color: white;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--spacing-md);
+}
+
+.card__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.card__date,
+.card__read-time {
+  font-weight: 500;
+}
+
+/* Skeleton Card */
+.card--skeleton {
+  padding: var(--spacing-2xl);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+}
+
+.card__skeleton-line {
+  height: 12px;
+  border-radius: 6px;
+  background: var(--glass-border);
+  margin-bottom: var(--spacing-sm);
+}
+
+.card__skeleton-line--title {
+  height: 20px;
+  width: 80%;
+}
+
+.card__skeleton-line--short {
+  width: 60%;
+}
+
+.card__skeleton-line--meta {
+  width: 35%;
+}
+
+/* =============================================
+   PACKAGE CARD SPECIFIC ELEMENTS
+   ============================================= */
+
+.package-for,
+.package-outcome {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+}
+
+.package-benefits {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-lg) 0;
+}
+
+.package-benefits li {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding-left: var(--spacing-lg);
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+.package-benefits li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--hero-accent);
+  font-weight: bold;
+}
+
+.package-pricing {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--hero-accent);
+  margin: var(--spacing-lg) 0;
+}
+
+/* =============================================
+   RESPONSIVE DESIGN - Mobile First
+   ============================================= */
+
+/* Desktop and up: larger padding */
+@media (min-width: 900px) {
+  .card--package,
+  .card--blog {
+    padding: var(--spacing-2xl);
+  }
+}
+

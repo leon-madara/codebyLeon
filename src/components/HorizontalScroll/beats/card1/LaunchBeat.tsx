@@ -33,7 +33,7 @@ const Card1LaunchBeat = forwardRef<HTMLDivElement, Card1LaunchBeatProps>(({ show
               <div
                 key={i}
                 className="launch-icon p-3 bg-accent rounded-full shadow-lg"
-                style={{ animationDelay: `${0.3 + i * 0.15}s` }}
+                style={{ '--animation-delay': `${0.3 + i * 0.15}s` } as React.CSSProperties}
               >
                 <Icon className="w-5 h-5 text-accent-foreground" />
               </div>
@@ -51,7 +51,7 @@ const Card1LaunchBeat = forwardRef<HTMLDivElement, Card1LaunchBeatProps>(({ show
             <div
               key={stat.label}
               className="launch-stat text-center"
-              style={{ animationDelay: `${0.5 + i * 0.1}s` }}
+              style={{ '--animation-delay': `${0.5 + i * 0.1}s` } as React.CSSProperties}
             >
               <div className="text-2xl font-bold text-primary-foreground">{stat.value}</div>
               <div className="text-sm text-primary-foreground/60">{stat.label}</div>

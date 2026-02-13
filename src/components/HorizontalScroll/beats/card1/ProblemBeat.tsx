@@ -18,7 +18,7 @@ const Card1ProblemBeat = forwardRef<HTMLDivElement>((_, ref) => {
           <div
             key={problem}
             className="problem-tag px-4 py-2 bg-background/10 backdrop-blur-sm rounded-full text-primary-foreground/90 text-sm font-medium border border-background/20"
-            style={{ animationDelay: `${i * 0.1}s` }}
+            style={{ '--animation-delay': `${i * 0.1}s` } as React.CSSProperties}
           >
             {problem}
           </div>

@@ -1,0 +1,172 @@
+/**
+ * Theme Switching Logic
+ * Dark mode token overrides using [data-theme="dark"] selector
+ * Part of CSS Architecture Refactor - Phase 1
+ * 
+ * IMPORTANT: This file should ONLY contain token overrides for dark theme.
+ * No new token definitions should be added here.
+ * All base tokens are defined in tokens/colors.css
+ */
+
+/* =============================================
+   DARK THEME TOKEN OVERRIDES
+   Applied when [data-theme="dark"] is set on html element
+   ============================================= */
+
+[data-theme="dark"] {
+  /* =============================================
+     BASE COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  /* Canvas/Background Base - Override for dark mode */
+  --color-canvas-light: #0A0F0D;
+  --color-canvas-dark: #F2EFFD;
+  --canvas-base: #021127;
+
+  /* =============================================
+     SEMANTIC COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  --background: 152 35% 8%;
+  --foreground: 145 25% 92%;
+
+  --card: 152 30% 12%;
+  --card-foreground: 145 25% 92%;
+
+  --popover: 152 30% 12%;
+  --popover-foreground: 145 25% 92%;
+
+  --primary: 140 40% 65%;
+  --primary-foreground: 152 35% 8%;
+
+  --secondary: 150 25% 18%;
+  --secondary-foreground: 145 25% 92%;
+
+  --muted: 150 20% 15%;
+  --muted-foreground: 145 15% 60%;
+
+  --accent: 85 50% 55%;
+  --accent-foreground: 152 35% 8%;
+
+  --destructive: 0 62.8% 50%;
+  --destructive-foreground: 145 25% 92%;
+
+  --border: 150 25% 20%;
+  --input: 150 25% 20%;
+  --ring: 140 40% 65%;
+
+  /* Sidebar Colors - Dark mode overrides */
+  --sidebar-background: 152 30% 10%;
+  --sidebar-foreground: 145 25% 92%;
+  --sidebar-primary: 140 40% 65%;
+  --sidebar-primary-foreground: 152 35% 8%;
+  --sidebar-accent: 150 25% 18%;
+  --sidebar-accent-foreground: 145 25% 92%;
+  --sidebar-border: 150 25% 20%;
+  --sidebar-ring: 140 40% 65%;
+
+  /* =============================================
+     COMPONENT COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  /* Typography Colors - Override for dark mode */
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b5;
+  --text-muted: #6b7280;
+  --color-text-primary: #f0f0f5;
+  --color-text-secondary: #a0a0b5;
+
+  /* Brand/Accent Colors - Override for dark mode */
+  --hero-accent: #D9751A;
+  --hero-accent-hover: #F58C2F;
+
+  /* Glass/Frosted UI - Override for dark mode */
+  --glass-bg: rgba(2, 17, 39, 0.55);
+  --glass-bg-hover: rgba(2, 17, 39, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+
+  /* Dot Grid Pattern - Override for dark mode */
+  --dot-color: rgba(255, 255, 255, 0.06);
+
+  /* Card Colors - Override for dark mode */
+  --card-bg: #1a1a1a;
+  --card-hover: #252525;
+  --card-selected-bg: rgba(217, 117, 26, 0.15);
+
+  /* =============================================
+     RAINBOW TYPEWRITER COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  --rainbow-1: #918ef6;  /* Light Pastel Purple */
+  --rainbow-2: #fc5b45;  /* Light Pastel Orange */
+  --rainbow-3: #cad7fb;  /* Light Pastel Blue */
+  --rainbow-4: #d1c6f9;  /* Light Pastel Lavender */
+  --rainbow-5: #fed7d4;  /* Light Pastel Pink */
+
+  /* =============================================
+     ORB GRADIENT COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  --orb-purple: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+  --orb-orange: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  --orb-blue: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+
+  /* =============================================
+     CONFIGURATOR SPECIFIC COLORS - DARK MODE OVERRIDES
+     ============================================= */
+  
+  --bg-primary: #0F0F0F;
+  --bg-secondary: #1a1a1a;
+  --border-color: #2d2d2d;
+
+  /* Button States - Override for dark mode */
+  --btn-primary-bg: #f0f0f5;
+  --btn-primary-text: #0F0F0F;
+  --btn-disabled-bg: #2d2d2d;
+  --btn-disabled-text: #6b7280;
+
+  /* Progress Indicators - Override for dark mode */
+  --progress-track: #2d2d2d;
+  --progress-fill: #f0f0f5;
+}
+
+/* =============================================
+   ADDITIONAL THEME-SPECIFIC OVERRIDES
+   Component-level adjustments for dark theme
+   ============================================= */
+
+/* Scrollbar styling - Dark mode */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--color-canvas-light);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Selection - Dark mode */
+[data-theme="dark"] ::selection {
+  background-color: var(--primary);
+  color: var(--color-canvas-light);
+}
+
+/* Code blocks - Dark mode */
+[data-theme="dark"] code,
+[data-theme="dark"] pre {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Blockquote - Dark mode */
+[data-theme="dark"] blockquote {
+  border-left-color: var(--primary);
+}
+
+/* Horizontal rule - Dark mode */
+[data-theme="dark"] hr {
+  border-top-color: var(--border);
+}

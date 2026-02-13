@@ -1,0 +1,225 @@
+/* =============================================
+   ANIMATION UTILITIES - Reusable Keyframes
+   Code by Leon - CSS Architecture Refactor
+   ============================================= */
+
+/* =============================================
+   KEYFRAME DEFINITIONS
+   ============================================= */
+
+/* Fade In - Element appears with opacity transition */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Fade In Up - Element slides up while fading in */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Slide Up - Element slides up (for modals) */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Modal Slide Up - Alias for slideUp (for backwards compatibility) */
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Bounce - Element bounces vertically */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Spin - Element rotates 360 degrees */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Cursor Blink - Blinking cursor effect */
+@keyframes cursorBlink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* Draw Underline - SVG path drawing animation */
+@keyframes drawUnderline {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Twinkle - Star twinkling effect */
+@keyframes twinkle {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Morph - Organic morphing animation for background orbs */
+@keyframes morph {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+    transform: translate(5%, 10%) rotate(90deg);
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    transform: translate(-5%, 5%) rotate(180deg);
+  }
+  75% {
+    border-radius: 60% 40% 60% 40% / 70% 30% 50% 60%;
+    transform: translate(10%, -5%) rotate(270deg);
+  }
+}
+
+/* Float animations for button background shapes */
+@keyframes float-1 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(30px, 40px) scale(1.2);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes float-2 {
+  0% {
+    transform: translateY(-50%) translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translateY(-50%) translate(-25px, -30px) scale(1.15);
+  }
+  100% {
+    transform: translateY(-50%) translate(0, 0) scale(1);
+  }
+}
+
+@keyframes float-3 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(20px, -25px) scale(1.1);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes float-4 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 30px) scale(1.2);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+@keyframes float-5 {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(15px, -20px) scale(1.15);
+  }
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+/* =============================================
+   UTILITY CLASSES
+   ============================================= */
+
+/* Fade In Animation Utility */
+.animate-fade-in {
+  animation: fadeIn var(--duration-normal) var(--easing-standard);
+}
+
+/* Fade In Up Animation Utility */
+.animate-fade-in-up {
+  animation: fadeInUp var(--duration-slow) var(--easing-decelerate);
+}
+
+/* Slide Up Animation Utility */
+.animate-slide-up {
+  animation: slideUp var(--duration-normal) var(--easing-decelerate);
+}
+
+/* Bounce Animation Utility */
+.animate-bounce {
+  animation: bounce var(--duration-slow) var(--easing-standard);
+}
+
+/* Spin Animation Utility */
+.animate-spin {
+  animation: spin var(--duration-slowest) linear infinite;
+}
+
+/* Cursor Blink Animation Utility */
+.animate-cursor-blink {
+  animation: cursorBlink var(--duration-slowest) step-end infinite;
+}
+
+/* Twinkle Animation Utility */
+.animate-twinkle {
+  animation: twinkle 1.5s infinite alternate;
+}
+
+/* Morph Animation Utility */
+.animate-morph {
+  animation: morph 15s var(--easing-ease-in-out) infinite;
+}

@@ -1,0 +1,199 @@
+/* =============================================
+   ABOUT SECTION
+   ============================================= */
+
+/* About section container - Mobile First */
+.about {
+  position: relative;
+  min-height: 80vh;
+  width: 100%;
+  padding: 5rem 1rem 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--canvas-base);
+  transition: background var(--duration-normal) ease;
+}
+
+/* Background orbs */
+.about__orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.about__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  animation: morph 15s var(--easing-ease-in-out) infinite;
+}
+
+.about__orb--purple {
+  width: 45vw;
+  height: 45vw;
+  background: var(--orb-purple);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.about__orb--orange {
+  width: 55vw;
+  height: 55vw;
+  background: var(--orb-orange);
+  top: 20%;
+  left: 30%;
+  animation-delay: -5s;
+}
+
+.about__orb--blue {
+  width: 40vw;
+  height: 40vw;
+  background: var(--orb-blue);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -10s;
+}
+
+/* Frosted overlay */
+.about__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 12px 12px;
+  pointer-events: none;
+}
+
+/* About content wrapper */
+.about__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* About headline */
+.about__headline {
+  font-family: 'Gladolia DEMO', 'Inter', sans-serif;
+  font-size: clamp(1.92rem, 8vw, 3.36rem);
+  font-weight: 400;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+  line-height: 1.2;
+}
+
+/* About subheadline */
+.about__subheadline {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+  max-width: 60ch;
+  margin: 0 auto var(--spacing-2xl);
+}
+
+/* About section container - Mobile First */
+.about__container {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: var(--spacing-3xl);
+}
+
+/* About card component - Mobile First */
+.about__card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: var(--spacing-2xl);
+  box-shadow: var(--glass-shadow);
+}
+
+/* About card title */
+.about__card-title {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
+}
+
+/* About card description */
+.about__card-description {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Process list */
+.about__process-list {
+  list-style: none;
+  padding: 0;
+  margin-top: var(--spacing-md);
+}
+
+/* Process list item */
+.about__process-item {
+  color: var(--text-secondary);
+  line-height: 1.8;
+  padding-left: 1.5rem;
+  position: relative;
+  margin-bottom: 0.75rem;
+}
+
+/* Process list item arrow */
+.about__process-item::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--hero-accent);
+  font-weight: bold;
+}
+
+/* CTA text styling */
+.about__cta-text {
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--color-text-secondary);
+}
+
+/* About CTA wrapper */
+.about__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-2xl);
+}
+
+/* =============================================
+   RESPONSIVE STYLES - Mobile First
+   ============================================= */
+
+/* Tablet and up */
+@media (min-width: 640px) {
+  .about__card {
+    padding: 2.5rem;
+  }
+
+  .about__cta {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
+/* Desktop and up */
+@media (min-width: 900px) {
+  .about__container {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-2xl);
+  }
+}

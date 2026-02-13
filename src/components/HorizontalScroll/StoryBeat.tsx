@@ -13,42 +13,31 @@ interface StoryBeatProps {
 const StoryBeat = forwardRef<HTMLDivElement, StoryBeatProps>(
   ({ index, title, subtitle, description, icon, children, gradientClass }, ref) => {
     return (
-      <div
+      <article
         ref={ref}
-        className={`beat-card min-w-[100vw] w-[100vw] h-[70vh] ${gradientClass} will-change-transform`}
+        className={`hs-beat ${gradientClass}`.trim()}
         data-beat={index}
       >
-        <div className="max-w-xl mx-auto px-4 lg:px-0 lg:mr-[280px] py-6">
-          {/* Icon */}
-          <div className="beat-icon mb-4 p-4 rounded-xl bg-background/10 backdrop-blur-sm border border-background/20 inline-block">
-            <div className="text-primary-foreground">{icon}</div>
+        <div className="hs-beat__content">
+          <div className="hs-beat__icon hs-beat-reveal">
+            <div className="hs-beat__icon-inner">{icon}</div>
           </div>
 
-          {/* Title */}
-          <h2 className="beat-title font-display text-2xl md:text-3xl lg:text-4xl font-bold text-primary-foreground mb-2 text-balance">
-            {title}
-          </h2>
+          <h2 className="hs-beat__title hs-beat-reveal">{title}</h2>
 
-          {/* Subtitle */}
           {subtitle && (
-            <p className="beat-subtitle text-base md:text-lg text-primary-foreground/80 font-medium mb-3">
-              {subtitle}
-            </p>
+            <p className="hs-beat__subtitle hs-beat-reveal">{subtitle}</p>
           )}
 
-          {/* Description */}
-          <p className="beat-description text-sm md:text-base text-primary-foreground/70 leading-relaxed max-w-md mx-auto">
-            {description}
-          </p>
+          <p className="hs-beat__description hs-beat-reveal">{description}</p>
 
-          {/* Additional content */}
           {children && (
-            <div className="beat-content mt-6">
+            <div className="hs-beat__body hs-beat-reveal">
               {children}
             </div>
           )}
         </div>
-      </div>
+      </article>
     );
   }
 );

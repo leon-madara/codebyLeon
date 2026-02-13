@@ -25,7 +25,7 @@ const Card3SuccessBeat = forwardRef<HTMLDivElement, Card3SuccessBeatProps>(({ sh
               <div
                 key={i}
                 className="flex-1 text-center"
-                style={{ animationDelay: `${i * 0.15}s` }}
+                style={{ '--animation-delay': `${i * 0.15}s` } as React.CSSProperties}
               >
                 <div className="w-14 h-14 rounded-xl bg-primary-foreground/20 flex items-center justify-center mb-3 mx-auto shadow-lg">
                   <Icon className="w-7 h-7 text-primary-foreground" />
@@ -48,7 +48,7 @@ const Card3SuccessBeat = forwardRef<HTMLDivElement, Card3SuccessBeatProps>(({ sh
             <div
               key={stat.label}
               className="text-center"
-              style={{ animationDelay: `${0.5 + i * 0.1}s` }}
+              style={{ '--animation-delay': `${0.5 + i * 0.1}s` } as React.CSSProperties}
             >
               <div className="text-2xl font-bold text-primary-foreground">{stat.value}</div>
               <div className="text-sm text-primary-foreground/60">{stat.label}</div>

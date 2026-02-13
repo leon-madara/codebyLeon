@@ -1,0 +1,68 @@
+{
+  "bundleSize": {
+    "totalSize": 107172,
+    "gzippedSize": 23866,
+    "fileCount": 11,
+    "files": [
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\base\\global.css",
+        "size": 3345,
+        "gzippedSize": 931
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\base\\reset.css",
+        "size": 1384,
+        "gzippedSize": 658
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\base\\theme.css",
+        "size": 4969,
+        "gzippedSize": 1468
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\configurator.css",
+        "size": 27962,
+        "gzippedSize": 5377
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\hero.css",
+        "size": 50162,
+        "gzippedSize": 10214
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\mouse-trail.css",
+        "size": 1951,
+        "gzippedSize": 770
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\tokens\\animations.css",
+        "size": 1985,
+        "gzippedSize": 522
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\tokens\\colors.css",
+        "size": 10104,
+        "gzippedSize": 2380
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\tokens\\shadows.css",
+        "size": 1779,
+        "gzippedSize": 554
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\tokens\\spacing.css",
+        "size": 1416,
+        "gzippedSize": 425
+      },
+      {
+        "path": "C:\\Users\\Leon\\DevMode\\codebyLeon\\src\\styles\\tokens\\typography.css",
+        "size": 2115,
+        "gzippedSize": 567
+      }
+    ]
+  },
+  "cssParsingTime": 2.467800000000125,
+  "timestamp": 1770658458929,
+  "version": "1.0.0-baseline",
+  "description": "Initial baseline before CSS architecture refactor"
+}

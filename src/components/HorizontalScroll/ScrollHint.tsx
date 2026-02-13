@@ -1,4 +1,4 @@
-import { ArrowRight } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 
 interface ScrollHintProps {
   visible: boolean;
@@ -8,11 +8,9 @@ const ScrollHint = ({ visible }: ScrollHintProps) => {
   if (!visible) return null;
 
   return (
-    <div
-      className={`scroll-hint lg:right-[320px] ${visible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-    >
-      <span>Scroll</span>
-      <ArrowRight className="w-4 h-4 animate-pulse" />
+    <div className="hs-scroll-hint" aria-hidden="true">
+      <span className="hs-scroll-hint__text">Scroll to progress</span>
+      <ArrowDown className="hs-scroll-hint__icon" />
     </div>
   );
 };
