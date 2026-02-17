@@ -1,6 +1,7 @@
 import { useEffect, RefObject } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { isVisualTestMode } from '../utils/runtimeFlags';
 
 // Register ScrollTrigger plugin
 if (typeof window !== 'undefined') {
@@ -8,7 +9,7 @@ if (typeof window !== 'undefined') {
 }
 
 interface ScrollAnimationConfig {
-  trigger: string | Element;
+  trigger?: string | Element;
   start?: string;
   toggleActions?: string;
   animateHeadline?: boolean;
@@ -58,6 +59,10 @@ export function useScrollAnimation(
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
+    if (isVisualTestMode()) return;
+
+    const triggerTarget = config.trigger ?? section;
+    if (!triggerTarget) return;
 
     const headline = section.querySelector(config.headlineSelector ?? '.section-headline') as HTMLElement | null;
     const subheadline = section.querySelector(config.subheadlineSelector ?? '.section-subheadline') as HTMLElement | null;
@@ -74,7 +79,7 @@ export function useScrollAnimation(
     // Create timeline
     const tl = gsap.timeline({
       scrollTrigger: {
-        trigger: config.trigger,
+        trigger: triggerTarget,
         start: config.start || 'top 80%',
         toggleActions: config.toggleActions || 'play none none none',
       },
@@ -142,8 +147,8 @@ export function useScrollAnimation(
 
     // Cleanup
     return () => {
+      tl.scrollTrigger?.kill();
       tl.kill();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
     };
   }, [sectionRef, config]);
 }

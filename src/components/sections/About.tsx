@@ -20,31 +20,59 @@ export function About() {
         </p>
 
         <div className="about__container">
-          <div className="about__card">
-            <h3 className="about__card-title">Mission</h3>
+          <article className="about__card about__card--featured">
+            <div className="about__card-media">
+              <div className="about__card-chips">
+                <span className="about__card-chip">Mission</span>
+                <span className="about__card-chip">Featured</span>
+              </div>
+              <div className="about__card-media-content">
+                <p className="about__card-kicker">Code by Leon</p>
+                <h3 className="about__card-title">Professional Presence That Builds Trust</h3>
+              </div>
+            </div>
+            <div className="about__card-body">
+              <p className="about__card-description">
+                We build polished websites and consistent visuals that make Kenyan businesses look credible,
+                win stronger first impressions, and turn more visitors into serious inquiries.
+              </p>
+              <div className="about__card-tags">
+                <span className="about__card-tag">Web Design</span>
+                <span className="about__card-tag">Brand Visuals</span>
+                <span className="about__card-tag">Lead-Focused</span>
+              </div>
+              <a href="/get-started.html" className="about__card-button">Start your project</a>
+            </div>
+          </article>
+
+          <article className="about__card about__card--stack">
+            <p className="about__card-kicker">Technology Stack</p>
+            <h3 className="about__card-title">Built for Speed, SEO, and Scale</h3>
             <p className="about__card-description">
-              Code by Leon helps small businesses and creators build modern websites and consistent visuals
-              so they can look professional online, attract better clients, and stop losing opportunities
-              because of weak design.
+              Your site is built with modern tooling, mobile-first layouts, and technical SEO best practices
+              so it loads fast, ranks better, and stays reliable as your business grows.
             </p>
-          </div>
-          <div className="about__card">
-            <h3 className="about__card-title">Technology Stack</h3>
-            <p className="about__card-description">
-              Modern, fast, mobile-first approaches with SEO and performance optimization. We use the latest
-              web technologies to ensure your site loads quickly and ranks well.
+            <div className="about__card-tags">
+              <span className="about__card-tag">Mobile-First</span>
+              <span className="about__card-tag">Technical SEO</span>
+              <span className="about__card-tag">Performance</span>
+            </div>
+          </article>
+
+          <article className="about__card about__card--process">
+            <p className="about__card-kicker">Working Process</p>
+            <h3 className="about__card-title">Clear 5-Step Delivery Process</h3>
+            <p className="about__card-intro">
+              You always know what is next, what is being delivered, and when it goes live.
             </p>
-          </div>
-          <div className="about__card">
-            <h3 className="about__card-title">Working Process</h3>
             <ol className="about__process-list">
-              <li className="about__process-item">Discovery call to understand your needs</li>
-              <li className="about__process-item">Proposal & agreement</li>
-              <li className="about__process-item">Design & development</li>
-              <li className="about__process-item">Revisions & refinement</li>
-              <li className="about__process-item">Launch & support</li>
+              <li className="about__process-item">Discovery and business goals</li>
+              <li className="about__process-item">Proposal and scope alignment</li>
+              <li className="about__process-item">Design and development sprint</li>
+              <li className="about__process-item">Review, revisions, and polish</li>
+              <li className="about__process-item">Launch and post-launch support</li>
             </ol>
-          </div>
+          </article>
         </div>
 
         <div className="about__cta">

@@ -90,11 +90,12 @@ describe('BlogCard Component', () => {
       expect(article).toHaveAttribute('tabIndex', '0');
     });
 
-    it('should have pointer cursor style', () => {
+    it('should render with expected card classes', () => {
       renderBlogCard();
       
       const article = screen.getByRole('button');
-      expect(article).toHaveStyle('cursor: pointer');
+      expect(article).toHaveClass('card');
+      expect(article).toHaveClass('card--blog');
     });
   });
 

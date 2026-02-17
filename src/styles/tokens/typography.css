@@ -9,7 +9,7 @@
      ============================================= */
 
    /* Primary Fonts */
-   --font-display: 'Playfair Display', serif;
+   --font-display: 'Gladolia', serif;
    --font-body: 'Inter', sans-serif;
 
    /* Custom Display Fonts */
@@ -46,6 +46,14 @@
 @font-face {
    font-family: 'VTKSNoise';
    src: url('../../assets/fonts/vtks-noise/vtks noise.ttf') format('truetype');
+   font-weight: normal;
+   font-style: normal;
+   font-display: swap;
+}
+
+@font-face {
+   font-family: 'Gladolia';
+   src: url('/fonts/GladoliaDEMO-Regular.otf') format('opentype');
    font-weight: normal;
    font-style: normal;
    font-display: swap;

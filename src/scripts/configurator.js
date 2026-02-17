@@ -16,12 +16,27 @@ class ServiceConfigurator {
         this.totalDataSteps = 8; // For progress calculation
         this.answers = {};
         this.additionalNeeds = [];
+        this.orbTrackingEnabled = false;
+        this.orbLoopId = null;
+        this.orbLerpFactor = 0.12;
+        this.orbMaxOffset = 10;
+        this.orbTargetX = 0;
+        this.orbTargetY = 0;
+        this.orbCurrentX = 0;
+        this.orbCurrentY = 0;
+        this.motionMediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+        this.handleMotionPreferenceChange = () => this.updateOrbTrackingState();
+        this.handleOrbMouseMove = (event) => this.onOrbMouseMove(event);
+        this.handleOrbMouseLeave = () => this.resetOrbTarget();
+        this.handleOrbResize = () => this.updateOrbTrackingState();
+        this.handleOrbBeforeUnload = () => this.cleanupOrbTracking();
 
         this.init();
     }
 
     init() {
         this.setupEventListeners();
+        this.setupOrbTracking();
         this.loadSavedProgress();
         this.updateUI();
     }
@@ -305,6 +320,98 @@ class ServiceConfigurator {
             if (card) card.classList.add('selected');
         } else {
             this.disableContinue();
+        }
+    }
+
+    setupOrbTracking() {
+        if (typeof this.motionMediaQuery.addEventListener === 'function') {
+            this.motionMediaQuery.addEventListener('change', this.handleMotionPreferenceChange);
+        } else if (typeof this.motionMediaQuery.addListener === 'function') {
+            this.motionMediaQuery.addListener(this.handleMotionPreferenceChange);
+        }
+
+        window.addEventListener('mousemove', this.handleOrbMouseMove, { passive: true });
+        window.addEventListener('mouseleave', this.handleOrbMouseLeave, { passive: true });
+        window.addEventListener('resize', this.handleOrbResize, { passive: true });
+        window.addEventListener('beforeunload', this.handleOrbBeforeUnload);
+
+        this.updateOrbTrackingState();
+    }
+
+    updateOrbTrackingState() {
+        const shouldEnable = !this.motionMediaQuery.matches && window.innerWidth > 768;
+        if (shouldEnable === this.orbTrackingEnabled) return;
+
+        this.orbTrackingEnabled = shouldEnable;
+
+        if (shouldEnable) {
+            this.startOrbTrackingLoop();
+            return;
+        }
+
+        this.resetOrbTarget();
+        this.orbCurrentX = 0;
+        this.orbCurrentY = 0;
+        this.applyOrbOffset(0, 0);
+        this.stopOrbTrackingLoop();
+    }
+
+    startOrbTrackingLoop() {
+        if (this.orbLoopId) return;
+
+        const animate = () => {
+            this.orbCurrentX = this.lerp(this.orbCurrentX, this.orbTargetX, this.orbLerpFactor);
+            this.orbCurrentY = this.lerp(this.orbCurrentY, this.orbTargetY, this.orbLerpFactor);
+            this.applyOrbOffset(this.orbCurrentX, this.orbCurrentY);
+            this.orbLoopId = window.requestAnimationFrame(animate);
+        };
+
+        this.orbLoopId = window.requestAnimationFrame(animate);
+    }
+
+    stopOrbTrackingLoop() {
+        if (!this.orbLoopId) return;
+        window.cancelAnimationFrame(this.orbLoopId);
+        this.orbLoopId = null;
+    }
+
+    onOrbMouseMove(event) {
+        if (!this.orbTrackingEnabled) return;
+
+        const viewportCenterX = window.innerWidth / 2;
+        const viewportCenterY = window.innerHeight / 2;
+        const normalizedX = (event.clientX - viewportCenterX) / viewportCenterX;
+        const normalizedY = (event.clientY - viewportCenterY) / viewportCenterY;
+
+        this.orbTargetX = normalizedX * this.orbMaxOffset;
+        this.orbTargetY = normalizedY * this.orbMaxOffset;
+    }
+
+    resetOrbTarget() {
+        this.orbTargetX = 0;
+        this.orbTargetY = 0;
+    }
+
+    applyOrbOffset(x, y) {
+        document.body.style.setProperty('--orb-track-x', `${x.toFixed(2)}px`);
+        document.body.style.setProperty('--orb-track-y', `${y.toFixed(2)}px`);
+    }
+
+    lerp(start, end, factor) {
+        return start + (end - start) * factor;
+    }
+
+    cleanupOrbTracking() {
+        this.stopOrbTrackingLoop();
+        window.removeEventListener('mousemove', this.handleOrbMouseMove);
+        window.removeEventListener('mouseleave', this.handleOrbMouseLeave);
+        window.removeEventListener('resize', this.handleOrbResize);
+        window.removeEventListener('beforeunload', this.handleOrbBeforeUnload);
+
+        if (typeof this.motionMediaQuery.removeEventListener === 'function') {
+            this.motionMediaQuery.removeEventListener('change', this.handleMotionPreferenceChange);
+        } else if (typeof this.motionMediaQuery.removeListener === 'function') {
+            this.motionMediaQuery.removeListener(this.handleMotionPreferenceChange);
         }
     }
 

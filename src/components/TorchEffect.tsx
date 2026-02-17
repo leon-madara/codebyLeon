@@ -80,7 +80,6 @@ export const TorchEffect = () => {
 
         return () => {
             anim.kill();
-            ScrollTrigger.getAll().forEach(t => t.kill()); // Clean up triggers
             document.body.classList.remove('torch-expanding');
             document.body.style.cursor = 'auto'; // Safety cleanup
         };

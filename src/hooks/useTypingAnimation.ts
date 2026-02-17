@@ -9,6 +9,7 @@ interface TypingConfig {
   backspaceSpeed: number;
   pauseBeforeBackspace: number;
   pauseBeforeType: number;
+  disabled: boolean;
 }
 
 const DEFAULT_CONFIG: TypingConfig = {
@@ -19,6 +20,7 @@ const DEFAULT_CONFIG: TypingConfig = {
   backspaceSpeed: 0.05,
   pauseBeforeBackspace: 1.5,
   pauseBeforeType: 0.5,
+  disabled: false,
 };
 
 const EMPTY_CONFIG = {};
@@ -32,12 +34,48 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
 
   const [currentWord, setCurrentWord] = useState(DEFAULT_CONFIG.words[0]);
   const currentWordRef = useRef(DEFAULT_CONFIG.words[0]);
+  const startWordIndexRef = useRef(0);
+  const currentWordIndexRef = useRef(0);
+  const wordCount = finalConfig.words.length;
+  const normalizeIndex = useMemo(() => {
+    return (index: number) => {
+      if (wordCount === 0) return 0;
+      return ((index % wordCount) + wordCount) % wordCount;
+    };
+  }, [wordCount]);
+  const setStartingWordIndex = useCallback((index: number) => {
+    startWordIndexRef.current = normalizeIndex(index);
+  }, [normalizeIndex]);
 
   useEffect(() => {
-    if (!isActive) return;
+    if (!isActive || wordCount === 0) return;
 
     const element = elementRef.current;
     if (!element) return;
+
+    if (finalConfig.disabled) {
+      const targetWord = finalConfig.words[0] ?? '';
+      const colorIndices = finalConfig.colorIndices.length > 0 ? finalConfig.colorIndices : [1];
+
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+        timelineRef.current = null;
+      }
+
+      element.innerHTML = '';
+      targetWord.split('').forEach((char, index) => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.className = `rainbow-color-${colorIndices[index % colorIndices.length]}`;
+        element.appendChild(span);
+      });
+
+      setCurrentWord(targetWord);
+      currentWordRef.current = targetWord;
+      startWordIndexRef.current = 0;
+      currentWordIndexRef.current = 0;
+      return;
+    }
 
     // Clear initial content
     element.textContent = '';
@@ -47,14 +85,17 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
     const typeLoop = (wordIndex: number) => {
       if (!isActive) return; // double check
 
-      const targetWord = finalConfig.words[wordIndex % finalConfig.words.length];
+      const safeIndex = normalizeIndex(wordIndex);
+      startWordIndexRef.current = safeIndex;
+      currentWordIndexRef.current = safeIndex;
+      const targetWord = finalConfig.words[safeIndex];
       setCurrentWord(targetWord); // Update the current target word
       currentWordRef.current = targetWord;
       const charArray = targetWord.split('');
 
       const tl = gsap.timeline({
         onComplete: () => {
-          if (isActive) typeLoop(wordIndex + 1)
+          if (isActive) typeLoop(safeIndex + 1)
         },
       });
 
@@ -104,8 +145,10 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
       tl.to({}, { duration: finalConfig.pauseBeforeType });
     };
 
-    // Start the loop
-    typeLoop(0);
+    // Start the loop from the last recorded index
+    const normalizedStart = normalizeIndex(startWordIndexRef.current);
+    startWordIndexRef.current = normalizedStart;
+    typeLoop(normalizedStart);
 
     // Cleanup
     return () => {
@@ -113,7 +156,7 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
         timelineRef.current.kill();
       }
     };
-  }, [finalConfig, isActive]);
+  }, [finalConfig, isActive, normalizeIndex, wordCount]);
 
   const stop = useCallback(() => {
     setIsActive(false);
@@ -128,5 +171,5 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
     setIsActive(true);
   }, []);
 
-  return { elementRef, stop, start, currentWord, currentWordRef };
+  return { elementRef, stop, start, currentWord, currentWordRef, currentWordIndexRef, setStartingWordIndex };
 }

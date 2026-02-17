@@ -286,12 +286,9 @@ export function extractTokenReferences(cssFiles: CSSFileInfo[]): TokenReference[
               // Extract the token name from var(--token-name)
               const tokenNameNode = funcNode.children.first;
               if (tokenNameNode) {
-                let tokenName = '';
-                // The token name already includes the -- prefix
-                if (tokenNameNode.type === 'Identifier') {
-                  tokenName = tokenNameNode.name;
-                } else if (tokenNameNode.type === 'Dashed') {
-                  tokenName = tokenNameNode.name;
+                let tokenName = csstree.generate(tokenNameNode).trim();
+                if (tokenName && !tokenName.startsWith('--')) {
+                  tokenName = `--${tokenName}`;
                 }
                 
                 if (tokenName) {
@@ -321,9 +318,21 @@ export function findUndefinedTokenReferences(
   tokensDir: string
 ): TokenReference[] {
   const references = extractTokenReferences(cssFiles);
-  const tokenFiles = cssFiles.filter(file => file.path.includes(tokensDir));
+  const normalizedTokensDir = tokensDir.replace(/\\/g, '/');
+  const tokenFiles = cssFiles.filter(file => file.path.replace(/\\/g, '/').includes(normalizedTokensDir));
   const definedTokens = extractTokenDefinitions(tokenFiles);
   const definedTokenNames = new Set(definedTokens.keys());
 
   return references.filter(ref => !definedTokenNames.has(ref.tokenName));
+}
+
+/**
+ * Find token references that are not declared anywhere in the CSS corpus
+ */
+export function findUndeclaredTokenReferences(cssFiles: CSSFileInfo[]): TokenReference[] {
+  const references = extractTokenReferences(cssFiles);
+  const declaredTokens = extractTokenDefinitions(cssFiles);
+  const declaredTokenNames = new Set(declaredTokens.keys());
+
+  return references.filter(ref => !declaredTokenNames.has(ref.tokenName));
 }

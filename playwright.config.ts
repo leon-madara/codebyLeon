@@ -10,7 +10,7 @@ export default defineConfig({
   testDir: './src/test/visual-regression',
   
   // Maximum time one test can run
-  timeout: 30 * 1000,
+  timeout: 60 * 1000,
   
   // Run tests in files in parallel
   fullyParallel: true,

@@ -12,6 +12,7 @@ import { Card3BottlenecksBeat, Card3ModelBeat, Card3WorkflowBeat, Card3SuccessBe
 import ProgressIndicator from './ProgressIndicator';
 import Sidebar from './Sidebar';
 import ScrollHint from './ScrollHint';
+import { isVisualTestMode } from '../../utils/runtimeFlags';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -59,6 +60,7 @@ const createBeatRefMatrix = () => STORIES.map(() => Array<HTMLDivElement | null>
 const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
 
 const MultiCardScrollSection = () => {
+  const visualTestMode = isVisualTestMode();
   const containerRef = useRef<HTMLDivElement>(null);
   const topChromeRef = useRef<HTMLDivElement>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -84,6 +86,7 @@ const MultiCardScrollSection = () => {
   useEffect(() => {
     syncViewportMode();
     setIsReady(true);
+    if (visualTestMode) return;
 
     let resizeTimer: ReturnType<typeof setTimeout>;
     const handleResize = () => {
@@ -99,15 +102,15 @@ const MultiCardScrollSection = () => {
       window.removeEventListener('resize', handleResize);
       clearTimeout(resizeTimer);
     };
-  }, [syncViewportMode]);
+  }, [syncViewportMode, visualTestMode]);
 
   useEffect(() => {
-    if (!showScrollHint || !isDesktop) return;
+    if (!showScrollHint || !isDesktop || visualTestMode) return;
 
     const handleScroll = () => setShowScrollHint(false);
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [showScrollHint, isDesktop]);
+  }, [showScrollHint, isDesktop, visualTestMode]);
 
   useEffect(() => {
     const element = topChromeRef.current;
@@ -196,7 +199,7 @@ const MultiCardScrollSection = () => {
   }, []);
 
   useLayoutEffect(() => {
-    if (!isReady) return;
+    if (!isReady || visualTestMode) return;
 
     const ctx = gsap.context(() => {
       STORIES.forEach((_, storyIndex) => {
@@ -284,14 +287,13 @@ const MultiCardScrollSection = () => {
               trigger: beat,
               containerAnimation: timeline,
               start: isDesktop ? 'left 72%' : 'top 72%',
-              end: isDesktop ? 'left 45%' : 'top 45%',
-              scrub: 0.35,
+              toggleActions: 'play none none none',
             },
           }).to(revealNodes, {
             opacity: 1,
             y: 0,
             stagger: 0.05,
-            duration: 0.3,
+            duration: 0.4,
             ease: 'power2.out',
           });
         });
@@ -312,7 +314,7 @@ const MultiCardScrollSection = () => {
       scrollTriggersRef.current = [];
       ctx.revert();
     };
-  }, [isDesktop, isReady, updateStoryProgress]);
+  }, [isDesktop, isReady, updateStoryProgress, visualTestMode]);
 
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,

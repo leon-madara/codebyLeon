@@ -7,17 +7,20 @@ import { TorchEffect } from './components/TorchEffect';
 import { ScrollToTop } from './components/ScrollToTop';
 import { HomePage } from './pages/HomePage';
 import RouteLoadingFallback from './components/RouteLoadingFallback';
+import { isVisualTestMode } from './utils/runtimeFlags';
 
 // Lazy load blog pages for code splitting
 const BlogListingPage = lazy(() => import('./pages/BlogListingPage').then(module => ({ default: module.BlogListingPage })));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 
 function App() {
+  const visualTestMode = isVisualTestMode();
+
   return (
     <ThemeProvider>
       <BrowserRouter>
-        <MouseTrail />
-        <TorchEffect />
+        {!visualTestMode && <MouseTrail />}
+        {!visualTestMode && <TorchEffect />}
         <Navigation />
         <ScrollToTop />
 

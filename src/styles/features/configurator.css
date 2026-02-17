@@ -21,6 +21,8 @@
     transition: background var(--duration-normal) var(--easing-standard), color var(--duration-normal) var(--easing-standard);
     position: relative;
     overflow-x: hidden;
+    --orb-track-x: 0px;
+    --orb-track-y: 0px;
 }
 
 /* =============================================
@@ -170,11 +172,11 @@
     text-decoration: none;
     text-align: center;
     transition: color var(--duration-fast) var(--easing-standard), background-color var(--duration-fast) var(--easing-standard);
-    position: absolute;
-    top: 0;
-    right: 0;
-    margin-top: 1rem;
-    margin-right: 2rem;
+    position: fixed;
+    top: 1rem;
+    right: 2rem;
+    margin-top: 0;
+    margin-right: 0;
     transform-origin: center;
     will-change: transform;
     border-radius: 50%;
@@ -189,11 +191,10 @@
 
 /* Close button tooltip */
 .close-btn-tooltip {
-    position: absolute;
-    top: 1rem;
+    position: fixed;
+    top: 3.5rem;
     right: 2rem;
-    margin-top: 40px;
-    /* 32px button height + 8px gap */
+    margin-top: 0;
     background: var(--text-primary);
     color: var(--bg-primary);
     padding: 0.5rem 0.75rem;
@@ -458,7 +459,8 @@
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.7;
-    animation: morph 15s var(--easing-ease-in-out) infinite;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
 }
 
 .configurator-page .orb-purple {
@@ -467,7 +469,7 @@
     background: var(--orb-purple);
     top: -10%;
     left: -10%;
-    animation-delay: 0s;
+    transform: translate3d(calc(var(--orb-track-x) * 0.35), calc(var(--orb-track-y) * 0.35), 0);
 }
 
 .configurator-page .orb-orange {
@@ -476,7 +478,7 @@
     background: var(--orb-orange);
     top: 20%;
     left: 30%;
-    animation-delay: -5s;
+    transform: translate3d(calc(var(--orb-track-x) * 0.55), calc(var(--orb-track-y) * 0.55), 0);
 }
 
 .configurator-page .orb-blue {
@@ -485,7 +487,7 @@
     background: var(--orb-blue);
     bottom: -15%;
     right: -10%;
-    animation-delay: -10s;
+    transform: translate3d(calc(var(--orb-track-x) * 0.75), calc(var(--orb-track-y) * 0.75), 0);
 }
 
 /* @keyframes morph defined in index.css - removed duplicate */
@@ -675,19 +677,19 @@
     margin-bottom: 2rem;
 }
 
-.form-group {
+.configurator-page .form-group {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
 }
 
-.form-group label {
+.configurator-page .form-group label {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-primary);
 }
 
-.form-group input {
+.configurator-page .form-group input {
     padding: 1rem;
     font-size: 1rem;
     border: 2px solid var(--border-color);
@@ -697,12 +699,12 @@
     transition: border-color var(--duration-fast) var(--easing-standard);
 }
 
-.form-group input:focus {
+.configurator-page .form-group input:focus {
     outline: none;
     border-color: var(--brand-orange);
 }
 
-.form-group input::placeholder {
+.configurator-page .form-group input::placeholder {
     color: var(--text-muted);
 }
 
@@ -861,8 +863,8 @@
     margin-top: 2rem;
 }
 
-.cta-primary,
-.cta-secondary {
+.configurator-page .cta-primary,
+.configurator-page .cta-secondary {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -875,23 +877,23 @@
     transition: all var(--duration-fast) var(--easing-standard);
 }
 
-.cta-primary {
+.configurator-page .cta-primary {
     background: var(--btn-primary-bg);
     color: var(--btn-primary-text);
 }
 
-.cta-primary:hover {
+.configurator-page .cta-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.cta-secondary {
+.configurator-page .cta-secondary {
     background: transparent;
     color: var(--text-primary);
     border: 2px solid var(--border-color);
 }
 
-.cta-secondary:hover {
+.configurator-page .cta-secondary:hover {
     border-color: var(--text-primary);
 }
 
@@ -911,7 +913,7 @@
     z-index: 100;
 }
 
-.btn-continue {
+.configurator-page .btn-continue {
     width: 100%;
     max-width: 400px;
     padding: 1rem 2rem;
@@ -935,7 +937,7 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.btn-continue:disabled {
+.configurator-page .btn-continue:disabled {
     /* Fallback */
     background: var(--btn-disabled-bg);
     /* Semi-transparent with blur - more transparent to show colors */
@@ -946,7 +948,7 @@
     -webkit-backdrop-filter: blur(5px);
 }
 
-.btn-continue:not(:disabled):hover {
+.configurator-page .btn-continue:not(:disabled):hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
@@ -954,7 +956,7 @@
 /* =============================================
    ANIMATED GLOWING BUTTON BACKGROUND
    ============================================= */
-.btn-continue-wrapper {
+.configurator-page .btn-continue-wrapper {
     position: relative;
     width: 100%;
     max-width: 400px;
@@ -963,7 +965,7 @@
     min-height: 50px;
 }
 
-.btn-continue-bg {
+.configurator-page .btn-continue-bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -1068,13 +1070,20 @@
     }
 
     .close-btn {
-        margin-top: 0.5rem;
-        margin-right: 1rem;
+        top: 0.5rem;
+        right: 1rem;
+        margin-top: 0;
+        margin-right: 0;
         display: flex;
         align-items: center;
         justify-content: center;
         line-height: 1;
         text-align: center;
+    }
+
+    .close-btn-tooltip {
+        top: 3rem;
+        right: 1rem;
     }
 
     .back-link {
@@ -1142,7 +1151,7 @@
     animation: fadeIn var(--duration-fast) var(--easing-standard);
 }
 
-.modal-backdrop {
+.configurator-page .modal-backdrop {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
@@ -1150,7 +1159,7 @@
     backdrop-filter: blur(4px);
 }
 
-.modal-dialog {
+.configurator-page .modal-dialog {
     position: relative;
     background: var(--bg-primary);
     border-radius: 12px;
@@ -1163,27 +1172,27 @@
     animation: slideUp var(--duration-normal) var(--easing-standard);
 }
 
-.modal-title {
+.configurator-page .modal-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.75rem;
 }
 
-.modal-message {
+.configurator-page .modal-message {
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     line-height: 1.5;
 }
 
-.modal-actions {
+.configurator-page .modal-actions {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.modal-btn {
+.configurator-page .modal-btn {
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -1194,58 +1203,58 @@
     text-align: center;
 }
 
-.modal-btn-primary {
+.configurator-page .modal-btn-primary {
     background: var(--brand-orange);
     color: #FFFFFF;
 }
 
-.modal-btn-primary:hover {
+.configurator-page .modal-btn-primary:hover {
     background: #A45711;
     transform: translateY(-1px);
 }
 
-.modal-btn-secondary {
+.configurator-page .modal-btn-secondary {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
 }
 
-.modal-btn-secondary:hover {
+.configurator-page .modal-btn-secondary:hover {
     background: var(--card-hover);
     transform: translateY(-1px);
 }
 
-.modal-btn-cancel {
+.configurator-page .modal-btn-cancel {
     background: transparent;
     color: var(--text-secondary);
 }
 
-.modal-btn-cancel:hover {
+.configurator-page .modal-btn-cancel:hover {
     color: var(--text-primary);
 }
 
 /* Dark mode modal adjustments */
-[data-theme="dark"] .modal-dialog {
+[data-theme="dark"] .configurator-page .modal-dialog {
     background: var(--bg-primary);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="dark"] .modal-backdrop {
+[data-theme="dark"] .configurator-page .modal-backdrop {
     background: rgba(0, 0, 0, 0.7);
 }
 
 /* Responsive modal */
 @media (max-width: 480px) {
-    .modal-dialog {
+    .configurator-page .modal-dialog {
         padding: 1.5rem;
         max-width: 95%;
     }
 
-    .modal-title {
+    .configurator-page .modal-title {
         font-size: 1.1rem;
     }
 
-    .modal-message {
+    .configurator-page .modal-message {
         font-size: 0.85rem;
     }
 }

@@ -75,6 +75,7 @@
   --text-muted: #6b7280;
   --color-text-primary: #f0f0f5;
   --color-text-secondary: #a0a0b5;
+  --color-text-muted: #6b7280;
 
   /* Brand/Accent Colors - Override for dark mode */
   --hero-accent: #D9751A;
@@ -85,6 +86,12 @@
   --glass-bg-hover: rgba(2, 17, 39, 0.75);
   --glass-border: rgba(255, 255, 255, 0.08);
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --surface-highlight: rgba(255, 255, 255, 0.06);
+  --color-glass-bg: rgba(2, 17, 39, 0.55);
+  --color-glass-bg-hover: rgba(2, 17, 39, 0.75);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
+  --color-glass-bg-dark: rgba(2, 17, 39, 0.55);
+  --color-glass-border-dark: rgba(255, 255, 255, 0.08);
 
   /* Dot Grid Pattern - Override for dark mode */
   --dot-color: rgba(255, 255, 255, 0.06);
@@ -93,6 +100,9 @@
   --card-bg: #1a1a1a;
   --card-hover: #252525;
   --card-selected-bg: rgba(217, 117, 26, 0.15);
+  --color-card-bg: #1a1a1a;
+  --color-card-bg-dark: #1a1a1a;
+  --color-border-dark: #2d2d2d;
 
   /* =============================================
      RAINBOW TYPEWRITER COLORS - DARK MODE OVERRIDES

@@ -486,7 +486,7 @@ describe('Property-Based Tests', () => {
           description: fc.string({ minLength: 1, maxLength: 200 }).filter(s => s.trim().length > 0),
           content: fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
           author: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
-          publishedDate: fc.date().map(d => d.toISOString().split('T')[0]),
+          publishedDate: fc.integer({ min: 0, max: 4102444800000 }).map((ms) => new Date(ms).toISOString().split('T')[0]),
           tags: fc.array(fc.string({ minLength: 1, maxLength: 20 }).filter(s => s.trim().length > 0), { minLength: 1, maxLength: 5 }),
           readTime: fc.integer({ min: 1, max: 60 })
         }),
@@ -529,7 +529,7 @@ describe('Property-Based Tests', () => {
           description: fc.string({ minLength: 1, maxLength: 200 }).filter(s => s.trim().length > 0),
           content: fc.string({ minLength: 1, maxLength: 500 }).filter(s => s.trim().length > 0),
           author: fc.string({ minLength: 1, maxLength: 50 }).filter(s => s.trim().length > 0),
-          publishedDate: fc.date().map(d => d.toISOString().split('T')[0]),
+          publishedDate: fc.integer({ min: 0, max: 4102444800000 }).map((ms) => new Date(ms).toISOString().split('T')[0]),
           tags: fc.array(fc.string({ minLength: 1, maxLength: 20 }).filter(s => s.trim().length > 0), { minLength: 1, maxLength: 5 }),
           readTime: fc.integer({ min: 1, max: 60 })
         }),

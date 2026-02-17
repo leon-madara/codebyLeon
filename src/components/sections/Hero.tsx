@@ -1,28 +1,60 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTypingAnimation } from '../../hooks/useTypingAnimation';
+import { isVisualTestMode } from '../../utils/runtimeFlags';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export function Hero() {
-  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef } = useTypingAnimation();
+export interface HeroHandle {
+  bgRef: HTMLDivElement | null;
+  textRefs: (HTMLDivElement | null)[];
+}
+
+interface HeroProps {
+  scrollWrapperRef?: React.RefObject<HTMLDivElement | null>;
+}
+
+export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref) => {
+  const visualTestMode = isVisualTestMode();
+  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const bgRef = useRef<HTMLDivElement>(null);
+
+  // Refs for staggered text lines
+  const line1Ref = useRef<HTMLDivElement>(null);
+  const line2Ref = useRef<HTMLDivElement>(null);
+  const line3Ref = useRef<HTMLDivElement>(null);
+
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const isInitializedRef = useRef(false);
   const wordContainerRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
+  // Expose refs to parent for orchestration
+  useImperativeHandle(ref, () => ({
+    bgRef: bgRef.current,
+    textRefs: [line1Ref.current, line2Ref.current, line3Ref.current]
+  }));
+
   useGSAP(() => {
-    if (isMobile) return;
+    if (isMobile || visualTestMode) return;
+    const heroScrollLength = 460;
+
+    // Use the scroll wrapper as trigger instead of pin: true.
+    // pin: true creates a pin-spacer div that breaks downstream position: sticky
+    // on the portfolio section. The wrapper provides the scroll space via CSS height,
+    // and the hero is made sticky via CSS (position: sticky; top: 0).
+    const triggerEl = scrollWrapperRef?.current || sectionRef.current;
+
     ScrollTrigger.create({
-      trigger: sectionRef.current,
+      trigger: triggerEl,
       start: "top top",
-      end: "+=700%", // Extended for extra animation step
-      pin: true,
-      scrub: 0.1,
+      end: scrollWrapperRef?.current ? "bottom bottom" : `+=${heroScrollLength}%`,
+      pin: !scrollWrapperRef?.current,
+      scrub: 0.2,
       onUpdate: (self) => {
         // Case 1: Start Scroll Interaction
         if (!isInitializedRef.current && self.progress > 0.01 && typingRef.current) {
@@ -151,7 +183,7 @@ export function Hero() {
           // Animate ONLY the new letters appearing
           // We distribute them over a portion of the scroll
           if (lettersToAnimate.length > 0) {
-            const letterRevealDuration = 0.5; // Portion of timeline
+            const letterRevealDuration = 0.38;
             const stagger = letterRevealDuration / lettersToAnimate.length;
 
             lettersToAnimate.forEach((char, i) => {
@@ -164,8 +196,8 @@ export function Hero() {
           }
 
           // Grow word and center it
-          const wordGrowthStart = 0.1;
-          const wordGrowthDuration = 0.7;
+          const wordGrowthStart = 0.08;
+          const wordGrowthDuration = 0.62;
 
           // Initial State: Tiny Scale (looks normal size)
           gsap.set(wordContainer, {
@@ -221,25 +253,22 @@ export function Hero() {
           // Animate "designs" appearing (Handwritten Wipe)
           tl.to(designsLabel, {
             clipPath: 'polygon(0 0, 0 100%, 150% 100%, 150% 0)', // Reveal fully
-            duration: 0.5,
+            duration: 0.36,
             ease: "power1.inOut"
           }, ">");
 
-          // TRANSITION: "Curtain" effect
-          const portfolioSection = document.querySelector('#portfolio');
-          if (portfolioSection) {
-            gsap.set(portfolioSection, { zIndex: 10, position: 'relative' });
-
-            tl.fromTo(portfolioSection,
-              { y: 0 },
-              {
-                y: -window.innerHeight, // Pull up by one viewport height
-                duration: 0.5,
-                ease: "power2.inOut"
-              },
-              ">+=0.2" // Wait a beat after "designs" writes
-            );
-          }
+          // Hero-local transition only.
+          // Never transform downstream sticky ancestors (e.g. .portfolio-sticky-wrapper).
+          tl.to(
+            '.hero__content',
+            {
+              autoAlpha: 0,
+              duration: 0.42,
+              ease: "power2.inOut",
+              pointerEvents: "none"
+            },
+            ">+=0.05"
+          );
 
           timelineRef.current = tl;
         }
@@ -258,9 +287,6 @@ export function Hero() {
             wordContainerRef.current = null;
           }
 
-          // Reset portfolio position if needed
-          gsap.set('#portfolio', { y: 0 });
-
           if (typingRef.current) {
             gsap.set(typingRef.current, {
               opacity: 1,
@@ -273,18 +299,21 @@ export function Hero() {
             autoAlpha: 1, // Restore autoAlpha
             pointerEvents: "auto"
           });
+          gsap.set('.hero__content', {
+            autoAlpha: 1,
+            pointerEvents: "auto"
+          });
 
+          setStartingWordIndex(currentWordIndexRef.current);
           startTyping();
         }
 
-        // Scrub the timeline based on scroll progress
         if (timelineRef.current) {
           timelineRef.current.progress(Math.min(self.progress, 1));
         }
       }
     });
-
-  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile] });
+  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile, visualTestMode] });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
@@ -294,7 +323,7 @@ export function Hero() {
   }, []);
 
   useEffect(() => {
-    if (!isMobile || !sectionRef.current || !contentRef.current) return;
+    if (visualTestMode || !isMobile || !sectionRef.current || !contentRef.current) return;
     const handleScroll = () => {
       const rect = sectionRef.current!.getBoundingClientRect();
       const translate = Math.min(Math.max(-rect.top, 0), window.innerHeight) * 0.1;
@@ -304,35 +333,45 @@ export function Hero() {
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile]);
+  }, [isMobile, visualTestMode]);
 
   return (
     <section ref={sectionRef} className="hero">
-      {/* LAYER 2: Abstract Orbs */}
-      <div className="hero__orbs-container">
-        <div className="hero__orb hero__orb--purple"></div>
-        <div className="hero__orb hero__orb--orange"></div>
-        <div className="hero__orb hero__orb--blue"></div>
+      {/* LAYER 2: Abstract Orbs (Grouped for Scaling) */}
+      <div ref={bgRef} className="hero__bg-wrapper absolute inset-0 z-0 scale-110 origin-center will-change-transform">
+        <div className="hero__orbs-container">
+          <div className="hero__orb hero__orb--purple"></div>
+          <div className="hero__orb hero__orb--orange"></div>
+          <div className="hero__orb hero__orb--blue"></div>
+        </div>
+
+        {/* LAYER 3: Full-Screen Frosted Overlay with Dot Grid */}
+        <div className="hero__frosted-overlay"></div>
       </div>
 
-      {/* LAYER 3: Full-Screen Frosted Overlay with Dot Grid */}
-      <div className="hero__frosted-overlay"></div>
-
       {/* LAYER 4: Content (Bold Typography) */}
-      <div ref={contentRef} className="hero__content">
+      <div ref={contentRef} className="hero__content relative z-10">
         <div className="hero__text-wrapper">
           {/* Badge */}
           <span className="hero__badge hero__anim-item">Nairobi-based design studio</span>
 
           {/* Main Headline */}
           <h1 className="hero__headline">
-            <div className="headline-line-1">
-              <span className="hero__highlight--bold">Bold</span> websites for
+            <div className="headline-line-wrapper overflow-hidden pb-2">
+              <div ref={line1Ref} className="headline-line-1 translate-y-full">
+                <span className="hero__highlight--bold">Bold</span> websites for
+              </div>
             </div>
-            <div className="headline-line-2">
-              <span ref={typingRef} className="hero__highlight--ambitious"></span>
+            <div className="headline-line-wrapper overflow-hidden pb-2">
+              <div ref={line2Ref} className="headline-line-2 translate-y-full">
+                <span ref={typingRef} className="hero__highlight--ambitious"></span>
+              </div>
             </div>
-            <div className="headline-line-3">brands<span className="hero__highlight--dot">.</span></div>
+            <div className="headline-line-wrapper overflow-hidden pb-2">
+              <div ref={line3Ref} className="headline-line-3 translate-y-full">
+                brands<span className="hero__highlight--dot">.</span>
+              </div>
+            </div>
           </h1>
 
           {/* Subheadline */}
@@ -365,4 +404,4 @@ export function Hero() {
       </div>
     </section>
   );
-}
+});

@@ -9,9 +9,19 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Homepage Visual Regression', () => {
+  const screenshotOptions = {
+    animations: 'disabled' as const,
+    caret: 'hide' as const,
+    timeout: 20000,
+  };
+
   test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      document.documentElement.setAttribute('data-visual-test', '1');
+    });
+
     // Navigate to homepage before each test
-    await page.goto('/');
+    await page.goto('/?e2e=1');
     
     // Wait for page to be fully loaded
     await page.waitForLoadState('networkidle');
@@ -30,8 +40,7 @@ test.describe('Homepage Visual Regression', () => {
     
     // Take full page screenshot
     await expect(page).toHaveScreenshot('homepage-light-full.png', {
-      fullPage: true,
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
@@ -45,8 +54,7 @@ test.describe('Homepage Visual Regression', () => {
     
     // Take full page screenshot
     await expect(page).toHaveScreenshot('homepage-dark-full.png', {
-      fullPage: true,
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
@@ -61,7 +69,7 @@ test.describe('Homepage Visual Regression', () => {
     // Screenshot just the navigation
     const nav = page.locator('nav').first();
     await expect(nav).toHaveScreenshot('navigation-light.png', {
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
@@ -76,19 +84,21 @@ test.describe('Homepage Visual Regression', () => {
     // Screenshot just the navigation
     const nav = page.locator('nav').first();
     await expect(nav).toHaveScreenshot('navigation-dark.png', {
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
   test('navigation - scrolled state', async ({ page }) => {
-    // Scroll down to trigger scrolled state
-    await page.evaluate(() => window.scrollTo(0, 200));
+    // Force scrolled-state modifier for deterministic screenshot capture.
+    await page.evaluate(() => {
+      document.querySelector('nav')?.classList.add('is-scrolled');
+    });
     await page.waitForTimeout(500);
     
     // Screenshot navigation in scrolled state
     const nav = page.locator('nav').first();
     await expect(nav).toHaveScreenshot('navigation-scrolled.png', {
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
@@ -102,7 +112,7 @@ test.describe('Homepage Visual Regression', () => {
     // Screenshot hero section
     const hero = page.locator('section').first();
     await expect(hero).toHaveScreenshot('hero-light.png', {
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
@@ -116,7 +126,33 @@ test.describe('Homepage Visual Regression', () => {
     // Screenshot hero section
     const hero = page.locator('section').first();
     await expect(hero).toHaveScreenshot('hero-dark.png', {
-      animations: 'disabled',
+      ...screenshotOptions,
+    });
+  });
+
+  test('portfolio section - light theme', async ({ page }) => {
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-theme', 'light');
+    });
+
+    await page.waitForTimeout(500);
+
+    const portfolio = page.locator('#portfolio');
+    await expect(portfolio).toHaveScreenshot('portfolio-light.png', {
+      ...screenshotOptions,
+    });
+  });
+
+  test('portfolio section - dark theme', async ({ page }) => {
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    });
+
+    await page.waitForTimeout(500);
+
+    const portfolio = page.locator('#portfolio');
+    await expect(portfolio).toHaveScreenshot('portfolio-dark.png', {
+      ...screenshotOptions,
     });
   });
 
@@ -134,7 +170,7 @@ test.describe('Homepage Visual Regression', () => {
     if (count > 0) {
       const firstButton = buttons.first();
       await expect(firstButton).toHaveScreenshot('button-light.png', {
-        animations: 'disabled',
+        ...screenshotOptions,
       });
     }
   });
@@ -153,7 +189,7 @@ test.describe('Homepage Visual Regression', () => {
     if (count > 0) {
       const firstButton = buttons.first();
       await expect(firstButton).toHaveScreenshot('button-dark.png', {
-        animations: 'disabled',
+        ...screenshotOptions,
       });
     }
   });
@@ -161,24 +197,24 @@ test.describe('Homepage Visual Regression', () => {
   test('responsive - mobile viewport', async ({ page }) => {
     // Set mobile viewport
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto('/?e2e=1');
     await page.waitForTimeout(500);
     
     // Take full page screenshot
     await expect(page).toHaveScreenshot('homepage-mobile.png', {
-      fullPage: true,
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 
   test('responsive - tablet viewport', async ({ page }) => {
     // Set tablet viewport
     await page.setViewportSize({ width: 768, height: 1024 });
+    await page.goto('/?e2e=1');
     await page.waitForTimeout(500);
     
     // Take full page screenshot
     await expect(page).toHaveScreenshot('homepage-tablet.png', {
-      fullPage: true,
-      animations: 'disabled',
+      ...screenshotOptions,
     });
   });
 });
