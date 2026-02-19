@@ -12,6 +12,11 @@ export interface ProjectData {
     techStack: string[];
     image: string;
     accentColor?: string;
+    blobColors?: {
+        purple: string;
+        orange: string;
+        blue: string;
+    };
     link?: string;
     repo?: string;
 }

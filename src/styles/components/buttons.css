@@ -152,7 +152,7 @@
 .button--primary:hover {
   background: var(--hero-accent-hover);
   border-color: var(--hero-accent-hover);
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(205, 52, 15, 0.3);
   font-weight: var(--font-weight-extrabold);
 }
@@ -191,7 +191,7 @@
 .btn-primary:hover {
   background: var(--hero-accent-hover);
   border-color: var(--hero-accent-hover);
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(205, 52, 15, 0.3);
   color: white;
   font-weight: 800;

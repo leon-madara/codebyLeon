@@ -285,7 +285,7 @@
 .blog__read-more-heading h3 {
   font-size: var(--font-size-3xl);
   margin-bottom: var(--spacing-sm);
-  font-family: var(--font-display);
+  font-family: var(--font-heading);
   color: var(--text-primary);
 }
 
@@ -339,7 +339,7 @@
   margin: 0;
   font-size: 1.3rem;
   color: var(--text-primary);
-  font-family: var(--font-display);
+  font-family: var(--font-body);
 }
 
 .blog__feature-body p {

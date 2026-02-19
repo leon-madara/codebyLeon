@@ -125,7 +125,7 @@
 }
 
 .hs-beat__title {
-  font-family: var(--font-display), serif;
+  font-family: var(--font-body), serif;
   font-size: clamp(1.85rem, 3.6vw, 2.65rem);
   font-weight: 700;
   color: hsl(var(--primary-foreground));

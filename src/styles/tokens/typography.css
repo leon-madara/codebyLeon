@@ -10,6 +10,7 @@
 
    /* Primary Fonts */
    --font-display: 'Gladolia', serif;
+   --font-heading: 'Gladolia DEMO', serif;
    --font-body: 'Inter', sans-serif;
 
    /* Custom Display Fonts */
@@ -53,6 +54,14 @@
 
 @font-face {
    font-family: 'Gladolia';
+   src: url('/fonts/GladoliaDEMO-Regular.otf') format('opentype');
+   font-weight: normal;
+   font-style: normal;
+   font-display: swap;
+}
+
+@font-face {
+   font-family: 'Gladolia DEMO';
    src: url('/fonts/GladoliaDEMO-Regular.otf') format('opentype');
    font-weight: normal;
    font-style: normal;

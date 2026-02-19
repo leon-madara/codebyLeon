@@ -14,7 +14,9 @@
     "test:visual:update": "playwright test --update-snapshots",
     "css:baseline": "tsx src/test/css-utils/collect-baseline.ts",
     "css:compare": "tsx src/test/css-utils/compare-metrics.ts",
-    "css:gates": "tsx src/test/css-utils/run-architecture-gates.ts"
+    "css:gates": "tsx src/test/css-utils/run-architecture-gates.ts",
+    "antigravity:install-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\install-antigravity-watchdog-global.ps1",
+    "antigravity:uninstall-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\uninstall-antigravity-watchdog-global.ps1"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

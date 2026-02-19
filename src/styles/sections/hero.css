@@ -5,8 +5,7 @@
 
 /* =============================================
    HERO SCROLL WRAPPER
-   Replaces GSAP pin: true to avoid pin-spacer
-   breaking downstream position: sticky elements.
+   Provides scroll distance for GSAP-pinned hero sequence.
    ============================================= */
 .hero-scroll-wrapper {
   position: relative;
@@ -38,8 +37,7 @@
 
 @media (min-width: 769px) {
   .hero {
-    position: sticky;
-    top: 0;
+    position: relative;
     height: 100vh;
     min-height: unset;
   }
@@ -441,7 +439,7 @@
 .hero__cta--primary:hover {
   background: var(--hero-accent-hover);
   border-color: var(--hero-accent-hover);
-  transform: translateY(-3px) scale(1.02);
+  transform: translateY(-3px);
   box-shadow: 0 10px 30px rgba(205, 52, 15, 0.3);
   color: white;
   font-weight: 800;

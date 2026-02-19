@@ -104,7 +104,7 @@ describe('Portfolio showcase transitions', () => {
     expect(screen.getByTestId('portfolio-active-title')).toHaveTextContent('Legit Logistics');
   });
 
-  it('handles wheel transitions only while section is in active viewport', () => {
+  it('does not change projects on wheel scroll', () => {
     render(<Portfolio />);
 
     mockSectionInView(false);
@@ -113,10 +113,10 @@ describe('Portfolio showcase transitions', () => {
 
     mockSectionInView(true);
     fireEvent.wheel(window, { deltaY: 120 });
-    expect(screen.getByTestId('portfolio-active-title')).toHaveTextContent('School Management');
+    expect(screen.getByTestId('portfolio-active-title')).toHaveTextContent('Legit Logistics');
   });
 
-  it('handles touch swipe transitions only while section is in active viewport', () => {
+  it('does not change projects on touch swipe', () => {
     render(<Portfolio />);
 
     mockSectionInView(false);
@@ -127,7 +127,7 @@ describe('Portfolio showcase transitions', () => {
     mockSectionInView(true);
     fireEvent.touchStart(window, { touches: [{ clientY: 400 }] });
     fireEvent.touchEnd(window, { changedTouches: [{ clientY: 120 }] });
-    expect(screen.getByTestId('portfolio-active-title')).toHaveTextContent('School Management');
+    expect(screen.getByTestId('portfolio-active-title')).toHaveTextContent('Legit Logistics');
   });
 
   it('disables navigation buttons for single-item filtered set', () => {

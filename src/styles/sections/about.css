@@ -286,6 +286,7 @@
 .about__card-title {
   position: relative;
   z-index: 1;
+  font-family: var(--font-body);
   font-size: clamp(1.32rem, 2.8vw, 1.84rem);
   font-weight: var(--font-weight-bold);
   color: var(--text-primary);

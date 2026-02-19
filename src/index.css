@@ -87,6 +87,7 @@
 @import './styles/sections/hero.css';
 @import './styles/sections/services.css';
 @import './styles/sections/portfolio.css';
+@import './styles/sections/portfolio-stacked.css';
 @import './styles/sections/about.css';
 @import './styles/sections/blog.css';
 @import './styles/sections/blog-post.css';
@@ -97,10 +98,11 @@
    ============================================
    Complex feature-specific styles (configurator, mouse trail, etc.).
    These are larger, self-contained features. */
-@import './styles/features/mouse-trail.css';
+
 @import './styles/features/horizontal-scroll.css';
 @import './styles/features/configurator.css';
 @import './styles/features/torch-effect.css';
+
 
 /* ============================================
    8. CUSTOM UTILITIES

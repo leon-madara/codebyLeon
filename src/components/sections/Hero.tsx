@@ -43,17 +43,17 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     if (isMobile || visualTestMode) return;
     const heroScrollLength = 460;
 
-    // Use the scroll wrapper as trigger instead of pin: true.
-    // pin: true creates a pin-spacer div that breaks downstream position: sticky
-    // on the portfolio section. The wrapper provides the scroll space via CSS height,
-    // and the hero is made sticky via CSS (position: sticky; top: 0).
+    // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
+    // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
     const triggerEl = scrollWrapperRef?.current || sectionRef.current;
 
     ScrollTrigger.create({
       trigger: triggerEl,
       start: "top top",
       end: scrollWrapperRef?.current ? "bottom bottom" : `+=${heroScrollLength}%`,
-      pin: !scrollWrapperRef?.current,
+      pin: true,
+      pinSpacing: false,
+      anticipatePin: 1,
       scrub: 0.2,
       onUpdate: (self) => {
         // Case 1: Start Scroll Interaction

@@ -25,6 +25,15 @@
     --orb-track-y: 0px;
 }
 
+.configurator-page h1,
+.configurator-page h2,
+.configurator-page h3,
+.configurator-page h4,
+.configurator-page h5,
+.configurator-page h6 {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
 /* =============================================
    CONFIGURATOR LAYOUT
    ============================================= */

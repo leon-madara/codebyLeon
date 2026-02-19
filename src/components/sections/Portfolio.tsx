@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect, useMemo, useCallback, type CSSProperties } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
@@ -8,9 +10,6 @@ import { ProjectModal, type ProjectData } from '../ui/ProjectModal';
 type FilterType = 'all' | 'small-business' | 'creative' | 'saas';
 type Direction = 'next' | 'prev';
 
-const INPUT_COOLDOWN_MS = 650;
-const WHEEL_THRESHOLD = 36;
-const SWIPE_THRESHOLD = 48;
 const DEFAULT_ACCENT = 'rgba(217, 117, 26, 0.22)';
 
 const PORTFOLIO_ITEMS: ProjectData[] = [
@@ -21,6 +20,11 @@ const PORTFOLIO_ITEMS: ProjectData[] = [
     type: 'B2B Logistics Platform',
     image: '/portfolio-legit.png',
     accentColor: 'rgba(217, 117, 26, 0.26)',
+    blobColors: {
+      purple: 'rgba(217, 117, 26, 0.7)',
+      orange: 'rgba(242, 147, 57, 0.7)',
+      blue: 'rgba(255, 193, 7, 0.6)'
+    },
     description: 'A high-performance delivery service platform designed for immediate B2B conversion.',
     longDescription: `Legit Logistics needed a professional presence to target Rhode Island businesses for same-day delivery. The challenge was to build trust instantly and provide a seamless "Get a Quote" flow.
 
@@ -36,6 +40,11 @@ const PORTFOLIO_ITEMS: ProjectData[] = [
     type: 'Educational Platform',
     image: 'https://images.unsplash.com/photo-1546410531-bb4caa6b424d?q=80&w=2071&auto=format&fit=crop',
     accentColor: 'rgba(88, 163, 207, 0.25)',
+    blobColors: {
+      purple: 'rgba(88, 163, 207, 0.7)',
+      orange: 'rgba(110, 142, 251, 0.6)',
+      blue: 'rgba(72, 219, 251, 0.7)'
+    },
     description: 'A comprehensive dashboard for managing student data, attendance, and grading.',
     longDescription: `Schools often struggle with fragmented data across paper logs and excel sheets. This project unifies administration into a single, secure platform.
 
@@ -49,6 +58,11 @@ const PORTFOLIO_ITEMS: ProjectData[] = [
     type: 'Personal Portfolio',
     image: '/portfolio-me.jpg',
     accentColor: 'rgba(165, 118, 241, 0.24)',
+    blobColors: {
+      purple: 'rgba(165, 118, 241, 0.7)',
+      orange: 'rgba(236, 72, 153, 0.6)',
+      blue: 'rgba(139, 92, 246, 0.7)'
+    },
     description: 'The standard for modern web development. Performance, accessibility, and aesthetics combined.',
     longDescription: `This portfolio itself is a testament to the "CodeByLeon Standard". It's not just about looking good; it's about performance and user experience.
 
@@ -60,6 +74,43 @@ const PORTFOLIO_ITEMS: ProjectData[] = [
 
 const MOD = (n: number, total: number) => ((n % total) + total) % total;
 
+// Register GSAP plugins
+gsap.registerPlugin(ScrollTrigger);
+
+// Helper: Split title text into character spans for animation (from reference code)
+const splitTitleToChars = (element: HTMLElement, text: string) => {
+  element.innerHTML = '';
+  const line = document.createElement('div');
+  line.style.cssText = 'position:relative;width:100%';
+
+  [...text].forEach((ch) => {
+    const wrapper = document.createElement('span');
+    wrapper.style.cssText = 'display:inline-block;overflow:hidden;vertical-align:top';
+    const inner = document.createElement('span');
+    inner.style.display = 'inline-block';
+    inner.textContent = ch === ' ' ? '\u00A0' : ch;
+    wrapper.appendChild(inner);
+    line.appendChild(wrapper);
+  });
+
+  element.appendChild(line);
+  return line.querySelectorAll('span > span');
+};
+
+// Throttle function for wheel events (from reference code)
+const throttle = (callback: Function, limit: number) => {
+  let waiting = false;
+  return function (this: any, ...args: any[]) {
+    if (!waiting) {
+      callback.apply(this, args);
+      waiting = true;
+      setTimeout(() => {
+        waiting = false;
+      }, limit);
+    }
+  };
+};
+
 export function Portfolio() {
   const visualTestMode = isVisualTestMode();
   const [activeFilter, setActiveFilter] = useState<FilterType>('all');
@@ -69,8 +120,11 @@ export function Portfolio() {
   const [reducedMotion, setReducedMotion] = useState(false);
   const [selectedProject, setSelectedProject] = useState<ProjectData | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPinned, setIsPinned] = useState(false);
 
   const sectionRef = useRef<HTMLElement>(null);
+  const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
+  const cardStackRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
   const filtersRef = useRef<HTMLDivElement>(null);
   const showcaseRef = useRef<HTMLDivElement>(null);
@@ -80,8 +134,6 @@ export function Portfolio() {
   const incomingMediaRef = useRef<HTMLDivElement>(null);
   const buttonRefs = useRef<Map<FilterType, HTMLButtonElement>>(new Map());
   const transitionDirectionRef = useRef<1 | -1>(1);
-  const touchStartYRef = useRef(0);
-  const inputCooldownUntilRef = useRef(0);
   const transitionTlRef = useRef<gsap.core.Timeline | null>(null);
 
   const scrollAnimationConfig = useMemo(
@@ -105,11 +157,11 @@ export function Portfolio() {
       activeFilter === 'all'
         ? PORTFOLIO_ITEMS
         : PORTFOLIO_ITEMS.filter((item) => {
-      if (activeFilter === 'small-business' && item.category === 'small-business') return true;
-      if (activeFilter === 'creative' && item.category === 'creative') return true;
-      if (activeFilter === 'saas' && item.category === 'saas') return true;
-      return false;
-          }),
+          if (activeFilter === 'small-business' && item.category === 'small-business') return true;
+          if (activeFilter === 'creative' && item.category === 'creative') return true;
+          if (activeFilter === 'saas' && item.category === 'saas') return true;
+          return false;
+        }),
     [activeFilter]
   );
 
@@ -188,7 +240,9 @@ export function Portfolio() {
     if (!sectionRef.current) return false;
     const rect = sectionRef.current.getBoundingClientRect();
     const viewportHeight = window.innerHeight || 0;
-    return rect.top <= viewportHeight * 0.92 && rect.bottom >= viewportHeight * 0.08;
+    const entersPrimaryViewport = rect.top <= viewportHeight * 0.35;
+    const notLeavingViewport = rect.bottom >= viewportHeight * 0.2;
+    return entersPrimaryViewport && notLeavingViewport;
   }, []);
 
   const go = useCallback(
@@ -304,50 +358,6 @@ export function Portfolio() {
         0.08
       );
   }, [items, transitionIndex]);
-
-  useEffect(() => {
-    const onWheel = (event: WheelEvent) => {
-      if (isModalOpen || !isSectionInteractive()) return;
-      if (Math.abs(event.deltaY) < WHEEL_THRESHOLD) return;
-
-      const now = Date.now();
-      if (now < inputCooldownUntilRef.current || isAnimating) return;
-
-      inputCooldownUntilRef.current = now + INPUT_COOLDOWN_MS;
-      go(event.deltaY > 0 ? 'next' : 'prev');
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: true });
-    return () => window.removeEventListener('wheel', onWheel);
-  }, [go, isAnimating, isModalOpen, isSectionInteractive]);
-
-  useEffect(() => {
-    const onTouchStart = (event: TouchEvent) => {
-      touchStartYRef.current = event.touches[0]?.clientY ?? 0;
-    };
-
-    const onTouchEnd = (event: TouchEvent) => {
-      if (isModalOpen || !isSectionInteractive()) return;
-
-      const endY = event.changedTouches[0]?.clientY ?? touchStartYRef.current;
-      const deltaY = touchStartYRef.current - endY;
-      if (Math.abs(deltaY) < SWIPE_THRESHOLD) return;
-
-      const now = Date.now();
-      if (now < inputCooldownUntilRef.current || isAnimating) return;
-
-      inputCooldownUntilRef.current = now + INPUT_COOLDOWN_MS;
-      go(deltaY > 0 ? 'next' : 'prev');
-    };
-
-    window.addEventListener('touchstart', onTouchStart, { passive: true });
-    window.addEventListener('touchend', onTouchEnd, { passive: true });
-
-    return () => {
-      window.removeEventListener('touchstart', onTouchStart);
-      window.removeEventListener('touchend', onTouchEnd);
-    };
-  }, [go, isAnimating, isModalOpen, isSectionInteractive]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
