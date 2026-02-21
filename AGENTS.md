@@ -63,6 +63,8 @@ codebyLeon/
 | `docs/hero_design_spec.md` | Hero section design specification |
 | `docs/configurator_spec.md` | Service configurator specification |
 | `GSAP/overview.md` | GSAP integration patterns and plugin reference |
+| `GLOBAL_CHANGE_EXECUTION_PLAYBOOK.md` | Global modification/new-feature workflow and decision protocol |
+| `docs/CODEBYLEON_CHANGE_EXECUTION_PLAYBOOK.md` | Project-specific execution workflow to use with this file |
 
 ---
 
@@ -113,3 +115,5 @@ npm run build
 5. **Design specs** → `docs/hero_design_spec.md`, `docs/configurator_spec.md`
 6. **Theme/dark mode** → `docs/theme_strategy.md`
 7. **Agent workflow** → `ENG WORKFLOW/01_WORKFLOW.md`
+8. **Global change protocol** → `GLOBAL_CHANGE_EXECUTION_PLAYBOOK.md`
+9. **Project change protocol** → `docs/CODEBYLEON_CHANGE_EXECUTION_PLAYBOOK.md`
