@@ -9,12 +9,13 @@ interface SnapshotData {
   portfolioTop: number;
   portfolioBottom: number;
   portfolioPosition: string;
+  pinSpacerClass: string;
   aboutTop: number;
 }
 
 test.describe('Portfolio Pinning Invariants', () => {
-  test('portfolio remains sticky and wrapper is never transformed by runtime JS', async ({ page }) => {
-    await page.goto('/');
+  test('portfolio remains pinned during hold and wrapper is never transformed by runtime JS', async ({ page }) => {
+    await page.goto('/?e2e=1');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(700);
 
@@ -22,7 +23,7 @@ test.describe('Portfolio Pinning Invariants', () => {
       document.documentElement.style.scrollBehavior = 'auto';
       document.body.style.scrollBehavior = 'auto';
 
-      const wrapper = document.querySelector('.portfolio-sticky-wrapper') as HTMLElement | null;
+      const wrapper = document.querySelector('.portfolio-carousel__wrapper') as HTMLElement | null;
       const portfolio = document.querySelector('#portfolio') as HTMLElement | null;
       if (!wrapper || !portfolio) return null;
 
@@ -57,7 +58,7 @@ test.describe('Portfolio Pinning Invariants', () => {
         window.scrollTo({ top: y, left: 0, behavior: 'auto' });
         await new Promise((resolve) => setTimeout(resolve, 60));
 
-        const wrapper = document.querySelector('.portfolio-sticky-wrapper') as HTMLElement;
+        const wrapper = document.querySelector('.portfolio-carousel__wrapper') as HTMLElement;
         const portfolio = document.querySelector('#portfolio') as HTMLElement;
         const about = document.querySelector('#about') as HTMLElement;
 
@@ -73,6 +74,7 @@ test.describe('Portfolio Pinning Invariants', () => {
           portfolioTop: Number(portfolioRect.top.toFixed(2)),
           portfolioBottom: Number(portfolioRect.bottom.toFixed(2)),
           portfolioPosition: getComputedStyle(portfolio).position,
+          pinSpacerClass: portfolio.parentElement?.className || '',
           aboutTop: Number(aboutRect.top.toFixed(2)),
         };
       }, targetY);
@@ -82,19 +84,14 @@ test.describe('Portfolio Pinning Invariants', () => {
     const mid = await captureAt(scrollPlan.midY);
     const post = await captureAt(scrollPlan.postY);
 
-    expect(enter.portfolioPosition).toBe('sticky');
-    expect(mid.portfolioPosition).toBe('sticky');
-    expect(Math.abs(enter.portfolioTop)).toBeLessThanOrEqual(120);
-    expect(Math.abs(mid.portfolioTop)).toBeLessThanOrEqual(120);
-    expect(enter.portfolioTransform).toBe('none');
-    expect(mid.portfolioTransform).toBe('none');
-    expect(post.portfolioTransform).toBe('none');
-    expect(enter.portfolioInlineStyle).not.toContain('transform');
-    expect(mid.portfolioInlineStyle).not.toContain('transform');
-    expect(post.portfolioInlineStyle).not.toContain('transform');
-    expect(enter.portfolioInlineStyle).not.toContain('position');
-    expect(mid.portfolioInlineStyle).not.toContain('position');
-    expect(post.portfolioInlineStyle).not.toContain('position');
+    expect(enter.portfolioPosition).toBe('fixed');
+    expect(mid.portfolioPosition).toBe('fixed');
+    expect(Math.abs(enter.portfolioTop)).toBeLessThanOrEqual(4);
+    expect(Math.abs(mid.portfolioTop)).toBeLessThanOrEqual(4);
+    expect(enter.pinSpacerClass).toContain('pin-spacer');
+    expect(mid.pinSpacerClass).toContain('pin-spacer');
+    expect(post.pinSpacerClass).toContain('pin-spacer');
+    expect(post.portfolioPosition).toBe('relative');
 
     expect(enter.wrapperTransform).toBe('none');
     expect(mid.wrapperTransform).toBe('none');

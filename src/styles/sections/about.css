@@ -60,16 +60,38 @@
   animation-delay: -10s;
 }
 
-/* Frosted overlay */
-.about__overlay {
+/* Frosted overlay - Refined for 3D Stack (Light Mode) */
+.about__overlay--3d {
   position: absolute;
   inset: 0;
   z-index: 2;
-  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.25);
+  background-image: radial-gradient(circle, rgba(150, 150, 150, 0.1) 1.2px, transparent 1.2px);
   background-size: 12px 12px;
   pointer-events: none;
+}
+
+/* Card highlight gloss */
+.about__card-gloss {
+  position: absolute;
+  inset: 0;
+  top: 0;
+  height: 1px;
+  opacity: 0.3;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  z-index: 11;
+}
+
+/* Card inner noise texture */
+.about__card-noise {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  background-image: radial-gradient(circle at 25% 75%, white 1px, transparent 1px), radial-gradient(circle at 75% 25%, white 1px, transparent 1px);
+  background-size: 30px 30px;
+  z-index: 1;
 }
 
 /* About content wrapper */
@@ -97,7 +119,7 @@
   font-size: var(--font-size-lg);
   color: var(--text-secondary);
   max-width: 60ch;
-  margin: 0 auto var(--spacing-2xl);
+  margin: 0 auto 1.5rem;
 }
 
 /* About section cards container - Mobile First */

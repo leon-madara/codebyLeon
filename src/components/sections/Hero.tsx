@@ -18,6 +18,7 @@ interface HeroProps {
 
 export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref) => {
   const visualTestMode = isVisualTestMode();
+  const WORD_GROWTH_START_PROGRESS = 0.08;
   const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -42,12 +43,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   useGSAP(() => {
     if (isMobile || visualTestMode) return;
     const heroScrollLength = 460;
+    document.body.classList.add('hero-torch-tint-active');
 
     // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
     // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
     const triggerEl = scrollWrapperRef?.current || sectionRef.current;
 
-    ScrollTrigger.create({
+    const heroPinTrigger = ScrollTrigger.create({
       trigger: triggerEl,
       start: "top top",
       end: scrollWrapperRef?.current ? "bottom bottom" : `+=${heroScrollLength}%`,
@@ -56,6 +58,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       anticipatePin: 1,
       scrub: 0.2,
       onUpdate: (self) => {
+        const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
+        document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
+
         // Case 1: Start Scroll Interaction
         if (!isInitializedRef.current && self.progress > 0.01 && typingRef.current) {
           isInitializedRef.current = true;
@@ -196,7 +201,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           }
 
           // Grow word and center it
-          const wordGrowthStart = 0.08;
           const wordGrowthDuration = 0.62;
 
           // Initial State: Tiny Scale (looks normal size)
@@ -227,7 +231,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             scale: 1, // Go to "natural" huge size (crisp!)
             duration: wordGrowthDuration,
             ease: "power2.inOut"
-          }, wordGrowthStart);
+          }, WORD_GROWTH_START_PROGRESS);
 
           // 10. Create "designs" label (Handwritten style)
           const designsLabel = document.createElement('div');
@@ -258,7 +262,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           }, ">");
 
           // Hero-local transition only.
-          // Never transform downstream sticky ancestors (e.g. .portfolio-sticky-wrapper).
+          // Never transform downstream section wrappers from here.
           tl.to(
             '.hero__content',
             {
@@ -313,6 +317,11 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         }
       }
     });
+
+    return () => {
+      heroPinTrigger.kill();
+      document.body.classList.remove('hero-torch-tint-active');
+    };
   }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile, visualTestMode] });
 
   useEffect(() => {

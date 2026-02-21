@@ -3,13 +3,6 @@
    BEM Architecture: .portfolio block with elements
    ============================================= */
 
-/* Portfolio Section Container - Mobile First */
-.portfolio-sticky-wrapper {
-  position: relative;
-  padding-bottom: 0;
-  min-height: auto;
-}
-
 .portfolio {
   position: relative;
   top: auto;

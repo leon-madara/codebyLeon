@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
+import { useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -7,13 +8,17 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 export const TorchEffect = () => {
+    const location = useLocation();
     const { theme } = useTheme();
+    const isHomeRoute = location.pathname === '/';
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
     const [isMobile, setIsMobile] = useState(false);
 
     // Track mouse position
     useEffect(() => {
+        if (theme !== 'dark' || isMobile || !isHomeRoute) return;
+
         const handleMouseMove = (e: MouseEvent) => {
             // Only update position if NOT expanding (scroll is at top)
             // We check a CSS variable or a ref to know if we are 'locked'
@@ -33,7 +38,7 @@ export const TorchEffect = () => {
 
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
+    }, [theme, isMobile, isHomeRoute]);
 
     useEffect(() => {
         const updateIsMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -44,7 +49,7 @@ export const TorchEffect = () => {
 
     // Handle scroll expansion
     useEffect(() => {
-        if (theme !== 'dark' || isMobile || !containerRef.current) return;
+        if (theme !== 'dark' || isMobile || !isHomeRoute || !containerRef.current) return;
 
         // Initialize radius variable
         containerRef.current.style.setProperty('--radius', '250px');
@@ -83,11 +88,11 @@ export const TorchEffect = () => {
             document.body.classList.remove('torch-expanding');
             document.body.style.cursor = 'auto'; // Safety cleanup
         };
-    }, [theme]);
+    }, [theme, isMobile, isHomeRoute]);
 
     // Handle cursor visibility (Initial & Toggle)
     useEffect(() => {
-        if (theme === 'dark' && !isMobile) {
+        if (theme === 'dark' && !isMobile && isHomeRoute) {
             // Default state at mount/theme switch should be hidden if at top
             const isScrolled = window.scrollY > 10;
             document.body.style.cursor = isScrolled ? 'auto' : 'none';
@@ -107,9 +112,9 @@ export const TorchEffect = () => {
         } else {
             document.body.style.cursor = 'auto';
         }
-    }, [theme]);
+    }, [theme, isMobile, isHomeRoute]);
 
-    if (theme !== 'dark' || isMobile) return null;
+    if (theme !== 'dark' || isMobile || !isHomeRoute) return null;
 
     return (
         <>

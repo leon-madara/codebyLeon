@@ -2,6 +2,7 @@ import { useRef, useState, useEffect, useCallback, useLayoutEffect } from 'react
 import type { ForwardRefExoticComponent, RefAttributes, CSSProperties } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import ServiceTabs from './ServiceTabs';
 import WaveDivider from './WaveDivider';
 
@@ -58,6 +59,7 @@ const createProgressArray = () => STORIES.map(() => 0);
 const createBeatRefMatrix = () => STORIES.map(() => Array<HTMLDivElement | null>(TOTAL_BEATS).fill(null));
 
 const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
+const getTargetSectionTop = (section: HTMLElement) => section.getBoundingClientRect().top + window.scrollY;
 
 const MultiCardScrollSection = () => {
   const visualTestMode = isVisualTestMode();
@@ -184,24 +186,44 @@ const MultiCardScrollSection = () => {
 
   const handleCardClick = useCallback((index: number) => {
     const trigger = scrollTriggersRef.current[index];
-    if (trigger) {
-      window.scrollTo({
-        top: trigger.start,
-        behavior: 'smooth',
-      });
+    const section = sectionRefs.current[index];
+    const targetScroll = trigger?.start ?? (section ? getTargetSectionTop(section) : null);
+    if (targetScroll === null) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const smoother = ScrollSmoother.get();
+    if (smoother) {
+      smoother.scrollTo(targetScroll, !prefersReducedMotion);
       return;
     }
 
-    const section = sectionRefs.current[index];
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
+    window.scrollTo({
+      top: targetScroll,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
   }, []);
 
   useLayoutEffect(() => {
     if (!isReady || visualTestMode) return;
 
     const ctx = gsap.context(() => {
+      const container = containerRef.current;
+      const topChrome = topChromeRef.current;
+
+      // Under ScrollSmoother, CSS sticky can desync from transformed scroll containers.
+      // Pin the top chrome with ScrollTrigger for deterministic behavior on desktop.
+      if (isDesktop && container && topChrome) {
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top top',
+          end: () => `bottom top+=${Math.ceil(topChrome.getBoundingClientRect().height)}`,
+          pin: topChrome,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
+      }
+
       STORIES.forEach((_, storyIndex) => {
         const section = sectionRefs.current[storyIndex];
         const track = trackRefs.current[storyIndex];
@@ -217,9 +239,19 @@ const MultiCardScrollSection = () => {
           return isDesktop ? rect.width : rect.height;
         };
 
-        const getBaseScrollDistance = () => getStepDistance() * (TOTAL_BEATS - 1);
-        const getFinalBeatHoldDistance = () => getStepDistance() * (FINAL_BEAT_SCROLL_MULTIPLIER - 1);
-        const getTotalScrollDistance = () => getBaseScrollDistance() + getFinalBeatHoldDistance();
+        let baseDistance = 0;
+        let totalDistance = 0;
+        const recalculateDistances = () => {
+          const stepDistance = getStepDistance();
+          baseDistance = stepDistance * (TOTAL_BEATS - 1);
+          totalDistance = baseDistance + stepDistance * (FINAL_BEAT_SCROLL_MULTIPLIER - 1);
+        };
+        recalculateDistances();
+
+        const finalBeatHoldRatio = Math.max(
+          0,
+          TOTAL_BEATS > 1 ? (FINAL_BEAT_SCROLL_MULTIPLIER - 1) / (TOTAL_BEATS - 1) : 0
+        );
 
         gsap.set(track, { x: 0, y: 0 });
 
@@ -229,10 +261,15 @@ const MultiCardScrollSection = () => {
             pin: true,
             pinSpacing: true,
             start: 'top top',
-            end: () => `+=${getTotalScrollDistance()}`,
+            end: () => {
+              recalculateDistances();
+              return `+=${totalDistance}`;
+            },
             scrub: 0.35,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onRefreshInit: recalculateDistances,
+            onRefresh: recalculateDistances,
             snap: {
               snapTo: (value: number) => Math.round(value * (TOTAL_BEATS - 1)) / (TOTAL_BEATS - 1),
               duration: { min: 0.15, max: 0.45 },
@@ -243,31 +280,27 @@ const MultiCardScrollSection = () => {
             onEnterBack: () => setActiveCard(storyIndex),
             onUpdate: (self) => {
               const scrolledDistance = self.scroll() - self.start;
-              const baseDistance = getBaseScrollDistance();
               const mappedProgress = baseDistance > 0 ? clampProgress(scrolledDistance / baseDistance) : 0;
               updateStoryProgress(storyIndex, mappedProgress);
             },
           },
         });
 
-        const baseDistance = getBaseScrollDistance();
-        const finalHoldDistance = getFinalBeatHoldDistance();
-
         if (isDesktop) {
           timeline.to(track, {
-            x: -baseDistance,
+            x: () => -baseDistance,
             ease: 'none',
-            duration: baseDistance,
+            duration: 1,
           });
         } else {
           timeline.to(track, {
-            y: -baseDistance,
+            y: () => -baseDistance,
             ease: 'none',
-            duration: baseDistance,
+            duration: 1,
           });
         }
 
-        timeline.to({}, { duration: Math.max(0, finalHoldDistance) });
+        timeline.to({}, { duration: finalBeatHoldRatio });
 
         scrollTriggersRef.current[storyIndex] = timeline.scrollTrigger ?? null;
 

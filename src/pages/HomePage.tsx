@@ -3,8 +3,11 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Hero, HeroHandle } from '../components/sections/Hero';
 import { Portfolio } from '../components/sections/Portfolio'; // OLD - kept for rollback
-import { PortfolioStacked } from '../components/sections/PortfolioStacked'; // NEW
-import { About } from '../components/sections/About';
+// import { PortfolioStacked } from '../components/sections/PortfolioStacked'; // OLD
+import PortfolioCarousel from '../components/sections/PortfolioCarousel'; // NEW
+// import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
+// import { About } from '../components/sections/About'; // OLD
+import { About3DStack } from '../components/sections/About3DStack'; // NEW
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
@@ -53,22 +56,19 @@ export function HomePage() {
          We pass the ref to Hero to control its internal elements.
          Note: The Hero's text elements are initially styled with `translate-y-full` 
          via Tailwind classes we added in the previous step, so they are hidden by default.
-         The hero-scroll-wrapper replaces GSAP pin: true to avoid pin-spacer
-         breaking downstream position: sticky on the portfolio section.
+         The hero-scroll-wrapper provides scroll distance for the Hero ScrollTrigger sequence.
       */}
       <div ref={heroWrapperRef} className="hero-scroll-wrapper">
         <Hero ref={heroRef} scrollWrapperRef={heroWrapperRef} />
       </div>
 
       {/* NEW: Stacked Portfolio with Carousel */}
-      <PortfolioStacked />
+      <PortfolioCarousel />
 
       {/* OLD: Original Portfolio (commented for rollback)
-      <div className="portfolio-sticky-wrapper">
-        <Portfolio />
-      </div>
+      <Portfolio />
       */}
-      <About />
+      <About3DStack />
       <MultiCardScrollSection />
       <Blog />
       <FinalCTA />

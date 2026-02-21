@@ -1,0 +1,234 @@
+.portfolio-carousel__wrapper {
+  position: relative;
+  padding-bottom: 0;
+  min-height: auto;
+}
+
+.portfolio-carousel__pin {
+  position: relative;
+}
+
+.portfolio-carousel {
+  --portfolio-glass-bg: hsla(0 0% 100% / 0.52);
+  --portfolio-glass-border: hsla(214 30% 24% / 0.18);
+  --portfolio-glass-strong-bg: hsla(0 0% 100% / 0.7);
+  --portfolio-glass-strong-border: hsla(214 30% 24% / 0.22);
+  --portfolio-cursor-bg: hsla(0 0% 100% / 0.62);
+  --portfolio-cursor-border: hsla(214 30% 24% / 0.2);
+  --portfolio-control-text: hsla(214 45% 18% / 0.75);
+  --portfolio-control-text-hover: hsla(214 45% 12% / 0.95);
+  --portfolio-pill-text: hsla(214 45% 18% / 0.8);
+
+  position: relative;
+  cursor: none;
+}
+
+[data-theme="dark"] .portfolio-carousel {
+  --portfolio-glass-bg: hsla(240 10% 12% / 0.4);
+  --portfolio-glass-border: hsla(0 0% 100% / 0.08);
+  --portfolio-glass-strong-bg: hsla(240 10% 12% / 0.7);
+  --portfolio-glass-strong-border: hsla(0 0% 100% / 0.12);
+  --portfolio-cursor-bg: hsla(0 0% 100% / 0.08);
+  --portfolio-cursor-border: hsla(0 0% 100% / 0.15);
+  --portfolio-control-text: hsla(0 0% 100% / 0.7);
+  --portfolio-control-text-hover: hsla(0 0% 100% / 1);
+  --portfolio-pill-text: hsla(0 0% 100% / 0.78);
+}
+
+.portfolio-carousel .portfolio-carousel__display {
+  font-family: "Frijole", cursive;
+}
+
+.portfolio-carousel .glass {
+  background: var(--portfolio-glass-bg);
+  border: 1px solid var(--portfolio-glass-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.portfolio-carousel .glass-strong {
+  background: var(--portfolio-glass-strong-bg);
+  border: 1px solid var(--portfolio-glass-strong-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.portfolio-carousel .glass-cursor {
+  background: var(--portfolio-cursor-bg);
+  border: 1px solid var(--portfolio-cursor-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.portfolio-carousel .dot-grid {
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.portfolio-carousel .portfolio-carousel__overlay {
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+.portfolio-carousel .orb {
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.4;
+  position: absolute;
+  will-change: transform, background-color;
+}
+
+.portfolio-carousel .tag-pill {
+  background: var(--portfolio-glass-bg);
+  border: 1px solid var(--portfolio-glass-border);
+  border-radius: 9999px;
+  padding: 0.375rem 1rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--portfolio-pill-text);
+}
+
+.portfolio-carousel .nav-arrow {
+  background: var(--portfolio-glass-bg);
+  border: 1px solid var(--portfolio-glass-border);
+  border-radius: 9999px;
+  width: 3rem;
+  height: 3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--portfolio-control-text);
+}
+
+.portfolio-carousel .nav-arrow:hover {
+  color: var(--portfolio-control-text-hover);
+  background: var(--portfolio-cursor-bg);
+  cursor: pointer;
+}
+
+.portfolio-carousel .nav-arrow.is-disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.portfolio-carousel .filter-pill {
+  background: var(--portfolio-glass-strong-bg);
+  border: 1px solid var(--portfolio-glass-strong-border);
+  border-radius: 9999px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.025em;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: var(--portfolio-pill-text);
+}
+
+.portfolio-carousel .portfolio-carousel__filters {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.portfolio-carousel .portfolio-carousel__filter-rail {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+  overflow-x: hidden;
+  overflow-y: hidden;
+  white-space: nowrap;
+  flex: 0 1 auto;
+  max-width: 100%;
+  pointer-events: none;
+  scrollbar-width: none;
+}
+
+.portfolio-carousel .portfolio-carousel__filter-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.portfolio-carousel .portfolio-carousel__filter-rail.is-open {
+  pointer-events: auto;
+}
+
+.portfolio-carousel .filter-pill:hover {
+  background: var(--portfolio-cursor-bg);
+  cursor: pointer;
+}
+
+.portfolio-carousel .filter-pill.active {
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  border-color: hsl(var(--primary));
+}
+
+.portfolio-carousel .view-details-btn {
+  background: var(--portfolio-glass-strong-bg);
+  border: 1px solid var(--portfolio-glass-strong-border);
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: hsl(var(--foreground));
+}
+
+.portfolio-carousel .view-details-btn:hover {
+  background: var(--portfolio-cursor-bg);
+  cursor: pointer;
+}
+
+.portfolio-carousel .char-span {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.portfolio-carousel .portfolio-carousel__cards-wrap {
+  perspective: 2000px;
+}
+
+.portfolio-carousel .portfolio-carousel__card {
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  opacity: 0;
+}
+
+@media (pointer: coarse) {
+  .portfolio-carousel,
+  .portfolio-carousel button,
+  .portfolio-carousel a {
+    cursor: auto;
+  }
+
+  .portfolio-carousel .glass-cursor {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .portfolio-carousel *,
+  .portfolio-carousel *::before,
+  .portfolio-carousel *::after {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+}

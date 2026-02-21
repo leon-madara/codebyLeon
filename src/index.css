@@ -89,6 +89,7 @@
 @import './styles/sections/portfolio.css';
 @import './styles/sections/portfolio-stacked.css';
 @import './styles/sections/about.css';
+@import './styles/sections/portfolio-carousel.css';
 @import './styles/sections/blog.css';
 @import './styles/sections/blog-post.css';
 @import './styles/sections/final-cta.css';

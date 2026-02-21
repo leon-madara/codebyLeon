@@ -15,9 +15,16 @@
   z-index: 150;
   pointer-events: none;
   transition: opacity var(--duration-slower) var(--easing-ease-in-out);
+  opacity: 0;
+  visibility: hidden;
   background: rgba(5, 5, 5, 0.85);
   mask-image: radial-gradient(circle var(--radius, 250px) at var(--x, 50%) var(--y, 50%), transparent 0%, black 100%);
   -webkit-mask-image: radial-gradient(circle var(--radius, 250px) at var(--x, 50%) var(--y, 50%), transparent 0%, black 100%);
+}
+
+body.hero-torch-tint-active .torch-overlay {
+  opacity: 1;
+  visibility: visible;
 }
 
 .torch-cursor {
