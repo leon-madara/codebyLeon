@@ -59,6 +59,81 @@
   box-shadow: 0 0 6px hsla(4, 96%, 79%, 0.4);
 }
 
+/* Hero-scoped variant */
+.mouse-trail-container--hero {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+}
+
+.has-section-mouse-trail {
+  cursor: none;
+}
+
+.has-section-mouse-trail a,
+.has-section-mouse-trail button,
+.has-section-mouse-trail [role="button"],
+.has-section-mouse-trail input,
+.has-section-mouse-trail select,
+.has-section-mouse-trail textarea,
+.has-section-mouse-trail label {
+  cursor: pointer;
+}
+
+.mouse-trail-container--hero .mouse-cursor,
+.mouse-trail-container--hero .trail-element {
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.mouse-trail-container--hero.is-visible .mouse-cursor,
+.mouse-trail-container--hero.is-visible .trail-element {
+  opacity: 1;
+}
+
+.mouse-trail-container--hero .mouse-cursor {
+  width: 12px;
+  height: 12px;
+  background-color: hsl(220 48% 20% / 0.92);
+  border: 1px solid hsl(0 0% 100% / 0.36);
+  box-shadow: 0 0 18px hsl(214 90% 59% / 0.28);
+}
+
+.mouse-trail-container--hero .trail-element {
+  background-color: hsl(0 0% 100% / 0.18);
+  border: 1px solid transparent;
+}
+
+.mouse-trail-container--hero .trail-element[data-index="0"] {
+  width: 18px;
+  height: 18px;
+  background-color: hsl(214 92% 61% / 0.3);
+  border-color: hsl(214 92% 61% / 0.7);
+  box-shadow: 0 0 14px hsl(214 92% 61% / 0.3);
+}
+
+.mouse-trail-container--hero .trail-element[data-index="1"] {
+  width: 14px;
+  height: 14px;
+  background-color: hsl(262 76% 54% / 0.3);
+  border-color: hsl(262 76% 54% / 0.7);
+  box-shadow: 0 0 12px hsl(262 76% 54% / 0.28);
+}
+
+.mouse-trail-container--hero .trail-element[data-index="2"] {
+  width: 10px;
+  height: 10px;
+  background-color: hsl(4 96% 79% / 0.35);
+  border-color: hsl(4 96% 79% / 0.7);
+  box-shadow: 0 0 10px hsl(4 96% 79% / 0.25);
+}
+
+.mouse-trail-container--hero.is-idle .trail-element {
+  background-color: transparent;
+  box-shadow: none;
+}
+
 /* Performance Optimizations */
 .mouse-cursor,
 .trail-element {
@@ -71,5 +146,11 @@
 @media (prefers-reduced-motion: reduce) {
   .mouse-trail-container {
     display: none !important;
+  }
+}
+
+@media (pointer: coarse) {
+  .mouse-trail-container--hero {
+    display: none;
   }
 }

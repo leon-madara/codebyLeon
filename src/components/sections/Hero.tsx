@@ -4,6 +4,8 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTypingAnimation } from '../../hooks/useTypingAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
+import { useTheme } from '../../contexts/ThemeContext';
+import { MouseTrail } from '../MouseTrail';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,6 +20,7 @@ interface HeroProps {
 
 export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref) => {
   const visualTestMode = isVisualTestMode();
+  const { theme } = useTheme();
   const WORD_GROWTH_START_PROGRESS = 0.08;
   const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
@@ -346,6 +349,11 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
   return (
     <section ref={sectionRef} className="hero">
+      <MouseTrail
+        scopeRef={sectionRef}
+        disabled={theme !== 'light' || visualTestMode || isMobile}
+      />
+
       {/* LAYER 2: Abstract Orbs (Grouped for Scaling) */}
       <div ref={bgRef} className="hero__bg-wrapper absolute inset-0 z-0 scale-110 origin-center will-change-transform">
         <div className="hero__orbs-container">

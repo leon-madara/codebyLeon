@@ -33,6 +33,10 @@ const PortfolioCarousel = () => {
   const cardsContainerRef = useRef<HTMLDivElement>(null);
   const cursorXTo = useRef<gsap.QuickToFunc | null>(null);
   const cursorYTo = useRef<gsap.QuickToFunc | null>(null);
+  const cursorRotateTo = useRef<gsap.QuickToFunc | null>(null);
+  const cursorRotationRef = useRef(0);
+  const lastScrollYRef = useRef(0);
+  const cursorInsideSectionRef = useRef(false);
   const activeIndexRef = useRef(0);
   const prefersReducedMotion = useRef(false);
   const isCoarsePointer = useRef(false);
@@ -253,42 +257,94 @@ const PortfolioCarousel = () => {
     () => {
       if (!cursorRef.current || !sectionRef.current || isCoarsePointer.current) return;
 
-      cursorXTo.current = gsap.quickTo(cursorRef.current, "x", {
-        duration: 0.3,
-        ease: "power3",
+      const section = sectionRef.current;
+      const cursorElement = cursorRef.current;
+
+      cursorXTo.current = gsap.quickTo(cursorElement, "x", {
+        duration: 0.24,
+        ease: "power3.out",
       });
-      cursorYTo.current = gsap.quickTo(cursorRef.current, "y", {
+      cursorYTo.current = gsap.quickTo(cursorElement, "y", {
+        duration: 0.24,
+        ease: "power3.out",
+      });
+      cursorRotateTo.current = gsap.quickTo(cursorElement, "rotate", {
         duration: 0.3,
-        ease: "power3",
+        ease: "power2.out",
       });
 
-      const interactiveSelector = "button, a, .filter-pill, .nav-arrow, .view-details-btn";
+      const interactiveSelector =
+        "button, a, [role='button'], .filter-pill, .nav-arrow, .view-details-btn";
 
-      const handleMove = (event: MouseEvent) => {
+      const setVisibility = (visible: boolean) => {
+        if (visible !== cursorVisibleRef.current) {
+          cursorVisibleRef.current = visible;
+          setCursorVisible(visible);
+        }
+      };
+
+      const updatePosition = (event: MouseEvent) => {
         cursorXTo.current?.(event.clientX - 32);
         cursorYTo.current?.(event.clientY - 32);
+      };
+
+      const updateVisibility = (event: MouseEvent) => {
         const hoveredElement = document.elementFromPoint(
           event.clientX,
           event.clientY
         ) as HTMLElement | null;
         const overInteractive = !!hoveredElement?.closest(interactiveSelector);
-        const nextVisible = !overInteractive;
-        if (nextVisible !== cursorVisibleRef.current) {
-          cursorVisibleRef.current = nextVisible;
-          setCursorVisible(nextVisible);
-        }
+        setVisibility(cursorInsideSectionRef.current && !overInteractive);
       };
 
-      cursorVisibleRef.current = true;
-      setCursorVisible(true);
+      const handleMouseEnter = (event: MouseEvent) => {
+        cursorInsideSectionRef.current = true;
+        updatePosition(event);
+        updateVisibility(event);
+      };
 
-      window.addEventListener("mousemove", handleMove);
+      const handleMove = (event: MouseEvent) => {
+        if (!cursorInsideSectionRef.current) return;
+        updatePosition(event);
+        updateVisibility(event);
+      };
+
+      const handleMouseLeave = () => {
+        cursorInsideSectionRef.current = false;
+        setVisibility(false);
+      };
+
+      const handleScroll = () => {
+        const nextScrollY = window.scrollY;
+        const delta = nextScrollY - lastScrollYRef.current;
+        lastScrollYRef.current = nextScrollY;
+
+        if (!cursorInsideSectionRef.current || !cursorVisibleRef.current) return;
+        if (Math.abs(delta) < 0.2) return;
+
+        cursorRotationRef.current += delta * 0.55;
+        cursorRotateTo.current?.(cursorRotationRef.current);
+      };
+
+      cursorInsideSectionRef.current = false;
+      setVisibility(false);
+      lastScrollYRef.current = window.scrollY;
+
+      section.addEventListener("mouseenter", handleMouseEnter);
+      section.addEventListener("mousemove", handleMove, { passive: true });
+      section.addEventListener("mouseleave", handleMouseLeave);
+      window.addEventListener("scroll", handleScroll, { passive: true });
 
       return () => {
-        window.removeEventListener("mousemove", handleMove);
+        section.removeEventListener("mouseenter", handleMouseEnter);
+        section.removeEventListener("mousemove", handleMove);
+        section.removeEventListener("mouseleave", handleMouseLeave);
+        window.removeEventListener("scroll", handleScroll);
+        cursorInsideSectionRef.current = false;
+        setVisibility(false);
       };
     },
-    { scope: sectionRef, dependencies: [filterOpen, filteredProjects.length] }
+    { scope: sectionRef, dependencies: [filteredProjects.length] }
   );
 
   useGSAP(

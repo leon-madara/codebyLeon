@@ -58,6 +58,8 @@
   border: 1px solid var(--portfolio-cursor-border);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  will-change: transform, opacity;
+  transform: translate3d(-999px, -999px, 0);
 }
 
 .portfolio-carousel .dot-grid {
@@ -105,6 +107,7 @@
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   color: var(--portfolio-control-text);
+  cursor: pointer;
 }
 
 .portfolio-carousel .nav-arrow:hover {
@@ -130,6 +133,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   color: var(--portfolio-pill-text);
+  cursor: pointer;
 }
 
 .portfolio-carousel .portfolio-carousel__filters {
@@ -189,6 +193,7 @@
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   color: hsl(var(--foreground));
+  cursor: pointer;
 }
 
 .portfolio-carousel .view-details-btn:hover {
