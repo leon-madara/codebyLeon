@@ -6,6 +6,14 @@ export function BurningReveal() {
     const [isComplete, setIsComplete] = useState(false);
 
     useEffect(() => {
+        // Skip burning animation if returning from configurator with no-burn flag
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('no-burn')) {
+            hasCompletedRef.current = true;
+            setIsComplete(true);
+            return;
+        }
+
         if (isComplete) return;
 
         const canvasEl = canvasRef.current;

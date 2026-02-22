@@ -50,26 +50,101 @@
    ============================================= */
 .configurator-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
+    /* Align buttons to the bottom of the header space */
     justify-content: space-between;
-    padding: 1.5rem 2rem;
+    padding: 3.5rem 2rem 1rem;
+    /* More top padding for the toggle area */
     position: sticky;
     top: 0;
     background: transparent;
     z-index: 100;
-    border-bottom: 1px solid var(--border-color);
 }
 
-.back-link {
-    color: var(--text-secondary);
-    text-decoration: none;
+/* The dividing line that stays above the buttons */
+.configurator-header::before {
+    content: '';
+    position: absolute;
+    top: 3rem;
+    /* Position the line above the buttons */
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border-color);
+    z-index: -1;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    background: #000000;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.6rem 1.4rem;
+    border-radius: 30px;
+    color: #ffffff;
     font-size: 0.9rem;
     font-weight: 500;
-    transition: color var(--duration-fast) var(--easing-standard);
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    position: relative;
+    overflow: hidden;
+    height: 44px;
+    /* Fixed height for consistent morphing */
+    min-width: 100px;
+    /* Base width for pill shape */
 }
 
-.back-link:hover {
-    color: var(--text-primary);
+.back-btn:hover {
+    border-color: rgba(255, 46, 46, 0.4);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+    transform: translateY(-1px);
+}
+
+.back-btn:hover .back-text,
+.back-btn:hover .back-arrow {
+    color: #ff2e2e;
+    /* Reddish color for text on hover */
+}
+
+.back-text {
+    transition: opacity 0.3s ease, transform 0.3s ease, width 0.3s ease;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.back-arrow {
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    line-height: 1;
+}
+
+/* Click animation state - morphing to circle */
+.back-btn.is-clicked {
+    pointer-events: none;
+    min-width: 44px;
+    width: 44px;
+    padding: 0;
+    gap: 0;
+    border-radius: 50%;
+    background: #000000;
+}
+
+.back-btn.is-clicked .back-text {
+    opacity: 0;
+    width: 0;
+    margin: 0;
+    transform: translateX(-10px);
+}
+
+.back-btn.is-clicked .back-arrow {
+    transform: translateX(0);
+    /* Center in the circle */
 }
 
 .progress-section {
@@ -165,32 +240,41 @@
 .header-right {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+/* Theme Toggle positioning (above the line) */
+.theme-toggle-wrapper {
+    position: absolute;
+    top: 0.5rem;
+    right: 2rem;
+    flex-shrink: 0;
+}
+
+.close-btn-wrapper {
+    display: flex;
+    align-items: center;
 }
 
 .close-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
+    width: 36px;
+    height: 36px;
     color: #dc2626;
     font-size: 1.25rem;
     font-weight: 300;
     line-height: 1;
     text-decoration: none;
     text-align: center;
-    transition: color var(--duration-fast) var(--easing-standard), background-color var(--duration-fast) var(--easing-standard);
-    position: fixed;
-    top: 1rem;
-    right: 2rem;
-    margin-top: 0;
-    margin-right: 0;
+    transition: all var(--duration-fast) var(--easing-standard);
     transform-origin: center;
     will-change: transform;
     border-radius: 50%;
-    background: rgba(217, 117, 26, 0.2);
-    z-index: 100;
+    background: rgba(220, 38, 38, 0.05);
+    border: 1px solid rgba(220, 38, 38, 0.1);
+    backdrop-filter: blur(10px);
 }
 
 .close-btn:hover {
@@ -200,10 +284,10 @@
 
 /* Close button tooltip */
 .close-btn-tooltip {
-    position: fixed;
-    top: 3.5rem;
-    right: 2rem;
-    margin-top: 0;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 0.75rem;
     background: var(--text-primary);
     color: var(--bg-primary);
     padding: 0.5rem 0.75rem;
@@ -498,8 +582,6 @@
     right: -10%;
     transform: translate3d(calc(var(--orb-track-x) * 0.75), calc(var(--orb-track-y) * 0.75), 0);
 }
-
-/* @keyframes morph defined in index.css - removed duplicate */
 
 .configurator-page .frosted-overlay {
     position: fixed;
@@ -934,22 +1016,16 @@
     border: none;
     position: relative;
     z-index: 1;
-    /* Fallback background for browsers without backdrop-filter support */
     background: var(--btn-primary-bg);
-    /* Blur filter for glowing effect - creates the glassmorphic look */
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
-    /* Semi-transparent overlay to show blurred shapes behind - more transparent for brighter colors */
     background: rgba(26, 26, 46, 0.3);
     color: #000000;
-    /* Ensure text remains sharp and readable */
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .configurator-page .btn-continue:disabled {
-    /* Fallback */
     background: var(--btn-disabled-bg);
-    /* Semi-transparent with blur - more transparent to show colors */
     background: rgba(229, 231, 235, 0.3);
     color: #000000;
     cursor: not-allowed;
@@ -980,7 +1056,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    min-height: 50px;
     border-radius: 50px;
     overflow: hidden;
     z-index: 0;
@@ -997,7 +1072,6 @@
     will-change: transform;
 }
 
-/* Shape 1 - Purple/Blue gradient */
 .bg-shape-1 {
     width: 120px;
     height: 120px;
@@ -1007,7 +1081,6 @@
     animation: float-1 4s ease-in-out infinite;
 }
 
-/* Shape 2 - Orange gradient */
 .bg-shape-2 {
     width: 100px;
     height: 100px;
@@ -1018,7 +1091,6 @@
     animation: float-2 5s ease-in-out infinite;
 }
 
-/* Shape 3 - Blue gradient */
 .bg-shape-3 {
     width: 80px;
     height: 80px;
@@ -1028,7 +1100,6 @@
     animation: float-3 6s ease-in-out infinite;
 }
 
-/* Shape 4 - Brand orange */
 .bg-shape-4 {
     width: 90px;
     height: 90px;
@@ -1038,7 +1109,6 @@
     animation: float-4 4.5s ease-in-out infinite;
 }
 
-/* Shape 5 - Purple accent */
 .bg-shape-5 {
     width: 70px;
     height: 70px;
@@ -1048,21 +1118,9 @@
     animation: float-5 5.5s ease-in-out infinite;
 }
 
-/* Dark theme adjustments for button background */
 [data-theme="dark"] .btn-continue {
-    /* Fallback */
-    background: var(--btn-primary-bg);
-    /* Semi-transparent with blur for glowing effect - more transparent for brighter colors */
     background: rgba(240, 240, 245, 0.3);
     color: #000000;
-}
-
-/* Disabled state in dark theme - use modifier class to reduce specificity */
-[data-theme="dark"] .btn-continue--disabled {
-    /* Fallback */
-    background: var(--btn-disabled-bg);
-    /* Semi-transparent with blur - more transparent to show colors */
-    background: rgba(45, 45, 45, 0.3);
 }
 
 /* =============================================
@@ -1070,7 +1128,16 @@
    ============================================= */
 @media (max-width: 768px) {
     .configurator-header {
-        padding: 1rem;
+        padding: 4rem 1rem 1rem;
+    }
+
+    .configurator-header::before {
+        top: 3.5rem;
+    }
+
+    .theme-toggle-wrapper {
+        top: 0.5rem;
+        right: 1rem;
     }
 
     .progress-section {
@@ -1078,40 +1145,17 @@
         max-width: 300px;
     }
 
-    .close-btn {
-        top: 0.5rem;
-        right: 1rem;
-        margin-top: 0;
-        margin-right: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        line-height: 1;
-        text-align: center;
-    }
-
-    .close-btn-tooltip {
-        top: 3rem;
-        right: 1rem;
-    }
-
-    .back-link {
-        font-size: 0.8rem;
-    }
-
     .configurator-content {
         padding: 4rem 1rem 7rem;
     }
 
-    .step-title {
-        font-size: 1.5rem;
+    .back-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
     }
 
     .options-4,
-    .options-multi {
-        grid-template-columns: 1fr;
-    }
-
+    .options-multi,
     .options-3 {
         grid-template-columns: 1fr;
     }
@@ -1147,28 +1191,25 @@
     }
 }
 
-/* =============================================
-   SAVE INFO MODAL
-   ============================================= */
+/* Save Info Modal */
 .save-info-modal {
-    display: none;
     position: fixed;
     inset: 0;
     z-index: 10000;
+    display: none;
     align-items: center;
     justify-content: center;
-    animation: fadeIn var(--duration-fast) var(--easing-standard);
+    padding: 1rem;
 }
 
-.configurator-page .modal-backdrop {
+.modal-backdrop {
     position: absolute;
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
-    -webkit-backdrop-filter: blur(4px);
     backdrop-filter: blur(4px);
 }
 
-.configurator-page .modal-dialog {
+.modal-dialog {
     position: relative;
     background: var(--bg-primary);
     border-radius: 12px;
@@ -1181,27 +1222,27 @@
     animation: slideUp var(--duration-normal) var(--easing-standard);
 }
 
-.configurator-page .modal-title {
+.modal-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.75rem;
 }
 
-.configurator-page .modal-message {
+.modal-message {
     font-size: 0.9rem;
     color: var(--text-secondary);
     margin-bottom: 1.5rem;
     line-height: 1.5;
 }
 
-.configurator-page .modal-actions {
+.modal-actions {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-.configurator-page .modal-btn {
+.modal-btn {
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -1212,58 +1253,47 @@
     text-align: center;
 }
 
-.configurator-page .modal-btn-primary {
+.modal-btn-primary {
     background: var(--brand-orange);
     color: #FFFFFF;
 }
 
-.configurator-page .modal-btn-primary:hover {
+.modal-btn-primary:hover {
     background: #A45711;
     transform: translateY(-1px);
 }
 
-.configurator-page .modal-btn-secondary {
+.modal-btn-secondary {
     background: var(--bg-secondary);
     color: var(--text-primary);
     border: 1px solid var(--border-color);
 }
 
-.configurator-page .modal-btn-secondary:hover {
+.modal-btn-secondary:hover {
     background: var(--card-hover);
     transform: translateY(-1px);
 }
 
-.configurator-page .modal-btn-cancel {
+.modal-btn-cancel {
     background: transparent;
     color: var(--text-secondary);
 }
 
-.configurator-page .modal-btn-cancel:hover {
+.modal-btn-cancel:hover {
     color: var(--text-primary);
 }
 
-/* Dark mode modal adjustments */
-[data-theme="dark"] .configurator-page .modal-dialog {
+[data-theme="dark"] .modal-dialog {
     background: var(--bg-primary);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
-[data-theme="dark"] .configurator-page .modal-backdrop {
+[data-theme="dark"] .modal-backdrop {
     background: rgba(0, 0, 0, 0.7);
 }
 
-/* Responsive modal */
 @media (max-width: 480px) {
-    .configurator-page .modal-dialog {
+    .modal-dialog {
         padding: 1.5rem;
         max-width: 95%;
-    }
-
-    .configurator-page .modal-title {
-        font-size: 1.1rem;
-    }
-
-    .configurator-page .modal-message {
-        font-size: 0.85rem;
     }
 }

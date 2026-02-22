@@ -58,14 +58,23 @@ class ServiceConfigurator {
             continueBtn.addEventListener('click', () => this.nextStep());
         }
 
-        // Back link
-        const backLink = document.querySelector('.back-link');
-        if (backLink) {
-            backLink.addEventListener('click', (e) => {
-                if (this.currentIndex > 0) {
-                    e.preventDefault();
-                    this.previousStep();
-                }
+        // Back Button
+        const btnBack = document.getElementById('btnBack');
+        if (btnBack) {
+            btnBack.addEventListener('click', (e) => {
+                // Trigger animation
+                btnBack.classList.add('is-clicked');
+
+                // Navigate after animation
+                setTimeout(() => {
+                    if (this.currentIndex > 0) {
+                        this.previousStep();
+                        btnBack.classList.remove('is-clicked');
+                    } else {
+                        // Exit using the same logic as close button
+                        this.handleClose();
+                    }
+                }, 500); // 500ms matches the longer CSS morph transition
             });
         }
 
@@ -215,15 +224,12 @@ class ServiceConfigurator {
         // Update progress bar
         this.updateProgress();
 
-        // Update back link text
-        const backLink = document.querySelector('.back-link');
-        if (backLink) {
-            if (this.currentIndex === 0) {
-                backLink.textContent = '← Back';
-                backLink.href = '/';
-            } else {
-                backLink.textContent = '← Back';
-                backLink.href = '#';
+        // Update back button state
+        const btnBack = document.getElementById('btnBack');
+        if (btnBack) {
+            const backText = btnBack.querySelector('.back-text');
+            if (backText) {
+                backText.textContent = this.currentIndex === 0 ? 'Exit' : 'Back';
             }
         }
 
@@ -250,7 +256,7 @@ class ServiceConfigurator {
         if (!closeBtn || !tooltip) return;
 
         const currentDataStep = this.getCurrentDataStep();
-        
+
         // Show tooltip only for steps 1-6
         if (currentDataStep <= 6) {
             closeBtn.setAttribute('data-tooltip', 'true');
@@ -449,52 +455,23 @@ class ServiceConfigurator {
 
         let packageName = '';
         let priceRange = '';
-        let whyReasons = [];
         let features = [];
 
-        // Determine package based on budget primarily
-        if (budget === 'budget-low') {
-            packageName = '10-Day Launch Site';
-            priceRange = 'KES 35,000 - KES 45,000';
-            features = [
-                '✓ 3-5 Page Custom Site',
-                '✓ Mobile-Responsive Design',
-                '✓ Contact Forms & WhatsApp',
-                '✓ Google Maps & Social Links',
-                '✓ 1 Month Free Support'
-            ];
-        } else if (budget === 'budget-mid') {
-            packageName = 'Brand Refresh Package';
-            priceRange = 'KES 60,000 - KES 90,000';
-            features = [
-                '✓ 5-8 Page Custom Site',
-                '✓ Brand Identity Consultation',
-                '✓ SEO Optimization',
-                '✓ Analytics Dashboard',
-                '✓ 3 Months Support'
-            ];
-        } else if (budget === 'budget-high') {
-            packageName = 'Premium Solution';
-            priceRange = 'KES 120,000+';
-            features = [
-                '✓ Full Custom Development',
-                '✓ E-Commerce Integration',
-                '✓ Advanced SEO & Marketing',
-                '✓ Admin Dashboard',
-                '✓ 6 Months Priority Support'
-            ];
+        if (budget === 'budget-low' || (presence === 'no-website' && budget === 'budget-unsure')) {
+            packageName = 'Launch Starter';
+            priceRange = 'KES 30,000 - 50,000';
+            features = ['3-5 Page Custom Site', 'Mobile-Responsive', 'Contact/WA Integration', 'Google Maps', '1 Month Support'];
+        } else if (budget === 'budget-high' || goal === 'ecommerce') {
+            packageName = 'Business Pro';
+            priceRange = 'KES 100,000+';
+            features = ['Full Custom Design', 'Advanced Features/E-com', 'SEO Strategy', 'Analytics Dashboard', '3 Months Support'];
         } else {
-            packageName = 'Custom Consultation';
-            priceRange = "Let's discuss!";
-            features = [
-                '✓ Free 20-Minute Strategy Call',
-                '✓ Personalized Quote',
-                '✓ Flexible Payment Options',
-                '✓ No Obligation'
-            ];
+            packageName = 'Business Growth';
+            priceRange = 'KES 50,000 - 100,000';
+            features = ['Custom Multi-page Site', 'SEO Foundation', 'Dynamic Content', 'WA & Email Automation', '2 Months Support'];
         }
 
-        // Generate why reasons
+        const whyReasons = [];
         if (presence === 'no-website') {
             whyReasons.push('Starting fresh—no old code to fix');
         } else if (presence === 'outdated') {
@@ -580,7 +557,9 @@ class ServiceConfigurator {
             return;
         }
 
-        // Delay navigation to allow vapor effect to be visible
+        // Delay navigation to allow vapor effect to be visible if staying internal
+        // But user requested "do not run the burning animation" on home page, 
+        // so we exit directly with the flag.
         const navigateHome = () => {
             // Step 7+ (not 8): Clear progress and exit
             if (currentDataStep === 7 || currentStepId === 'processing') {
@@ -589,54 +568,39 @@ class ServiceConfigurator {
                 // Steps 1-6: Preserve progress and exit
                 this.saveProgress();
             }
-            window.location.href = '/';
+            window.location.href = '/?no-burn=true';
         };
 
-        // Wait 400ms for vapor effect animation to be visible before navigating
-        setTimeout(navigateHome, 400);
+        // If we are exiting, we don't need much delay if the target doesn't have an entrance transition
+        setTimeout(navigateHome, 100);
     }
 
     clearProgress() {
         localStorage.removeItem('configurator_progress');
-        this.currentIndex = 0;
-        this.answers = {};
-        this.additionalNeeds = [];
-    }
-
-    showSaveInfoModal() {
-        const modal = document.getElementById('saveInfoModal');
-        if (modal) {
-            modal.style.display = 'flex';
-        }
-    }
-
-    hideSaveInfoModal() {
-        const modal = document.getElementById('saveInfoModal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    }
-
-    saveContactInfo() {
-        // Save only contact information separately
-        if (this.answers.contact) {
-            localStorage.setItem('configurator_contact', JSON.stringify(this.answers.contact));
-        }
     }
 
     handleSaveAndExit() {
-        this.saveContactInfo();
-        this.clearProgress();
-        window.location.href = 'index.html';
+        this.saveProgress();
+        window.location.href = '/?no-burn=true';
     }
 
     handleExitAndReset() {
         this.clearProgress();
-        window.location.href = 'index.html';
+        window.location.href = '/?no-burn=true';
+    }
+
+    showSaveInfoModal() {
+        const modal = document.getElementById('saveInfoModal');
+        if (modal) modal.style.display = 'flex';
+    }
+
+    hideSaveInfoModal() {
+        const modal = document.getElementById('saveInfoModal');
+        if (modal) modal.style.display = 'none';
     }
 }
 
-// Initialize when DOM is ready
+// Initialize on DOM load
 document.addEventListener('DOMContentLoaded', () => {
-    new ServiceConfigurator();
+    window.configurator = new ServiceConfigurator();
 });

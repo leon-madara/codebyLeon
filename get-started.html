@@ -27,9 +27,12 @@
     <main class="configurator">
         <!-- Header -->
         <header class="configurator-header">
-            <a href="/" class="back-link">— Back</a>
+            <button class="back-btn" id="btnBack">
+                <span class="back-text">Back</span>
+                <span class="back-arrow">←</span>
+            </button>
 
-            <!-- Right: Theme Toggle -->
+            <!-- Right: Theme Toggle & Close Button -->
             <div class="header-right">
                 <div class="theme-toggle-wrapper">
                     <div class="toggle-switch" id="themeToggle">
@@ -54,6 +57,11 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="close-btn-wrapper">
+                    <a href="#" class="close-btn">✕</a>
+                    <div class="close-btn-tooltip">Your progress will be saved</div>
+                </div>
             </div>
         </header>
 
@@ -74,10 +82,6 @@
                     <div class="progress-fill" id="progressFill"></div>
                 </div>
             </div>
-
-            <!-- Close Button -->
-            <a href="#" class="close-btn">✕</a>
-            <div class="close-btn-tooltip">Your progress will be saved</div>
 
             <!-- STEP 1: Business Identity -->
             <div class="step active" data-step="1">
