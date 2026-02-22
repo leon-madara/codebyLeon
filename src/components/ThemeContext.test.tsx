@@ -110,8 +110,8 @@ describe('Theme Persistence Property-Based Tests', () => {
    * Tests that theme changes are properly saved to localStorage and document
    */
   it('should persist theme changes to localStorage and document', async () => {
-    fc.assert(
-      await fc.asyncProperty(
+    await fc.assert(
+      fc.asyncProperty(
         // Generate random initial theme
         fc.constantFrom('light', 'dark'),
         async (initialTheme) => {

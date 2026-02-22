@@ -8,7 +8,8 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  SlidersHorizontal,
+  Lock,
+  LockOpen,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -20,8 +21,10 @@ const PortfolioCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const filterControlsRef = useRef<HTMLDivElement>(null);
+  const filterShellRef = useRef<HTMLDivElement>(null);
   const filterTriggerRef = useRef<HTMLButtonElement>(null);
+  const filterTriggerIconRef = useRef<HTMLSpanElement>(null);
+  const filterTriggerLabelRef = useRef<HTMLSpanElement>(null);
   const filterRailRef = useRef<HTMLDivElement>(null);
   const filterPillRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const filterTimelineRef = useRef<gsap.core.Timeline | null>(null);
@@ -46,7 +49,6 @@ const PortfolioCarousel = () => {
   const [activeFilter, setActiveFilter] = useState<string>("All");
   const [cursorVisible, setCursorVisible] = useState(true);
   const cursorVisibleRef = useRef(true);
-
   const filteredProjects = useMemo(
     () =>
       activeFilter === "All"
@@ -87,6 +89,28 @@ const PortfolioCarousel = () => {
     setFilterOpen(false);
     ScrollTrigger.refresh();
   }, [filteredProjects.length]);
+
+  useEffect(() => {
+    if (!filterOpen) return;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (filterShellRef.current && !filterShellRef.current.contains(event.target as Node)) {
+        setFilterOpen(false);
+      }
+    };
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setFilterOpen(false);
+    };
+
+    window.addEventListener("pointerdown", onPointerDown);
+    window.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      window.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [filterOpen]);
 
   const getDuration = useCallback(
     (duration: number) => (prefersReducedMotion.current ? 0.01 : duration),
@@ -273,8 +297,7 @@ const PortfolioCarousel = () => {
         ease: "power2.out",
       });
 
-      const interactiveSelector =
-        "button, a, [role='button'], .filter-pill, .nav-arrow, .view-details-btn";
+      const interactiveSelector = "button, a, [role='button'], .nav-arrow, .view-details-btn";
 
       const setVisibility = (visible: boolean) => {
         if (visible !== cursorVisibleRef.current) {
@@ -344,39 +367,60 @@ const PortfolioCarousel = () => {
         setVisibility(false);
       };
     },
-    { scope: sectionRef, dependencies: [filteredProjects.length] }
+    { scope: sectionRef, dependencies: [filteredProjects.length, filterOpen] }
   );
 
   useGSAP(
     () => {
-      if (!filterControlsRef.current || !filterTriggerRef.current || !filterRailRef.current) return;
+      if (!filterShellRef.current || !filterTriggerRef.current || !filterRailRef.current) return;
 
-      const controls = filterControlsRef.current;
+      const shell = filterShellRef.current;
       const triggerButton = filterTriggerRef.current;
+      const triggerIcon = filterTriggerIconRef.current;
+      const triggerLabel = filterTriggerLabelRef.current;
       const rail = filterRailRef.current;
       const pills = filterPillRefs.current.filter(
         (pill): pill is HTMLButtonElement => Boolean(pill)
       );
 
-      const getTargetWidth = () => {
-        const controlsWidth = controls.getBoundingClientRect().width;
+      const measureWidths = () => {
         const triggerWidth = triggerButton.getBoundingClientRect().width;
-        const gap = 12;
-        const availableWidth = Math.max(controlsWidth - triggerWidth - gap, 0);
-        const naturalWidth = rail.scrollWidth;
-
-        if (availableWidth === 0) return naturalWidth;
-        return Math.min(naturalWidth, availableWidth);
+        const shellStyle = window.getComputedStyle(shell);
+        const shellPadX =
+          parseFloat(shellStyle.paddingLeft || "0") + parseFloat(shellStyle.paddingRight || "0");
+        const shellBorderX =
+          parseFloat(shellStyle.borderLeftWidth || "0") +
+          parseFloat(shellStyle.borderRightWidth || "0");
+        const closedWidth = triggerWidth + shellPadX + shellBorderX;
+        const hostWidth =
+          shell.parentElement?.getBoundingClientRect().width ?? shell.getBoundingClientRect().width;
+        const railNaturalWidth = rail.scrollWidth;
+        const openWidth = Math.min(hostWidth, closedWidth + railNaturalWidth);
+        return { closedWidth, openWidth };
       };
 
       const setClosedState = () => {
+        const { closedWidth } = measureWidths();
+        gsap.set(shell, { width: closedWidth });
         gsap.set(rail, {
-          width: 0,
           autoAlpha: 0,
-          overflowX: "hidden",
+          x: 0,
+          clipPath: "inset(0 100% 0 0)",
           pointerEvents: "none",
         });
-        gsap.set(pills, { x: -14, autoAlpha: 0 });
+        gsap.set(pills, { autoAlpha: 0, x: -4 });
+      };
+
+      const setOpenState = () => {
+        const { openWidth } = measureWidths();
+        gsap.set(shell, { width: openWidth });
+        gsap.set(rail, {
+          autoAlpha: 1,
+          x: 0,
+          clipPath: "inset(0 0% 0 0)",
+          pointerEvents: "auto",
+        });
+        gsap.set(pills, { autoAlpha: 1, x: 0 });
       };
 
       filterTimelineRef.current?.kill();
@@ -384,79 +428,155 @@ const PortfolioCarousel = () => {
       if (!filterAnimationReadyRef.current) {
         filterAnimationReadyRef.current = true;
         if (filterOpen) {
-          gsap.set(rail, {
-            width: getTargetWidth(),
-            autoAlpha: 1,
-            overflowX: "auto",
-            pointerEvents: "auto",
-          });
-          gsap.set(pills, { x: 0, autoAlpha: 1 });
+          setOpenState();
         } else {
           setClosedState();
         }
       } else if (filterOpen) {
-        const targetWidth = getTargetWidth();
+        const { openWidth } = measureWidths();
         const openTl = gsap.timeline();
-
         openTl
-          .set(rail, { overflowX: "hidden", pointerEvents: "auto" })
-          .to(rail, {
-            width: targetWidth,
-            autoAlpha: 1,
+          .to(shell, {
+            width: openWidth,
             duration: getDuration(0.32),
             ease: "power3.out",
+            overwrite: "auto",
           })
+          .to(
+            rail,
+            {
+              autoAlpha: 1,
+              x: 0,
+              clipPath: "inset(0 0% 0 0)",
+              pointerEvents: "auto",
+              duration: getDuration(0.24),
+              ease: "power2.out",
+            },
+            0.04
+          )
           .to(
             pills,
             {
-              x: 0,
               autoAlpha: 1,
-              duration: getDuration(0.24),
+              x: 0,
+              duration: getDuration(0.18),
               stagger: 0.04,
               ease: "power2.out",
               overwrite: "auto",
             },
             0.08
-          )
-          .set(rail, { overflowX: "auto" });
+          );
+
+        if (triggerIcon && triggerLabel) {
+          openTl
+            .fromTo(
+              triggerIcon,
+              { x: -8, rotate: -18, scale: 0.92, autoAlpha: 0.85 },
+              {
+                x: 0,
+                rotate: 0,
+                scale: 1,
+                autoAlpha: 1,
+                duration: getDuration(0.2),
+                ease: "power2.out",
+                overwrite: "auto",
+              },
+              0.05
+            )
+            .fromTo(
+              triggerLabel,
+              { x: 8, autoAlpha: 0.86 },
+              {
+                x: 0,
+                autoAlpha: 1,
+                duration: getDuration(0.2),
+                ease: "power2.out",
+                overwrite: "auto",
+              },
+              0.06
+            );
+        }
 
         filterTimelineRef.current = openTl;
       } else {
+        const { closedWidth } = measureWidths();
         const closeTl = gsap.timeline({
           onComplete: () => {
             rail.scrollLeft = 0;
-            gsap.set(rail, { overflowX: "hidden", pointerEvents: "none" });
+            gsap.set(rail, { pointerEvents: "none" });
           },
         });
 
         closeTl
           .to(pills, {
-            x: -14,
             autoAlpha: 0,
-            duration: getDuration(0.2),
-            stagger: { each: 0.03, from: "end" },
+            x: -4,
+            duration: getDuration(0.16),
+            stagger: { each: 0.028, from: "end" },
             ease: "power2.in",
             overwrite: "auto",
           })
           .to(
             rail,
             {
-              width: 0,
               autoAlpha: 0,
-              duration: getDuration(0.22),
-              ease: "power3.in",
+              x: 0,
+              clipPath: "inset(0 100% 0 0)",
+              duration: getDuration(0.24),
+              ease: "power2.inOut",
             },
-            0
+            0.06
+          )
+          .to(
+            shell,
+            {
+              width: closedWidth,
+              duration: getDuration(0.3),
+              ease: "power3.in",
+              overwrite: "auto",
+            },
+            0.07
           );
+
+        if (triggerIcon && triggerLabel) {
+          closeTl
+            .fromTo(
+              triggerIcon,
+              { x: 8, rotate: 16, scale: 0.92, autoAlpha: 0.86 },
+              {
+                x: 0,
+                rotate: 0,
+                scale: 1,
+                autoAlpha: 1,
+                duration: getDuration(0.2),
+                ease: "power2.out",
+                overwrite: "auto",
+              },
+              0.12
+            )
+            .fromTo(
+              triggerLabel,
+              { x: -8, autoAlpha: 0.88 },
+              {
+                x: 0,
+                autoAlpha: 1,
+                duration: getDuration(0.2),
+                ease: "power2.out",
+                overwrite: "auto",
+              },
+              0.12
+            );
+        }
 
         filterTimelineRef.current = closeTl;
       }
 
       const handleResize = () => {
-        if (!filterOpen) return;
-        gsap.set(rail, { width: getTargetWidth() });
+        const { closedWidth, openWidth } = measureWidths();
+        gsap.set(shell, { width: filterOpen ? openWidth : closedWidth });
       };
 
+      handleResize();
       window.addEventListener("resize", handleResize);
 
       return () => {
@@ -464,7 +584,7 @@ const PortfolioCarousel = () => {
         filterTimelineRef.current?.kill();
       };
     },
-    { scope: sectionRef, dependencies: [filterOpen, getDuration] }
+    { scope: sectionRef, dependencies: [filterOpen, activeFilter, filteredProjects.length, getDuration] }
   );
 
   useGSAP(
@@ -600,41 +720,55 @@ const PortfolioCarousel = () => {
           </p>
         </div>
 
-        <div className="relative z-10 mt-6 px-8 md:px-16">
-          <div ref={filterControlsRef} className="portfolio-carousel__filters">
-            <button
-              ref={filterTriggerRef}
-              className="filter-pill flex items-center gap-2"
-              aria-controls="portfolio-filter-rail"
-              aria-expanded={filterOpen}
-              onClick={() => setFilterOpen((open) => !open)}
-            >
-              <SlidersHorizontal size={16} />
-              Filter
-            </button>
-
-            <div
-              id="portfolio-filter-rail"
-              ref={filterRailRef}
-              className={`portfolio-carousel__filter-rail ${filterOpen ? "is-open" : ""}`}
-              aria-hidden={!filterOpen}
-            >
-              {CATEGORIES.map((category, index) => (
-                <button
-                  key={category}
-                  ref={(node) => {
-                    filterPillRefs.current[index] = node;
-                  }}
-                  tabIndex={filterOpen ? 0 : -1}
-                  className={`filter-pill ${activeFilter === category ? "active" : ""}`}
-                  onClick={() => {
-                    setActiveFilter(category);
-                    setFilterOpen(false);
-                  }}
+        <div className="relative z-10 mt-6 mx-auto w-full max-w-[1280px] px-8 md:px-16">
+          <div className="portfolio-carousel__filter-row">
+            <div ref={filterShellRef} className="portfolio-filter">
+              <button
+                ref={filterTriggerRef}
+                id="portfolio-filter-trigger"
+                className={`portfolio-filter__trigger ${filterOpen ? "is-open" : ""}`}
+                aria-controls="portfolio-filter-rail"
+                aria-expanded={filterOpen}
+                onClick={() => setFilterOpen((open) => !open)}
+              >
+                <span
+                  ref={filterTriggerIconRef}
+                  className="portfolio-filter__trigger-icon"
+                  aria-hidden="true"
                 >
-                  {category}
-                </button>
-              ))}
+                  {filterOpen ? <LockOpen size={14} /> : <Lock size={14} />}
+                </span>
+                <span ref={filterTriggerLabelRef} className="portfolio-filter__trigger-label">
+                  {filterOpen ? "Filtered" : "Filter"}
+                </span>
+              </button>
+
+              <div
+                id="portfolio-filter-rail"
+                ref={filterRailRef}
+                className="portfolio-filter__rail"
+                role="group"
+                aria-labelledby="portfolio-filter-trigger"
+                aria-hidden={!filterOpen}
+              >
+                {CATEGORIES.map((category, index) => (
+                  <button
+                    key={category}
+                    ref={(node) => {
+                      filterPillRefs.current[index] = node;
+                    }}
+                    tabIndex={filterOpen ? 0 : -1}
+                    className={`portfolio-filter__pill ${activeFilter === category ? "is-active" : ""}`}
+                    aria-pressed={activeFilter === category}
+                    onClick={() => {
+                      setActiveFilter(category);
+                      setFilterOpen(false);
+                    }}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -701,21 +835,23 @@ const PortfolioCarousel = () => {
 
         <button
           className={`nav-arrow absolute left-4 top-1/2 z-20 -translate-y-1/2 md:left-8 ${
-            activeIndex === 0 ? "is-disabled" : ""
+            activeIndex === 0 || filteredProjects.length <= 1 ? "is-disabled" : ""
           }`}
           onClick={() => snapToProject(-1)}
           aria-label="Previous project"
-          disabled={activeIndex === 0}
+          disabled={activeIndex === 0 || filteredProjects.length <= 1}
         >
           <ChevronLeft size={24} />
         </button>
         <button
           className={`nav-arrow absolute right-4 top-1/2 z-20 -translate-y-1/2 md:right-8 ${
-            activeIndex === filteredProjects.length - 1 ? "is-disabled" : ""
+            activeIndex === filteredProjects.length - 1 || filteredProjects.length <= 1
+              ? "is-disabled"
+              : ""
           }`}
           onClick={() => snapToProject(1)}
           aria-label="Next project"
-          disabled={activeIndex === filteredProjects.length - 1}
+          disabled={activeIndex === filteredProjects.length - 1 || filteredProjects.length <= 1}
         >
           <ChevronRight size={24} />
         </button>

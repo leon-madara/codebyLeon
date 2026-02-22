@@ -22,17 +22,37 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   const visualTestMode = isVisualTestMode();
   const { theme } = useTheme();
   const WORD_GROWTH_START_PROGRESS = 0.08;
-  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWord, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
+  const HERO_ANIMATION_SCROLL_VH = 120;
+  const HERO_POST_ANIMATION_HOLD_VH = 10;
+  const HERO_REVERSE_PEEL_SCROLL_VH = 34;
+  const HERO_CUBE_PERSPECTIVE = 1400;
+  const HERO_CUBE_PEEL_ROTATION_DEG = 72;
+  const HERO_CUBE_PEEL_LIFT_PERCENT = -20;
+  const HERO_CUBE_PEEL_DEPTH = -240;
+  const HERO_TOTAL_SCROLL_VH = HERO_ANIMATION_SCROLL_VH + HERO_POST_ANIMATION_HOLD_VH;
+  const HERO_ANIMATION_PROGRESS_CAP = HERO_ANIMATION_SCROLL_VH / HERO_TOTAL_SCROLL_VH;
+  const HERO_REVERSE_PEEL_PROGRESS_WINDOW = Math.min(
+    HERO_REVERSE_PEEL_SCROLL_VH / HERO_TOTAL_SCROLL_VH,
+    HERO_ANIMATION_PROGRESS_CAP
+  );
+  const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const bgRef = useRef<HTMLDivElement>(null);
 
   // Refs for staggered text lines
+  const badgeRef = useRef<HTMLSpanElement>(null);
+  const subheadlineRef = useRef<HTMLParagraphElement>(null);
+  const tagWrapperRef = useRef<HTMLDivElement>(null);
+  const ctasRef = useRef<HTMLDivElement>(null);
   const line1Ref = useRef<HTMLDivElement>(null);
   const line2Ref = useRef<HTMLDivElement>(null);
   const line3Ref = useRef<HTMLDivElement>(null);
 
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
+  const reversePeelTlRef = useRef<gsap.core.Timeline | null>(null);
+  const hasReachedWordStageRef = useRef(false);
+  const reverseCompletionAppliedRef = useRef(false);
   const isInitializedRef = useRef(false);
   const wordContainerRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
@@ -45,12 +65,73 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
   useGSAP(() => {
     if (isMobile || visualTestMode) return;
-    const heroScrollLength = 460;
+    const heroScrollLength = HERO_TOTAL_SCROLL_VH;
     document.body.classList.add('hero-torch-tint-active');
 
     // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
     // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
     const triggerEl = scrollWrapperRef?.current || sectionRef.current;
+    const getFadeTargets = (): Element[] => {
+      const navigationEl = document.querySelector('.navigation');
+      return [
+        navigationEl,
+        badgeRef.current,
+        subheadlineRef.current,
+        tagWrapperRef.current,
+        ctasRef.current,
+        line1Ref.current,
+        line3Ref.current
+      ].filter((target): target is Element => Boolean(target));
+    };
+    const showBaseHeroState = (restartTyping: boolean) => {
+      isInitializedRef.current = false;
+      hasReachedWordStageRef.current = false;
+      reverseCompletionAppliedRef.current = false;
+
+      if (timelineRef.current) {
+        timelineRef.current.kill();
+        timelineRef.current = null;
+      }
+
+      if (reversePeelTlRef.current) {
+        reversePeelTlRef.current.kill();
+        reversePeelTlRef.current = null;
+      }
+
+      if (wordContainerRef.current) {
+        wordContainerRef.current.remove();
+        wordContainerRef.current = null;
+      }
+
+      if (typingRef.current) {
+        gsap.set(typingRef.current, {
+          opacity: 1,
+          visibility: 'visible'
+        });
+      }
+
+      const fadeTargets = getFadeTargets();
+      if (fadeTargets.length > 0) {
+        gsap.set(fadeTargets, {
+          autoAlpha: 1,
+          pointerEvents: "auto"
+        });
+      }
+
+      if (contentRef.current) {
+        gsap.set(contentRef.current, {
+          autoAlpha: 1,
+          y: 0,
+          scale: 1,
+          pointerEvents: "auto"
+        });
+      }
+
+      if (restartTyping) {
+        setStartingWordIndex(currentWordIndexRef.current);
+        startTyping();
+      }
+    };
 
     const heroPinTrigger = ScrollTrigger.create({
       trigger: triggerEl,
@@ -60,13 +141,62 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       pinSpacing: false,
       anticipatePin: 1,
       scrub: 0.2,
+      onLeave: () => {
+        hasReachedWordStageRef.current = true;
+        if (timelineRef.current) {
+          timelineRef.current.progress(1);
+        }
+        if (reversePeelTlRef.current) {
+          reversePeelTlRef.current.pause(0);
+        }
+      },
+      onEnterBack: () => {
+        if (!timelineRef.current) return;
+        hasReachedWordStageRef.current = true;
+        timelineRef.current.progress(1);
+        if (reversePeelTlRef.current) {
+          reversePeelTlRef.current.pause(0);
+        }
+        if (wordContainerRef.current) {
+          gsap.set(wordContainerRef.current, {
+            autoAlpha: 1,
+            yPercent: 0,
+            scale: 1,
+            filter: "blur(0px)"
+          });
+          const wordFace = wordContainerRef.current.querySelector('.hero__word-grow-face') as HTMLDivElement | null;
+          if (wordFace) {
+            gsap.set(wordFace, {
+              autoAlpha: 1,
+              yPercent: 0,
+              rotateX: 0,
+              rotateY: 0,
+              z: 0,
+              scale: 1,
+              filter: "blur(0px)",
+              transformOrigin: '50% 100%',
+              transformPerspective: HERO_CUBE_PERSPECTIVE,
+              force3D: true
+            });
+          }
+        }
+        if (contentRef.current) {
+          gsap.set(contentRef.current, {
+            autoAlpha: 0,
+            y: 28,
+            scale: 0.9,
+            pointerEvents: "none"
+          });
+        }
+      },
       onUpdate: (self) => {
         const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
         document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
 
         // Case 1: Start Scroll Interaction
-        if (!isInitializedRef.current && self.progress > 0.01 && typingRef.current) {
+        if (!isInitializedRef.current && self.direction >= 0 && self.progress > 0.01 && typingRef.current) {
           isInitializedRef.current = true;
+          reverseCompletionAppliedRef.current = false;
 
           // 1. Stop the typing animation immediately
           stopTyping();
@@ -121,9 +251,28 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             willChange: 'transform',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
-            zIndex: '10'
+            zIndex: '10',
+            perspective: `${HERO_CUBE_PERSPECTIVE}px`,
+            perspectiveOrigin: '50% 50%'
           });
 
+          const wordFace = document.createElement('div');
+          wordFace.className = 'hero__word-grow-face';
+          Object.assign(wordFace.style, {
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+            transformStyle: 'preserve-3d',
+            backfaceVisibility: 'hidden',
+            willChange: 'transform, filter, opacity'
+          });
+
+          wordContainer.appendChild(wordFace);
           sectionRef.current?.appendChild(wordContainer);
           wordContainerRef.current = wordContainer;
 
@@ -171,7 +320,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
               textShadow: "0px 10px 20px rgba(0,0,0,0.1)"
             });
 
-            wordContainer.appendChild(span);
+            wordFace.appendChild(span);
 
             if (index >= numExisting) {
               lettersToAnimate.push(span);
@@ -179,14 +328,17 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           });
 
           const tl = gsap.timeline({ paused: true });
+          const fadeTargets = getFadeTargets();
 
           // Fade out elements (instant)
-          tl.to('.navigation, .hero__badge, .hero__subheadline, .hero__tag-wrapper, .hero__ctas, .headline-line-1, .headline-line-3', {
-            autoAlpha: 0,
-            duration: 0,
-            ease: "none",
-            pointerEvents: "none"
-          }, 0);
+          if (fadeTargets.length > 0) {
+            tl.to(fadeTargets, {
+              autoAlpha: 0,
+              duration: 0,
+              ease: "none",
+              pointerEvents: "none"
+            }, 0);
+          }
 
           // Animate ONLY the new letters appearing
           // We distribute them over a portion of the scroll
@@ -255,7 +407,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             clipPath: 'polygon(0 0, 0 100%, 0 100%, 0 0)' // Initially hidden
           });
 
-          wordContainer.appendChild(designsLabel);
+          wordFace.appendChild(designsLabel);
 
           // Animate "designs" appearing (Handwritten Wipe)
           tl.to(designsLabel, {
@@ -266,63 +418,143 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
           // Hero-local transition only.
           // Never transform downstream section wrappers from here.
-          tl.to(
-            '.hero__content',
-            {
-              autoAlpha: 0,
-              duration: 0.42,
-              ease: "power2.inOut",
-              pointerEvents: "none"
-            },
-            ">+=0.05"
-          );
+          if (contentRef.current) {
+            tl.to(
+              contentRef.current,
+              {
+                autoAlpha: 0,
+                duration: 0.42,
+                ease: "power2.inOut",
+                pointerEvents: "none"
+              },
+              ">+=0.05"
+            );
+          }
 
           timelineRef.current = tl;
+
+          if (reversePeelTlRef.current) {
+            reversePeelTlRef.current.kill();
+            reversePeelTlRef.current = null;
+          }
+
+          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+          const reversePeelTl = gsap.timeline({ paused: true });
+
+          if (prefersReducedMotion) {
+            reversePeelTl.to(wordFace, {
+              autoAlpha: 0,
+              duration: 1,
+              ease: "none"
+            }, 0);
+            if (contentRef.current) {
+              reversePeelTl.fromTo(
+                contentRef.current,
+                { autoAlpha: 0, y: 0, scale: 1, pointerEvents: "none" },
+                { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "none" },
+                0
+              );
+            }
+            if (fadeTargets.length > 0) {
+              reversePeelTl.to(fadeTargets, {
+                autoAlpha: 1,
+                duration: 0.8,
+                ease: "none",
+                pointerEvents: "auto"
+              }, 0.2);
+            }
+          } else {
+            reversePeelTl
+              .to(wordFace, {
+                yPercent: HERO_CUBE_PEEL_LIFT_PERCENT,
+                rotateX: HERO_CUBE_PEEL_ROTATION_DEG,
+                rotateY: -8,
+                z: HERO_CUBE_PEEL_DEPTH,
+                scale: 0.94,
+                autoAlpha: 0,
+                filter: "blur(10px)",
+                transformOrigin: '50% 100%',
+                transformPerspective: HERO_CUBE_PERSPECTIVE,
+                force3D: true,
+                duration: 1,
+                ease: "power3.inOut"
+              }, 0);
+            if (contentRef.current) {
+              reversePeelTl.fromTo(
+                contentRef.current,
+                { autoAlpha: 0, y: 36, scale: 0.88, transformOrigin: '50% 80%', pointerEvents: "none" },
+                { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "power2.out" },
+                0
+              );
+            }
+            if (fadeTargets.length > 0) {
+              reversePeelTl.to(fadeTargets, {
+                autoAlpha: 1,
+                duration: 0.75,
+                ease: "power2.out",
+                pointerEvents: "auto"
+              }, 0.15);
+            }
+          }
+
+          reversePeelTlRef.current = reversePeelTl;
         }
 
         // Case 2: Revert (Back to Top)
         if (isInitializedRef.current && self.progress <= 0.01) {
-          isInitializedRef.current = false;
-
-          if (timelineRef.current) {
-            timelineRef.current.kill();
-            timelineRef.current = null;
-          }
-
-          if (wordContainerRef.current) {
-            wordContainerRef.current.remove();
-            wordContainerRef.current = null;
-          }
-
-          if (typingRef.current) {
-            gsap.set(typingRef.current, {
-              opacity: 1,
-              visibility: 'visible'
-            });
-          }
-
-          // Restore other elements
-          gsap.set('.navigation, .hero__badge, .hero__subheadline, .hero__tag-wrapper, .hero__ctas, .headline-line-1, .headline-line-3', {
-            autoAlpha: 1, // Restore autoAlpha
-            pointerEvents: "auto"
-          });
-          gsap.set('.hero__content', {
-            autoAlpha: 1,
-            pointerEvents: "auto"
-          });
-
-          setStartingWordIndex(currentWordIndexRef.current);
-          startTyping();
+          hasReachedWordStageRef.current = false;
+          showBaseHeroState(true);
         }
 
         if (timelineRef.current) {
-          timelineRef.current.progress(Math.min(self.progress, 1));
+          const clampedProgress = Math.min(self.progress, 1);
+          const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
+          const isReverseScroll = self.direction < 0;
+
+          if (!isReverseScroll || !hasReachedWordStageRef.current) {
+            timelineRef.current.progress(animationProgress);
+            hasReachedWordStageRef.current = hasReachedWordStageRef.current || animationProgress >= 1;
+            if (reversePeelTlRef.current) {
+              reversePeelTlRef.current.pause(0);
+            }
+          } else {
+            timelineRef.current.progress(1);
+
+            if (reversePeelTlRef.current) {
+              const safeReverseWindow = HERO_REVERSE_PEEL_PROGRESS_WINDOW > 0
+                ? HERO_REVERSE_PEEL_PROGRESS_WINDOW
+                : Number.EPSILON;
+              const peelProgress = clampedProgress >= HERO_ANIMATION_PROGRESS_CAP
+                ? 0
+                : Math.min(
+                  Math.max(
+                    (HERO_ANIMATION_PROGRESS_CAP - clampedProgress) / safeReverseWindow,
+                    0
+                  ),
+                  1
+                );
+
+              reversePeelTlRef.current.progress(peelProgress);
+
+              // Once reverse peel is fully completed, restore the base hero experience:
+              // navigation + content + typing loop (word iteration) and clear grown-word layer.
+              if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
+                reverseCompletionAppliedRef.current = true;
+                showBaseHeroState(true);
+                return;
+              }
+            }
+          }
         }
       }
     });
 
     return () => {
       heroPinTrigger.kill();
+      if (reversePeelTlRef.current) {
+        reversePeelTlRef.current.kill();
+        reversePeelTlRef.current = null;
+      }
       document.body.classList.remove('hero-torch-tint-active');
     };
   }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile, visualTestMode] });
@@ -370,7 +602,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       <div ref={contentRef} className="hero__content relative z-10">
         <div className="hero__text-wrapper">
           {/* Badge */}
-          <span className="hero__badge hero__anim-item">Nairobi-based design studio</span>
+          <span ref={badgeRef} className="hero__badge hero__anim-item">Nairobi-based design studio</span>
 
           {/* Main Headline */}
           <h1 className="hero__headline">
@@ -392,12 +624,12 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           </h1>
 
           {/* Subheadline */}
-          <p className="hero__subheadline hero__anim-item">
+          <p ref={subheadlineRef} className="hero__subheadline hero__anim-item">
             Websites and design that make your business<br />look as professional as it is.
           </p>
 
           {/* Tag with Gradient + SVG Underline */}
-          <div className="hero__tag-wrapper hero__anim-item">
+          <div ref={tagWrapperRef} className="hero__tag-wrapper hero__anim-item">
             <span className="hero__tag gradient-text">Beyond the Blueprint</span>
             <svg className="hero__underline-svg" viewBox="0 0 200 12" preserveAspectRatio="none">
               <path
@@ -413,7 +645,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           </div>
 
           {/* CTAs */}
-          <div className="hero__ctas hero__anim-item">
+          <div ref={ctasRef} className="hero__ctas hero__anim-item">
             <a href="/get-started.html" className="hero__cta hero__cta--primary">Book a free 20-minute call</a>
             <a href="#portfolio" className="hero__cta hero__cta--secondary">VIEW PORTFOLIO</a>
           </div>

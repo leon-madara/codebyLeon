@@ -13,8 +13,8 @@
 
 @media (min-width: 769px) {
   .hero-scroll-wrapper {
-    /* 100vh for the hero + 460vh for the scroll animation range */
-    height: 560vh;
+    /* 100vh hero + 120vh animation + 10vh hold */
+    height: 230vh;
   }
 }
 
