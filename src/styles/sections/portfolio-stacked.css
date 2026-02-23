@@ -346,6 +346,14 @@
     gap: 3rem;
     align-items: center;
   }
+
+  .portfolio-stacked__left {
+    flex: 0.9;
+  }
+
+  .portfolio-stacked__right {
+    flex: 1.1;
+  }
 }
 
 /* LEFT SIDE: Content */
@@ -436,7 +444,7 @@
 /* Individual card slides */
 .portfolio-stacked__slide {
   width: 90%;
-  aspect-ratio: 1.4;
+  aspect-ratio: 3 / 4;
   border-radius: 20px;
   overflow: hidden;
   box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
@@ -452,12 +460,14 @@
 @media (min-width: 768px) {
   .portfolio-stacked__slide {
     width: 90%;
+    aspect-ratio: 16 / 9;
   }
 }
 
 @media (min-width: 1024px) {
   .portfolio-stacked__slide {
     width: 90%;
+    aspect-ratio: 16 / 9;
   }
 }
 

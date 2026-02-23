@@ -7,7 +7,7 @@ interface StoryBeatProps {
   description: string;
   icon: ReactNode;
   children?: ReactNode;
-  gradientClass: string;
+  gradientClass: string; 
 }
 
 const StoryBeat = forwardRef<HTMLDivElement, StoryBeatProps>(

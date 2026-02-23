@@ -210,20 +210,6 @@ const MultiCardScrollSection = () => {
       const container = containerRef.current;
       const topChrome = topChromeRef.current;
 
-      // Under ScrollSmoother, CSS sticky can desync from transformed scroll containers.
-      // Pin the top chrome with ScrollTrigger for deterministic behavior on desktop.
-      if (isDesktop && container && topChrome) {
-        ScrollTrigger.create({
-          trigger: container,
-          start: 'top top',
-          end: () => `bottom top+=${Math.ceil(topChrome.getBoundingClientRect().height)}`,
-          pin: topChrome,
-          pinSpacing: false,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        });
-      }
-
       STORIES.forEach((_, storyIndex) => {
         const section = sectionRefs.current[storyIndex];
         const track = trackRefs.current[storyIndex];
@@ -260,7 +246,7 @@ const MultiCardScrollSection = () => {
             trigger: section,
             pin: true,
             pinSpacing: true,
-            start: 'top top',
+            start: isDesktop ? `top top+=${topChromeHeight}` : 'top top',
             end: () => {
               recalculateDistances();
               return `+=${totalDistance}`;
@@ -332,6 +318,31 @@ const MultiCardScrollSection = () => {
         });
       });
 
+      if (isDesktop && container && topChrome) {
+        ScrollTrigger.create({
+          trigger: container,
+          start: 'top top',
+          end: () => {
+            const storyTriggers = scrollTriggersRef.current.filter(
+              (t): t is ScrollTrigger => Boolean(t)
+            );
+
+            if (!storyTriggers.length) {
+              return container.scrollHeight - topChrome.getBoundingClientRect().height;
+            }
+
+            return storyTriggers.reduce(
+              (maxEnd, trigger) => Math.max(maxEnd, trigger.end ?? maxEnd),
+              0
+            );
+          },
+          pin: topChrome,
+          pinSpacing: false,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+        });
+      }
+
       ScrollTrigger.create({
         trigger: containerRef.current,
         start: 'top center',
@@ -347,7 +358,7 @@ const MultiCardScrollSection = () => {
       scrollTriggersRef.current = [];
       ctx.revert();
     };
-  }, [isDesktop, isReady, updateStoryProgress, visualTestMode]);
+  }, [isDesktop, isReady, topChromeHeight, updateStoryProgress, visualTestMode]);
 
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,

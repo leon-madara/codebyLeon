@@ -85,6 +85,12 @@
   justify-content: center;
   padding: 2.25rem 1.25rem;
   color: hsl(var(--primary-foreground));
+  border-radius: 1.75rem;
+  overflow: hidden;
+  border: 1px solid hsl(var(--primary-foreground) / 0.18);
+  box-shadow:
+    0 18px 55px hsl(var(--background) / 0.9),
+    0 0 0 1px hsl(var(--primary-foreground) / 0.08);
 }
 
 .hs__story--horizontal .hs-beat {
@@ -100,9 +106,16 @@
 }
 
 .hs-beat__content {
-  max-width: min(640px, 90vw);
-  text-align: center;
+  max-width: min(720px, 90vw);
   margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) clamp(1.75rem, 4.5vw, 3rem);
+  border-radius: inherit;
+  background:
+    radial-gradient(120% 140% at 0% 0%, hsl(var(--background) / 0.4) 0%, transparent 55%),
+    radial-gradient(140% 180% at 120% 120%, hsl(var(--background) / 0.28) 0%, transparent 60%);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  text-align: left;
 }
 
 .hs-beat__icon {
@@ -110,12 +123,15 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.9rem;
-  border-radius: 0.9rem;
-  border: 1px solid hsl(var(--primary-foreground) / 0.3);
-  background: hsl(var(--background) / 0.14);
-  -webkit-backdrop-filter: blur(6px);
-  backdrop-filter: blur(6px);
+  padding: 0.85rem;
+  border-radius: 9999px;
+  border: 1px solid hsl(var(--primary-foreground) / 0.35);
+  background: hsl(var(--background) / 0.2);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  box-shadow:
+    0 0 0 1px hsl(var(--primary-foreground) / 0.1),
+    0 14px 30px hsl(var(--background) / 0.9);
 }
 
 .hs-beat__icon-inner {
@@ -129,25 +145,27 @@
   font-size: clamp(1.85rem, 3.6vw, 2.65rem);
   font-weight: 700;
   color: hsl(var(--primary-foreground));
-  margin: 0 0 0.55rem;
+  letter-spacing: -0.03em;
+  margin: 0 0 0.6rem;
 }
 
 .hs-beat__subtitle {
   font-size: clamp(1rem, 2vw, 1.2rem);
   font-weight: 600;
   color: hsl(var(--primary-foreground) / 0.82);
-  margin: 0 0 0.8rem;
+  margin: 0 0 0.9rem;
 }
 
 .hs-beat__description {
   margin: 0 auto;
-  max-width: 34rem;
-  color: hsl(var(--primary-foreground) / 0.74);
-  line-height: 1.65;
+  max-width: 36rem;
+  color: hsl(var(--primary-foreground) / 0.8);
+  line-height: 1.7;
+  font-size: 0.98rem;
 }
 
 .hs-beat__body {
-  margin-top: 1.5rem;
+  margin-top: 1.75rem;
 }
 
 .hs .problem-tag,
@@ -377,10 +395,12 @@
 }
 
 @keyframes hs-bob {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(4px);
   }
@@ -462,7 +482,8 @@
 
   .hs-beat__content {
     margin-right: auto;
-    max-width: min(620px, 92vw);
+    max-width: min(640px, 92vw);
+    padding: 1.75rem 1.5rem 2.25rem;
   }
 
   .hs-progress {
