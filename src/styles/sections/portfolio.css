@@ -119,12 +119,12 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-  gap: 0;
-  margin-bottom: 0;
+  gap: 0.425rem;
+  margin-bottom: 2.125rem;
   flex-wrap: wrap;
   background: rgba(180, 180, 180, 0.4);
-  border-radius: 12px;
-  padding: var(--spacing-xs);
+  border-radius: 999px;
+  padding: 0.425rem;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   text-align: center;
@@ -136,20 +136,32 @@
 }
 
 .portfolio__filter-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.72rem 1.48rem;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   color: #000;
   font-weight: 500;
-  font-size: 0.85rem;
+  font-size: 0.765rem;
   cursor: pointer;
-  transition: all var(--duration-normal) ease;
+  transition: all 0.3s ease;
   white-space: nowrap;
   position: relative;
   z-index: 1;
   --filter-btn-hover-color: var(--text-primary);
   --filter-btn-active-color: white;
+}
+
+/* Hack to prevent layout shift on bold text */
+.portfolio__filter-btn::after {
+  content: attr(data-text);
+  font-weight: 600;
+  height: 0;
+  visibility: hidden;
+  overflow: hidden;
+  user-select: none;
+  pointer-events: none;
+  display: block;
 }
 
 [data-theme="dark"] .portfolio__filter-btn {
@@ -171,13 +183,15 @@
 .portfolio__filter-slider {
   position: absolute;
   background: var(--text-primary);
-  border-radius: 8px;
-  height: calc(100% - 1rem);
-  top: var(--spacing-sm);
-  left: var(--spacing-sm);
-  transition: all var(--duration-normal) var(--easing-standard);
+  border-radius: 999px;
+  top: 0;
+  left: 0;
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+    height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
   z-index: 0;
   pointer-events: none;
+  transform-origin: center center;
 }
 
 [data-theme="dark"] .portfolio__filter-slider {
@@ -480,13 +494,13 @@
 
   .portfolio__filters,
   .portfolio-filters {
-    padding: var(--spacing-sm);
+    padding: 0.425rem;
   }
 
   .portfolio__filter-btn,
   .filter-btn {
-    padding: 0.55rem 1.05rem;
-    font-size: 0.86rem;
+    padding: 0.72rem 1.48rem;
+    font-size: 0.8rem;
   }
 
   .portfolio__showcase {

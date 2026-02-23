@@ -182,15 +182,18 @@ export function Portfolio() {
     const buttonRect = button.getBoundingClientRect();
 
     const left = buttonRect.left - filtersRect.left;
+    const top = buttonRect.top - filtersRect.top;
     const width = buttonRect.width;
+    const height = buttonRect.height;
 
     slider.style.width = `${width}px`;
-    slider.style.left = `${left}px`;
+    slider.style.height = `${height}px`;
+    slider.style.transform = `translate(${left}px, ${top}px)`;
   };
 
   useEffect(() => {
-    const id = window.setTimeout(() => updateSliderPosition(activeFilter), 100);
-    return () => window.clearTimeout(id);
+    // using requestAnimationFrame to ensure ref layout has occurred before measuring
+    requestAnimationFrame(() => updateSliderPosition(activeFilter));
   }, [activeFilter]);
 
   useEffect(() => {
@@ -408,30 +411,34 @@ export function Portfolio() {
           <div className="portfolio__filters" ref={filtersRef}>
             <div className="portfolio__filter-slider" ref={sliderRef}></div>
             <button
-              ref={(el) => el && buttonRefs.current.set('all', el)}
+              ref={(el) => (el ? buttonRefs.current.set('all', el) : buttonRefs.current.delete('all'))}
               className={`portfolio__filter-btn ${activeFilter === 'all' ? 'is-active' : ''}`}
               onClick={() => handleFilterClick('all')}
+              data-text="All Projects"
             >
               All Projects
             </button>
             <button
-              ref={(el) => el && buttonRefs.current.set('small-business', el)}
+              ref={(el) => (el ? buttonRefs.current.set('small-business', el) : buttonRefs.current.delete('small-business'))}
               className={`portfolio__filter-btn ${activeFilter === 'small-business' ? 'is-active' : ''}`}
               onClick={() => handleFilterClick('small-business')}
+              data-text="Small Business"
             >
               Small Business
             </button>
             <button
-              ref={(el) => el && buttonRefs.current.set('saas', el)}
+              ref={(el) => (el ? buttonRefs.current.set('saas', el) : buttonRefs.current.delete('saas'))}
               className={`portfolio__filter-btn ${activeFilter === 'saas' ? 'is-active' : ''}`}
               onClick={() => handleFilterClick('saas')}
+              data-text="SaaS & Apps"
             >
               SaaS & Apps
             </button>
             <button
-              ref={(el) => el && buttonRefs.current.set('creative', el)}
+              ref={(el) => (el ? buttonRefs.current.set('creative', el) : buttonRefs.current.delete('creative'))}
               className={`portfolio__filter-btn ${activeFilter === 'creative' ? 'is-active' : ''}`}
               onClick={() => handleFilterClick('creative')}
+              data-text="Creative"
             >
               Creative
             </button>
