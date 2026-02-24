@@ -109,7 +109,7 @@
 }
 
 .hs__story--horizontal .hs__viewport {
-  height: max(420px, calc(100vh - var(--hs-top-chrome-height) - var(--hs-sidebar-height)));
+  height: max(420px, calc(100vh - var(--hs-top-chrome-height)));
 }
 
 .hs__story--vertical .hs__viewport {

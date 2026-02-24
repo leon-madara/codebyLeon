@@ -86,7 +86,6 @@ const MultiCardScrollSection = () => {
   const [showSidebar, setShowSidebar] = useState(false);
   const [topChromeHeight, setTopChromeHeight] = useState(168);
   const topChromeHeightRef = useRef(168);
-  const [sidebarHeight, setSidebarHeight] = useState(0);
 
   const syncViewportMode = useCallback(() => {
     setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
@@ -147,34 +146,6 @@ const MultiCardScrollSection = () => {
     // topChromeHeightRef stays in sync for useLayoutEffect to read without re-triggering it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    const element = sidebarRef.current;
-    if (!element) {
-      setSidebarHeight(0);
-      return;
-    }
-
-    const updateSidebarHeight = () => {
-      if (!isDesktop || !showSidebar) {
-        setSidebarHeight(0);
-        return;
-      }
-      const nextHeight = Math.ceil(element.getBoundingClientRect().height);
-      setSidebarHeight(nextHeight > 0 ? nextHeight : 0);
-    };
-
-    updateSidebarHeight();
-
-    const resizeObserver = new ResizeObserver(updateSidebarHeight);
-    resizeObserver.observe(element);
-    window.addEventListener('resize', updateSidebarHeight);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener('resize', updateSidebarHeight);
-    };
-  }, [isDesktop, showSidebar, activeCard]);
 
   const updateStoryProgress = useCallback((storyIndex: number, progressValue: number) => {
     const clamped = clampProgress(progressValue);
@@ -415,7 +386,6 @@ const MultiCardScrollSection = () => {
 
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,
-    '--hs-sidebar-height': `${sidebarHeight}px`,
   } as CSSProperties;
 
   return (
