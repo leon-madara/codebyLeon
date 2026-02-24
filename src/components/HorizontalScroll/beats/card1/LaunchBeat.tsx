@@ -66,7 +66,7 @@ const Card1LaunchBeat = forwardRef<HTMLDivElement, Card1LaunchBeatProps>(({ show
               <div className="text-primary-foreground/70 text-sm font-medium mb-2">Starting at</div>
               <div className="text-4xl font-bold text-primary-foreground mb-2">KES 35,000</div>
               <div className="text-primary-foreground/60 text-sm mb-4">10-day delivery</div>
-              <button className="w-full px-6 py-3 bg-primary-foreground text-forest-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
+              <button className="hs-beat__cta w-full px-6 py-3 bg-primary-foreground text-forest-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
                 Get Started
               </button>
             </div>

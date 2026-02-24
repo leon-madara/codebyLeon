@@ -63,7 +63,7 @@ const Card2TransformationBeat = forwardRef<HTMLDivElement, Card2TransformationBe
               <div className="text-primary-foreground/70 text-sm font-medium mb-2">Investment</div>
               <div className="text-4xl font-bold text-primary-foreground mb-2">KES 75,000</div>
               <div className="text-primary-foreground/60 text-sm mb-4">3-4 week delivery</div>
-              <button className="w-full px-6 py-3 bg-primary-foreground text-cyan-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
+              <button className="hs-beat__cta w-full px-6 py-3 bg-primary-foreground text-cyan-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
                 Start Your Refresh
               </button>
             </div>

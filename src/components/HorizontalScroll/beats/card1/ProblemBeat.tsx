@@ -13,7 +13,7 @@ const Card1ProblemBeat = forwardRef<HTMLDivElement>((_, ref) => {
       icon={<AlertCircle className="w-12 h-12" />}
       gradientClass="card1-beat-1"
     >
-      <div className="flex flex-wrap justify-center gap-4 mt-8">
+      <div className="hs-beat__tags-row flex flex-wrap justify-center gap-4 mt-8">
         {['No website', 'Outdated design', 'Zero SEO', 'Lost leads'].map((problem, i) => (
           <div
             key={problem}

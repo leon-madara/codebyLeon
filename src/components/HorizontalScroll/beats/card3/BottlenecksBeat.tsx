@@ -13,7 +13,7 @@ const Card3BottlenecksBeat = forwardRef<HTMLDivElement>((_, ref) => {
       icon={<Clock className="w-12 h-12" />}
       gradientClass="card3-beat-1"
     >
-      <div className="flex flex-wrap justify-center gap-4 mt-8">
+      <div className="hs-beat__tags-row flex flex-wrap justify-center gap-4 mt-8">
         {['Delayed campaigns', 'Inconsistent visuals', 'No bandwidth', 'Missed deadlines'].map((problem, i) => (
           <div
             key={problem}

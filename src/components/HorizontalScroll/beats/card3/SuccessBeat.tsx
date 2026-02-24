@@ -63,7 +63,7 @@ const Card3SuccessBeat = forwardRef<HTMLDivElement, Card3SuccessBeatProps>(({ sh
               <div className="text-primary-foreground/70 text-sm font-medium mb-2">Monthly retainer</div>
               <div className="text-4xl font-bold text-primary-foreground mb-2">KES 25,000 - 50,000</div>
               <div className="text-primary-foreground/60 text-sm mb-4">Flexible monthly plans</div>
-              <button className="w-full px-6 py-3 bg-primary-foreground text-emerald-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
+              <button className="hs-beat__cta w-full px-6 py-3 bg-primary-foreground text-emerald-dark rounded-xl font-semibold hover:bg-primary-foreground/90 transition-all duration-300">
                 Start Monthly Support
               </button>
             </div>

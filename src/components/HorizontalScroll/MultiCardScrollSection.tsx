@@ -251,10 +251,12 @@ const MultiCardScrollSection = () => {
           const totalTimelineDuration =
             (TOTAL_BEATS - 1) * (1 + beatDwellRatio) + finalBeatHoldRatio;
 
-          snapPoints = Array.from({ length: TOTAL_BEATS }, (_, beatIndex) => {
+          const beatSnapPoints = Array.from({ length: TOTAL_BEATS }, (_, beatIndex) => {
             if (totalTimelineDuration <= 0) return 0;
             return (beatIndex * (1 + beatDwellRatio)) / totalTimelineDuration;
           });
+
+          snapPoints = [...beatSnapPoints, 1];
         };
         recalculateDistances();
 
