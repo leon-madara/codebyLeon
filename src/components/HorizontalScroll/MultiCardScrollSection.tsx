@@ -19,7 +19,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const DESKTOP_BREAKPOINT = 1024;
 const TOTAL_BEATS = 4;
-const FINAL_BEAT_SCROLL_MULTIPLIER = 1.2;
+const DESKTOP_BEAT_DWELL_RATIO = 0.18;
+const MOBILE_BEAT_DWELL_RATIO = 0.08;
+const DESKTOP_FINAL_BEAT_HOLD_RATIO = 0.22;
+const MOBILE_FINAL_BEAT_HOLD_RATIO = 0.1;
+const SNAP_DURATION = { min: 0.2, max: 0.55 } as const;
 
 type BeatComponent = ForwardRefExoticComponent<RefAttributes<HTMLDivElement>>;
 
@@ -60,6 +64,8 @@ const createBeatRefMatrix = () => STORIES.map(() => Array<HTMLDivElement | null>
 
 const clampProgress = (value: number) => Math.min(1, Math.max(0, value));
 const getTargetSectionTop = (section: HTMLElement) => section.getBoundingClientRect().top + window.scrollY;
+const getNumericGsapValue = (value: string | number) =>
+  typeof value === 'number' ? value : Number.parseFloat(value);
 
 const MultiCardScrollSection = () => {
   const visualTestMode = isVisualTestMode();
@@ -225,19 +231,32 @@ const MultiCardScrollSection = () => {
           return isDesktop ? rect.width : rect.height;
         };
 
+        const beatDwellRatio = isDesktop ? DESKTOP_BEAT_DWELL_RATIO : MOBILE_BEAT_DWELL_RATIO;
+        const finalBeatHoldRatio = isDesktop
+          ? DESKTOP_FINAL_BEAT_HOLD_RATIO
+          : MOBILE_FINAL_BEAT_HOLD_RATIO;
+
+        let stepDistance = 0;
         let baseDistance = 0;
         let totalDistance = 0;
+        let snapPoints = [0];
+
         const recalculateDistances = () => {
-          const stepDistance = getStepDistance();
+          stepDistance = getStepDistance();
           baseDistance = stepDistance * (TOTAL_BEATS - 1);
-          totalDistance = baseDistance + stepDistance * (FINAL_BEAT_SCROLL_MULTIPLIER - 1);
+          totalDistance =
+            baseDistance +
+            stepDistance * ((TOTAL_BEATS - 1) * beatDwellRatio + finalBeatHoldRatio);
+
+          const totalTimelineDuration =
+            (TOTAL_BEATS - 1) * (1 + beatDwellRatio) + finalBeatHoldRatio;
+
+          snapPoints = Array.from({ length: TOTAL_BEATS }, (_, beatIndex) => {
+            if (totalTimelineDuration <= 0) return 0;
+            return (beatIndex * (1 + beatDwellRatio)) / totalTimelineDuration;
+          });
         };
         recalculateDistances();
-
-        const finalBeatHoldRatio = Math.max(
-          0,
-          TOTAL_BEATS > 1 ? (FINAL_BEAT_SCROLL_MULTIPLIER - 1) / (TOTAL_BEATS - 1) : 0
-        );
 
         gsap.set(track, { x: 0, y: 0 });
 
@@ -257,33 +276,58 @@ const MultiCardScrollSection = () => {
             onRefreshInit: recalculateDistances,
             onRefresh: recalculateDistances,
             snap: {
-              snapTo: (value: number) => Math.round(value * (TOTAL_BEATS - 1)) / (TOTAL_BEATS - 1),
-              duration: { min: 0.15, max: 0.45 },
-              delay: 0.05,
+              snapTo: (value: number) => {
+                let closest = snapPoints[0] ?? value;
+                let smallestDistance = Math.abs(value - closest);
+
+                for (let index = 1; index < snapPoints.length; index += 1) {
+                  const point = snapPoints[index];
+                  const distance = Math.abs(value - point);
+                  if (distance < smallestDistance) {
+                    smallestDistance = distance;
+                    closest = point;
+                  }
+                }
+
+                return closest;
+              },
+              duration: SNAP_DURATION,
+              delay: 0.03,
               ease: 'power2.out',
             },
             onEnter: () => setActiveCard(storyIndex),
             onEnterBack: () => setActiveCard(storyIndex),
-            onUpdate: (self) => {
-              const scrolledDistance = self.scroll() - self.start;
-              const mappedProgress = baseDistance > 0 ? clampProgress(scrolledDistance / baseDistance) : 0;
+            onUpdate: () => {
+              const trackOffset = getNumericGsapValue(
+                gsap.getProperty(track, isDesktop ? 'x' : 'y') as string | number
+              );
+              const travelledDistance = Number.isFinite(trackOffset)
+                ? Math.min(baseDistance, Math.abs(trackOffset))
+                : 0;
+              const mappedProgress = baseDistance > 0
+                ? clampProgress(travelledDistance / baseDistance)
+                : 0;
               updateStoryProgress(storyIndex, mappedProgress);
             },
           },
         });
 
-        if (isDesktop) {
-          timeline.to(track, {
-            x: () => -baseDistance,
-            ease: 'none',
-            duration: 1,
-          });
-        } else {
-          timeline.to(track, {
-            y: () => -baseDistance,
-            ease: 'none',
-            duration: 1,
-          });
+        for (let beatIndex = 0; beatIndex < TOTAL_BEATS - 1; beatIndex += 1) {
+          timeline.to({}, { duration: beatDwellRatio });
+
+          if (isDesktop) {
+            timeline.to(track, {
+              x: () => -(beatIndex + 1) * stepDistance,
+              ease: 'none',
+              duration: 1,
+            });
+          } else {
+            timeline.to(track, {
+              y: () => -(beatIndex + 1) * stepDistance,
+              ease: 'none',
+              duration: 1,
+            });
+          }
         }
 
         timeline.to({}, { duration: finalBeatHoldRatio });
