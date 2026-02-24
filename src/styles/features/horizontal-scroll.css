@@ -31,6 +31,10 @@
   --hs-cta-bg: hsl(var(--foreground));
   --hs-cta-fg: hsl(var(--background));
   --hs-cta-bg-hover: hsl(var(--foreground) / 0.9);
+  --hs-sidebar-step-bg: hsl(48 97% 54%);
+  --hs-sidebar-step-text: hsl(220 33% 9%);
+  --hs-sidebar-cta-bg: hsl(0 73% 50%);
+  --hs-sidebar-cta-bg-hover: hsl(0 73% 38%);
 
   position: relative;
   padding-bottom: 0;
@@ -57,6 +61,10 @@
   --hs-cta-bg: hsl(var(--foreground));
   --hs-cta-fg: hsl(var(--background));
   --hs-cta-bg-hover: hsl(var(--foreground) / 0.86);
+  --hs-sidebar-step-bg: hsl(48 97% 54%);
+  --hs-sidebar-step-text: hsl(220 33% 9%);
+  --hs-sidebar-cta-bg: hsl(0 73% 50%);
+  --hs-sidebar-cta-bg-hover: hsl(0 73% 38%);
 }
 
 .hs__top-chrome {
@@ -479,6 +487,7 @@
   gap: 0.35rem;
 }
 
+/* Tabs are chrome UI, not beat surfaces — rounded corners intentionally kept */
 .hs-tabs__button {
   position: relative;
   border: 0;
@@ -658,8 +667,8 @@
 }
 
 .hs-sidebar__step {
-  background: #facc15;
-  color: #0f172a;
+  background: var(--hs-sidebar-step-bg);
+  color: var(--hs-sidebar-step-text);
   border-radius: 0.65rem;
   padding: 0.55rem 0.9rem;
   font-size: 0.88rem;
@@ -673,15 +682,15 @@
   gap: 0.42rem;
   border: 0;
   border-radius: 0.8rem;
-  background: #dc2626;
-  color: #fff;
+  background: var(--hs-sidebar-cta-bg);
+  color: var(--hs-sidebar-step-text);
   font-weight: 600;
   padding: 0.7rem 1rem;
   transition: background 0.2s ease;
 }
 
 .hs-sidebar__cta:hover {
-  background: #b91c1c;
+  background: var(--hs-sidebar-cta-bg-hover);
 }
 
 .hs-sidebar__cta-icon {

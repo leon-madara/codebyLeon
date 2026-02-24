@@ -13,7 +13,7 @@ const Card2OutdatedBeat = forwardRef<HTMLDivElement>((_, ref) => {
       icon={<AlertTriangle className="w-12 h-12" />}
       gradientClass="card2-beat-1"
     >
-      <div className="hs-beat__tags-row flex flex-wrap justify-center gap-4 mt-8">
+      <div className="hs-beat__tags-row flex flex-wrap gap-4 mt-8">
         {['Dated design', 'Inconsistent branding', 'Poor mobile UX', 'Lost credibility'].map((problem, i) => (
           <div
             key={problem}

@@ -85,6 +85,7 @@ const MultiCardScrollSection = () => {
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
   const [topChromeHeight, setTopChromeHeight] = useState(168);
+  const topChromeHeightRef = useRef(168);
   const [sidebarHeight, setSidebarHeight] = useState(0);
 
   const syncViewportMode = useCallback(() => {
@@ -126,7 +127,10 @@ const MultiCardScrollSection = () => {
 
     const updateTopChromeHeight = () => {
       const nextHeight = Math.ceil(element.getBoundingClientRect().height);
-      if (nextHeight > 0) setTopChromeHeight(nextHeight);
+      if (nextHeight > 0) {
+        topChromeHeightRef.current = nextHeight;
+        setTopChromeHeight(nextHeight);
+      }
     };
 
     updateTopChromeHeight();
@@ -139,7 +143,10 @@ const MultiCardScrollSection = () => {
       resizeObserver.disconnect();
       window.removeEventListener('resize', updateTopChromeHeight);
     };
-  }, [activeCard]);
+    // Intentionally no activeCard dep — observer only needs to register once on mount.
+    // topChromeHeightRef stays in sync for useLayoutEffect to read without re-triggering it.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     const element = sidebarRef.current;
@@ -267,7 +274,7 @@ const MultiCardScrollSection = () => {
             trigger: section,
             pin: true,
             pinSpacing: true,
-            start: isDesktop ? `top top+=${topChromeHeight}` : 'top top',
+            start: isDesktop ? `top top+=${topChromeHeightRef.current}` : 'top top',
             end: () => {
               recalculateDistances();
               return `+=${totalDistance}`;
@@ -404,7 +411,7 @@ const MultiCardScrollSection = () => {
       scrollTriggersRef.current = [];
       ctx.revert();
     };
-  }, [isDesktop, isReady, topChromeHeight, updateStoryProgress, visualTestMode]);
+  }, [isDesktop, isReady, updateStoryProgress, visualTestMode]);
 
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,
