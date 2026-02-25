@@ -99,17 +99,111 @@
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.02em;
-  transition: background var(--duration-normal) var(--easing-standard), 
-              transform var(--duration-fast) var(--easing-standard);
+  transition: background var(--duration-normal) var(--easing-standard);
   border: none;
   cursor: pointer;
   display: inline-block;
+  position: relative;
+}
+
+/* CTA text wrapper for wave effect */
+.navigation__cta-text {
+  display: inline-block;
+  color: black;
 }
 
 .navigation__cta:hover {
-  background: rgba(252, 91, 69, 1);
-  transform: translateY(-2px);
-  color: black;
+  background: rgba(252, 91, 69, 0.7);
+}
+
+.navigation__cta:hover .navigation__cta-text {
+  background-image: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #D9751A 25%,
+    #000000 50%,
+    #D9751A 75%,
+    #ffffff 100%
+  );
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wave-text 2.5s linear infinite;
+}
+
+@keyframes wave-text {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Navigation CTA Tooltip - Desktop only */
+.navigation__cta-tooltip {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: var(--color-text-primary, #13100E);
+  color: var(--color-canvas-light, #F3F1F9);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-normal);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-normal) var(--easing-standard), 
+              transform var(--duration-normal) var(--easing-standard);
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: none;
+}
+
+/* Tooltip arrow */
+.navigation__cta-tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid var(--color-text-primary, #13100E);
+}
+
+/* Show tooltip on hover - Desktop only (≥900px) */
+@media (min-width: 900px) {
+  .navigation__cta-tooltip {
+    display: block;
+  }
+
+  .navigation__cta:hover .navigation__cta-tooltip {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+/* Dark mode tooltip */
+[data-theme="dark"] .navigation__cta-tooltip {
+  background: var(--color-canvas-light, #F3F1F9);
+  color: var(--color-text-primary, #13100E);
+}
+
+[data-theme="dark"] .navigation__cta-tooltip::before {
+  border-bottom-color: var(--color-canvas-light, #F3F1F9);
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .navigation__cta-tooltip {
+    transition: none;
+  }
 }
 
 /* Scrolled state modifier (for future use) */

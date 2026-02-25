@@ -544,6 +544,11 @@ class ServiceConfigurator {
             } catch (e) {
                 console.error('Error loading saved progress:', e);
             }
+        } else {
+            // No saved progress - ensure all cards start unselected
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
         }
     }
 

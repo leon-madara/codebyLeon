@@ -27,7 +27,16 @@ export function Navigation() {
           <li><Link to="/blog" state={{ preserveScroll: true }} className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>BLOG</Link></li>
         </ul>
 
-        <a href="/get-started.html" className="navigation__cta">GET IN TOUCH</a>
+        <a 
+          href="/get-started.html" 
+          className="navigation__cta"
+          aria-label="Build Your Quote - Configure your project and see pricing"
+        >
+          <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+          <span className="navigation__cta-tooltip" role="tooltip" aria-hidden="true">
+            Configure your project & see pricing
+          </span>
+        </a>
 
         {/* Theme Toggle */}
         <div className="navigation__theme-toggle">
