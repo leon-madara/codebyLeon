@@ -72,9 +72,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
     const triggerEl = scrollWrapperRef?.current || sectionRef.current;
     const getFadeTargets = (): Element[] => {
-      const navigationEl = document.querySelector('.navigation');
       return [
-        navigationEl,
         badgeRef.current,
         subheadlineRef.current,
         tagWrapperRef.current,
@@ -190,6 +188,8 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         }
       },
       onUpdate: (self) => {
+        const clampedProgress = Math.min(self.progress, 1);
+        const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
         const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
         document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
 
@@ -507,8 +507,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         }
 
         if (timelineRef.current) {
-          const clampedProgress = Math.min(self.progress, 1);
-          const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
           const isReverseScroll = self.direction < 0;
 
           if (!isReverseScroll || !hasReachedWordStageRef.current) {
@@ -537,7 +535,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
               reversePeelTlRef.current.progress(peelProgress);
 
               // Once reverse peel is fully completed, restore the base hero experience:
-              // navigation + content + typing loop (word iteration) and clear grown-word layer.
+              // content + typing loop (word iteration) and clear grown-word layer.
               if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
                 reverseCompletionAppliedRef.current = true;
                 showBaseHeroState(true);
@@ -580,7 +578,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   }, [isMobile, visualTestMode]);
 
   return (
-    <section ref={sectionRef} className="hero">
+    <section ref={sectionRef} id="hero" className="hero">
       <MouseTrail
         scopeRef={sectionRef}
         disabled={theme !== 'light' || visualTestMode || isMobile}

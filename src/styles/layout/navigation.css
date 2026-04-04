@@ -9,12 +9,18 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 100;
+  /* Keep navigation above non-interactive visual overlays (e.g. torch effect). */
+  z-index: 300;
   padding: var(--spacing-md);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.1);
   border-bottom: 1px solid var(--glass-border);
+  transition:
+    background var(--duration-normal) var(--easing-standard),
+    border-color var(--duration-normal) var(--easing-standard),
+    -webkit-backdrop-filter var(--duration-normal) var(--easing-standard),
+    backdrop-filter var(--duration-normal) var(--easing-standard);
 }
 
 /* Theme override for navigation */
@@ -201,6 +207,10 @@
 
 /* Respect reduced motion preference */
 @media (prefers-reduced-motion: reduce) {
+  .navigation {
+    transition: none;
+  }
+
   .navigation__cta-tooltip {
     transition: none;
   }

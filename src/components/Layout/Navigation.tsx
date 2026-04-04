@@ -1,11 +1,12 @@
 import { Link, useLocation } from 'react-router-dom';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useTheme } from '../../contexts/ThemeContext';
 
 export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
+  const isHomeRoute = location.pathname === '/';
 
-  // Helper function to determine if a link is active
   const isActiveLink = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
@@ -13,22 +14,50 @@ export function Navigation() {
     return location.pathname.startsWith(path);
   };
 
+  const getSectionHref = (sectionId: string) => {
+    if (isHomeRoute) {
+      return `#${sectionId}`;
+    }
+    return `/#${sectionId}`;
+  };
+
+  const handleSectionLinkClick = (sectionId: string) => (event: React.MouseEvent<HTMLAnchorElement>) => {
+    if (!isHomeRoute) return;
+    event.preventDefault();
+
+    const target = document.getElementById(sectionId);
+    if (!target) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const smoother = ScrollSmoother.get();
+
+    if (smoother) {
+      smoother.scrollTo(target, !prefersReducedMotion, 'top top');
+    } else {
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    }
+
+  };
+
   return (
-    <nav className="navigation">
+    <nav className="navigation" aria-label="Main navigation">
       <div className="navigation__container">
-        <Link to="/" className="navigation__logo">
+        <Link to="/#hero" className="navigation__logo" aria-label="Code by Leon home">
           <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
         <ul className="navigation__links">
-          <li><a href="#portfolio" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>PORTFOLIO</a></li>
-          <li><a href="#about" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>ABOUT</a></li>
-          <li><a href="#services" className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>SERVICES</a></li>
+          <li><a href={getSectionHref('portfolio')} onClick={handleSectionLinkClick('portfolio')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>PORTFOLIO</a></li>
+          <li><a href={getSectionHref('about')} onClick={handleSectionLinkClick('about')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>ABOUT</a></li>
+          <li><a href={getSectionHref('services')} onClick={handleSectionLinkClick('services')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>SERVICES</a></li>
           <li><Link to="/blog" state={{ preserveScroll: true }} className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>BLOG</Link></li>
         </ul>
 
-        <a 
-          href="/get-started.html" 
+        <a
+          href="/get-started.html"
           className="navigation__cta"
           aria-label="Build Your Quote - Configure your project and see pricing"
         >
@@ -38,7 +67,6 @@ export function Navigation() {
           </span>
         </a>
 
-        {/* Theme Toggle */}
         <div className="navigation__theme-toggle">
           <div
             className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}

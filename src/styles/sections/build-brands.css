@@ -3,6 +3,14 @@
    ============================================= */
 
 .build-brands {
+  --build-brands-primary-line: hsl(222 40% 20%);
+  --build-brands-primary-shadow: 0 12px 28px rgba(132, 150, 178, 0.32);
+  --build-brands-subtitle: hsl(220 23% 38%);
+  --build-brands-subtitle-hover: hsl(220 27% 31%);
+  --build-brands-accent-hover: hsl(27 84% 46%);
+  --build-brands-canvas-primary: rgb(34, 52, 84);
+  --build-brands-canvas-accent: rgb(217, 117, 26);
+  --build-brands-canvas-ambient-rgb: 112, 132, 168;
   position: relative;
   min-height: 100vh;
   width: 100%;
@@ -11,25 +19,79 @@
   justify-content: center;
   overflow: hidden;
   padding: clamp(4.5rem, 8vw, 8rem) 1rem;
-  background:
-    radial-gradient(circle at 50% 50%, rgba(18, 35, 77, 0.32) 0%, rgba(5, 14, 36, 0) 62%),
-    linear-gradient(180deg, #020817 0%, #010615 100%);
+  background: var(--canvas-base);
+  transition: background var(--duration-normal) ease;
+}
+
+[data-theme="dark"] .build-brands {
+  --build-brands-primary-line: hsl(210 33% 90%);
+  --build-brands-primary-shadow: 0 12px 30px rgba(3, 9, 27, 0.55);
+  --build-brands-subtitle: hsl(218 16% 60%);
+  --build-brands-subtitle-hover: hsl(219 18% 66%);
+  --build-brands-accent-hover: hsl(29 84% 58%);
+  --build-brands-canvas-primary: rgb(226, 234, 246);
+  --build-brands-canvas-accent: rgb(217, 117, 26);
+  --build-brands-canvas-ambient-rgb: 156, 173, 204;
+}
+
+.build-brands__orbs {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.build-brands__orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.7;
+  animation: morph 15s var(--easing-ease-in-out) infinite;
+}
+
+.build-brands__orb--purple {
+  width: 45vw;
+  height: 45vw;
+  background: var(--orb-purple);
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.build-brands__orb--orange {
+  width: 55vw;
+  height: 55vw;
+  background: var(--orb-orange);
+  top: 20%;
+  left: 30%;
+  animation-delay: -5s;
+}
+
+.build-brands__orb--blue {
+  width: 40vw;
+  height: 40vw;
+  background: var(--orb-blue);
+  bottom: -15%;
+  right: -10%;
+  animation-delay: -10s;
 }
 
 .build-brands__pattern {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
+  background-size: 12px 12px;
   pointer-events: none;
-  opacity: 0.36;
-  background-image: radial-gradient(circle, rgba(115, 136, 180, 0.22) 1px, transparent 1px);
-  background-size: 16px 16px;
 }
 
 .build-brands__canvas {
   position: absolute;
   inset: 0;
-  z-index: 2;
+  z-index: 3;
   width: 100%;
   height: 100%;
   pointer-events: none;
@@ -39,7 +101,7 @@
 
 .build-brands__content {
   position: relative;
-  z-index: 3;
+  z-index: 4;
   width: min(100%, 900px);
   text-align: center;
 }
@@ -69,8 +131,9 @@
 
 .build-brands__line {
   display: block;
-  color: hsl(210 33% 90%);
-  text-shadow: 0 12px 30px rgba(3, 9, 27, 0.55);
+  color: var(--build-brands-primary-line);
+  text-shadow: var(--build-brands-primary-shadow);
+  transition: color 0.24s ease, text-shadow 0.24s ease;
 }
 
 .build-brands__line--accent {
@@ -81,7 +144,7 @@
 .build-brands__subtitle {
   max-width: 36ch;
   margin: clamp(1.25rem, 2.8vw, 2rem) auto 0;
-  color: hsl(218 16% 60%);
+  color: var(--build-brands-subtitle);
   font-size: clamp(1.04rem, 1.7vw, 1.65rem);
   line-height: 1.45;
   transition: color 0.24s ease;
@@ -120,21 +183,16 @@
 }
 
 .build-brands:hover .build-brands__line--accent {
-  color: hsl(29 84% 58%);
+  color: var(--build-brands-accent-hover);
 }
 
 .build-brands:hover .build-brands__subtitle {
-  color: hsl(219 18% 66%);
+  color: var(--build-brands-subtitle-hover);
 }
 
 @media (max-width: 768px) {
   .build-brands {
     min-height: 82vh;
-  }
-
-  .build-brands__pattern {
-    background-size: 14px 14px;
-    opacity: 0.3;
   }
 
   .build-brands__title {

@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { isVisualTestMode } from "../../utils/runtimeFlags";
+import { useTheme } from "../../contexts/ThemeContext";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -19,6 +20,7 @@ const splitWords = (text: string) =>
 
 export function BuildBrands() {
   const visualTestMode = isVisualTestMode();
+  const { theme } = useTheme();
   const sectionRef = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const accentRef = useRef<HTMLSpanElement>(null);
@@ -277,6 +279,30 @@ export function BuildBrands() {
     let textParticles: TextParticle[] = [];
     let ambientParticles: AmbientParticle[] = [];
 
+    const isSectionInViewport = () => {
+      const rect = section.getBoundingClientRect();
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+      return rect.bottom > 0 && rect.top < viewportHeight;
+    };
+
+    const readThemePalette = () => {
+      const styles = window.getComputedStyle(section);
+      const primaryTextColor =
+        styles.getPropertyValue("--build-brands-canvas-primary").trim() || "rgb(226, 234, 246)";
+      const accentTextColor =
+        styles.getPropertyValue("--build-brands-canvas-accent").trim() || "rgb(217, 117, 26)";
+      const ambientRgb =
+        styles.getPropertyValue("--build-brands-canvas-ambient-rgb").trim() || "156, 173, 204";
+
+      return {
+        primaryTextColor,
+        accentTextColor,
+        ambientRgb,
+      };
+    };
+
+    let themePalette = readThemePalette();
+
     const getResponsiveTextSize = (base: number, min: number, max: number) =>
       Math.max(min, Math.min(max, width * base));
 
@@ -285,6 +311,7 @@ export function BuildBrands() {
       height = Math.max(1, Math.floor(section.clientHeight));
       canvas.width = width;
       canvas.height = height;
+      themePalette = readThemePalette();
 
       const offscreen = document.createElement("canvas");
       offscreen.width = width;
@@ -303,10 +330,10 @@ export function BuildBrands() {
       offCtx.textAlign = "center";
       offCtx.textBaseline = "middle";
       offCtx.font = `700 ${lineOneSize}px VTKSNoise, Georgia, serif`;
-      offCtx.fillStyle = "rgb(226, 234, 246)";
+      offCtx.fillStyle = themePalette.primaryTextColor;
       offCtx.fillText("We Build", centerX, lineOneY);
       offCtx.font = `700 ${lineTwoSize}px VTKSNoise, Georgia, serif`;
-      offCtx.fillStyle = "rgb(217, 117, 26)";
+      offCtx.fillStyle = themePalette.accentTextColor;
       offCtx.fillText("Brands", centerX, lineTwoY);
 
       const image = offCtx.getImageData(0, 0, width, height).data;
@@ -416,7 +443,7 @@ export function BuildBrands() {
       for (const particle of ambientParticles) {
         updateAmbientParticle(particle);
         context.beginPath();
-        context.fillStyle = `rgba(156, 173, 204, ${0.08 + particle.depth * 0.14})`;
+        context.fillStyle = `rgba(${themePalette.ambientRgb}, ${0.08 + particle.depth * 0.14})`;
         context.arc(particle.x, particle.y, particle.size * particle.depth, 0, Math.PI * 2);
         context.fill();
       }
@@ -453,6 +480,7 @@ export function BuildBrands() {
     };
 
     createScene();
+    sectionActiveRef.current = isSectionInViewport();
     section.addEventListener("mousemove", handleMouseMove);
     section.addEventListener("mouseleave", resetMouse);
     window.addEventListener("resize", handleResize);
@@ -464,9 +492,8 @@ export function BuildBrands() {
       section.removeEventListener("mouseleave", resetMouse);
       window.removeEventListener("resize", handleResize);
       if (resizeTimer) clearTimeout(resizeTimer);
-      sectionActiveRef.current = false;
     };
-  }, [desktopFxEnabled]);
+  }, [desktopFxEnabled, theme]);
 
   return (
     <section
@@ -475,6 +502,11 @@ export function BuildBrands() {
       className={`build-brands ${desktopFxEnabled ? "build-brands--desktop-fx" : ""}`.trim()}
       aria-labelledby="build-brands-title"
     >
+      <div className="build-brands__orbs" aria-hidden="true">
+        <div className="build-brands__orb build-brands__orb--purple"></div>
+        <div className="build-brands__orb build-brands__orb--orange"></div>
+        <div className="build-brands__orb build-brands__orb--blue"></div>
+      </div>
       <div className="build-brands__pattern" aria-hidden="true" />
       <canvas ref={canvasRef} className="build-brands__canvas" aria-hidden="true" />
 

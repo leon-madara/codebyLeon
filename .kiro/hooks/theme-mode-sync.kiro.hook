@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Theme Mode Sync",
+  "description": "When light or dark mode styles are modified, automatically generate or update the corresponding theme mode implementation",
+  "version": "1",
+  "when": {
+    "type": "postToolUse",
+    "toolTypes": [
+      "write"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if the recent changes involve light mode or dark mode styling (CSS custom properties, theme classes, or color tokens). If light mode was modified, generate the corresponding dark mode implementation following docs/theme_strategy.md. If dark mode was modified, generate the corresponding light mode implementation. Ensure both modes maintain visual consistency and follow the color mappings defined in the theme strategy."
+  }
+}

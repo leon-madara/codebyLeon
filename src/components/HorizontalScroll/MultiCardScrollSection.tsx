@@ -85,7 +85,9 @@ const MultiCardScrollSection = () => {
   const [showScrollHint, setShowScrollHint] = useState(true);
   const [showSidebar, setShowSidebar] = useState(false);
   const [topChromeHeight, setTopChromeHeight] = useState(168);
+  const [navHeight, setNavHeight] = useState(72);
   const topChromeHeightRef = useRef(168);
+  const navHeightRef = useRef(72);
 
   const syncViewportMode = useCallback(() => {
     setIsDesktop(window.innerWidth >= DESKTOP_BREAKPOINT);
@@ -145,6 +147,30 @@ const MultiCardScrollSection = () => {
     // Intentionally no activeCard dep — observer only needs to register once on mount.
     // topChromeHeightRef stays in sync for useLayoutEffect to read without re-triggering it.
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    const navElement = document.querySelector<HTMLElement>('.navigation');
+    if (!navElement) return;
+
+    const updateNavHeight = () => {
+      const nextHeight = navElement.offsetHeight;
+      if (nextHeight > 0) {
+        navHeightRef.current = nextHeight;
+        setNavHeight(nextHeight);
+      }
+    };
+
+    updateNavHeight();
+
+    const resizeObserver = new ResizeObserver(updateNavHeight);
+    resizeObserver.observe(navElement);
+    window.addEventListener('resize', updateNavHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener('resize', updateNavHeight);
+    };
   }, []);
 
   const updateStoryProgress = useCallback((storyIndex: number, progressValue: number) => {
@@ -386,6 +412,7 @@ const MultiCardScrollSection = () => {
 
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,
+    '--hs-nav-height': `${navHeight}px`,
   } as CSSProperties;
 
   return (

@@ -73,11 +73,12 @@ function App() {
   return (
     <ThemeProvider>
       <BrowserRouter>
+        <Navigation />
+        <ScrollToTop />
+
         <SmoothScrollShell visualTestMode={visualTestMode}>
           {!visualTestMode && <TorchEffect />}
           <BurningReveal />
-          <Navigation />
-          <ScrollToTop />
 
           <Suspense fallback={<RouteLoadingFallback message="Loading page..." />}>
             <Routes>
