@@ -3,6 +3,7 @@ import { BlogCard } from '../components/Blog/BlogCard';
 import { getAllBlogPosts, getAllCategories } from '../utils/blogUtils';
 import { BlogPost } from '../types/blog';
 import BlogCardSkeleton from '../components/Blog/BlogCardSkeleton';
+import { SITE_NAME, SITE_URL, getAbsoluteUrl, usePageSeo } from '../utils/seo';
 
 type SortOption = 'date' | 'title';
 
@@ -49,6 +50,37 @@ export function BlogListingPage() {
   // Get all blog posts and categories
   const allPosts = getAllBlogPosts();
   const categories = getAllCategories();
+
+  usePageSeo({
+    title: `Blog | ${SITE_NAME}`,
+    description:
+      'Practical web design, SEO, conversion, and business growth articles for Kenyan founders, teams, and service businesses.',
+    path: '/blog',
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      name: `${SITE_NAME} Blog`,
+      description:
+        'Practical web design, SEO, conversion, and business growth articles for Kenyan founders, teams, and service businesses.',
+      url: getAbsoluteUrl('/blog'),
+      publisher: {
+        '@type': 'Organization',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      blogPost: allPosts.map((post) => ({
+        '@type': 'BlogPosting',
+        headline: post.title,
+        description: post.description,
+        url: getAbsoluteUrl(`/blog/${post.slug}`),
+        datePublished: post.publishedDate,
+        author: {
+          '@type': 'Person',
+          name: post.author,
+        },
+      })),
+    },
+  });
 
   // Filter and sort posts based on current selections
   const filteredAndSortedPosts = useMemo(() => {

@@ -13,6 +13,7 @@ import { MultiCardScrollSection } from '../components/HorizontalScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 import { isVisualTestMode } from '../utils/runtimeFlags';
+import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_NAME, SITE_URL, usePageSeo } from '../utils/seo';
 
 /**
  * HomePage component that renders all sections of the home page
@@ -23,6 +24,46 @@ export function HomePage() {
   const heroRef = useRef<HeroHandle>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroWrapperRef = useRef<HTMLDivElement>(null);
+
+  usePageSeo({
+    title: DEFAULT_TITLE,
+    description: DEFAULT_DESCRIPTION,
+    path: '/',
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': `${SITE_URL}/#organization`,
+          name: SITE_NAME,
+          url: SITE_URL,
+          logo: `${SITE_URL}/icons/main-logo.svg`,
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${SITE_URL}/#website`,
+          name: SITE_NAME,
+          url: SITE_URL,
+          publisher: {
+            '@id': `${SITE_URL}/#organization`,
+          },
+        },
+        {
+          '@type': 'ProfessionalService',
+          '@id': `${SITE_URL}/#business`,
+          name: SITE_NAME,
+          url: SITE_URL,
+          areaServed: 'Kenya',
+          address: {
+            '@type': 'PostalAddress',
+            addressLocality: 'Nairobi',
+            addressCountry: 'KE',
+          },
+          serviceType: ['Web design', 'Website development', 'Brand identity', 'Conversion design'],
+        },
+      ],
+    },
+  });
 
   useGSAP(() => {
     if (isVisualTest) return;

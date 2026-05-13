@@ -6,6 +6,9 @@
  */
 
 import { BlogPost } from '../types/blog';
+import projectLogistics from '../assets/project-logistics.jpg';
+import projectRestaurant from '../assets/project-restaurant.jpg';
+import projectSaas from '../assets/project-saas.jpg';
 
 /**
  * Array of all blog posts
@@ -20,7 +23,7 @@ export const blogPosts: BlogPost[] = [
     description: "Common pitfalls that prevent your website from converting visitors into customers.",
     author: "Leon",
     publishedDate: "2025-01-15",
-    featuredImage: "/src/assets/images/blog/website-mistakes.jpg",
+    featuredImage: projectSaas,
     tags: ["web design", "conversion", "business", "user experience"],
     readTime: 5,
     content: `
@@ -210,7 +213,7 @@ Remember: Your website should work for you 24/7, converting visitors into custom
     description: "Real examples of how professional website redesigns transformed struggling businesses into thriving online presences.",
     author: "Leon",
     publishedDate: "2025-01-08",
-    featuredImage: "/src/assets/images/blog/transformation-case-studies.jpg",
+    featuredImage: projectRestaurant,
     tags: ["case studies", "web design", "transformation", "results"],
     readTime: 8,
     content: `
@@ -515,7 +518,7 @@ These transformations didn't happen by accident. They resulted from:
     description: "The data-driven approach to understanding why professional websites generate more leads and how to implement these strategies.",
     author: "Leon",
     publishedDate: "2025-01-01",
-    featuredImage: "/src/assets/images/blog/increase-inquiries.jpg",
+    featuredImage: projectLogistics,
     tags: ["business growth", "lead generation", "conversion", "strategy"],
     readTime: 7,
     content: `
