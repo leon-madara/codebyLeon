@@ -1,9 +1,3 @@
-import projectLogistics from "@/assets/project-logistics.jpg";
-import projectCreative from "@/assets/project-creative.jpg";
-import projectSaas from "@/assets/project-saas.jpg";
-import projectRestaurant from "@/assets/project-restaurant.jpg";
-import projectFintech from "@/assets/project-fintech.jpg";
-
 export interface Project {
   name: string;
   type: string;
@@ -21,78 +15,63 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: "Legit Logistics",
-    type: "B2B Logistics Platform",
+    name: "Kossy Langat",
+    type: "Professional Brand Website",
     category: "Small Business",
     description:
-      "A high-performance delivery service platform designed for immediate B2B conversion. Real-time tracking, fleet management, and automated dispatch.",
-    image: projectLogistics,
-    accentColor: "hsl(210 90% 50%)",
-    techStack: ["Next.js 14", "TypeScript", "Tailwind CSS", "Framer Motion"],
+      "A cinematic personal brand site for a structural engineer, built around trust, authority, mentorship, and a clear path to conversation.",
+    image: "/portfolio/kossy-langat.png",
+    accentColor: "hsl(28 78% 48%)",
+    techStack: ["Next.js", "TypeScript", "Tailwind CSS", "GSAP"],
     blobColors: {
-      purple: "hsl(230 70% 45%)",
-      orange: "hsl(200 80% 50%)",
-      blue: "hsl(190 90% 45%)",
+      purple: "hsl(165 48% 18%)",
+      orange: "hsl(28 78% 48%)",
+      blue: "hsl(52 86% 44%)",
     },
   },
   {
-    name: "Bloom Studio",
-    type: "Creative Agency",
+    name: "Reverie Reveal",
+    type: "Luxury Commerce Experience",
+    category: "Small Business",
+    description:
+      "A refined home and living storefront concept with soft editorial motion, product storytelling, and a premium furniture browsing experience.",
+    image: "/portfolio/reverie-reveal.png",
+    accentColor: "hsl(37 43% 59%)",
+    techStack: ["TanStack Start", "React", "Tailwind CSS", "GSAP"],
+    blobColors: {
+      purple: "hsl(26 28% 26%)",
+      orange: "hsl(37 43% 59%)",
+      blue: "hsl(32 18% 72%)",
+    },
+  },
+  {
+    name: "Leon Madara Portfolio",
+    type: "Case Study System",
+    category: "SaaS",
+    description:
+      "A portfolio system shaped around deep case studies, project proof, and structured storytelling for product-minded web work.",
+    image: "/portfolio/leon-madara-portfolio.png",
+    accentColor: "hsl(214 88% 62%)",
+    techStack: ["React", "Vite", "TypeScript", "GSAP"],
+    blobColors: {
+      purple: "hsl(155 74% 25%)",
+      orange: "hsl(0 72% 42%)",
+      blue: "hsl(214 88% 62%)",
+    },
+  },
+  {
+    name: "CodeByLeon",
+    type: "Studio Website",
     category: "Creative",
     description:
-      "An immersive portfolio for a design studio specializing in brand identity, digital experiences, and motion design for premium clients.",
-    image: projectCreative,
-    accentColor: "hsl(330 80% 55%)",
-    techStack: ["React", "GSAP", "Three.js", "Styled Components"],
+      "The current CodeByLeon site: a bold, animated studio presence designed to show craft, positioning, and conversion-ready web direction.",
+    image: "/portfolio/codebyleon.png",
+    accentColor: "hsl(18 88% 52%)",
+    techStack: ["React", "Vite", "TypeScript", "GSAP"],
     blobColors: {
-      purple: "hsl(330 70% 50%)",
-      orange: "hsl(25 95% 55%)",
-      blue: "hsl(280 60% 50%)",
-    },
-  },
-  {
-    name: "CloudSync Pro",
-    type: "SaaS Dashboard",
-    category: "SaaS",
-    description:
-      "Enterprise-grade analytics dashboard with real-time data pipelines, customizable widgets, and AI-powered insights for decision-makers.",
-    image: projectSaas,
-    accentColor: "hsl(270 60% 55%)",
-    techStack: ["Vue 3", "D3.js", "WebSocket", "PostgreSQL"],
-    blobColors: {
-      purple: "hsl(270 70% 50%)",
-      orange: "hsl(260 60% 45%)",
-      blue: "hsl(220 80% 55%)",
-    },
-  },
-  {
-    name: "Artisan Eats",
-    type: "Restaurant Platform",
-    category: "Small Business",
-    description:
-      "A luxury dining reservation and delivery platform featuring chef profiles, seasonal menus, and real-time table availability.",
-    image: projectRestaurant,
-    accentColor: "hsl(35 90% 50%)",
-    techStack: ["React Native", "Node.js", "Stripe", "Firebase"],
-    blobColors: {
-      purple: "hsl(15 70% 40%)",
-      orange: "hsl(35 90% 50%)",
-      blue: "hsl(45 80% 45%)",
-    },
-  },
-  {
-    name: "NexGen Finance",
-    type: "Fintech Application",
-    category: "SaaS",
-    description:
-      "A next-generation trading platform with real-time market data, portfolio management, and AI-driven investment recommendations.",
-    image: projectFintech,
-    accentColor: "hsl(150 70% 40%)",
-    techStack: ["Angular", "RxJS", "Chart.js", "Kubernetes"],
-    blobColors: {
-      purple: "hsl(160 60% 35%)",
-      orange: "hsl(140 70% 40%)",
-      blue: "hsl(170 80% 35%)",
+      purple: "hsl(246 86% 68%)",
+      orange: "hsl(18 88% 52%)",
+      blue: "hsl(204 87% 67%)",
     },
   },
 ];

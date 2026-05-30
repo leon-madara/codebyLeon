@@ -260,6 +260,15 @@ const PortfolioCarousel = () => {
           y = step < 0 ? (isDesktop ? -32 : -80) : isDesktop ? 46 : 100;
         }
 
+        if (!isDesktop && step !== 0) {
+          opacity = 0;
+          zIndex = 0;
+          scale = 0.94;
+          rotateY = 0;
+          x = 0;
+          y = 24;
+        }
+
         gsap.to(card, {
           x,
           y,
@@ -773,8 +782,8 @@ const PortfolioCarousel = () => {
           </div>
         </div>
 
-        <div className="relative z-10 mx-auto flex h-[calc(100vh-200px)] w-full max-w-[1280px] flex-col items-center gap-8 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
-          <div className="flex w-full max-w-xl flex-1 flex-col justify-center md:max-w-[34rem] md:flex-[0_1_34rem]">
+        <div className="relative z-10 mx-auto flex h-[calc(100vh-200px)] w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
+          <div className="relative z-20 flex w-full max-w-xl flex-1 flex-col justify-center md:max-w-[34rem] md:flex-[0_1_34rem]">
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase">
               {currentProject.type}
             </p>
@@ -802,10 +811,10 @@ const PortfolioCarousel = () => {
             </button>
           </div>
 
-          <div className="portfolio-carousel__cards-wrap flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
+          <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
             <div
               ref={cardsContainerRef}
-              className="relative h-[420px] w-[320px] sm:h-[500px] sm:w-[380px] md:h-[500px] md:w-[360px] lg:h-[560px] lg:w-[420px]"
+              className="relative h-[260px] w-[195px] sm:h-[500px] sm:w-[380px] md:h-[500px] md:w-[360px] lg:h-[560px] lg:w-[420px]"
             >
               {filteredProjects.map((project) => (
                 <div
