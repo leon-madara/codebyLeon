@@ -454,7 +454,7 @@ const PortfolioCarousel = () => {
 
         <div className="portfolio-carousel__overlay dot-grid absolute inset-0 pointer-events-none" />
 
-        <div className="relative z-10 px-8 pt-8 md:px-16">
+        <div className="portfolio-carousel__header relative z-10 px-8 md:px-16">
           <h2 className="portfolio-carousel__display text-2xl text-center text-foreground md:text-3xl">
             Our Work
           </h2>
@@ -463,7 +463,7 @@ const PortfolioCarousel = () => {
           </p>
         </div>
 
-        <div className="relative z-10 mx-auto flex h-[calc(100vh-200px)] w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
+        <div className="portfolio-carousel__content relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
           <div className="relative z-20 flex w-full max-w-xl flex-1 flex-col justify-center md:max-w-[34rem] md:flex-[0_1_34rem]">
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase">
               {currentProject.type}

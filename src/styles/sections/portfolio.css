@@ -9,13 +9,14 @@
   z-index: 5;
   min-height: 80vh;
   width: 100%;
-  padding: 5rem 1rem 3rem;
+  padding: calc(5rem + 68px) 1rem 3rem;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   background: var(--canvas-base);
   transition: background var(--duration-normal) ease;
+  scroll-margin-top: 68px;
   --portfolio-showcase-radius: 24px;
   --portfolio-showcase-accent: rgba(217, 117, 26, 0.22);
 }
@@ -465,7 +466,7 @@
 /* Tablet and up */
 @media (min-width: 640px) {
   .portfolio {
-    --portfolio-pad-top: clamp(4.75rem, 8vh, 5.75rem);
+    --portfolio-pad-top: clamp(calc(4.75rem + 68px), calc(8vh + 68px), calc(5.75rem + 68px));
     --portfolio-pad-bottom: clamp(0.9rem, 2.2vh, 1.35rem);
     padding: var(--portfolio-pad-top) clamp(1.25rem, 2.2vw, 2rem) var(--portfolio-pad-bottom);
     min-height: 100vh;

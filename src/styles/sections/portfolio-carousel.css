@@ -21,6 +21,8 @@
 
   position: relative;
   cursor: none;
+  padding-top: var(--nav-height, 72px);
+  box-sizing: border-box;
 }
 
 [data-theme="dark"] .portfolio-carousel {
@@ -36,7 +38,7 @@
 }
 
 .portfolio-carousel .portfolio-carousel__display {
-  font-family: "Frijole", cursive;
+  font-family: var(--font-heading);
 }
 
 .portfolio-carousel .glass {
@@ -181,5 +183,25 @@
     animation-duration: 0.01ms;
     animation-iteration-count: 1;
     transition-duration: 0.01ms;
+  }
+}
+
+.portfolio-carousel__header {
+  position: relative;
+  z-index: 10;
+  padding-top: var(--spacing-md);
+}
+
+.portfolio-carousel__content {
+  height: calc(100vh - 190px - var(--nav-height, 72px));
+}
+
+@media (min-width: 768px) {
+  .portfolio-carousel__header {
+    padding-top: var(--spacing-lg);
+  }
+
+  .portfolio-carousel__content {
+    height: calc(100vh - 180px - var(--nav-height, 72px));
   }
 }
