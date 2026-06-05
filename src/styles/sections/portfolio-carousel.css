@@ -18,21 +18,6 @@
   --portfolio-control-text: hsla(214 45% 18% / 0.75);
   --portfolio-control-text-hover: hsla(214 45% 12% / 0.95);
   --portfolio-pill-text: hsla(214 45% 18% / 0.8);
-  --portfolio-filter-shell-bg: hsl(0 0% 82%);
-  --portfolio-filter-shell-border: hsl(0 0% 8%);
-  --portfolio-filter-trigger-bg: hsl(0 0% 4%);
-  --portfolio-filter-trigger-border: hsl(0 0% 0%);
-  --portfolio-filter-trigger-text: hsl(0 0% 98%);
-  --portfolio-filter-trigger-icon-bg: hsl(0 0% 100% / 0.15);
-  --portfolio-filter-trigger-icon-border: hsl(0 0% 100% / 0.26);
-  --portfolio-filter-pill-bg: hsl(0 0% 74% / 0.88);
-  --portfolio-filter-pill-bg-hover: hsl(0 0% 87%);
-  --portfolio-filter-pill-border: hsl(0 0% 58% / 0.45);
-  --portfolio-filter-pill-text: hsl(0 0% 16%);
-  --portfolio-filter-pill-active-bg: hsl(0 0% 7%);
-  --portfolio-filter-pill-active-border: hsl(0 0% 0%);
-  --portfolio-filter-pill-active-text: hsl(0 0% 96%);
-  --portfolio-filter-shadow: 0 12px 24px hsla(0 0% 0% / 0.24);
 
   position: relative;
   cursor: none;
@@ -48,21 +33,6 @@
   --portfolio-control-text: hsla(0 0% 100% / 0.7);
   --portfolio-control-text-hover: hsla(0 0% 100% / 1);
   --portfolio-pill-text: hsla(0 0% 100% / 0.78);
-  --portfolio-filter-shell-bg: hsl(0 0% 88% / 0.88);
-  --portfolio-filter-shell-border: hsl(0 0% 22%);
-  --portfolio-filter-trigger-bg: hsl(0 0% 5%);
-  --portfolio-filter-trigger-border: hsl(0 0% 0%);
-  --portfolio-filter-trigger-text: hsl(0 0% 98%);
-  --portfolio-filter-trigger-icon-bg: hsl(0 0% 100% / 0.15);
-  --portfolio-filter-trigger-icon-border: hsl(0 0% 100% / 0.26);
-  --portfolio-filter-pill-bg: hsl(0 0% 91% / 0.85);
-  --portfolio-filter-pill-bg-hover: hsl(0 0% 98%);
-  --portfolio-filter-pill-border: hsl(0 0% 100% / 0.48);
-  --portfolio-filter-pill-text: hsl(0 0% 14%);
-  --portfolio-filter-pill-active-bg: hsl(0 0% 9%);
-  --portfolio-filter-pill-active-border: hsl(0 0% 0%);
-  --portfolio-filter-pill-active-text: hsl(0 0% 96%);
-  --portfolio-filter-shadow: 0 14px 26px hsla(0 0% 0% / 0.36);
 }
 
 .portfolio-carousel .portfolio-carousel__display {
@@ -151,131 +121,6 @@
   pointer-events: none;
 }
 
-.portfolio-carousel .portfolio-carousel__filter-row {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-}
-
-.portfolio-carousel .portfolio-filter {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  width: max-content;
-  max-width: min(100%, 54rem);
-  height: auto;
-  border-radius: 9999px;
-  border: 1px solid var(--portfolio-filter-shell-border);
-  background: var(--portfolio-filter-shell-bg);
-  box-shadow: var(--portfolio-filter-shadow);
-  padding: 0.425rem;
-  overflow: hidden;
-  will-change: width;
-}
-
-.portfolio-carousel .portfolio-filter__trigger {
-  position: relative;
-  z-index: 1;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.51rem;
-  height: 2.72rem;
-  border-radius: 9999px;
-  border: 1px solid var(--portfolio-filter-trigger-border);
-  background: var(--portfolio-filter-trigger-bg);
-  color: var(--portfolio-filter-trigger-text);
-  font-size: 0.765rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
-  padding: 0 1.275rem 0 1.06rem;
-  cursor: pointer;
-  transition: filter 0.24s ease;
-}
-
-.portfolio-carousel .portfolio-filter__trigger.is-open .portfolio-filter__trigger-icon {
-  order: 2;
-}
-
-.portfolio-carousel .portfolio-filter__trigger.is-open .portfolio-filter__trigger-label {
-  order: 1;
-}
-
-.portfolio-carousel .portfolio-filter__trigger:hover {
-  filter: brightness(1.05);
-}
-
-.portfolio-carousel .portfolio-filter__trigger:focus-visible,
-.portfolio-carousel .portfolio-filter__pill:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px hsl(var(--ring) / 0.52);
-}
-
-.portfolio-carousel .portfolio-filter__trigger-icon {
-  width: 1.44rem;
-  height: 1.44rem;
-  border-radius: 9999px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--portfolio-filter-trigger-icon-border);
-  background: var(--portfolio-filter-trigger-icon-bg);
-}
-
-.portfolio-carousel .portfolio-filter__trigger-label {
-  order: 2;
-  display: inline-flex;
-  align-items: center;
-  white-space: nowrap;
-}
-
-.portfolio-carousel .portfolio-filter__rail {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.52rem;
-  min-width: 0;
-  padding: 0 0.6rem 0 0.62rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  clip-path: inset(0 100% 0 0);
-}
-
-.portfolio-carousel .portfolio-filter__rail::-webkit-scrollbar {
-  display: none;
-}
-
-.portfolio-carousel .portfolio-filter__pill {
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 2.38rem;
-  padding: 0 1.275rem;
-  border-radius: 9999px;
-  border: 1px solid var(--portfolio-filter-pill-border);
-  background: var(--portfolio-filter-pill-bg);
-  color: var(--portfolio-filter-pill-text);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: 0;
-  line-height: 1;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
-}
-
-.portfolio-carousel .portfolio-filter__pill:hover {
-  background: var(--portfolio-filter-pill-bg-hover);
-}
-
-.portfolio-carousel .portfolio-filter__pill.is-active {
-  background: var(--portfolio-filter-pill-active-bg);
-  border-color: var(--portfolio-filter-pill-active-border);
-  color: var(--portfolio-filter-pill-active-text);
-}
-
 .portfolio-carousel .view-details-btn {
   background: var(--portfolio-glass-strong-bg);
   border: 1px solid var(--portfolio-glass-strong-border);
@@ -326,23 +171,6 @@
     display: none;
   }
 
-  .portfolio-carousel .portfolio-filter {
-    max-width: 100%;
-    height: auto;
-    padding: 0.3rem;
-  }
-
-  .portfolio-carousel .portfolio-filter__trigger {
-    height: 2.55rem;
-    padding: 0 1.06rem 0 0.935rem;
-    font-size: 0.765rem;
-  }
-
-  .portfolio-carousel .portfolio-filter__pill {
-    height: 2.21rem;
-    padding: 0 1.06rem;
-    font-size: 0.72rem;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
