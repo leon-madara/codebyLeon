@@ -2,10 +2,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BlogPost } from '../../types/blog';
 import SafeImage from '../SafeImage';
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { BlogPost } from '../../types/blog';
-import SafeImage from '../SafeImage';
 
 interface BlogCardProps {
   post: BlogPost;
