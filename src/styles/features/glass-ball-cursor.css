@@ -1,0 +1,129 @@
+/* =============================================
+   GLASS BALL CURSOR
+   Lightweight fixed Three.js cursor overlay
+   ============================================= */
+
+.glass-ball-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0;
+  transform: translate3d(-999px, -999px, 0);
+  transition: opacity 180ms ease, scale 180ms ease;
+  scale: 0.85;
+  will-change: transform, opacity, scale;
+}
+
+.glass-ball-cursor[data-active='true'] {
+  opacity: 1;
+  scale: 1;
+}
+
+.glass-ball-cursor__canvas {
+  display: block;
+  width: 160px;
+  height: 160px;
+  pointer-events: none;
+}
+
+/* =============================================
+   CURSOR SWITCHER PILL
+   ============================================= */
+
+.cursor-switcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  background: rgba(10, 15, 13, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 9999px;
+  z-index: 9998;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  user-select: none;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(16px) scale(0.95);
+  transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cursor-switcher[data-active='true'] {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+[data-theme='light'] .cursor-switcher {
+  background: rgba(242, 239, 253, 0.75);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.cursor-switcher__indicator {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  width: calc(25% - 6px); /* 4 buttons total */
+  background: #fc5b45; /* Brand accent color matching build brands and cta */
+  border-radius: 9999px;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 1;
+  box-shadow: 0 2px 8px rgba(252, 91, 69, 0.4);
+}
+
+.cursor-switcher__btn {
+  position: relative;
+  z-index: 2;
+  width: 72px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  font-family: 'Outfit', 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  border-radius: 9999px;
+  outline: none;
+  transition: color 0.2s ease;
+}
+
+.cursor-switcher__btn:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.cursor-switcher__btn.is-active {
+  color: #ffffff;
+}
+
+[data-theme='light'] .cursor-switcher__btn {
+  color: rgba(0, 0, 0, 0.5);
+}
+
+[data-theme='light'] .cursor-switcher__btn:hover {
+  color: rgba(0, 0, 0, 0.85);
+}
+
+[data-theme='light'] .cursor-switcher__btn.is-active {
+  color: #ffffff;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .glass-ball-cursor,
+  .cursor-switcher {
+    display: none !important;
+  }
+}
