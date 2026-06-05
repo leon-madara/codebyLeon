@@ -19,10 +19,11 @@ import '../styles/sections/blog-post.css';
 // Structured data for SEO
 const createBlogPostStructuredData = (blogPost: BlogPost): Record<string, unknown> => {
   const canonicalUrl = getAbsoluteUrl(`/blog/${blogPost.slug}`);
+  const combinedTitle = blogPost.titleItalic ? `${blogPost.title} ${blogPost.titleItalic}` : blogPost.title;
   const structuredData: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
-    headline: blogPost.title,
+    headline: combinedTitle,
     description: blogPost.description,
     author: {
       '@type': 'Person',
@@ -56,7 +57,7 @@ const createBlogPostStructuredData = (blogPost: BlogPost): Record<string, unknow
     structuredData.image = {
       '@type': 'ImageObject',
       url: getAbsoluteUrl(blogPost.featuredImage),
-      caption: blogPost.title,
+      caption: combinedTitle,
     };
   }
 
@@ -84,6 +85,7 @@ const BlogPostPage: React.FC = () => {
   const slugIndex = allPosts.findIndex(p => p.slug === slug);
   const activeIndex = slugIndex !== -1 ? slugIndex : 0;
   const post = allPosts[activeIndex];
+  const postTitle = post ? (post.titleItalic ? `${post.title} ${post.titleItalic}` : post.title) : '';
 
   const [isScrollHidden, setIsScrollHidden] = useState(false);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
@@ -183,12 +185,12 @@ const BlogPostPage: React.FC = () => {
 
   // Set Page SEO
   usePageSeo(post ? {
-    title: `${post.title} | ${SITE_NAME} Blog`,
+    title: `${postTitle} | ${SITE_NAME} Blog`,
     description: post.description,
     path: `/blog/${post.slug}`,
     type: 'article',
     image: post.featuredImage,
-    imageAlt: post.title,
+    imageAlt: postTitle,
     author: post.author,
     publishedTime: post.publishedDate,
     modifiedTime: post.publishedDate,
@@ -304,7 +306,7 @@ const BlogPostPage: React.FC = () => {
           <div className="v1-share">
             <div className="v1-share-label">Share</div>
             <a 
-              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(post.title)}`}
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(postTitle)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="v1-share-btn btn-x"
@@ -313,7 +315,7 @@ const BlogPostPage: React.FC = () => {
               X
             </a>
             <a 
-              href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(post.title)}`}
+              href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(postTitle)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="v1-share-btn btn-linkedin"
@@ -379,6 +381,7 @@ const BlogPostPage: React.FC = () => {
 
                       <h1 className="v1-title">
                         <span className="v1-title-main">{p.title}</span>
+                        {p.titleItalic && <em>{p.titleItalic}</em>}
                       </h1>
 
                       <div className="v1-author">

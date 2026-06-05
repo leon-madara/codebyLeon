@@ -578,7 +578,8 @@ describe('getBlogPostBySlug', () => {
     const post = getBlogPostBySlug('3-mistakes-your-business-website-is-making');
     expect(post).toBeDefined();
     expect(post?.slug).toBe('3-mistakes-your-business-website-is-making');
-    expect(post?.title).toBe('3 Mistakes Your Business Website is Making');
+    expect(post?.title).toBe('3 Mistakes Your');
+    expect(post?.titleItalic).toBe('Business Website is Making');
   });
 
   it('should return blog post for second valid slug', () => {

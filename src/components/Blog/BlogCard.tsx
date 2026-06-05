@@ -2,6 +2,10 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BlogPost } from '../../types/blog';
 import SafeImage from '../SafeImage';
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { BlogPost } from '../../types/blog';
+import SafeImage from '../SafeImage';
 
 interface BlogCardProps {
   post: BlogPost;
@@ -10,6 +14,7 @@ interface BlogCardProps {
 
 export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
   const navigate = useNavigate();
+  const combinedTitle = post.titleItalic ? `${post.title} ${post.titleItalic}` : post.title;
 
   const handleCardClick = () => {
     navigate(`/blog/${post.slug}`);
@@ -38,21 +43,21 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
       onKeyDown={handleKeyDown}
       tabIndex={0}
       role="button"
-      aria-label={`Read blog post: ${post.title}`}
+      aria-label={`Read blog post: ${combinedTitle}`}
     >
       {/* Featured Image (if available) */}
       {post.featuredImage && (
         <div className="card__media">
           <SafeImage
             src={post.featuredImage}
-            alt={post.title}
+            alt={combinedTitle}
             className="card__image"
             fallbackType="gradient"
             placeholderText={post.category}
             onError={(error) => {
               console.warn('Blog card image failed to load:', {
                 src: post.featuredImage,
-                title: post.title,
+                title: combinedTitle,
                 error: error.toString()
               });
             }}
@@ -62,7 +67,7 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
       
       <div className="card__content">
         <span className="card__category">{post.category}</span>
-        <h3 className="card__title">{post.title}</h3>
+        <h3 className="card__title">{combinedTitle}</h3>
         <p className="card__description">{post.description}</p>
         
         <div className="card__meta">
