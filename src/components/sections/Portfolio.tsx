@@ -1,14 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef } from 'react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 
-type FilterType = 'all' | 'small-business' | 'creative';
-
 export function Portfolio() {
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
   const sectionRef = useRef<HTMLElement>(null);
-  const sliderRef = useRef<HTMLDivElement>(null);
-  const filtersRef = useRef<HTMLDivElement>(null);
-  const buttonRefs = useRef<Map<FilterType, HTMLButtonElement>>(new Map());
 
   // Scroll animation
   useScrollAnimation(sectionRef, {
@@ -16,7 +10,7 @@ export function Portfolio() {
     start: 'top 80%',
     animateHeadline: true,
     animateSubheadline: true,
-    animateFilters: true,
+    animateFilters: false,
     animateItems: true,
   });
 
@@ -25,41 +19,6 @@ export function Portfolio() {
     { id: 2, category: 'creative', name: 'Client Name', type: 'Creative Professional' },
     { id: 3, category: 'small-business', name: 'Client Name', type: 'Small Service Business' },
   ];
-
-  const filteredItems = activeFilter === 'all' 
-    ? portfolioItems 
-    : portfolioItems.filter(item => item.category === activeFilter);
-
-  const updateSliderPosition = (filter: FilterType) => {
-    const button = buttonRefs.current.get(filter);
-    const slider = sliderRef.current;
-    const filtersContainer = filtersRef.current;
-
-    if (!button || !slider || !filtersContainer) return;
-
-    const filtersRect = filtersContainer.getBoundingClientRect();
-    const buttonRect = button.getBoundingClientRect();
-
-    const left = buttonRect.left - filtersRect.left;
-    const width = buttonRect.width;
-
-    slider.style.width = `${width}px`;
-    slider.style.left = `${left}px`;
-  };
-
-  useEffect(() => {
-    setTimeout(() => updateSliderPosition(activeFilter), 100);
-  }, [activeFilter]);
-
-  useEffect(() => {
-    const handleResize = () => updateSliderPosition(activeFilter);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [activeFilter]);
-
-  const handleFilterClick = (filter: FilterType) => {
-    setActiveFilter(filter);
-  };
 
   return (
     <section id="portfolio" className="content-section" ref={sectionRef}>
@@ -80,33 +39,8 @@ export function Portfolio() {
           See how we've helped Kenyan businesses look professional and attract better clients.
         </p>
 
-        <div className="portfolio-filters" ref={filtersRef}>
-          <div className="filter-slider" ref={sliderRef}></div>
-          <button
-            ref={el => el && buttonRefs.current.set('all', el)}
-            className={`filter-btn ${activeFilter === 'all' ? 'active' : ''}`}
-            onClick={() => handleFilterClick('all')}
-          >
-            All Projects
-          </button>
-          <button
-            ref={el => el && buttonRefs.current.set('small-business', el)}
-            className={`filter-btn ${activeFilter === 'small-business' ? 'active' : ''}`}
-            onClick={() => handleFilterClick('small-business')}
-          >
-            Small Business
-          </button>
-          <button
-            ref={el => el && buttonRefs.current.set('creative', el)}
-            className={`filter-btn ${activeFilter === 'creative' ? 'active' : ''}`}
-            onClick={() => handleFilterClick('creative')}
-          >
-            Creative Professional
-          </button>
-        </div>
-
         <div className="portfolio-grid">
-          {filteredItems.map(item => (
+          {portfolioItems.map(item => (
             <div key={item.id} className="portfolio-item">
               <div className="portfolio-image-placeholder">
                 <p>Project Image</p>
