@@ -7,7 +7,6 @@ import { Portfolio } from '../components/sections/Portfolio'; // OLD - kept for 
 import PortfolioCarousel from '../components/sections/PortfolioCarousel'; // NEW
 // import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
 // import { About } from '../components/sections/About'; // OLD
-import { BuildBrands } from '../components/sections/BuildBrands';
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
 import { Blog } from '../components/sections/Blog';
@@ -110,7 +109,6 @@ export function HomePage() {
       {/* OLD: Original Portfolio (commented for rollback)
       <Portfolio />
       */}
-      <BuildBrands />
       <About3DStack />
       <MultiCardScrollSection />
       <Blog />
