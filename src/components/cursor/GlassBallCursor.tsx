@@ -164,6 +164,7 @@ export function GlassBallCursor() {
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isCursorActive, setIsCursorActive] = useState(false);
+  const [isSectionVisible, setIsSectionVisible] = useState(false);
 
   // Switcher state: 'glass' (Clear Sphere), 'torus' (Glass Torus), 'crystal' (Faceted Crystal), 'glossy' (Glossy Blue Sphere)
   const [cursorType, setCursorType] = useState<'glass' | 'torus' | 'crystal' | 'glossy'>('glossy');
@@ -171,6 +172,35 @@ export function GlassBallCursor() {
   useEffect(() => {
     setPortalHost(document.body);
   }, []);
+
+  useEffect(() => {
+    if (!isEnabled) {
+      return;
+    }
+
+    if (typeof window === 'undefined' || typeof window.IntersectionObserver === 'undefined') {
+      setIsSectionVisible(true);
+      return;
+    }
+
+    const section = document.querySelector(OUR_WORK_SECTION_SELECTOR);
+    if (!section) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSectionVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+      }
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, [isEnabled]);
 
   useEffect(() => {
     if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
@@ -540,7 +570,7 @@ export function GlassBallCursor() {
       <div 
         className="cursor-switcher" 
         data-theme={theme} 
-        data-active={isCursorActive ? 'true' : 'false'}
+        data-active={isSectionVisible ? 'true' : 'false'}
       >
         <div
           className="cursor-switcher__indicator"
