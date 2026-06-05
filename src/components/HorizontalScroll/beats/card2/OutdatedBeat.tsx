@@ -1,33 +1,23 @@
-import { AlertTriangle } from 'lucide-react';
-import StoryBeat from '../../StoryBeat';
 import { forwardRef } from 'react';
+import { AlertTriangle } from 'lucide-react';
+import { BeatCard } from '../../BeatCard';
+import image from '@/assets/horizontal-scroll/5.png';
 
-const Card2OutdatedBeat = forwardRef<HTMLDivElement>((_, ref) => {
+const Card2OutdatedBeat = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <StoryBeat
+    <BeatCard
       ref={ref}
-      index={0}
-      title="The Outdated"
-      subtitle="Your brand no longer reflects who you are"
-      description="You've evolved, but your digital presence hasn't. Your website feels dated, your branding is inconsistent, and it's silently losing you credibility."
-      icon={<AlertTriangle className="w-12 h-12" />}
-      gradientClass="card2-beat-1"
-    >
-      <div className="hs-beat__tags-row flex flex-wrap gap-4 mt-8">
-        {['Dated design', 'Inconsistent branding', 'Poor mobile UX', 'Lost credibility'].map((problem, i) => (
-          <div
-            key={problem}
-            className="problem-tag px-4 py-2 bg-background/10 backdrop-blur-sm rounded-full text-primary-foreground/90 text-sm font-medium border border-background/20"
-            style={{ '--animation-delay': `${i * 0.1}s` } as React.CSSProperties}
-          >
-            {problem}
-          </div>
-        ))}
-      </div>
-    </StoryBeat>
+      step={1}
+      totalSteps={4}
+      tagText="OUTDATED"
+      imageSrc={image}
+      icon={<AlertTriangle className="w-6 h-6" style={{ color: 'var(--color-primary, #10B981)' }} />}
+      heading="The Outdated"
+      subheading="Your brand no longer reflects who you are"
+      body="You've evolved, but your digital presence hasn't. Your website feels dated, your branding is inconsistent, and it's silently losing you credibility."
+    />
   );
 });
 
 Card2OutdatedBeat.displayName = 'Card2OutdatedBeat';
-
 export default Card2OutdatedBeat;
