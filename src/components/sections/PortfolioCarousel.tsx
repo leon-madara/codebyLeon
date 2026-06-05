@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,27 +8,16 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Lock,
-  LockOpen,
 } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const CATEGORIES = ["All", "Small Business", "SaaS", "Creative"] as const;
 const getElementTop = (element: HTMLElement) => element.getBoundingClientRect().top + window.scrollY;
 
 const PortfolioCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
-  const filterShellRef = useRef<HTMLDivElement>(null);
-  const filterTriggerRef = useRef<HTMLButtonElement>(null);
-  const filterTriggerIconRef = useRef<HTMLSpanElement>(null);
-  const filterTriggerLabelRef = useRef<HTMLSpanElement>(null);
-  const filterRailRef = useRef<HTMLDivElement>(null);
-  const filterPillRefs = useRef<(HTMLButtonElement | null)[]>([]);
-  const filterTimelineRef = useRef<gsap.core.Timeline | null>(null);
-  const filterAnimationReadyRef = useRef(false);
   const orbPurpleRef = useRef<HTMLDivElement>(null);
   const orbOrangeRef = useRef<HTMLDivElement>(null);
   const orbBlueRef = useRef<HTMLDivElement>(null);
@@ -45,17 +34,8 @@ const PortfolioCarousel = () => {
   const isCoarsePointer = useRef(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [filterOpen, setFilterOpen] = useState(false);
-  const [activeFilter, setActiveFilter] = useState<string>("All");
   const [cursorVisible, setCursorVisible] = useState(true);
   const cursorVisibleRef = useRef(true);
-  const filteredProjects = useMemo(
-    () =>
-      activeFilter === "All"
-        ? projects
-        : projects.filter((project) => project.category === activeFilter),
-    [activeFilter]
-  );
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -82,35 +62,6 @@ const PortfolioCarousel = () => {
       pointerQuery.removeEventListener("change", syncPrefs);
     };
   }, []);
-
-  useEffect(() => {
-    setActiveIndex(0);
-    activeIndexRef.current = 0;
-    setFilterOpen(false);
-    ScrollTrigger.refresh();
-  }, [filteredProjects.length]);
-
-  useEffect(() => {
-    if (!filterOpen) return;
-
-    const onPointerDown = (event: PointerEvent) => {
-      if (filterShellRef.current && !filterShellRef.current.contains(event.target as Node)) {
-        setFilterOpen(false);
-      }
-    };
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setFilterOpen(false);
-    };
-
-    window.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("keydown", onKeyDown);
-
-    return () => {
-      window.removeEventListener("pointerdown", onPointerDown);
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [filterOpen]);
 
   const getDuration = useCallback(
     (duration: number) => (prefersReducedMotion.current ? 0.01 : duration),
@@ -367,238 +318,21 @@ const PortfolioCarousel = () => {
         setVisibility(false);
       };
     },
-    { scope: sectionRef, dependencies: [filteredProjects.length, filterOpen] }
+    { scope: sectionRef, dependencies: [projects.length] }
   );
 
   useGSAP(
     () => {
-      if (!filterShellRef.current || !filterTriggerRef.current || !filterRailRef.current) return;
+      if (!containerRef.current || !sectionRef.current || projects.length === 0) return;
 
-      const shell = filterShellRef.current;
-      const triggerButton = filterTriggerRef.current;
-      const triggerIcon = filterTriggerIconRef.current;
-      const triggerLabel = filterTriggerLabelRef.current;
-      const rail = filterRailRef.current;
-      const pills = filterPillRefs.current.filter(
-        (pill): pill is HTMLButtonElement => Boolean(pill)
-      );
-
-      const measureWidths = () => {
-        const triggerWidth = triggerButton.getBoundingClientRect().width;
-        const shellStyle = window.getComputedStyle(shell);
-        const shellPadX =
-          parseFloat(shellStyle.paddingLeft || "0") + parseFloat(shellStyle.paddingRight || "0");
-        const shellBorderX =
-          parseFloat(shellStyle.borderLeftWidth || "0") +
-          parseFloat(shellStyle.borderRightWidth || "0");
-        const closedWidth = triggerWidth + shellPadX + shellBorderX;
-        const hostWidth =
-          shell.parentElement?.getBoundingClientRect().width ?? shell.getBoundingClientRect().width;
-        const railNaturalWidth = rail.scrollWidth;
-        const openWidth = Math.min(hostWidth, closedWidth + railNaturalWidth);
-        return { closedWidth, openWidth };
-      };
-
-      const setClosedState = () => {
-        const { closedWidth } = measureWidths();
-        gsap.set(shell, { width: closedWidth });
-        gsap.set(rail, {
-          autoAlpha: 0,
-          x: 0,
-          clipPath: "inset(0 100% 0 0)",
-          pointerEvents: "none",
-        });
-        gsap.set(pills, { autoAlpha: 0, x: -4 });
-      };
-
-      const setOpenState = () => {
-        const { openWidth } = measureWidths();
-        gsap.set(shell, { width: openWidth });
-        gsap.set(rail, {
-          autoAlpha: 1,
-          x: 0,
-          clipPath: "inset(0 0% 0 0)",
-          pointerEvents: "auto",
-        });
-        gsap.set(pills, { autoAlpha: 1, x: 0 });
-      };
-
-      filterTimelineRef.current?.kill();
-
-      if (!filterAnimationReadyRef.current) {
-        filterAnimationReadyRef.current = true;
-        if (filterOpen) {
-          setOpenState();
-        } else {
-          setClosedState();
-        }
-      } else if (filterOpen) {
-        const { openWidth } = measureWidths();
-        const openTl = gsap.timeline();
-        openTl
-          .to(shell, {
-            width: openWidth,
-            duration: getDuration(0.32),
-            ease: "power3.out",
-            overwrite: "auto",
-          })
-          .to(
-            rail,
-            {
-              autoAlpha: 1,
-              x: 0,
-              clipPath: "inset(0 0% 0 0)",
-              pointerEvents: "auto",
-              duration: getDuration(0.24),
-              ease: "power2.out",
-            },
-            0.04
-          )
-          .to(
-            pills,
-            {
-              autoAlpha: 1,
-              x: 0,
-              duration: getDuration(0.18),
-              stagger: 0.04,
-              ease: "power2.out",
-              overwrite: "auto",
-            },
-            0.08
-          );
-
-        if (triggerIcon && triggerLabel) {
-          openTl
-            .fromTo(
-              triggerIcon,
-              { x: -8, rotate: -18, scale: 0.92, autoAlpha: 0.85 },
-              {
-                x: 0,
-                rotate: 0,
-                scale: 1,
-                autoAlpha: 1,
-                duration: getDuration(0.2),
-                ease: "power2.out",
-                overwrite: "auto",
-              },
-              0.05
-            )
-            .fromTo(
-              triggerLabel,
-              { x: 8, autoAlpha: 0.86 },
-              {
-                x: 0,
-                autoAlpha: 1,
-                duration: getDuration(0.2),
-                ease: "power2.out",
-                overwrite: "auto",
-              },
-              0.06
-            );
-        }
-
-        filterTimelineRef.current = openTl;
-      } else {
-        const { closedWidth } = measureWidths();
-        const closeTl = gsap.timeline({
-          onComplete: () => {
-            rail.scrollLeft = 0;
-            gsap.set(rail, { pointerEvents: "none" });
-          },
-        });
-
-        closeTl
-          .to(pills, {
-            autoAlpha: 0,
-            x: -4,
-            duration: getDuration(0.16),
-            stagger: { each: 0.028, from: "end" },
-            ease: "power2.in",
-            overwrite: "auto",
-          })
-          .to(
-            rail,
-            {
-              autoAlpha: 0,
-              x: 0,
-              clipPath: "inset(0 100% 0 0)",
-              duration: getDuration(0.24),
-              ease: "power2.inOut",
-            },
-            0.06
-          )
-          .to(
-            shell,
-            {
-              width: closedWidth,
-              duration: getDuration(0.3),
-              ease: "power3.in",
-              overwrite: "auto",
-            },
-            0.07
-          );
-
-        if (triggerIcon && triggerLabel) {
-          closeTl
-            .fromTo(
-              triggerIcon,
-              { x: 8, rotate: 16, scale: 0.92, autoAlpha: 0.86 },
-              {
-                x: 0,
-                rotate: 0,
-                scale: 1,
-                autoAlpha: 1,
-                duration: getDuration(0.2),
-                ease: "power2.out",
-                overwrite: "auto",
-              },
-              0.12
-            )
-            .fromTo(
-              triggerLabel,
-              { x: -8, autoAlpha: 0.88 },
-              {
-                x: 0,
-                autoAlpha: 1,
-                duration: getDuration(0.2),
-                ease: "power2.out",
-                overwrite: "auto",
-              },
-              0.12
-            );
-        }
-
-        filterTimelineRef.current = closeTl;
-      }
-
-      const handleResize = () => {
-        const { closedWidth, openWidth } = measureWidths();
-        gsap.set(shell, { width: filterOpen ? openWidth : closedWidth });
-      };
-
-      handleResize();
-      window.addEventListener("resize", handleResize);
-
-      return () => {
-        window.removeEventListener("resize", handleResize);
-        filterTimelineRef.current?.kill();
-      };
-    },
-    { scope: sectionRef, dependencies: [filterOpen, activeFilter, filteredProjects.length, getDuration] }
-  );
-
-  useGSAP(
-    () => {
-      if (!containerRef.current || !sectionRef.current || filteredProjects.length === 0) return;
-
-      const firstProject = filteredProjects[0];
+      const firstProject = projects[0];
       activeIndexRef.current = 0;
       setActiveIndex(0);
       animateTitle(firstProject.name);
       animateCards(0);
       animateOrbs(firstProject);
 
-      const maxIndex = filteredProjects.length - 1;
+      const maxIndex = projects.length - 1;
       const trigger = ScrollTrigger.create({
         trigger: containerRef.current,
         start: "top top",
@@ -618,7 +352,7 @@ const PortfolioCarousel = () => {
           activeIndexRef.current = progressIndex;
           setActiveIndex(progressIndex);
 
-          const nextProject = filteredProjects[progressIndex];
+          const nextProject = projects[progressIndex];
           animateTitle(nextProject.name);
           animateCards(progressIndex);
           animateOrbs(nextProject);
@@ -638,15 +372,15 @@ const PortfolioCarousel = () => {
     },
     {
       scope: containerRef,
-      dependencies: [filteredProjects, animateCards, animateOrbs, animateTitle],
+      dependencies: [animateCards, animateOrbs, animateTitle],
     }
   );
 
   const snapToProject = useCallback(
     (direction: 1 | -1) => {
-      if (!containerRef.current || filteredProjects.length <= 1) return;
+      if (!containerRef.current || projects.length <= 1) return;
 
-      const maxIndex = filteredProjects.length - 1;
+      const maxIndex = projects.length - 1;
       const nextIndex = Math.min(
         maxIndex,
         Math.max(0, activeIndexRef.current + direction)
@@ -674,10 +408,10 @@ const PortfolioCarousel = () => {
         behavior: prefersReduced ? "auto" : "smooth",
       });
     },
-    [filteredProjects.length]
+    []
   );
 
-  const currentProject = filteredProjects[activeIndex] ?? filteredProjects[0] ?? projects[0];
+  const currentProject = projects[activeIndex] ?? projects[0];
 
   return (
     <div className="portfolio-carousel__wrapper">
@@ -685,7 +419,7 @@ const PortfolioCarousel = () => {
         ref={containerRef}
         className="portfolio-carousel__pin relative w-full"
         style={{
-          height: `${Math.max(filteredProjects.length, 1) * 100}vh`,
+          height: `${Math.max(projects.length, 1) * 100}vh`,
         }}
       >
         <section
@@ -718,59 +452,6 @@ const PortfolioCarousel = () => {
           <p className="mx-auto mt-2 max-w-lg text-center text-sm text-muted-foreground md:text-base">
             See how we've helped businesses look professional and attract better clients.
           </p>
-        </div>
-
-        <div className="relative z-10 mt-6 mx-auto w-full max-w-[1280px] px-8 md:px-16">
-          <div className="portfolio-carousel__filter-row">
-            <div ref={filterShellRef} className="portfolio-filter">
-              <button
-                ref={filterTriggerRef}
-                id="portfolio-filter-trigger"
-                className={`portfolio-filter__trigger ${filterOpen ? "is-open" : ""}`}
-                aria-controls="portfolio-filter-rail"
-                aria-expanded={filterOpen}
-                onClick={() => setFilterOpen((open) => !open)}
-              >
-                <span
-                  ref={filterTriggerIconRef}
-                  className="portfolio-filter__trigger-icon"
-                  aria-hidden="true"
-                >
-                  {filterOpen ? <LockOpen size={14} /> : <Lock size={14} />}
-                </span>
-                <span ref={filterTriggerLabelRef} className="portfolio-filter__trigger-label">
-                  {filterOpen ? "Filtered" : "Filter"}
-                </span>
-              </button>
-
-              <div
-                id="portfolio-filter-rail"
-                ref={filterRailRef}
-                className="portfolio-filter__rail"
-                role="group"
-                aria-labelledby="portfolio-filter-trigger"
-                aria-hidden={!filterOpen}
-              >
-                {CATEGORIES.map((category, index) => (
-                  <button
-                    key={category}
-                    ref={(node) => {
-                      filterPillRefs.current[index] = node;
-                    }}
-                    tabIndex={filterOpen ? 0 : -1}
-                    className={`portfolio-filter__pill ${activeFilter === category ? "is-active" : ""}`}
-                    aria-pressed={activeFilter === category}
-                    onClick={() => {
-                      setActiveFilter(category);
-                      setFilterOpen(false);
-                    }}
-                  >
-                    {category}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="relative z-10 mx-auto flex h-[calc(100vh-200px)] w-full max-w-[1280px] flex-col items-center gap-8 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
@@ -807,7 +488,7 @@ const PortfolioCarousel = () => {
               ref={cardsContainerRef}
               className="relative h-[420px] w-[320px] sm:h-[500px] sm:w-[380px] md:h-[500px] md:w-[360px] lg:h-[560px] lg:w-[420px]"
             >
-              {filteredProjects.map((project) => (
+              {projects.map((project) => (
                 <div
                   key={project.name}
                   className="portfolio-card portfolio-carousel__card absolute inset-0 overflow-hidden rounded-2xl shadow-2xl"
@@ -835,23 +516,23 @@ const PortfolioCarousel = () => {
 
         <button
           className={`nav-arrow absolute left-4 top-1/2 z-20 -translate-y-1/2 md:left-8 ${
-            activeIndex === 0 || filteredProjects.length <= 1 ? "is-disabled" : ""
+            activeIndex === 0 || projects.length <= 1 ? "is-disabled" : ""
           }`}
           onClick={() => snapToProject(-1)}
           aria-label="Previous project"
-          disabled={activeIndex === 0 || filteredProjects.length <= 1}
+          disabled={activeIndex === 0 || projects.length <= 1}
         >
           <ChevronLeft size={24} />
         </button>
         <button
           className={`nav-arrow absolute right-4 top-1/2 z-20 -translate-y-1/2 md:right-8 ${
-            activeIndex === filteredProjects.length - 1 || filteredProjects.length <= 1
+            activeIndex === projects.length - 1 || projects.length <= 1
               ? "is-disabled"
               : ""
           }`}
           onClick={() => snapToProject(1)}
           aria-label="Next project"
-          disabled={activeIndex === filteredProjects.length - 1 || filteredProjects.length <= 1}
+          disabled={activeIndex === projects.length - 1 || projects.length <= 1}
         >
           <ChevronRight size={24} />
         </button>
