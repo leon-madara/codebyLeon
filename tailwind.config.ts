@@ -54,6 +54,11 @@ const config: Config = {
         'emerald-dark': 'hsl(var(--emerald-dark))',
         'emerald-mid': 'hsl(var(--emerald-mid))',
         'emerald-light': 'hsl(var(--emerald-light))',
+        'brand-emerald': 'oklch(var(--brand-emerald))',
+        'brand-amber': 'oklch(var(--brand-amber))',
+        'brand-ember': 'oklch(var(--brand-ember))',
+        'brand-navy': 'oklch(var(--brand-navy))',
+        'brand-canvas': 'oklch(var(--brand-canvas))',
       },
       borderRadius: {
         lg: 'var(--radius)',
