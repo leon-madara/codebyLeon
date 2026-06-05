@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 import { BlogPost } from '../types/blog';
-import { getBlogPostBySlug, getRelatedPosts } from '../utils/blogUtils';
-import BlogHeader from '../components/Blog/BlogHeader';
+import { getAllBlogPosts } from '../utils/blogUtils';
 import BlogContent from '../components/Blog/BlogContent';
-import BlogFooter from '../components/Blog/BlogFooter';
 import BlogPostErrorBoundary from '../components/Blog/BlogPostErrorBoundary';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { useToast } from '../hooks/use-toast';
@@ -14,7 +14,9 @@ import {
   getAbsoluteUrl,
   usePageSeo,
 } from '../utils/seo';
+import '../styles/sections/blog-post.css';
 
+// Structured data for SEO
 const createBlogPostStructuredData = (blogPost: BlogPost): Record<string, unknown> => {
   const canonicalUrl = getAbsoluteUrl(`/blog/${blogPost.slug}`);
   const structuredData: Record<string, unknown> = {
@@ -61,16 +63,105 @@ const createBlogPostStructuredData = (blogPost: BlogPost): Record<string, unknow
   return structuredData;
 };
 
+// Background Orb Colors corresponding to each article (v1, v2, v3)
+const ORB_PALETTES = [
+  // Article 1 (Business Strategy): Blues, Purples, Cyan
+  ['#2563eb', '#8b5cf6', '#06b6d4'],
+  // Article 2 (Tech & Reliability): Greens, Deep Teals
+  ['#10b981', '#0d9488', '#115e59'],
+  // Article 3 (User Experience): Pinks, Oranges, Purples
+  ['#ec4899', '#f97316', '#a855f7']
+];
+
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
+  const allPosts = getAllBlogPosts();
+  
+  // Identify the active article index based on the slug in the URL
+  const slugIndex = allPosts.findIndex(p => p.slug === slug);
+  const activeIndex = slugIndex !== -1 ? slugIndex : 0;
+  const post = allPosts[activeIndex];
+
+  const [isScrollHidden, setIsScrollHidden] = useState(false);
+
+  // References for GSAP background orb animations
+  const orb1Ref = useRef<HTMLDivElement>(null);
+  const orb2Ref = useRef<HTMLDivElement>(null);
+  const orb3Ref = useRef<HTMLDivElement>(null);
+
+  // Redirect to the first post if the slug is invalid or missing
+  useEffect(() => {
+    if (!slug || slugIndex === -1) {
+      if (slug) {
+        toast({
+          title: "Blog post not found",
+          description: "The requested blog post could not be found. Showing latest articles.",
+          variant: "destructive",
+        });
+      }
+      if (allPosts.length > 0) {
+        navigate(`/blog/${allPosts[0].slug}`, { replace: true });
+      } else {
+        navigate('/blog', { replace: true });
+      }
+    }
+  }, [slug, slugIndex, navigate, toast, allPosts]);
+
+  // Hide design switcher when scrolling down, show on scroll up
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let scrollTicking = false;
+
+    const handleScroll = () => {
+      if (!scrollTicking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const delta = currentScrollY - lastScrollY;
+          if (currentScrollY <= 8 || delta < -4) {
+            setIsScrollHidden(false);
+          } else if (delta > 4) {
+            setIsScrollHidden(true);
+          }
+          lastScrollY = currentScrollY;
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // GSAP Background orb color-morphing animation
+  useGSAP(() => {
+    if (allPosts.length === 0) return;
+    
+    const palette = ORB_PALETTES[activeIndex % ORB_PALETTES.length];
+    
+    gsap.to(orb1Ref.current, {
+      backgroundColor: palette[0],
+      duration: 0.75,
+      ease: 'power2.out'
+    });
+    
+    gsap.to(orb2Ref.current, {
+      backgroundColor: palette[1],
+      duration: 0.75,
+      ease: 'power2.out'
+    });
+    
+    gsap.to(orb3Ref.current, {
+      backgroundColor: palette[2],
+      duration: 0.75,
+      ease: 'power2.out'
+    });
+  }, [activeIndex, allPosts.length]);
+
+  // Set Page SEO
   usePageSeo(post ? {
     title: `${post.title} | ${SITE_NAME} Blog`,
     description: post.description,
@@ -85,73 +176,14 @@ const BlogPostPage: React.FC = () => {
     tags: post.tags,
     structuredData: createBlogPostStructuredData(post),
   } : {
-    title: error ? `Blog Post Not Found | ${SITE_NAME}` : `Loading Blog Post | ${SITE_NAME}`,
+    title: slugIndex === -1 ? `Blog Post Not Found | ${SITE_NAME}` : `Loading Blog Post | ${SITE_NAME}`,
     description: 'Read practical website, SEO, and conversion articles from Code by Leon.',
     path: slug ? `/blog/${slug}` : '/blog',
   });
 
-  useEffect(() => {
-    const fetchBlogPost = async () => {
-      if (!slug) {
-        setError('No blog post slug provided');
-        setLoading(false);
-        return;
-      }
-
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Simulate async operation (in a real app, this might be an API call)
-        await new Promise(resolve => setTimeout(resolve, 100));
-
-        const blogPost = getBlogPostBySlug(slug);
-        
-        if (!blogPost) {
-          // Handle invalid slug - show toast and redirect to blog listing
-          toast({
-            title: "Blog post not found",
-            description: "The requested blog post could not be found. Redirecting to blog listing.",
-            variant: "destructive",
-          });
-          
-          // Redirect to blog listing after a short delay
-          setTimeout(() => {
-            navigate('/blog', { replace: true });
-          }, 2000);
-          
-          setError('Blog post not found');
-          setLoading(false);
-          return;
-        }
-
-        setPost(blogPost);
-        
-        // Get related posts
-        const related = getRelatedPosts(blogPost, 3);
-        setRelatedPosts(related);
-
-        setLoading(false);
-      } catch (err) {
-        console.error('Error fetching blog post:', err);
-        setError('Failed to load blog post');
-        setLoading(false);
-        
-        toast({
-          title: "Error loading blog post",
-          description: "There was an error loading the blog post. Please try again.",
-          variant: "destructive",
-        });
-      }
-    };
-
-    fetchBlogPost();
-  }, [slug, navigate, toast]);
-
-  // Loading state
-  if (loading) {
+  if (allPosts.length === 0 || !post) {
     return (
-      <div className="blog-post-page">
+      <div className="blog-post-page-wrapper">
         <div className="blog-post-loading">
           <LoadingSpinner 
             size="large" 
@@ -163,54 +195,163 @@ const BlogPostPage: React.FC = () => {
     );
   }
 
-  // Error state
-  if (error || !post) {
-    return (
-      <div className="blog-post-page">
-        <div className="blog-post-error">
-          <h1>Blog Post Not Found</h1>
-          <p>
-            {error === 'Blog post not found' 
-              ? 'The requested blog post could not be found.' 
-              : 'There was an error loading the blog post.'}
-          </p>
-          <p>You will be redirected to the blog listing shortly.</p>
-          <button 
-            onClick={() => navigate('/blog')}
-            className="back-to-blog-button"
-          >
-            Go to Blog
-          </button>
-        </div>
-      </div>
-    );
-  }
+  const currentUrl = SITE_URL + `/blog/${post.slug}`;
 
   return (
     <BlogPostErrorBoundary>
-      <div className="blog-post-page">
-        <main className="blog-post-main">
-          <article className="blog-post-article">
-            <BlogHeader
-              title={post.title}
-              category={post.category}
-              author={post.author}
-              publishedDate={post.publishedDate}
-              readTime={post.readTime}
-              featuredImage={post.featuredImage}
-            />
-            
-            <BlogContent
-              content={post.content}
-              format="markdown"
-            />
-          </article>
+      <div className="blog-post-page-wrapper">
+        {/* Background Orbs */}
+        <div className="blog__orbs">
+          <div ref={orb1Ref} className="blog__orb blog__orb--1" />
+          <div ref={orb2Ref} className="blog__orb blog__orb--2" />
+          <div ref={orb3Ref} className="blog__orb blog__orb--3" />
+        </div>
+        <div className="blog__overlay" />
+
+        {/* Global Design Switcher (Floating pills) */}
+        <div 
+          className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
+          role="tablist" 
+          aria-label="Design directions"
+        >
+          <div className={`v2-pill-indicator is-v${(activeIndex % 3) + 1}`} />
+          {allPosts.map((p, index) => (
+            <button
+              key={p.slug}
+              className={`v2-pill ${activeIndex === index ? 'is-active' : ''}`}
+              data-design={`v${index + 1}`}
+              onClick={() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                navigate(`/blog/${p.slug}`, { replace: true });
+              }}
+              role="tab"
+              aria-selected={activeIndex === index}
+            >
+              Article {index + 1}
+            </button>
+          ))}
+        </div>
+
+        {/* Subnav Strip */}
+        <div className="v1-subnav-strip">
+          <span className="v1-subnav-edge">Strategy / Issue 04</span>
+          <span className="v1-subnav-brand">THE STUDIO.</span>
+          <span className="v1-subnav-edge">Archive 2026</span>
+        </div>
+
+        {/* Fixed Gutter Sidebar Controls (Stays persistent and static during article slides) */}
+        <aside className="v1-gutter-sticky">
+          <button 
+            onClick={() => navigate('/blog')} 
+            className="v1-back"
+            aria-label="Back to Blog"
+          >
+            <span className="v1-back-circle" aria-hidden="true">
+              <span className="v1-back-icon">&larr;</span>
+            </span>
+            <span className="v1-back-label">Back to Blog</span>
+          </button>
           
-          <BlogFooter
-            currentPostId={post.id}
-            relatedPosts={relatedPosts}
-          />
-        </main>
+          <div className="v1-share">
+            <div className="v1-share-label">Share</div>
+            <a 
+              href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(currentUrl)}&text=${encodeURIComponent(post.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="v1-share-btn btn-x"
+              title="Share on X"
+            >
+              X
+            </a>
+            <a 
+              href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(currentUrl)}&title=${encodeURIComponent(post.title)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="v1-share-btn btn-linkedin"
+              title="Share on LinkedIn"
+            >
+              in
+            </a>
+            <a 
+              href="https://github.com/leon-madara"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="v1-share-btn btn-github"
+              title="Developer GitHub"
+            >
+              GH
+            </a>
+            <button 
+              onClick={() => {
+                navigator.clipboard.writeText(currentUrl);
+                toast({
+                  title: "Link Copied",
+                  description: "Blog post link copied to clipboard.",
+                });
+              }}
+              className="v1-share-btn btn-more"
+              title="Copy Link"
+            >
+              ···
+            </button>
+          </div>
+        </aside>
+
+        {/* Slider Stage */}
+        <div className="stage">
+          <div 
+            className="stage-track" 
+            style={{ transform: `translateX(-${activeIndex * 100}vw)` }}
+          >
+            {allPosts.map((p) => {
+              const formatDate = (dateString: string) => {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric'
+                });
+              };
+
+              return (
+                <section key={p.slug} className={`design design-v${p.id}`} data-design={`v${p.id}`}>
+                  <main className="v1-main">
+                    <div className="v1-gutter" /> {/* spacing column */}
+                    
+                    <article className="v1-article">
+                      <div className="v1-meta">
+                        <span className="v1-tag">{p.category}</span>
+                        <span className="v1-dot" />
+                        <span className="v1-read">{p.readTime} min read</span>
+                      </div>
+
+                      <h1 className="v1-title">
+                        <span className="v1-title-main">{p.title}</span>
+                      </h1>
+
+                      <div className="v1-author">
+                        <div className="v1-avatar-lg">
+                          {p.author.charAt(0)}
+                        </div>
+                        <div>
+                          <div className="v1-author-name">By {p.author}</div>
+                          <div className="v1-author-date">{formatDate(p.publishedDate)}</div>
+                        </div>
+                      </div>
+
+                      <BlogContent
+                        content={p.content}
+                        format="markdown"
+                      />
+                    </article>
+                    
+                    <div className="v1-gutter" /> {/* spacing column */}
+                  </main>
+                </section>
+              );
+            })}
+          </div>
+        </div>
       </div>
     </BlogPostErrorBoundary>
   );
