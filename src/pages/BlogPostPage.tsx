@@ -86,6 +86,7 @@ const BlogPostPage: React.FC = () => {
   const post = allPosts[activeIndex];
 
   const [isScrollHidden, setIsScrollHidden] = useState(false);
+  const [visibleStartIndex, setVisibleStartIndex] = useState(0);
 
   // References for GSAP background orb animations
   const orb1Ref = useRef<HTMLDivElement>(null);
@@ -135,6 +136,25 @@ const BlogPostPage: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+ 
+  // Ensure the active post is always in the visible viewport (which shows 3 pills)
+  useEffect(() => {
+    if (activeIndex < visibleStartIndex) {
+      if (activeIndex === 2) {
+        setVisibleStartIndex(2);
+      } else if (activeIndex === 4) {
+        setVisibleStartIndex(4);
+      } else {
+        setVisibleStartIndex(Math.max(0, activeIndex - 1));
+      }
+    } else if (activeIndex > visibleStartIndex + 2) {
+      if (activeIndex === 3) {
+        setVisibleStartIndex(2);
+      } else {
+        setVisibleStartIndex(Math.min(allPosts.length - 2, activeIndex));
+      }
+    }
+  }, [activeIndex, visibleStartIndex, allPosts.length]);
 
   // GSAP Background orb color-morphing animation
   useGSAP(() => {
@@ -213,23 +233,52 @@ const BlogPostPage: React.FC = () => {
           className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
           role="tablist" 
           aria-label="Design directions"
+          style={{ 
+            '--indicator-pos': activeIndex - visibleStartIndex 
+          } as React.CSSProperties}
         >
-          <div className={`v2-pill-indicator is-v${(activeIndex % 3) + 1}`} />
-          {allPosts.map((p, index) => (
-            <button
-              key={p.slug}
-              className={`v2-pill ${activeIndex === index ? 'is-active' : ''}`}
-              data-design={`v${index + 1}`}
-              onClick={() => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-                navigate(`/blog/${p.slug}`, { replace: true });
-              }}
-              role="tab"
-              aria-selected={activeIndex === index}
-            >
-              Article {index + 1}
-            </button>
-          ))}
+          <div className="v2-pill-indicator" />
+          {allPosts.slice(visibleStartIndex, visibleStartIndex + 3).map((p, index) => {
+            const globalIndex = visibleStartIndex + index;
+            const isActive = activeIndex === globalIndex;
+            
+            // Render left arrow if we are at the first visible pill (index === 0) AND there are posts to the left
+            const showLeftArrow = index === 0 && visibleStartIndex > 0;
+            
+            // Render right arrow if we are at the last visible pill (index === 2) AND there are posts to the right
+            const showRightArrow = index === 2 && (visibleStartIndex + 2 < allPosts.length - 1);
+            
+            return (
+              <button
+                key={p.slug}
+                className={`v2-pill ${isActive ? 'is-active' : ''}`}
+                data-design={`v${globalIndex + 1}`}
+                onClick={() => {
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                  navigate(`/blog/${p.slug}`, { replace: true });
+                  
+                  // Viewport shift logic:
+                  if (index === 2) {
+                    // Clicked rightmost boundary -> make it the new first pill
+                    setVisibleStartIndex(globalIndex);
+                  } else if (index === 0 && visibleStartIndex > 0) {
+                    // Clicked leftmost boundary -> shift back by 2 positions
+                    setVisibleStartIndex(Math.max(0, visibleStartIndex - 2));
+                  }
+                }}
+                role="tab"
+                aria-selected={isActive}
+              >
+                {showLeftArrow && (
+                  <span className="v2-pill-arrow v2-pill-arrow--left" aria-hidden="true">&larr;</span>
+                )}
+                Article {globalIndex + 1}
+                {showRightArrow && (
+                  <span className="v2-pill-arrow v2-pill-arrow--right" aria-hidden="true">&rarr;</span>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         {/* Subnav Strip */}
@@ -301,7 +350,10 @@ const BlogPostPage: React.FC = () => {
         <div className="stage">
           <div 
             className="stage-track" 
-            style={{ transform: `translateX(-${activeIndex * 100}vw)` }}
+            style={{ 
+              transform: `translateX(-${activeIndex * 100}vw)`,
+              width: `${allPosts.length * 100}vw`
+            }}
           >
             {allPosts.map((p) => {
               const formatDate = (dateString: string) => {

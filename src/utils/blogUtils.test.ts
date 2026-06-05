@@ -609,7 +609,7 @@ describe('getAllBlogPosts', () => {
     const posts = getAllBlogPosts();
     expect(posts).toBeDefined();
     expect(posts.length).toBeGreaterThan(0);
-    expect(posts.length).toBe(3); // We have 3 posts in the data
+    expect(posts.length).toBe(6); // We have 6 posts in the data
   });
 
   it('should return posts sorted by date (newest first)', () => {
