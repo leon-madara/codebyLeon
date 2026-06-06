@@ -29,4 +29,20 @@ describe('LegitLogisticsCaseStudyPage', () => {
       '/get-started.html'
     );
   });
+
+  it('presents the three systems with an editorial article layout', () => {
+    const { container } = render(
+      <MemoryRouter>
+        <LegitLogisticsCaseStudyPage />
+      </MemoryRouter>
+    );
+
+    const systemArticles = container.querySelectorAll('.case-study__article-panel');
+
+    expect(systemArticles).toHaveLength(3);
+    expect(container.querySelector('.case-study__system-card')).not.toBeInTheDocument();
+    expect(container.querySelectorAll('.case-study__article-meta')).toHaveLength(3);
+    expect(container.querySelectorAll('.case-study__article-proofline')).toHaveLength(3);
+    expect(container.querySelectorAll('.case-study__article-lede')).toHaveLength(3);
+  });
 });

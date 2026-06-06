@@ -22,6 +22,8 @@ const workflowPillars = [
     label: 'Owner and dispatcher control',
     description:
       'A central dashboard for quote review, job creation, active delivery management, completed work, and operational visibility.',
+    audience: 'Built for owners and dispatchers',
+    outcome: 'Replaces scattered admin work with one place to review, create, and monitor deliveries.',
     proof: ['Quote queue', 'Delivery creation', 'Status review', 'Mobile admin views'],
   },
   {
@@ -30,6 +32,8 @@ const workflowPillars = [
     label: 'Field workflow automation',
     description:
       'A mobile-first driver flow that turns pickup, transit, arrival, and delivery into guided actions with proof capture.',
+    audience: 'Built for field teams',
+    outcome: 'Turns delivery progress into guided actions instead of calls, texts, and memory.',
     proof: ['Job selection', 'Status updates', 'Pickup photo proof', 'Customer signature'],
   },
   {
@@ -38,6 +42,8 @@ const workflowPillars = [
     label: 'Self-service delivery visibility',
     description:
       'A public tracking and lookup experience so customers can check order progress without calling the dispatch team.',
+    audience: 'Built for customers and support teams',
+    outcome: 'Moves routine status questions into a self-service tracking experience.',
     proof: ['Tracking code pages', 'Phone lookup', 'Timeline updates', 'Delivered privacy state'],
   },
 ];
@@ -158,25 +164,47 @@ export function LegitLogisticsCaseStudyPage() {
           </h2>
         </div>
 
-        <div className="case-study__system-grid">
-          {workflowPillars.map((pillar) => {
+        <div className="case-study__article-stack">
+          {workflowPillars.map((pillar, index) => {
             const Icon = pillar.icon;
             return (
-              <article className="case-study__system-card" key={pillar.title}>
-                <div className="case-study__system-icon">
-                  <Icon aria-hidden="true" />
+              <article className="case-study__article-panel" key={pillar.title}>
+                <aside className="case-study__article-rail" aria-hidden="true">
+                  <span className="case-study__article-number">{String(index + 1).padStart(2, '0')}</span>
+                  <span className="case-study__article-icon">
+                    <Icon />
+                  </span>
+                </aside>
+
+                <div className="case-study__article-content">
+                  <div className="case-study__article-meta">
+                    <span className="case-study__article-tag">{pillar.label}</span>
+                    <span className="case-study__article-dot" aria-hidden="true" />
+                    <span>System {index + 1} of 3</span>
+                  </div>
+                  <h3 className="case-study__article-title">{pillar.title}</h3>
+                  <div className="case-study__article-proofline">
+                    <span className="case-study__article-avatar" aria-hidden="true">
+                      <Icon />
+                    </span>
+                    <div>
+                      <p className="case-study__article-proofline-title">{pillar.audience}</p>
+                      <p className="case-study__article-proofline-copy">{pillar.outcome}</p>
+                    </div>
+                  </div>
+                  <p className="case-study__article-lede">{pillar.description}</p>
+                  <div className="case-study__article-body">
+                    <h4 className="case-study__article-subhead">What clients can see in this build</h4>
+                    <ul className="case-study__proof-list case-study__proof-list--article" aria-label={`${pillar.title} capabilities`}>
+                      {pillar.proof.map((item) => (
+                        <li key={item}>
+                          <CheckCircle2 aria-hidden="true" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
                 </div>
-                <p className="case-study__system-label">{pillar.label}</p>
-                <h3 className="case-study__system-title">{pillar.title}</h3>
-                <p className="case-study__system-description">{pillar.description}</p>
-                <ul className="case-study__proof-list" aria-label={`${pillar.title} capabilities`}>
-                  {pillar.proof.map((item) => (
-                    <li key={item}>
-                      <CheckCircle2 aria-hidden="true" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
               </article>
             );
           })}
