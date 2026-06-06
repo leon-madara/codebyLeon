@@ -4,6 +4,7 @@ export interface Project {
   category: "Small Business" | "SaaS" | "Creative";
   description: string;
   image: string;
+  caseStudyPath?: string;
   accentColor: string;
   techStack: string[];
   blobColors: {
@@ -14,6 +15,22 @@ export interface Project {
 }
 
 export const projects: Project[] = [
+  {
+    name: "Legit Logistics",
+    type: "Delivery Operations Platform",
+    category: "SaaS",
+    description:
+      "A custom logistics system that connects dispatch, driver updates, proof collection, and customer self-service tracking.",
+    image: "/portfolio-legit.png",
+    caseStudyPath: "/work/legit-logistics",
+    accentColor: "hsl(28 78% 48%)",
+    techStack: ["React", "TypeScript", "Supabase", "Realtime"],
+    blobColors: {
+      purple: "hsl(152 45% 25%)",
+      orange: "hsl(28 78% 48%)",
+      blue: "hsl(195 65% 38%)",
+    },
+  },
   {
     name: "Kossy Langat",
     type: "Professional Brand Website",

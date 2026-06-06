@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -449,10 +450,17 @@ const PortfolioCarousel = () => {
               ))}
             </div>
 
-            <button className="view-details-btn w-fit">
-              View Details
-              <ArrowUpRight size={16} />
-            </button>
+            {currentProject.caseStudyPath ? (
+              <Link className="view-details-btn w-fit" to={currentProject.caseStudyPath}>
+                View Details
+                <ArrowUpRight size={16} />
+              </Link>
+            ) : (
+              <button className="view-details-btn w-fit" type="button">
+                View Details
+                <ArrowUpRight size={16} />
+              </button>
+            )}
           </div>
 
           <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
@@ -510,9 +518,9 @@ const PortfolioCarousel = () => {
         </button>
 
         <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
-          <button className="rounded-full bg-accent px-8 py-3 text-sm font-semibold tracking-wide text-accent-foreground transition-opacity hover:opacity-90 cursor-pointer">
+          <a href="/get-started.html" className="rounded-full bg-accent px-8 py-3 text-sm font-semibold tracking-wide text-accent-foreground transition-opacity hover:opacity-90 cursor-pointer">
             Ready to Start Your Project?
-          </button>
+          </a>
         </div>
         </section>
       </div>
