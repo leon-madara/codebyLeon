@@ -455,7 +455,7 @@ const PortfolioCarousel = () => {
         <div className="portfolio-carousel__overlay dot-grid absolute inset-0 pointer-events-none" />
 
         <div className="portfolio-carousel__header relative z-10 px-8 md:px-16">
-          <h2 className="portfolio-carousel__display text-2xl text-center text-foreground md:text-3xl">
+          <h2 className="portfolio-carousel__display text-center text-foreground">
             Our Work
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-center text-sm text-muted-foreground md:text-base">
@@ -471,7 +471,7 @@ const PortfolioCarousel = () => {
 
             <div
               ref={titleRef}
-              className="portfolio-carousel__display text-4xl leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl mb-6 min-h-[2.5em]"
+              className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
             />
 
             <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">

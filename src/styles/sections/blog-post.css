@@ -4,7 +4,7 @@
    BLOG POST PAGE STYLES - EDITORIAL LAYOUT
    ============================================= */
 
-:root {
+.blog-post-page-wrapper {
   --font-heading: 'Playfair Display', Georgia, serif;
   --reading-spine: 700px;
   --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
