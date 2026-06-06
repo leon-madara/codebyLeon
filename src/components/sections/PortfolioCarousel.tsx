@@ -155,8 +155,7 @@ const PortfolioCarousel = () => {
     (index: number) => {
       if (!cardsContainerRef.current) return;
       const cards = cardsContainerRef.current.querySelectorAll(".portfolio-card");
-      const duration = getDuration(0.8);
-      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      const duration = getDuration(0.7);
 
       cards.forEach((card, cardIndex) => {
         const step = cardIndex - index;
@@ -174,50 +173,14 @@ const PortfolioCarousel = () => {
           zIndex = 3;
           x = 0;
           y = 0;
-        } else if (step === -1) {
-          scale = 1.05;
-          rotateY = -12;
-          opacity = 0.5;
-          zIndex = 2;
-          x = isDesktop ? -88 : -40;
-          y = isDesktop ? -12 : -30;
-        } else if (step === -2) {
-          scale = 1.1;
-          rotateY = -22;
-          opacity = 0.2;
-          zIndex = 1;
-          x = isDesktop ? -148 : -70;
-          y = isDesktop ? -22 : -55;
-        } else if (step === 1) {
-          scale = 0.85;
-          rotateY = 12;
-          opacity = 0.5;
-          zIndex = 2;
-          x = isDesktop ? 84 : -30;
-          y = isDesktop ? 16 : 40;
-        } else if (step === 2) {
-          scale = 0.7;
-          rotateY = 22;
-          opacity = 0.2;
-          zIndex = 1;
-          x = isDesktop ? 142 : -50;
-          y = isDesktop ? 28 : 70;
         } else {
+          // Background/inactive cards are completely hidden
           opacity = 0;
           zIndex = 0;
-          scale = step < 0 ? 1.2 : 0.5;
-          rotateY = step < 0 ? -30 : 30;
-          x = step < 0 ? (isDesktop ? -188 : -90) : isDesktop ? 184 : -60;
-          y = step < 0 ? (isDesktop ? -32 : -80) : isDesktop ? 46 : 100;
-        }
-
-        if (!isDesktop && step !== 0) {
-          opacity = 0;
-          zIndex = 0;
-          scale = 0.94;
-          rotateY = 0;
-          x = 0;
-          y = 24;
+          scale = 0.95;
+          // Smooth slide offset depending on direction
+          x = step < 0 ? -40 : 40;
+          y = 0;
         }
 
         gsap.to(card, {
@@ -228,7 +191,7 @@ const PortfolioCarousel = () => {
           opacity,
           zIndex,
           duration,
-          ease: "expo.inOut",
+          ease: "power2.out",
           force3D: true,
           overwrite: "auto",
         });
@@ -495,7 +458,7 @@ const PortfolioCarousel = () => {
           <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
             <div
               ref={cardsContainerRef}
-              className="relative h-[260px] w-[195px] sm:h-[500px] sm:w-[380px] md:h-[500px] md:w-[360px] lg:h-[560px] lg:w-[420px]"
+              className="relative w-[280px] h-[186px] sm:w-[450px] sm:h-[300px] md:w-[480px] md:h-[320px] lg:w-[540px] lg:h-[360px]"
             >
               {projects.map((project) => (
                 <div
