@@ -90,10 +90,30 @@ const BlogPostPage: React.FC = () => {
   const [isScrollHidden, setIsScrollHidden] = useState(false);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
 
-  // References for GSAP background orb animations
+  // References for GSAP background orb animations and layout measuring
   const orb1Ref = useRef<HTMLDivElement>(null);
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
+  const postRefs = useRef<React.RefObject<HTMLDivElement>[]>([]);
+  const [stageHeight, setStageHeight] = useState<number | 'auto'>('auto');
+
+  // Initialize refs array
+  if (postRefs.current.length !== allPosts.length) {
+    postRefs.current = Array(allPosts.length).fill(null).map((_, i) => postRefs.current[i] || React.createRef());
+  }
+
+  // Adjust stage height dynamically to active post height to avoid empty whitespace
+  useEffect(() => {
+    const handleResize = () => {
+      const activePostRef = postRefs.current[activeIndex];
+      if (activePostRef && activePostRef.current) {
+        setStageHeight(activePostRef.current.offsetHeight);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeIndex, allPosts.length]);
 
   // Redirect to the first post if the slug is invalid or missing
   useEffect(() => {
@@ -349,7 +369,7 @@ const BlogPostPage: React.FC = () => {
         </aside>
 
         {/* Slider Stage */}
-        <div className="stage">
+        <div className="stage" style={{ height: stageHeight }}>
           <div 
             className="stage-track" 
             style={{ 
@@ -357,7 +377,7 @@ const BlogPostPage: React.FC = () => {
               width: `${allPosts.length * 100}vw`
             }}
           >
-            {allPosts.map((p) => {
+            {allPosts.map((p, postIndex) => {
               const formatDate = (dateString: string) => {
                 const date = new Date(dateString);
                 return date.toLocaleDateString('en-US', {
@@ -368,7 +388,7 @@ const BlogPostPage: React.FC = () => {
               };
 
               return (
-                <section key={p.slug} className={`design design-v${p.id}`} data-design={`v${p.id}`}>
+                <section key={p.slug} ref={postRefs.current[postIndex]} className={`design design-v${p.id}`} data-design={`v${p.id}`}>
                   <main className="v1-main">
                     <div className="v1-gutter" /> {/* spacing column */}
                     
