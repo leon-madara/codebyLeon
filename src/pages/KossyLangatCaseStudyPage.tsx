@@ -16,11 +16,26 @@ import { SITE_NAME, SITE_URL, usePageSeo } from '../utils/seo';
 import '../styles/sections/blog-post.css';
 
 const kossyAssets = {
-  hero: '/portfolio/case-studies/kossy/kossy-home-hero.png',
-  values: '/portfolio/case-studies/kossy/kossy-about-values.png',
-  workIndex: '/portfolio/case-studies/kossy/kossy-work-index.png',
-  workDetail: '/portfolio/case-studies/kossy/kossy-work-tassis.png',
-  mentorship: '/portfolio/case-studies/kossy/kossy-mentorship-hero.png',
+  hero: {
+    desktop: '/portfolio/case-studies/kossy/kossy-home-hero.png',
+    mobile: '/portfolio/case-studies/kossy/kossy-home-hero-mobile.png',
+  },
+  values: {
+    desktop: '/portfolio/case-studies/kossy/kossy-about-values.png',
+    mobile: '/portfolio/case-studies/kossy/kossy-about-values-mobile.png',
+  },
+  workIndex: {
+    desktop: '/portfolio/case-studies/kossy/kossy-work-index.png',
+    mobile: '/portfolio/case-studies/kossy/kossy-work-index-mobile.png',
+  },
+  workDetail: {
+    desktop: '/portfolio/case-studies/kossy/kossy-work-tassis.png',
+    mobile: '/portfolio/case-studies/kossy/kossy-work-tassis-mobile.png',
+  },
+  mentorship: {
+    desktop: '/portfolio/case-studies/kossy/kossy-mentorship-hero.png',
+    mobile: '/portfolio/case-studies/kossy/kossy-mentorship-hero-mobile.png',
+  },
 };
 
 const proofChips = [
@@ -155,7 +170,7 @@ export function KossyLangatCaseStudyPage() {
     description:
       'A Code by Leon case study for a personal brand website built around identity architecture, structural engineering, leadership, mentorship, and public voice.',
     path: '/work/kossy-langat',
-    image: kossyAssets.hero,
+    image: kossyAssets.hero.desktop,
     imageAlt: 'Kossy Langat personal brand website homepage screenshot',
     structuredData: {
       '@context': 'https://schema.org',
@@ -369,7 +384,10 @@ export function KossyLangatCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src={kossyAssets.hero} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet={kossyAssets.hero.mobile} />
+                    <img src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
+                  </picture>
                   <figcaption>Homepage evidence: the source site leads with identity, role, and the Orchestrator idea before moving into work proof.</figcaption>
                 </figure>
 
@@ -400,7 +418,10 @@ export function KossyLangatCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <img src={kossyAssets.values} alt="Kossy Langat about page values and identity section screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet={kossyAssets.values.mobile} />
+                    <img src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
+                  </picture>
                   <figcaption>About evidence: values, discipline, representation, and character.</figcaption>
                 </figure>
 
@@ -447,7 +468,10 @@ export function KossyLangatCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src={kossyAssets.workIndex} alt="Kossy Langat work index page screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet={kossyAssets.workIndex.mobile} />
+                    <img src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
+                  </picture>
                   <figcaption>Work index evidence: multiple projects organized as brand credibility.</figcaption>
                 </figure>
 
@@ -457,7 +481,10 @@ export function KossyLangatCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <img src={kossyAssets.workDetail} alt="Tassis Residential Development work detail page screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet={kossyAssets.workDetail.mobile} />
+                    <img src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
+                  </picture>
                   <figcaption>Work detail evidence: a representative project connects technical context and professional authority.</figcaption>
                 </figure>
 
@@ -505,7 +532,10 @@ export function KossyLangatCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src={kossyAssets.mentorship} alt="Kossy Langat mentorship page hero screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet={kossyAssets.mentorship.mobile} />
+                    <img src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
+                  </picture>
                   <figcaption>Mentorship evidence: leadership and public voice beyond project delivery.</figcaption>
                 </figure>
 

@@ -334,7 +334,10 @@ export function DelivahDispatchCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-home-hero-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
+                  </picture>
                   <figcaption>Funnel hero landing page: positioning freight services for American owner-operators and fleet owners.</figcaption>
                 </figure>
 
@@ -373,7 +376,10 @@ export function DelivahDispatchCaseStudyPage() {
                   The services breakdown organizes dispatch services, W9 paperwork filing, route planning, and broker negotiations into distinct, clear offers.
                 </p>
                 <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-services-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
+                  </picture>
                   <figcaption>Service positioning layout showing dedicated dispatch and document handling advantages.</figcaption>
                 </figure>
 
@@ -382,7 +388,10 @@ export function DelivahDispatchCaseStudyPage() {
                   A dedicated contact inquiry branch catches general questions and consultations, providing a lightweight path to conversion for prospects who aren't ready to submit DOT documentation.
                 </p>
                 <figure className="v1-hero" style={{ marginTop: '24px' }}>
-                  <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-contact-form-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
+                  </picture>
                   <figcaption>Alternate lead collection form with validated contact routing.</figcaption>
                 </figure>
               </article>
@@ -421,7 +430,10 @@ export function DelivahDispatchCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
+                  </picture>
                   <figcaption>Registration step 1: capturing DOT/MC logistics information and contact details.</figcaption>
                 </figure>
 
@@ -453,7 +465,10 @@ export function DelivahDispatchCaseStudyPage() {
                   To complete registration onboarding, carriers must upload copies of W9 forms, liability certificates, and authority letters. This secure client-side form interface supports required file types and passes storage references to the database.
                 </p>
                 <figure className="v1-hero" style={{ marginTop: '24px' }}>
-                  <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
+                  </picture>
                   <figcaption>Intake step 4: secure file dropzones for carrier W9, authority letter, and proof documentation.</figcaption>
                 </figure>
               </article>
@@ -492,7 +507,10 @@ export function DelivahDispatchCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-admin-login-mobile.png" />
+                    <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
+                  </picture>
                   <figcaption>Admin entry surface: secure dispatcher authentication controls for backend dashboard access.</figcaption>
                 </figure>
 

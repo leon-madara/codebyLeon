@@ -380,7 +380,10 @@ export function LegitLogisticsCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio-legit-dashboard-mobile.png" />
+                    <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
+                  </picture>
                   <figcaption>The central digital dispatch: active delivery queues, live status boards, and driver assignments in a unified panel.</figcaption>
                 </figure>
 
@@ -470,7 +473,7 @@ export function LegitLogisticsCaseStudyPage() {
                 <figure className="v1-hero">
                   <div className="mobile-frame-container" style={{ maxWidth: '340px', margin: '0 auto', position: 'relative' }}>
                     <img
-                      src="/portfolio-legit-driver.png"
+                      src="/portfolio-legit-driver-mobile.png"
                       alt="Legit Logistics driver app screenshot"
                       style={{
                         borderRadius: '24px',
@@ -561,7 +564,10 @@ export function LegitLogisticsCaseStudyPage() {
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio-legit-lookup-mobile.png" />
+                    <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
+                  </picture>
                   <figcaption>The public lookup portal: customers type tracking codes or enter phone numbers to get order details.</figcaption>
                 </figure>
 
@@ -572,6 +578,14 @@ export function LegitLogisticsCaseStudyPage() {
                 <p className="v1-p">
                   The portal is designed with Row-Level Security (RLS) policies. Public visitors can view the active status timeline using their unique, cryptographically random tracking code, but private details (such as the driver's phone number or drop-off signature) are protected until they pass secondary verification.
                 </p>
+
+                <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
+                  <picture>
+                    <source media="(max-width: 768px)" srcSet="/portfolio-legit-tracking-mobile.png" />
+                    <img src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
+                  </picture>
+                  <figcaption>Self-service tracking timeline: customers monitor the driver's progress and delivery status milestones in real-time.</figcaption>
+                </figure>
 
                 <h2 className="v1-h2">{workflowPillars[2].title}</h2>
                 <p className="v1-p">
