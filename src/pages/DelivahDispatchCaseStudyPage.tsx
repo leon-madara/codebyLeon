@@ -1,96 +1,66 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import {
   ArrowRight,
-  BarChart3,
   CheckCircle2,
   ClipboardList,
-  Clock,
-  DatabaseZap,
-  LayoutDashboard,
+  Database,
+  Mail,
   Route,
-  SearchCheck,
   ShieldCheck,
-  Smartphone,
-  Truck,
+  Upload,
+  UserPlus,
 } from 'lucide-react';
-import { useToast } from '../hooks/use-toast';
 import { SITE_NAME, SITE_URL, usePageSeo } from '../utils/seo';
 import '../styles/sections/blog-post.css';
 
 const workflowPillars = [
   {
-    icon: LayoutDashboard,
-    title: 'Admin Dashboard',
-    label: 'Owner and dispatcher control',
+    title: 'Service Positioning',
+    label: 'Freight service funnel',
     description:
-      'A central dashboard for quote review, job creation, active delivery management, completed work, and operational visibility.',
-    audience: 'Built for owners and dispatchers',
-    outcome: 'Replaces scattered admin work with one place to review, create, and monitor deliveries.',
-    proof: ['Quote queue', 'Delivery creation', 'Status review', 'Mobile admin views'],
+      'A conversion-focused landing page and service hierarchy that positions freight dispatch operations for American carriers.',
+    audience: 'Built for carrier acquisition',
+    outcome: 'Presents dispatch service clarity and handles initial contact routing.',
+    proof: ['Landing hero structure', 'Service categorizations', 'General inquiries form'],
   },
   {
-    icon: Truck,
-    title: 'Driver App',
-    label: 'Field workflow automation',
+    title: 'Guided Carrier Intake',
+    label: 'Structured company registration',
     description:
-      'A mobile-first driver flow that turns pickup, transit, arrival, and delivery into guided actions with proof capture.',
-    audience: 'Built for field teams',
-    outcome: 'Turns delivery progress into guided actions instead of calls, texts, and memory.',
-    proof: ['Job selection', 'Status updates', 'Pickup photo proof', 'Customer signature'],
+      'A multi-step registration wizard and document upload flow that turns carrier prospects into qualified operational leads.',
+    audience: 'Built for onboarding automation',
+    outcome: 'Collects required operating numbers and compliance files without manual paperwork.',
+    proof: ['DOT/MC contact setup', 'Equipment selection checklist', 'Secure document upload UI'],
   },
   {
-    icon: SearchCheck,
-    title: 'Customer Tracking',
-    label: 'Self-service delivery visibility',
+    title: 'Operations & Admin',
+    label: 'Backend lead management',
     description:
-      'A public tracking and lookup experience so customers can check order progress without calling the dispatch team.',
-    audience: 'Built for customers and support teams',
-    outcome: 'Moves routine status questions into a self-service tracking experience.',
-    proof: ['Tracking code pages', 'Phone lookup', 'Timeline updates', 'Delivered privacy state'],
-  },
-];
-
-const automationMap = [
-  {
-    manual: 'Dispatchers manually create and chase delivery updates',
-    software: 'Admin creates orders, tracks status, and reviews work from one dashboard',
-  },
-  {
-    manual: 'Drivers send status updates through calls or messages',
-    software: 'Driver app guides each milestone and records proof as the job moves',
-  },
-  {
-    manual: 'Customers contact support to ask where their order is',
-    software: 'Customers use a tracking link or phone lookup to see active delivery progress',
-  },
-  {
-    manual: 'Proof of delivery lives in scattered photos or conversations',
-    software: 'Photos, signatures, and status history are attached to the delivery workflow',
+      'A secure dispatch admin login and review area where lead logs, document archives, and carrier files are monitored.',
+    audience: 'Built for dispatch managers',
+    outcome: 'Exposes lead records and company details to dispatch operations in a clean data table.',
+    proof: ['Admin login portal', 'Record log access', 'Document inspection', 'Lead verification'],
   },
 ];
 
 const capabilities = [
-  { icon: DatabaseZap, title: 'Realtime backend', copy: 'Supabase PostgreSQL, storage, realtime subscriptions, and delivery history.' },
-  { icon: Smartphone, title: 'Mobile workflow UX', copy: 'Touch-friendly driver and admin views for work that happens away from a desk.' },
-  { icon: ShieldCheck, title: 'Secure public access', copy: 'Tracking codes, RLS-aware data access, and privacy handling after delivery.' },
-  { icon: BarChart3, title: 'Operational dashboards', copy: 'Tabbed work queues, status counts, quote review, and order analytics.' },
+  { icon: UserPlus, title: 'Intake wizard', copy: 'Multi-step registration with client-side form validation and equipment filtering.' },
+  { icon: Upload, title: 'Secure uploads', copy: 'Secure file upload handling for required carrier compliance documents.' },
+  { icon: Database, title: 'Supabase integration', copy: 'Database schema for carrier logs and secure file storage buckets.' },
+  { icon: Mail, title: 'EmailJS alerts', copy: 'Automated notification path to alert dispatch owners of new registrants.' },
 ];
 
 const ORB_PALETTES = [
-  ['#d9751a', '#a45711', '#fd9f68'], // Admin Dashboard: Oranges / Peaches
-  ['#10b981', '#0d9488', '#115e59'], // Driver App: Greens
-  ['#2563eb', '#1d4ed8', '#3b82f6']  // Customer Tracking: Blues
+  ['#0f766e', '#115e59', '#134e4a'], // Tab 1: Deep Greens
+  ['#d97706', '#b45309', '#92400e'], // Tab 2: Warm Ambers
+  ['#475569', '#334155', '#1e293b']  // Tab 3: Steel Slates
 ];
 
-export function LegitLogisticsCaseStudyPage() {
+export function DelivahDispatchCaseStudyPage() {
   const navigate = useNavigate();
-  const { toast } = useToast();
-
-  const { contextSafe } = useGSAP();
-
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrollHidden, setIsScrollHidden] = useState(false);
 
@@ -99,6 +69,8 @@ export function LegitLogisticsCaseStudyPage() {
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
+
+  const { contextSafe } = useGSAP();
 
   const handleBackClick = contextSafe((e: React.MouseEvent) => {
     e.preventDefault();
@@ -144,26 +116,26 @@ export function LegitLogisticsCaseStudyPage() {
   });
 
   usePageSeo({
-    title: `Legit Logistics Case Study | ${SITE_NAME}`,
+    title: `Delivah Dispatch Case Study | ${SITE_NAME}`,
     description:
-      'A Code by Leon case study showing how a logistics platform can automate dispatch, driver workflows, and customer tracking.',
-    path: '/work/legit-logistics',
-    image: '/portfolio-legit.png',
-    imageAlt: 'Legit Logistics delivery operations platform preview',
+      'A Code by Leon case study for a freight dispatch website connecting service positioning, carrier intake, document upload, backend setup, and admin review.',
+    path: '/work/delivah-dispatch-hub',
+    image: '/portfolio/delivah-dispatch.png',
+    imageAlt: 'Delivah Dispatch freight dispatch website homepage screenshot',
     structuredData: {
       '@context': 'https://schema.org',
       '@type': 'CreativeWork',
-      name: 'Legit Logistics Delivery Operations Automation Platform',
+      name: 'Delivah Dispatch Freight Dispatch Funnel',
       creator: {
         '@type': 'Organization',
         name: SITE_NAME,
         url: SITE_URL,
       },
-      about: ['Logistics software', 'Workflow automation', 'Customer tracking', 'Driver operations'],
+      about: ['Freight dispatch', 'Carrier acquisition', 'Service funnel', 'Operations intake'],
     },
   });
 
-  // Hide design switcher when scrolling down, show on scroll up
+  // Hide switcher when scrolling down, show on scroll up
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let scrollTicking = false;
@@ -212,12 +184,8 @@ export function LegitLogisticsCaseStudyPage() {
     });
   }, [activeIndex]);
 
-  const Icon1 = workflowPillars[0].icon;
-  const Icon2 = workflowPillars[1].icon;
-  const Icon3 = workflowPillars[2].icon;
-
   return (
-    <div className="blog-post-page-wrapper case-study-white-bg">
+    <div className="blog-post-page-wrapper case-study-white-bg case-study--delivah">
       {/* Background Orbs */}
       <div className="blog__orbs">
         <div ref={orb1Ref} className="blog__orb blog__orb--1" />
@@ -245,7 +213,7 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 0}
         >
-          Dashboard
+          Service Funnel
         </button>
         <button
           className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
@@ -256,7 +224,7 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 1}
         >
-          Driver App
+          Onboarding
         </button>
         <button
           className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
@@ -267,22 +235,22 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 2}
         >
-          Tracking
+          Operations
         </button>
       </div>
 
       {/* Subnav Strip */}
       <div className="v1-subnav-strip">
-        <span className="v1-subnav-edge">Strategy / Issue 04</span>
+        <span className="v1-subnav-edge">Strategy / Issue 05</span>
         <span className="v1-subnav-brand">THE STUDIO.</span>
         <span className="v1-subnav-edge">Archive 2026</span>
       </div>
 
       {/* Fixed Gutter Sidebar Controls */}
       <aside className="v1-gutter-sticky">
-        <Link
+        <Link 
           to="/#portfolio"
-          onClick={handleBackClick}
+          onClick={handleBackClick} 
           className="v1-back-pill"
           aria-label="Back to Our Work"
           ref={backButtonRef}
@@ -296,7 +264,7 @@ export function LegitLogisticsCaseStudyPage() {
         <div className="v1-share">
           <div className="v1-share-label">Share</div>
           <a 
-            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(SITE_URL + '/work/legit-logistics')}&text=${encodeURIComponent('Legit Logistics Case Study')}`}
+            href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(SITE_URL + '/work/delivah-dispatch-hub')}&text=${encodeURIComponent('Delivah Dispatch Case Study')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="v1-share-btn btn-x"
@@ -305,7 +273,7 @@ export function LegitLogisticsCaseStudyPage() {
             X
           </a>
           <a 
-            href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(SITE_URL + '/work/legit-logistics')}&title=${encodeURIComponent('Legit Logistics Case Study')}`}
+            href={`https://www.linkedin.com/shareArticle?url=${encodeURIComponent(SITE_URL + '/work/delivah-dispatch-hub')}&title=${encodeURIComponent('Delivah Dispatch Case Study')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="v1-share-btn btn-linkedin"
@@ -322,19 +290,6 @@ export function LegitLogisticsCaseStudyPage() {
           >
             GH
           </a>
-          <button 
-            onClick={() => {
-              navigator.clipboard.writeText(SITE_URL + '/work/legit-logistics');
-              toast({
-                title: "Link Copied",
-                description: "Case study link copied to clipboard.",
-              });
-            }}
-            className="v1-share-btn btn-more"
-            title="Copy Link"
-          >
-            ···
-          </button>
         </div>
       </aside>
 
@@ -347,7 +302,7 @@ export function LegitLogisticsCaseStudyPage() {
             width: '300vw'
           }}
         >
-          {/* SYSTEM 1: Admin Dashboard */}
+          {/* SYSTEM 1: Service Funnel */}
           <section className="design design-v1 case-study__article-panel" data-design="v1">
             <main className="v1-main">
               <div className="v1-gutter" />
@@ -360,8 +315,7 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <h1 className="v1-title">
-                  <span className="v1-title-main">Delivery Operations</span>{' '}
-                  <em>Automation Platform</em>
+                  A freight dispatch funnel <em>with operations behind it.</em>
                 </h1>
 
                 <div className="v1-author case-study__article-proofline">
@@ -373,27 +327,24 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <p className="v1-lede case-study__article-lede">
-                  A custom logistics system built to reduce manual coordination across dispatch, driver updates, proof collection, and customer tracking.
+                  A service-business website built around customer acquisition plus operational intake: visitors understand the offer, enter registration, upload onboarding materials, and give the business a path toward admin review.
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
-                  <figcaption>The central digital dispatch: active delivery queues, live status boards, and driver assignments in a unified panel.</figcaption>
+                  <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
+                  <figcaption>Funnel hero landing page: positioning freight services for American owner-operators and fleet owners.</figcaption>
                 </figure>
 
                 <div className="case-study__hero-actions" style={{ marginBottom: '48px' }}>
                   <a href="/get-started.html" className="case-study__button case-study__button--primary">
-                    Automate My Workflow
+                    Build My Service Funnel
                     <ArrowRight aria-hidden="true" />
                   </a>
                 </div>
 
-                <h2 className="v1-h2">The Business Problem: Whiteboards & Chaos</h2>
+                <h2 className="v1-h2">The Business Promise: Marketing to Carriers</h2>
                 <p className="v1-p">
-                  In many service and delivery operations, information is scattered. Dispatchers track orders on whiteboards, drivers call in status updates via SMS, and managers manually reconcile delivery slips at the end of the day. When customer service agents get questions, they must text the driver directly, creating operational bottlenecks.
-                </p>
-                <p className="v1-p">
-                  Legit Logistics replaces these disconnected steps with a single source of truth. By linking the dispatch queue directly to a driver app and a customer tracking link, the software automates routine communication.
+                  In the competitive truck dispatch industry, websites must work hard to build trust with owner-operators. Delivah Dispatch communicates freight rate advantages and dispatcher support immediately upon load.
                 </p>
 
                 <h2 className="v1-h2">{workflowPillars[0].title}</h2>
@@ -404,7 +355,7 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[0].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What dispatchers see in this build</h3>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What visitors see in this module</h3>
                 <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[0].proof.map((item) => (
                     <li key={item}>
@@ -414,28 +365,30 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Dispatch Automation Flow</h3>
-                <div className="case-study__automation-list" style={{ marginTop: '20px' }}>
-                  <article className="case-study__automation-row">
-                    <div className="case-study__automation-number">01</div>
-                    <div>
-                      <p className="case-study__automation-label">Manual pattern</p>
-                      <p className="case-study__automation-copy">{automationMap[0].manual}</p>
-                    </div>
-                    <Route className="case-study__automation-icon" aria-hidden="true" />
-                    <div>
-                      <p className="case-study__automation-label">Software replacement</p>
-                      <p className="case-study__automation-copy">{automationMap[0].software}</p>
-                    </div>
-                  </article>
-                </div>
+                <h2 className="v1-h2">Core service offers</h2>
+                <p className="v1-p">
+                  The services breakdown organizes dispatch services, W9 paperwork filing, route planning, and broker negotiations into distinct, clear offers.
+                </p>
+                <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
+                  <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
+                  <figcaption>Service positioning layout showing dedicated dispatch and document handling advantages.</figcaption>
+                </figure>
+
+                <h2 className="v1-h2">Contact flow</h2>
+                <p className="v1-p">
+                  A dedicated contact inquiry branch catches general questions and consultations, providing a lightweight path to conversion for prospects who aren't ready to submit DOT documentation.
+                </p>
+                <figure className="v1-hero" style={{ marginTop: '24px' }}>
+                  <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
+                  <figcaption>Alternate lead collection form with validated contact routing.</figcaption>
+                </figure>
               </article>
               
               <div className="v1-gutter" />
             </main>
           </section>
 
-          {/* SYSTEM 2: Driver App */}
+          {/* SYSTEM 2: Onboarding Intake */}
           <section className="design design-v2 case-study__article-panel" data-design="v2">
             <main className="v1-main">
               <div className="v1-gutter" />
@@ -448,8 +401,8 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <h1 className="v1-title">
-                  <span className="v1-title-main">Guided Driver</span>{' '}
-                  <em>Flow & Actions</em>
+                  <span className="v1-title-main">Guided Carrier</span>{' '}
+                  <em>Registration & Intake</em>
                 </h1>
 
                 <div className="v1-author case-study__article-proofline">
@@ -461,32 +414,17 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <p className="v1-lede case-study__article-lede">
-                  A mobile-first driver flow that turns pickup, transit, arrival, and delivery into guided actions with proof capture.
+                  A multi-step registration wizard and document upload flow that turns carrier prospects into qualified operational leads.
                 </p>
 
                 <figure className="v1-hero">
-                  <div className="mobile-frame-container" style={{ maxWidth: '340px', margin: '0 auto', position: 'relative' }}>
-                    <img
-                      src="/portfolio-legit-driver.png"
-                      alt="Legit Logistics driver app screenshot"
-                      style={{
-                        borderRadius: '24px',
-                        border: '12px solid #1a1a1a',
-                        boxShadow: 'var(--shadow-large)',
-                        width: '100%',
-                        display: 'block'
-                      }}
-                    />
-                  </div>
-                  <figcaption style={{ marginTop: '16px' }}>Mobile-first driver interface showing active job tasks and automated status controls.</figcaption>
+                  <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
+                  <figcaption>Registration step 1: capturing DOT/MC logistics information and contact details.</figcaption>
                 </figure>
 
-                <h2 className="v1-h2">The Driver Workflow: Click-to-Update</h2>
+                <h2 className="v1-h2">Carrier intake step 1</h2>
                 <p className="v1-p">
-                  Drivers in the field are busy. Expecting them to manually call dispatch at every pick-up or drop-off fails in practice. The mobile driver app solves this by guiding drivers with simple milestone buttons (e.g. <em>Mark as Transit</em>, <em>Arrived</em>, <em>Delivered</em>). Each action logs timestamps and automatically triggers Supabase database triggers to update the customer page.
-                </p>
-                <p className="v1-p">
-                  Instead of paper invoices, drivers capture a photo at pickup and a digital customer signature at delivery, which are uploaded securely to Supabase storage buckets and pinned to the database record.
+                  Carrier registration begins with validating essential contact and business numbers. Structuring this as a multi-step sequence reduces barrier fatigue and filters out unqualified leads before the document stage.
                 </p>
 
                 <h2 className="v1-h2">{workflowPillars[1].title}</h2>
@@ -497,7 +435,7 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[1].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What drivers see in this build</h3>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Guided registration elements</h3>
                 <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[1].proof.map((item) => (
                     <li key={item}>
@@ -507,28 +445,21 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Driver Automation Flow</h3>
-                <div className="case-study__automation-list" style={{ marginTop: '20px' }}>
-                  <article className="case-study__automation-row">
-                    <div className="case-study__automation-number">02</div>
-                    <div>
-                      <p className="case-study__automation-label">Manual pattern</p>
-                      <p className="case-study__automation-copy">{automationMap[1].manual}</p>
-                    </div>
-                    <Route className="case-study__automation-icon" aria-hidden="true" />
-                    <div>
-                      <p className="case-study__automation-label">Software replacement</p>
-                      <p className="case-study__automation-copy">{automationMap[1].software}</p>
-                    </div>
-                  </article>
-                </div>
+                <h2 className="v1-h2">Document upload</h2>
+                <p className="v1-p">
+                  To complete registration onboarding, carriers must upload copies of W9 forms, liability certificates, and authority letters. This secure client-side form interface supports required file types and passes storage references to the database.
+                </p>
+                <figure className="v1-hero" style={{ marginTop: '24px' }}>
+                  <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
+                  <figcaption>Intake step 4: secure file dropzones for carrier W9, authority letter, and proof documentation.</figcaption>
+                </figure>
               </article>
               
               <div className="v1-gutter" />
             </main>
           </section>
 
-          {/* SYSTEM 3: Customer Tracking */}
+          {/* SYSTEM 3: Operations & Admin */}
           <section className="design design-v3 case-study__article-panel" data-design="v3">
             <main className="v1-main">
               <div className="v1-gutter" />
@@ -541,8 +472,8 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <h1 className="v1-title">
-                  <span className="v1-title-main">Real-time Delivery</span>{' '}
-                  <em>Visibility & Timeline</em>
+                  <span className="v1-title-main">Operational Backend</span>{' '}
+                  <em>& Lead Management</em>
                 </h1>
 
                 <div className="v1-author case-study__article-proofline">
@@ -554,20 +485,17 @@ export function LegitLogisticsCaseStudyPage() {
                 </div>
 
                 <p className="v1-lede case-study__article-lede">
-                  A public tracking and lookup experience so customers can check order progress without calling the dispatch team.
+                  A secure dispatch admin login and review area where lead logs, document archives, and carrier files are monitored.
                 </p>
 
                 <figure className="v1-hero">
-                  <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
-                  <figcaption>The public lookup portal: customers type tracking codes or enter phone numbers to get order details.</figcaption>
+                  <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
+                  <figcaption>Admin entry surface: secure dispatcher authentication controls for backend dashboard access.</figcaption>
                 </figure>
 
-                <h2 className="v1-h2">Customer Transparency: Self-Service Tracking</h2>
+                <h2 className="v1-h2">Admin entry</h2>
                 <p className="v1-p">
-                  The most common support questions for logistics teams are <em>"Where is my driver?"</em>. Responding to these manually consumes hours of dispatcher time. By automatically emailing or texting a secure tracking link to the customer upon job creation, customers can track their package's journey self-service.
-                </p>
-                <p className="v1-p">
-                  The portal is designed with Row-Level Security (RLS) policies. Public visitors can view the active status timeline using their unique, cryptographically random tracking code, but private details (such as the driver's phone number or drop-off signature) are protected until they pass secondary verification.
+                  The dashboard is protected behind login controls, allowing dispatch managers to audit registrants, review contact logs, inspect uploaded authority files, and filter lead logs by state.
                 </p>
 
                 <h2 className="v1-h2">{workflowPillars[2].title}</h2>
@@ -578,7 +506,7 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[2].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What customers see in this build</h3>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What administrators see in this build</h3>
                 <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[2].proof.map((item) => (
                     <li key={item}>
@@ -588,38 +516,9 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Customer Visibility Flow</h3>
-                <div className="case-study__automation-list" style={{ marginTop: '20px', marginBottom: '48px' }}>
-                  <article className="case-study__automation-row">
-                    <div className="case-study__automation-number">03</div>
-                    <div>
-                      <p className="case-study__automation-label">Manual pattern</p>
-                      <p className="case-study__automation-copy">{automationMap[2].manual}</p>
-                    </div>
-                    <Route className="case-study__automation-icon" aria-hidden="true" />
-                    <div>
-                      <p className="case-study__automation-label">Software replacement</p>
-                      <p className="case-study__automation-copy">{automationMap[2].software}</p>
-                    </div>
-                  </article>
-                  
-                  <article className="case-study__automation-row" style={{ marginTop: '16px' }}>
-                    <div className="case-study__automation-number">04</div>
-                    <div>
-                      <p className="case-study__automation-label">Manual pattern</p>
-                      <p className="case-study__automation-copy">{automationMap[3].manual}</p>
-                    </div>
-                    <Route className="case-study__automation-icon" aria-hidden="true" />
-                    <div>
-                      <p className="case-study__automation-label">Software replacement</p>
-                      <p className="case-study__automation-copy">{automationMap[3].software}</p>
-                    </div>
-                  </article>
-                </div>
-
-                <h2 className="v1-h2" style={{ marginTop: '64px' }}>Skills & Capabilities Demonstrated</h2>
+                <h2 className="v1-h2" style={{ marginTop: '64px' }}>What CodeByLeon Delivered</h2>
                 <p className="v1-p">
-                  The same developer skills a growing business needs for reliable, custom systems:
+                  The developer skills applied to build this client funnel and operational intake platform:
                 </p>
                 
                 <div className="case-study__capability-grid" style={{ marginTop: '24px' }}>
@@ -640,23 +539,23 @@ export function LegitLogisticsCaseStudyPage() {
                   <span>TypeScript</span>
                   <span>Vite</span>
                   <span>Supabase</span>
-                  <span>Realtime</span>
-                  <span>PostgreSQL</span>
+                  <span>SQL</span>
+                  <span>Row-Level Security</span>
                   <span>React Hook Form</span>
-                  <span>Zod</span>
+                  <span>EmailJS</span>
                   <span>Tailwind CSS</span>
                 </div>
 
                 <section className="case-study__cta" style={{ borderRadius: '16px', marginBottom: '40px' }}>
                   <div className="case-study__cta-inner">
-                    <Clock aria-hidden="true" />
-                    <h2 style={{ color: 'white' }}>Have a workflow that wastes time every week?</h2>
+                    <ClipboardList aria-hidden="true" />
+                    <h2 style={{ color: 'white' }}>Need to automate customer acquisition and onboarding?</h2>
                     <p style={{ color: 'rgba(255,255,255,0.72)' }}>
-                      I can help map the repeated steps, design the right screens, and build software that makes the work easier to run.
+                      I can map your business intake form steps, configure secure storage for customer files, and build a review dashboard.
                     </p>
                     <a href="/get-started.html" className="case-study__button case-study__button--primary">
-                      Start With My Workflow
-                      <ClipboardList aria-hidden="true" />
+                      Build My Service Funnel
+                      <ArrowRight aria-hidden="true" />
                     </a>
                   </div>
                 </section>
@@ -671,4 +570,4 @@ export function LegitLogisticsCaseStudyPage() {
   );
 }
 
-export default LegitLogisticsCaseStudyPage;
+export default DelivahDispatchCaseStudyPage;

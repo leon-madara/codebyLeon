@@ -67,6 +67,8 @@ function SmoothScrollShell({ visualTestMode, children }: SmoothScrollShellProps)
 const BlogListingPage = lazy(() => import('./pages/BlogListingPage').then(module => ({ default: module.BlogListingPage })));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
 const LegitLogisticsCaseStudyPage = lazy(() => import('./pages/LegitLogisticsCaseStudyPage'));
+const KossyLangatCaseStudyPage = lazy(() => import('./pages/KossyLangatCaseStudyPage'));
+const DelivahDispatchCaseStudyPage = lazy(() => import('./pages/DelivahDispatchCaseStudyPage'));
 
 function App() {
   const visualTestMode = isVisualTestMode();
@@ -94,6 +96,8 @@ function App() {
 
               {/* Work case study route */}
               <Route path="/work/legit-logistics" element={<LegitLogisticsCaseStudyPage />} />
+              <Route path="/work/kossy-langat" element={<KossyLangatCaseStudyPage />} />
+              <Route path="/work/delivah-dispatch-hub" element={<DelivahDispatchCaseStudyPage />} />
 
               {/* Catch-all route for /blog/* that redirects to /blog */}
               <Route path="/blog/*" element={<Navigate to="/blog" replace />} />

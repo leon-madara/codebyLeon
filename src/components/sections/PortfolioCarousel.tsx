@@ -15,6 +15,22 @@ gsap.registerPlugin(ScrollTrigger);
 
 const getElementTop = (element: HTMLElement) => element.getBoundingClientRect().top + window.scrollY;
 
+export function getPortfolioProjectCta(project: Pick<Project, "caseStudyPath">) {
+  if (project.caseStudyPath) {
+    return {
+      href: project.caseStudyPath,
+      isRoute: true,
+      label: "View Details",
+    } as const;
+  }
+
+  return {
+    href: "/get-started.html",
+    isRoute: false,
+    label: "Start Similar Project",
+  } as const;
+}
+
 const PortfolioCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
@@ -385,6 +401,7 @@ const PortfolioCarousel = () => {
   );
 
   const currentProject = projects[activeIndex] ?? projects[0];
+  const currentProjectCta = getPortfolioProjectCta(currentProject);
 
   return (
     <div className="portfolio-carousel__wrapper">
@@ -450,16 +467,16 @@ const PortfolioCarousel = () => {
               ))}
             </div>
 
-            {currentProject.caseStudyPath ? (
-              <Link className="view-details-btn w-fit" to={currentProject.caseStudyPath}>
-                View Details
+            {currentProjectCta.isRoute ? (
+              <Link className="view-details-btn w-fit" to={currentProjectCta.href}>
+                {currentProjectCta.label}
                 <ArrowUpRight size={16} />
               </Link>
             ) : (
-              <button className="view-details-btn w-fit" type="button">
-                View Details
+              <a className="view-details-btn w-fit" href={currentProjectCta.href}>
+                {currentProjectCta.label}
                 <ArrowUpRight size={16} />
-              </button>
+              </a>
             )}
           </div>
 

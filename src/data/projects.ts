@@ -38,6 +38,7 @@ export const projects: Project[] = [
     description:
       "A cinematic personal brand site for a structural engineer, built around trust, authority, mentorship, and a clear path to conversation.",
     image: "/portfolio/kossy-langat.png",
+    caseStudyPath: "/work/kossy-langat",
     accentColor: "hsl(28 78% 48%)",
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "GSAP"],
     blobColors: {
@@ -47,48 +48,19 @@ export const projects: Project[] = [
     },
   },
   {
-    name: "Reverie Reveal",
-    type: "Luxury Commerce Experience",
+    name: "Delivah Dispatch",
+    type: "Freight Dispatch Funnel",
     category: "Small Business",
     description:
-      "A refined home and living storefront concept with soft editorial motion, product storytelling, and a premium furniture browsing experience.",
-    image: "/portfolio/reverie-reveal.png",
-    accentColor: "hsl(37 43% 59%)",
-    techStack: ["TanStack Start", "React", "Tailwind CSS", "GSAP"],
+      "A customer-acquisition and carrier intake platform for an American truck dispatch business, connecting services, registration, document upload, and admin review.",
+    image: "/portfolio/delivah-dispatch.png",
+    caseStudyPath: "/work/delivah-dispatch-hub",
+    accentColor: "hsl(143 40% 21%)",
+    techStack: ["React", "TypeScript", "Supabase", "EmailJS"],
     blobColors: {
-      purple: "hsl(26 28% 26%)",
-      orange: "hsl(37 43% 59%)",
-      blue: "hsl(32 18% 72%)",
-    },
-  },
-  {
-    name: "Leon Madara Portfolio",
-    type: "Case Study System",
-    category: "SaaS",
-    description:
-      "A portfolio system shaped around deep case studies, project proof, and structured storytelling for product-minded web work.",
-    image: "/portfolio/leon-madara-portfolio.png",
-    accentColor: "hsl(214 88% 62%)",
-    techStack: ["React", "Vite", "TypeScript", "GSAP"],
-    blobColors: {
-      purple: "hsl(155 74% 25%)",
-      orange: "hsl(0 72% 42%)",
-      blue: "hsl(214 88% 62%)",
-    },
-  },
-  {
-    name: "CodeByLeon",
-    type: "Studio Website",
-    category: "Creative",
-    description:
-      "The current CodeByLeon site: a bold, animated studio presence designed to show craft, positioning, and conversion-ready web direction.",
-    image: "/portfolio/codebyleon.png",
-    accentColor: "hsl(18 88% 52%)",
-    techStack: ["React", "Vite", "TypeScript", "GSAP"],
-    blobColors: {
-      purple: "hsl(246 86% 68%)",
-      orange: "hsl(18 88% 52%)",
-      blue: "hsl(204 87% 67%)",
+      purple: "hsl(143 40% 21%)",
+      orange: "hsl(41 100% 55%)",
+      blue: "hsl(198 52% 32%)",
     },
   },
 ];
