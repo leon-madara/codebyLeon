@@ -64,11 +64,28 @@ export function DelivahDispatchCaseStudyPage() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrollHidden, setIsScrollHidden] = useState(false);
 
-  // References for GSAP background orb animations
+  // References for layout measuring and GSAP animations
   const orb1Ref = useRef<HTMLDivElement>(null);
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
+  const panel1Ref = useRef<HTMLDivElement>(null);
+  const panel2Ref = useRef<HTMLDivElement>(null);
+  const panel3Ref = useRef<HTMLDivElement>(null);
+  const [stageHeight, setStageHeight] = useState<number | 'auto'>('auto');
+
+  // Adjust stage height dynamically to active panel height to avoid empty whitespace
+  useEffect(() => {
+    const handleResize = () => {
+      const activePanel = [panel1Ref, panel2Ref, panel3Ref][activeIndex].current;
+      if (activePanel) {
+        setStageHeight(activePanel.offsetHeight);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeIndex]);
 
   const { contextSafe } = useGSAP();
 
@@ -297,7 +314,7 @@ export function DelivahDispatchCaseStudyPage() {
       </aside>
 
       {/* Slider Stage */}
-      <div className="stage">
+      <div className="stage" style={{ height: stageHeight }}>
         <div 
           className="stage-track" 
           style={{ 
@@ -306,7 +323,7 @@ export function DelivahDispatchCaseStudyPage() {
           }}
         >
           {/* SYSTEM 1: Service Funnel */}
-          <section className="design design-v1 case-study__article-panel" data-design="v1">
+          <section ref={panel1Ref} className="design design-v1 case-study__article-panel" data-design="v1">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -333,13 +350,25 @@ export function DelivahDispatchCaseStudyPage() {
                   A service-business website built around customer acquisition plus operational intake: visitors understand the offer, enter registration, upload onboarding materials, and give the business a path toward admin review.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-home-hero-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
-                  </picture>
-                  <figcaption>Funnel hero landing page: positioning freight services for American owner-operators and fleet owners.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(15, 118, 110, 0.12)', '--workspace-bg-end': 'rgba(15, 118, 110, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-home-hero-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Funnel hero landing page: positioning freight services for American owner-operators and fleet owners.
+                  </div>
+                </div>
 
                 <div className="case-study__hero-actions" style={{ marginBottom: '48px' }}>
                   <a href="/get-started.html" className="case-study__button case-study__button--primary">
@@ -375,25 +404,49 @@ export function DelivahDispatchCaseStudyPage() {
                 <p className="v1-p">
                   The services breakdown organizes dispatch services, W9 paperwork filing, route planning, and broker negotiations into distinct, clear offers.
                 </p>
-                <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-services-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
-                  </picture>
-                  <figcaption>Service positioning layout showing dedicated dispatch and document handling advantages.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(15, 118, 110, 0.12)', '--workspace-bg-end': 'rgba(15, 118, 110, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000#services</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-services-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Service positioning layout showing dedicated dispatch and document handling advantages.
+                  </div>
+                </div>
 
                 <h2 className="v1-h2">Contact flow</h2>
                 <p className="v1-p">
                   A dedicated contact inquiry branch catches general questions and consultations, providing a lightweight path to conversion for prospects who aren't ready to submit DOT documentation.
                 </p>
-                <figure className="v1-hero" style={{ marginTop: '24px' }}>
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-contact-form-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
-                  </picture>
-                  <figcaption>Alternate lead collection form with validated contact routing.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(15, 118, 110, 0.12)', '--workspace-bg-end': 'rgba(15, 118, 110, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/contact</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-contact-form-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Alternate lead collection form with validated contact routing.
+                  </div>
+                </div>
               </article>
               
               <div className="v1-gutter" />
@@ -401,7 +454,7 @@ export function DelivahDispatchCaseStudyPage() {
           </section>
 
           {/* SYSTEM 2: Onboarding Intake */}
-          <section className="design design-v2 case-study__article-panel" data-design="v2">
+          <section ref={panel2Ref} className="design design-v2 case-study__article-panel" data-design="v2">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -429,13 +482,25 @@ export function DelivahDispatchCaseStudyPage() {
                   A multi-step registration wizard and document upload flow that turns carrier prospects into qualified operational leads.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
-                  </picture>
-                  <figcaption>Registration step 1: capturing DOT/MC logistics information and contact details.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(217, 119, 6, 0.12)', '--workspace-bg-end': 'rgba(217, 119, 6, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/register</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Registration step 1: capturing DOT/MC logistics information and contact details.
+                  </div>
+                </div>
 
                 <h2 className="v1-h2">Carrier intake step 1</h2>
                 <p className="v1-p">
@@ -464,13 +529,25 @@ export function DelivahDispatchCaseStudyPage() {
                 <p className="v1-p">
                   To complete registration onboarding, carriers must upload copies of W9 forms, liability certificates, and authority letters. This secure client-side form interface supports required file types and passes storage references to the database.
                 </p>
-                <figure className="v1-hero" style={{ marginTop: '24px' }}>
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
-                  </picture>
-                  <figcaption>Intake step 4: secure file dropzones for carrier W9, authority letter, and proof documentation.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(217, 119, 6, 0.12)', '--workspace-bg-end': 'rgba(217, 119, 6, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/register/step-4</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Intake step 4: secure file dropzones for carrier W9, authority letter, and proof documentation.
+                  </div>
+                </div>
               </article>
               
               <div className="v1-gutter" />
@@ -478,7 +555,7 @@ export function DelivahDispatchCaseStudyPage() {
           </section>
 
           {/* SYSTEM 3: Operations & Admin */}
-          <section className="design design-v3 case-study__article-panel" data-design="v3">
+          <section ref={panel3Ref} className="design design-v3 case-study__article-panel" data-design="v3">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -506,13 +583,25 @@ export function DelivahDispatchCaseStudyPage() {
                   A secure dispatch admin login and review area where lead logs, document archives, and carrier files are monitored.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-admin-login-mobile.png" />
-                    <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
-                  </picture>
-                  <figcaption>Admin entry surface: secure dispatcher authentication controls for backend dashboard access.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(71, 85, 105, 0.12)', '--workspace-bg-end': 'rgba(71, 85, 105, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/admin/login</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-admin-login-mobile.png" />
+                        <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Admin entry surface: secure dispatcher authentication controls for backend dashboard access.
+                  </div>
+                </div>
 
                 <h2 className="v1-h2">Admin entry</h2>
                 <p className="v1-p">

@@ -119,6 +119,23 @@ export function KossyLangatCaseStudyPage() {
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
+  const panel1Ref = useRef<HTMLDivElement>(null);
+  const panel2Ref = useRef<HTMLDivElement>(null);
+  const panel3Ref = useRef<HTMLDivElement>(null);
+  const [stageHeight, setStageHeight] = useState<number | 'auto'>('auto');
+
+  // Adjust stage height dynamically to active panel height to avoid empty whitespace
+  useEffect(() => {
+    const handleResize = () => {
+      const activePanel = [panel1Ref, panel2Ref, panel3Ref][activeIndex].current;
+      if (activePanel) {
+        setStageHeight(activePanel.offsetHeight);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeIndex]);
 
   const { contextSafe } = useGSAP();
 
@@ -347,7 +364,7 @@ export function KossyLangatCaseStudyPage() {
       </aside>
 
       {/* Slider Stage */}
-      <div className="stage">
+      <div className="stage" style={{ height: stageHeight }}>
         <div 
           className="stage-track" 
           style={{ 
@@ -356,7 +373,7 @@ export function KossyLangatCaseStudyPage() {
           }}
         >
           {/* PANEL 1: Identity & Values */}
-          <section className="design design-v1 case-study__article-panel" data-design="v1">
+          <section ref={panel1Ref} className="design design-v1 case-study__article-panel" data-design="v1">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -383,13 +400,25 @@ export function KossyLangatCaseStudyPage() {
                   A personal brand for a structural engineer, general manager, mentor, and public voice. The challenge was turning a full professional story with structure into a website that feels specific to her.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet={kossyAssets.hero.mobile} />
-                    <img src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
-                  </picture>
-                  <figcaption>Homepage evidence: the source site leads with identity, role, and the Orchestrator idea before moving into work proof.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(194, 65, 12, 0.12)', '--workspace-bg-end': 'rgba(194, 65, 12, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet={kossyAssets.hero.mobile} />
+                        <img src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Homepage evidence: the source site leads with identity, role, and the Orchestrator idea before moving into work proof.
+                  </div>
+                </div>
 
                 <div className="case-study__hero-actions" style={{ marginBottom: '48px' }}>
                   <a href="/get-started.html" className="case-study__button case-study__button--primary">
@@ -417,13 +446,25 @@ export function KossyLangatCaseStudyPage() {
                   The site gives visitors a way to understand how Kossy thinks, leads, and measures good work. This is where the page stops feeling like a resume and starts feeling like a public identity.
                 </p>
 
-                <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet={kossyAssets.values.mobile} />
-                    <img src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
-                  </picture>
-                  <figcaption>About evidence: values, discipline, representation, and character.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(194, 65, 12, 0.12)', '--workspace-bg-end': 'rgba(194, 65, 12, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/about</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet={kossyAssets.values.mobile} />
+                        <img src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    About evidence: values, discipline, representation, and character.
+                  </div>
+                </div>
 
                 <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {values.map((value) => (
@@ -440,7 +481,7 @@ export function KossyLangatCaseStudyPage() {
           </section>
 
           {/* PANEL 2: Structural Portfolio */}
-          <section className="design design-v2 case-study__article-panel" data-design="v2">
+          <section ref={panel2Ref} className="design design-v2 case-study__article-panel" data-design="v2">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -467,26 +508,50 @@ export function KossyLangatCaseStudyPage() {
                   A portfolio layout designed to support the identity rather than overwhelm it. Visitors see real project context, then return to the larger professional story.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet={kossyAssets.workIndex.mobile} />
-                    <img src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
-                  </picture>
-                  <figcaption>Work index evidence: multiple projects organized as brand credibility.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(71, 85, 105, 0.12)', '--workspace-bg-end': 'rgba(71, 85, 105, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/work</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet={kossyAssets.workIndex.mobile} />
+                        <img src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Work index evidence: multiple projects organized as brand credibility.
+                  </div>
+                </div>
 
                 <h2 className="v1-h2">Work credibility</h2>
                 <p className="v1-p">
                   A structural engineer's brand is built on projects completed. The layout displays these credentials with clean spacing, professional context, and structural clarity.
                 </p>
 
-                <figure className="v1-hero" style={{ marginTop: '24px', marginBottom: '40px' }}>
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet={kossyAssets.workDetail.mobile} />
-                    <img src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
-                  </picture>
-                  <figcaption>Work detail evidence: a representative project connects technical context and professional authority.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(71, 85, 105, 0.12)', '--workspace-bg-end': 'rgba(71, 85, 105, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/work/tassis-residence</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet={kossyAssets.workDetail.mobile} />
+                        <img src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Work detail evidence: a representative project connects technical context and professional authority.
+                  </div>
+                </div>
 
                 <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Projects & Evidence</h3>
                 <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
@@ -504,7 +569,7 @@ export function KossyLangatCaseStudyPage() {
           </section>
 
           {/* PANEL 3: Mentorship & Voice */}
-          <section className="design design-v3 case-study__article-panel" data-design="v3">
+          <section ref={panel3Ref} className="design design-v3 case-study__article-panel" data-design="v3">
             <main className="v1-main">
               <div className="v1-gutter" />
               
@@ -531,13 +596,25 @@ export function KossyLangatCaseStudyPage() {
                   Translating guidance, mentorship, and public presence into a core pillar of leadership and personal authority.
                 </p>
 
-                <figure className="v1-hero">
-                  <picture>
-                    <source media="(max-width: 768px)" srcSet={kossyAssets.mentorship.mobile} />
-                    <img src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
-                  </picture>
-                  <figcaption>Mentorship evidence: leadership and public voice beyond project delivery.</figcaption>
-                </figure>
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(15, 118, 110, 0.12)', '--workspace-bg-end': 'rgba(15, 118, 110, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:3000/mentorship</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet={kossyAssets.mentorship.mobile} />
+                        <img src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    Mentorship evidence: leadership and public voice beyond project delivery.
+                  </div>
+                </div>
 
                 <h2 className="v1-h2">Mentorship and public voice</h2>
                 <p className="v1-p">

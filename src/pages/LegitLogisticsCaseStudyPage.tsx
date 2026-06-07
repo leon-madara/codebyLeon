@@ -95,11 +95,28 @@ export function LegitLogisticsCaseStudyPage() {
   const [isScrollHidden, setIsScrollHidden] = useState(false);
   const [system3ActiveTab, setSystem3ActiveTab] = useState<'lookup' | 'tracking'>('lookup');
 
-  // References for GSAP background orb animations
+  // References for layout measuring and GSAP animations
   const orb1Ref = useRef<HTMLDivElement>(null);
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
+  const panel1Ref = useRef<HTMLDivElement>(null);
+  const panel2Ref = useRef<HTMLDivElement>(null);
+  const panel3Ref = useRef<HTMLDivElement>(null);
+  const [stageHeight, setStageHeight] = useState<number | 'auto'>('auto');
+
+  // Adjust stage height dynamically to active panel height to avoid empty whitespace
+  useEffect(() => {
+    const handleResize = () => {
+      const activePanel = [panel1Ref, panel2Ref, panel3Ref][activeIndex].current;
+      if (activePanel) {
+        setStageHeight(activePanel.offsetHeight);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [activeIndex]);
 
   const handleBackClick = contextSafe((e: React.MouseEvent) => {
     e.preventDefault();
@@ -343,7 +360,7 @@ export function LegitLogisticsCaseStudyPage() {
       </aside>
 
       {/* Slider Stage */}
-      <div className="stage">
+      <div className="stage" style={{ height: stageHeight }}>
         <div 
           className="stage-track" 
           style={{ 
@@ -352,31 +369,11 @@ export function LegitLogisticsCaseStudyPage() {
           }}
         >
           {/* SYSTEM 1: Admin Dashboard */}
-          <section className="design design-v1 case-study__article-panel" data-design="v1">
-            <main className="v1-main-workspace">
-              {/* Left Canvas: Sticky Viewport */}
-              <div className="workspace-canvas" style={{ '--workspace-bg-start': 'rgba(217, 117, 26, 0.12)', '--workspace-bg-end': 'rgba(217, 117, 26, 0.02)' } as React.CSSProperties}>
-                <div className="browser-shell">
-                  <div className="browser-header">
-                    <div className="browser-dot" />
-                    <div className="browser-dot" />
-                    <div className="browser-dot" />
-                    <div className="browser-url">localhost:5173/admin/dashboard</div>
-                  </div>
-                  <div className="browser-body">
-                    <picture>
-                      <source media="(max-width: 768px)" srcSet="/portfolio-legit-dashboard-mobile.png" />
-                      <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
-                    </picture>
-                  </div>
-                </div>
-                <div className="workspace-canvas-caption">
-                  The central digital dispatch: active delivery queues, live status boards, and driver assignments in a unified panel.
-                </div>
-              </div>
-
-              {/* Right Specs Panel */}
-              <article className="workspace-specs">
+          <section ref={panel1Ref} className="design design-v1 case-study__article-panel" data-design="v1">
+            <main className="v1-main">
+              <div className="v1-gutter" />
+              
+              <article className="v1-article">
                 <div className="v1-meta case-study__article-meta">
                   <span className="v1-tag">{workflowPillars[0].label}</span>
                   <span className="v1-dot" />
@@ -400,7 +397,28 @@ export function LegitLogisticsCaseStudyPage() {
                   A custom logistics system built to reduce manual coordination across dispatch, driver updates, proof collection, and customer tracking.
                 </p>
 
-                <div className="case-study__hero-actions" style={{ marginBottom: '40px' }}>
+                {/* Inline Workspace Canvas */}
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(217, 117, 26, 0.12)', '--workspace-bg-end': 'rgba(217, 117, 26, 0.02)' } as React.CSSProperties}>
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">localhost:5173/admin/dashboard</div>
+                    </div>
+                    <div className="browser-body">
+                      <picture>
+                        <source media="(max-width: 768px)" srcSet="/portfolio-legit-dashboard-mobile.png" />
+                        <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
+                      </picture>
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    The central digital dispatch: active delivery queues, live status boards, and driver assignments in a unified panel.
+                  </div>
+                </div>
+
+                <div className="case-study__hero-actions" style={{ marginBottom: '48px' }}>
                   <a href="/get-started.html" className="case-study__button case-study__button--primary">
                     Automate My Workflow
                     <ArrowRight aria-hidden="true" />
@@ -415,6 +433,11 @@ export function LegitLogisticsCaseStudyPage() {
                   Legit Logistics replaces these disconnected steps with a single source of truth. By linking the dispatch queue directly to a driver app and a customer tracking link, the software automates routine communication.
                 </p>
 
+                <h3 className="v1-h2" style={{ fontSize: '22px', marginTop: '32px' }}>Database & Synchronization Architecture</h3>
+                <p className="v1-p">
+                  At the core of the admin system is a Supabase PostgreSQL database structured for transactional integrity. Active order rows transition through a strict enum state model: <code>pending_quote</code> &rarr; <code>assigned</code> &rarr; <code>in_transit</code> &rarr; <code>delivered</code>. Leveraging real-time PostgreSQL replication, dispatchers see update events instantly as drivers trigger actions in the field, eliminating double-booking and manual phone checks.
+                </p>
+
                 <h2 className="v1-h2">{workflowPillars[0].title}</h2>
                 <p className="v1-p">
                   <strong>{workflowPillars[0].audience}:</strong> {workflowPillars[0].outcome}
@@ -423,8 +446,8 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[0].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>What dispatchers see in this build</h3>
-                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '36px' }}>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What dispatchers see in this build</h3>
+                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[0].proof.map((item) => (
                     <li key={item}>
                       <CheckCircle2 aria-hidden="true" />
@@ -433,7 +456,7 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>Dispatch Automation Flow</h3>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Dispatch Automation Flow</h3>
                 <div className="case-study__automation-list" style={{ marginTop: '20px' }}>
                   <article className="case-study__automation-row">
                     <div className="case-study__automation-number">01</div>
@@ -449,29 +472,17 @@ export function LegitLogisticsCaseStudyPage() {
                   </article>
                 </div>
               </article>
+              
+              <div className="v1-gutter" />
             </main>
           </section>
 
           {/* SYSTEM 2: Driver App */}
-          <section className="design design-v2 case-study__article-panel" data-design="v2">
-            <main className="v1-main-workspace">
-              {/* Left Canvas: Sticky Viewport */}
-              <div className="workspace-canvas" style={{ '--workspace-bg-start': 'rgba(16, 185, 129, 0.12)', '--workspace-bg-end': 'rgba(16, 185, 129, 0.02)' } as React.CSSProperties}>
-                <div className="phone-shell">
-                  <div className="phone-screen">
-                    <img
-                      src="/portfolio-legit-driver-mobile.png"
-                      alt="Legit Logistics driver app screenshot"
-                    />
-                  </div>
-                </div>
-                <div className="workspace-canvas-caption">
-                  Mobile-first driver interface showing active job tasks and automated status controls.
-                </div>
-              </div>
-
-              {/* Right Specs Panel */}
-              <article className="workspace-specs">
+                <section ref={panel2Ref} className="design design-v2 case-study__article-panel" data-design="v2">
+            <main className="v1-main">
+              <div className="v1-gutter" />
+              
+              <article className="v1-article">
                 <div className="v1-meta case-study__article-meta">
                   <span className="v1-tag">{workflowPillars[1].label}</span>
                   <span className="v1-dot" />
@@ -495,12 +506,32 @@ export function LegitLogisticsCaseStudyPage() {
                   A mobile-first driver flow that turns pickup, transit, arrival, and delivery into guided actions with proof capture.
                 </p>
 
+                {/* Inline Workspace Canvas */}
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(16, 185, 129, 0.12)', '--workspace-bg-end': 'rgba(16, 185, 129, 0.02)' } as React.CSSProperties}>
+                  <div className="phone-shell">
+                    <div className="phone-screen">
+                      <img
+                        src="/portfolio-legit-driver-mobile.png"
+                        alt="Legit Logistics driver app screenshot"
+                      />
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption" style={{ marginTop: '16px' }}>
+                    Mobile-first driver interface showing active job tasks and automated status controls.
+                  </div>
+                </div>
+
                 <h2 className="v1-h2">The Driver Workflow: Click-to-Update</h2>
                 <p className="v1-p">
                   Drivers in the field are busy. Expecting them to manually call dispatch at every pick-up or drop-off fails in practice. The mobile driver app solves this by guiding drivers with simple milestone buttons (e.g. <em>Mark as Transit</em>, <em>Arrived</em>, <em>Delivered</em>). Each action logs timestamps and automatically triggers Supabase database triggers to update the customer page.
                 </p>
                 <p className="v1-p">
                   Instead of paper invoices, drivers capture a photo at pickup and a digital customer signature at delivery, which are uploaded securely to Supabase storage buckets and pinned to the database record.
+                </p>
+
+                <h3 className="v1-h2" style={{ fontSize: '22px', marginTop: '32px' }}>Offline Resilience & Storage Operations</h3>
+                <p className="v1-p">
+                  The mobile-first client utilizes optimistic state caching. If a driver drops connection in a low-reception area, signature capture and photo proofs are cached in local storage before being securely synced to Supabase Storage Buckets once the connection is restored. High-resolution photos are compressed client-side using canvas scaling to minimize data usage for field operations.
                 </p>
 
                 <h2 className="v1-h2">{workflowPillars[1].title}</h2>
@@ -511,8 +542,8 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[1].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>What drivers see in this build</h3>
-                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '36px' }}>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What drivers see in this build</h3>
+                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[1].proof.map((item) => (
                     <li key={item}>
                       <CheckCircle2 aria-hidden="true" />
@@ -521,7 +552,7 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>Driver Automation Flow</h3>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Driver Automation Flow</h3>
                 <div className="case-study__automation-list" style={{ marginTop: '20px' }}>
                   <article className="case-study__automation-row">
                     <div className="case-study__automation-number">02</div>
@@ -537,62 +568,17 @@ export function LegitLogisticsCaseStudyPage() {
                   </article>
                 </div>
               </article>
+              
+              <div className="v1-gutter" />
             </main>
           </section>
 
           {/* SYSTEM 3: Customer Tracking */}
-          <section className="design design-v3 case-study__article-panel" data-design="v3">
-            <main className="v1-main-workspace">
-              {/* Left Canvas: Sticky Viewport */}
-              <div className="workspace-canvas" style={{ '--workspace-bg-start': 'rgba(37, 99, 235, 0.12)', '--workspace-bg-end': 'rgba(37, 99, 235, 0.02)' } as React.CSSProperties}>
-                <div className="workspace-canvas-switcher">
-                  <button 
-                    onClick={() => setSystem3ActiveTab('lookup')}
-                    className={`workspace-canvas-btn ${system3ActiveTab === 'lookup' ? 'is-active' : ''}`}
-                  >
-                    Order Lookup
-                  </button>
-                  <button 
-                    onClick={() => setSystem3ActiveTab('tracking')}
-                    className={`workspace-canvas-btn ${system3ActiveTab === 'tracking' ? 'is-active' : ''}`}
-                  >
-                    Live Tracking
-                  </button>
-                </div>
-
-                <div className="browser-shell">
-                  <div className="browser-header">
-                    <div className="browser-dot" />
-                    <div className="browser-dot" />
-                    <div className="browser-dot" />
-                    <div className="browser-url">
-                      {system3ActiveTab === 'lookup' ? 'localhost:3000/tracking' : 'localhost:3000/tracking/legit-track-102'}
-                    </div>
-                  </div>
-                  <div className="browser-body">
-                    {system3ActiveTab === 'lookup' ? (
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio-legit-lookup-mobile.png" />
-                        <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
-                      </picture>
-                    ) : (
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio-legit-tracking-mobile.png" />
-                        <img src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
-                      </picture>
-                    )}
-                  </div>
-                </div>
-                <div className="workspace-canvas-caption">
-                  {system3ActiveTab === 'lookup' 
-                    ? 'The public lookup portal: customers type tracking codes or enter phone numbers to get order details.'
-                    : 'Self-service tracking timeline: customers monitor the driver\'s progress and delivery status milestones in real-time.'
-                  }
-                </div>
-              </div>
-
-              {/* Right Specs Panel */}
-              <article className="workspace-specs">
+                <section ref={panel3Ref} className="design design-v3 case-study__article-panel" data-design="v3">
+            <main className="v1-main">
+              <div className="v1-gutter" />
+              
+              <article className="v1-article">
                 <div className="v1-meta case-study__article-meta">
                   <span className="v1-tag">{workflowPillars[2].label}</span>
                   <span className="v1-dot" />
@@ -616,12 +602,65 @@ export function LegitLogisticsCaseStudyPage() {
                   A public tracking and lookup experience so customers can check order progress without calling the dispatch team.
                 </p>
 
+                {/* Inline Workspace Canvas */}
+                <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(37, 99, 235, 0.12)', '--workspace-bg-end': 'rgba(37, 99, 235, 0.02)' } as React.CSSProperties}>
+                  <div className="workspace-canvas-switcher">
+                    <button 
+                      onClick={() => setSystem3ActiveTab('lookup')}
+                      className={`workspace-canvas-btn ${system3ActiveTab === 'lookup' ? 'is-active' : ''}`}
+                    >
+                      Order Lookup
+                    </button>
+                    <button 
+                      onClick={() => setSystem3ActiveTab('tracking')}
+                      className={`workspace-canvas-btn ${system3ActiveTab === 'tracking' ? 'is-active' : ''}`}
+                    >
+                      Live Tracking
+                    </button>
+                  </div>
+
+                  <div className="browser-shell">
+                    <div className="browser-header">
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-dot" />
+                      <div className="browser-url">
+                        {system3ActiveTab === 'lookup' ? 'localhost:3000/tracking' : 'localhost:3000/tracking/legit-track-102'}
+                      </div>
+                    </div>
+                    <div className="browser-body">
+                      {system3ActiveTab === 'lookup' ? (
+                        <picture>
+                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-lookup-mobile.png" />
+                          <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
+                        </picture>
+                      ) : (
+                        <picture>
+                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-tracking-mobile.png" />
+                          <img src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
+                        </picture>
+                      )}
+                    </div>
+                  </div>
+                  <div className="workspace-canvas-caption">
+                    {system3ActiveTab === 'lookup' 
+                      ? 'The public lookup portal: customers type tracking codes or enter phone numbers to get order details.'
+                      : 'Self-service tracking timeline: customers monitor the driver\'s progress and delivery status milestones in real-time.'
+                    }
+                  </div>
+                </div>
+
                 <h2 className="v1-h2">Customer Transparency: Self-Service Tracking</h2>
                 <p className="v1-p">
                   The most common support questions for logistics teams are <em>"Where is my driver?"</em>. Responding to these manually consumes hours of dispatcher time. By automatically emailing or texting a secure tracking link to the customer upon job creation, customers can track their package's journey self-service.
                 </p>
                 <p className="v1-p">
                   The portal is designed with Row-Level Security (RLS) policies. Public visitors can view the active status timeline using their unique, cryptographically random tracking code, but private details (such as the driver's phone number or drop-off signature) are protected until they pass secondary verification.
+                </p>
+
+                <h3 className="v1-h2" style={{ fontSize: '22px', marginTop: '32px' }}>Row-Level Security (RLS) & Privacy</h3>
+                <p className="v1-p">
+                  To protect operational security, public access is governed by strict PostgreSQL RLS policies. The public tracking portal queries a dedicated RPC function that requires a cryptographically random, 16-character tracking token. Once the order reaches the <code>delivered</code> state, the policy automatically obfuscates driver location details and contact numbers, ensuring customer privacy and business security.
                 </p>
 
                 <h2 className="v1-h2">{workflowPillars[2].title}</h2>
@@ -632,8 +671,8 @@ export function LegitLogisticsCaseStudyPage() {
                   {workflowPillars[2].description}
                 </p>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>What customers see in this build</h3>
-                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '36px' }}>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>What customers see in this build</h3>
+                <ul className="case-study__proof-list case-study__proof-list--article" style={{ marginBottom: '40px' }}>
                   {workflowPillars[2].proof.map((item) => (
                     <li key={item}>
                       <CheckCircle2 aria-hidden="true" />
@@ -642,8 +681,8 @@ export function LegitLogisticsCaseStudyPage() {
                   ))}
                 </ul>
 
-                <h3 className="v1-h2" style={{ fontSize: '20px', marginTop: '36px', marginBottom: '16px' }}>Customer Visibility Flow</h3>
-                <div className="case-study__automation-list" style={{ marginTop: '20px', marginBottom: '40px' }}>
+                <h3 className="v1-h2" style={{ fontSize: '24px', marginTop: '40px' }}>Customer Visibility Flow</h3>
+                <div className="case-study__automation-list" style={{ marginTop: '20px', marginBottom: '48px' }}>
                   <article className="case-study__automation-row">
                     <div className="case-study__automation-number">03</div>
                     <div>
@@ -671,7 +710,7 @@ export function LegitLogisticsCaseStudyPage() {
                   </article>
                 </div>
 
-                <h2 className="v1-h2" style={{ marginTop: '56px' }}>Skills & Capabilities Demonstrated</h2>
+                <h2 className="v1-h2" style={{ marginTop: '64px' }}>Skills & Capabilities Demonstrated</h2>
                 <p className="v1-p">
                   The same developer skills a growing business needs for reliable, custom systems:
                 </p>
@@ -689,7 +728,7 @@ export function LegitLogisticsCaseStudyPage() {
                   })}
                 </div>
 
-                <div className="case-study__stack" style={{ marginTop: '32px', marginBottom: '56px' }}>
+                <div className="case-study__stack" style={{ marginTop: '32px', marginBottom: '64px' }}>
                   <span>React</span>
                   <span>TypeScript</span>
                   <span>Vite</span>
@@ -715,6 +754,8 @@ export function LegitLogisticsCaseStudyPage() {
                   </div>
                 </section>
               </article>
+              
+              <div className="v1-gutter" />
             </main>
           </section>
         </div>
