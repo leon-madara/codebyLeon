@@ -213,7 +213,8 @@ export function DelivahDispatchCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 0}
         >
-          Service Funnel
+          <span className="v2-pill-text-full">Service Funnel</span>
+          <span className="v2-pill-text-short">Funnel</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
@@ -224,7 +225,8 @@ export function DelivahDispatchCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 1}
         >
-          Onboarding
+          <span className="v2-pill-text-full">Onboarding</span>
+          <span className="v2-pill-text-short">Onboard</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
@@ -235,7 +237,8 @@ export function DelivahDispatchCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 2}
         >
-          Operations
+          <span className="v2-pill-text-full">Operations</span>
+          <span className="v2-pill-text-short">Ops</span>
         </button>
       </div>
 

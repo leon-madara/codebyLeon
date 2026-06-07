@@ -248,7 +248,8 @@ export function KossyLangatCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 0}
         >
-          Identity & Values
+          <span className="v2-pill-text-full">Identity & Values</span>
+          <span className="v2-pill-text-short">Identity</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
@@ -259,7 +260,8 @@ export function KossyLangatCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 1}
         >
-          Structural Portfolio
+          <span className="v2-pill-text-full">Structural Portfolio</span>
+          <span className="v2-pill-text-short">Portfolio</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
@@ -270,7 +272,8 @@ export function KossyLangatCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 2}
         >
-          Mentorship & Voice
+          <span className="v2-pill-text-full">Mentorship & Voice</span>
+          <span className="v2-pill-text-short">Mentorship</span>
         </button>
       </div>
 

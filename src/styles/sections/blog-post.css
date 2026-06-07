@@ -222,6 +222,10 @@
   color: var(--pill-text-active);
 }
 
+.v2-pill-text-short {
+  display: none;
+}
+
 /* Blinking Arrow Indicators */
 .v2-pill-arrow {
   display: inline-block;
@@ -650,6 +654,12 @@
   .global-v2-switcher .v2-pill-indicator {
     width: 92px;
     left: calc(var(--pill-pad) + var(--indicator-pos, 0) * (92px + var(--pill-gap)));
+  }
+  .v2-pill-text-full {
+    display: none;
+  }
+  .v2-pill-text-short {
+    display: inline;
   }
   .v1-quote p {
     font-size: 24px;

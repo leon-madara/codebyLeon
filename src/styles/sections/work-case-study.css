@@ -538,10 +538,18 @@
   --case-study-panel: hsl(var(--card));
 }
 
+.case-study--kossy .v2-pills.global-v2-switcher {
+  --pill-width: 170px;
+}
+
 .case-study--delivah {
   --case-study-accent: hsl(143 40% 21%);
   --case-study-accent-soft: hsl(143 40% 21% / 0.12);
   --case-study-panel: hsl(var(--card));
+}
+
+.case-study--delivah .v2-pills.global-v2-switcher {
+  --pill-width: 130px;
 }
 
 .case-study--kossy .case-study__hero--editorial,

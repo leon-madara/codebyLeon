@@ -245,7 +245,8 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 0}
         >
-          Dashboard
+          <span className="v2-pill-text-full">Dashboard</span>
+          <span className="v2-pill-text-short">Dash</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
@@ -256,7 +257,8 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 1}
         >
-          Driver App
+          <span className="v2-pill-text-full">Driver App</span>
+          <span className="v2-pill-text-short">Driver</span>
         </button>
         <button
           className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
@@ -267,7 +269,8 @@ export function LegitLogisticsCaseStudyPage() {
           role="tab"
           aria-selected={activeIndex === 2}
         >
-          Tracking
+          <span className="v2-pill-text-full">Tracking</span>
+          <span className="v2-pill-text-short">Track</span>
         </button>
       </div>
 
