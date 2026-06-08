@@ -34,49 +34,28 @@ export function getPortfolioProjectCta(project: Pick<Project, "caseStudyPath">) 
 const PortfolioCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const orbPurpleRef = useRef<HTMLDivElement>(null);
   const orbOrangeRef = useRef<HTMLDivElement>(null);
   const orbBlueRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
-  const cursorXTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorYTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorRotateTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorRotationRef = useRef(0);
-  const lastScrollYRef = useRef(0);
-  const cursorInsideSectionRef = useRef(false);
   const activeIndexRef = useRef(0);
   const prefersReducedMotion = useRef(false);
-  const isCoarsePointer = useRef(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cursorVisible, setCursorVisible] = useState(true);
-  const cursorVisibleRef = useRef(true);
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const pointerQuery = window.matchMedia("(pointer: coarse)");
 
     const syncPrefs = () => {
       prefersReducedMotion.current = motionQuery.matches;
-      isCoarsePointer.current = pointerQuery.matches;
-      if (pointerQuery.matches) {
-        cursorVisibleRef.current = false;
-        setCursorVisible(false);
-      } else {
-        cursorVisibleRef.current = true;
-        setCursorVisible(true);
-      }
     };
 
     syncPrefs();
     motionQuery.addEventListener("change", syncPrefs);
-    pointerQuery.addEventListener("change", syncPrefs);
 
     return () => {
       motionQuery.removeEventListener("change", syncPrefs);
-      pointerQuery.removeEventListener("change", syncPrefs);
     };
   }, []);
 
@@ -219,99 +198,6 @@ const PortfolioCarousel = () => {
 
   useGSAP(
     () => {
-      if (!cursorRef.current || !sectionRef.current || isCoarsePointer.current) return;
-
-      const section = sectionRef.current;
-      const cursorElement = cursorRef.current;
-
-      cursorXTo.current = gsap.quickTo(cursorElement, "x", {
-        duration: 0.24,
-        ease: "power3.out",
-      });
-      cursorYTo.current = gsap.quickTo(cursorElement, "y", {
-        duration: 0.24,
-        ease: "power3.out",
-      });
-      cursorRotateTo.current = gsap.quickTo(cursorElement, "rotate", {
-        duration: 0.3,
-        ease: "power2.out",
-      });
-
-      const interactiveSelector = "button, a, [role='button'], .nav-arrow, .view-details-btn";
-
-      const setVisibility = (visible: boolean) => {
-        if (visible !== cursorVisibleRef.current) {
-          cursorVisibleRef.current = visible;
-          setCursorVisible(visible);
-        }
-      };
-
-      const updatePosition = (event: MouseEvent) => {
-        cursorXTo.current?.(event.clientX - 32);
-        cursorYTo.current?.(event.clientY - 32);
-      };
-
-      const updateVisibility = (event: MouseEvent) => {
-        const hoveredElement = document.elementFromPoint(
-          event.clientX,
-          event.clientY
-        ) as HTMLElement | null;
-        const overInteractive = !!hoveredElement?.closest(interactiveSelector);
-        setVisibility(cursorInsideSectionRef.current && !overInteractive);
-      };
-
-      const handleMouseEnter = (event: MouseEvent) => {
-        cursorInsideSectionRef.current = true;
-        updatePosition(event);
-        updateVisibility(event);
-      };
-
-      const handleMove = (event: MouseEvent) => {
-        if (!cursorInsideSectionRef.current) return;
-        updatePosition(event);
-        updateVisibility(event);
-      };
-
-      const handleMouseLeave = () => {
-        cursorInsideSectionRef.current = false;
-        setVisibility(false);
-      };
-
-      const handleScroll = () => {
-        const nextScrollY = window.scrollY;
-        const delta = nextScrollY - lastScrollYRef.current;
-        lastScrollYRef.current = nextScrollY;
-
-        if (!cursorInsideSectionRef.current || !cursorVisibleRef.current) return;
-        if (Math.abs(delta) < 0.2) return;
-
-        cursorRotationRef.current += delta * 0.55;
-        cursorRotateTo.current?.(cursorRotationRef.current);
-      };
-
-      cursorInsideSectionRef.current = false;
-      setVisibility(false);
-      lastScrollYRef.current = window.scrollY;
-
-      section.addEventListener("mouseenter", handleMouseEnter);
-      section.addEventListener("mousemove", handleMove, { passive: true });
-      section.addEventListener("mouseleave", handleMouseLeave);
-      window.addEventListener("scroll", handleScroll, { passive: true });
-
-      return () => {
-        section.removeEventListener("mouseenter", handleMouseEnter);
-        section.removeEventListener("mousemove", handleMove);
-        section.removeEventListener("mouseleave", handleMouseLeave);
-        window.removeEventListener("scroll", handleScroll);
-        cursorInsideSectionRef.current = false;
-        setVisibility(false);
-      };
-    },
-    { scope: sectionRef, dependencies: [projects.length] }
-  );
-
-  useGSAP(
-    () => {
       if (!containerRef.current || !sectionRef.current || projects.length === 0) return;
 
       const firstProject = projects[0];
@@ -417,16 +303,6 @@ const PortfolioCarousel = () => {
           id="portfolio"
           className="portfolio-carousel h-screen w-full overflow-hidden bg-background select-none"
         >
-        <div
-          ref={cursorRef}
-          className="glass-cursor fixed left-0 top-0 z-[100] flex h-16 w-16 items-center justify-center rounded-full transition-opacity duration-200 pointer-events-none"
-          style={{ opacity: cursorVisible ? 1 : 0 }}
-        >
-          <span className="text-[10px] font-bold tracking-widest text-foreground/70 uppercase">
-            Scroll
-          </span>
-        </div>
-
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div ref={orbPurpleRef} className="orb h-[500px] w-[500px] -top-20 -left-20" />
           <div ref={orbOrangeRef} className="orb h-[400px] w-[400px] top-1/2 left-1/3" />
@@ -450,10 +326,29 @@ const PortfolioCarousel = () => {
               {currentProject.type}
             </p>
 
-            <div
-              ref={titleRef}
-              className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
-            />
+            {currentProjectCta.isRoute ? (
+              <Link
+                className="portfolio-carousel__title-link"
+                to={currentProjectCta.href}
+                aria-label={currentProject.name}
+              >
+                <div
+                  ref={titleRef}
+                  className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
+                />
+              </Link>
+            ) : (
+              <a
+                className="portfolio-carousel__title-link"
+                href={currentProjectCta.href}
+                aria-label={currentProject.name}
+              >
+                <div
+                  ref={titleRef}
+                  className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
+                />
+              </a>
+            )}
 
             <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
               {currentProject.description}
@@ -485,28 +380,56 @@ const PortfolioCarousel = () => {
               ref={cardsContainerRef}
               className="relative w-[280px] h-[186px] sm:w-[450px] sm:h-[300px] md:w-[480px] md:h-[320px] lg:w-[540px] lg:h-[360px]"
             >
-              {projects.map((project) => (
-                <div
-                  key={project.name}
-                  className="portfolio-card portfolio-carousel__card absolute inset-0 overflow-hidden rounded-2xl shadow-2xl"
-                >
-                  <img
-                    src={project.image}
-                    alt={project.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                  <div
-                    className="portfolio-carousel__image-overlay absolute inset-0"
-                    style={{
-                      background: `linear-gradient(180deg, transparent 40%, ${project.accentColor.replace(
-                        ")",
-                        " / 0.3)"
-                      )})`,
-                    }}
-                  />
-                </div>
-              ))}
+              {projects.map((project, projectIndex) => {
+                const projectCta = getPortfolioProjectCta(project);
+                const isActiveProject = projectIndex === activeIndex;
+                const cardClassName = `portfolio-card portfolio-carousel__card ${
+                  isActiveProject ? "is-active" : "is-inactive"
+                } absolute inset-0 overflow-hidden rounded-2xl shadow-2xl`;
+                const cardContents = (
+                  <>
+                    <img
+                      src={project.image}
+                      alt={project.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                    <div
+                      className="portfolio-carousel__image-overlay absolute inset-0"
+                      style={{
+                        background: `linear-gradient(180deg, transparent 40%, ${project.accentColor.replace(
+                          ")",
+                          " / 0.3)"
+                        )})`,
+                      }}
+                    />
+                  </>
+                );
+
+                return projectCta.isRoute ? (
+                  <Link
+                    key={project.name}
+                    className={cardClassName}
+                    to={projectCta.href}
+                    aria-label={`Open ${project.name} case study`}
+                    aria-hidden={!isActiveProject}
+                    tabIndex={isActiveProject ? 0 : -1}
+                  >
+                    {cardContents}
+                  </Link>
+                ) : (
+                  <a
+                    key={project.name}
+                    className={cardClassName}
+                    href={projectCta.href}
+                    aria-label={`Open ${project.name} project details`}
+                    aria-hidden={!isActiveProject}
+                    tabIndex={isActiveProject ? 0 : -1}
+                  >
+                    {cardContents}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>

@@ -186,6 +186,13 @@
   transform-style: preserve-3d;
   backface-visibility: hidden;
   opacity: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.portfolio-carousel .portfolio-carousel__card.is-active {
+  pointer-events: auto;
+  z-index: 3;
 }
 
 @media (pointer: coarse) {

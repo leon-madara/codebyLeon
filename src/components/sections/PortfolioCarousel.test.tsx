@@ -67,9 +67,13 @@ describe('PortfolioCarousel', () => {
     renderCarousel();
 
     const detailsLink = screen.getByRole('link', { name: /view details/i });
+    const titleLink = screen.getByRole('link', { name: 'Legit Logistics', exact: true });
+    const imageLink = screen.getByRole('link', { name: /open legit logistics case study/i });
 
     expect(screen.getByRole('img', { name: /legit logistics/i })).toBeInTheDocument();
     expect(detailsLink).toHaveAttribute('href', '/work/legit-logistics');
+    expect(titleLink).toHaveAttribute('href', '/work/legit-logistics');
+    expect(imageLink).toHaveAttribute('href', '/work/legit-logistics');
   });
 
   it('uses the approved Phase 2 active carousel project set', () => {
