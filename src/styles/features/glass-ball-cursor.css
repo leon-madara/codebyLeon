@@ -1,0 +1,104 @@
+/* =============================================
+   OUR WORK CURSOR
+   Webflow-inspired ring and dot cursor scoped to #portfolio
+   ============================================= */
+
+.glass-ball-cursor {
+  --work-cursor-ring: hsla(24 70% 36% / 0.42);
+  --work-cursor-dot: hsl(var(--accent));
+  --work-cursor-text: hsl(var(--foreground));
+  --work-cursor-fill: hsla(0 0% 100% / 0.08);
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 50px;
+  height: 50px;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(-100px, -100px, 0);
+  transform-origin: center;
+  will-change: transform, opacity;
+}
+
+[data-theme='dark'] .glass-ball-cursor {
+  --work-cursor-ring: hsla(30 40% 82% / 0.5);
+  --work-cursor-dot: hsl(var(--accent));
+  --work-cursor-text: hsl(var(--background));
+  --work-cursor-fill: hsla(0 0% 100% / 0.05);
+}
+
+.glass-ball-cursor[data-active='true'] {
+  opacity: 1;
+}
+
+.glass-ball-cursor__ring {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--work-cursor-ring);
+  border-radius: 50vw;
+  background: var(--work-cursor-fill);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.glass-ball-cursor__dot {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
+  background:
+    radial-gradient(circle at center, var(--work-cursor-dot) 0 3px, transparent 4px),
+    radial-gradient(circle at center, hsla(24 87% 60% / 0.18), transparent 70%);
+}
+
+.glass-ball-cursor__text {
+  color: var(--work-cursor-text);
+  font-family: var(--font-heading);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0;
+  text-transform: uppercase;
+  transform: scale(0.84);
+  transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.glass-ball-cursor[data-pressed='true'] .glass-ball-cursor__ring {
+  background: hsla(24 87% 60% / 0.12);
+  border-color: var(--work-cursor-dot);
+}
+
+.portfolio-carousel {
+  cursor: auto;
+}
+
+.portfolio-carousel:hover,
+.portfolio-carousel:hover a,
+.portfolio-carousel:hover button {
+  cursor: none;
+}
+
+.portfolio-carousel .nav-arrow.is-disabled {
+  cursor: none;
+}
+
+@media (prefers-reduced-motion: reduce), (pointer: coarse) {
+  .glass-ball-cursor {
+    display: none;
+  }
+
+  .portfolio-carousel:hover,
+  .portfolio-carousel:hover a,
+  .portfolio-carousel:hover button {
+    cursor: auto;
+  }
+}
