@@ -427,16 +427,6 @@ const PortfolioCarousel = () => {
           id="portfolio"
           className="portfolio-carousel h-screen w-full overflow-hidden bg-background select-none"
         >
-        <div
-          ref={cursorRef}
-          className="glass-cursor fixed left-0 top-0 z-[100] flex h-16 w-16 items-center justify-center rounded-full transition-opacity duration-200 pointer-events-none"
-          style={{ opacity: cursorVisible ? 1 : 0 }}
-        >
-          <span className="text-[10px] font-bold tracking-widest text-foreground/70 uppercase">
-            Scroll
-          </span>
-        </div>
-
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div ref={orbPurpleRef} className="orb h-[500px] w-[500px] -top-20 -left-20" />
           <div ref={orbOrangeRef} className="orb h-[400px] w-[400px] top-1/2 left-1/3" />
