@@ -82,15 +82,6 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-.portfolio-carousel .glass-cursor {
-  background: var(--portfolio-cursor-bg);
-  border: 1px solid var(--portfolio-cursor-border);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  will-change: transform, opacity;
-  transform: translate3d(-999px, -999px, 0);
-}
-
 .portfolio-carousel .dot-grid {
   background-image: radial-gradient(circle, var(--dot-color) 1px, transparent 1px);
   background-size: 24px 24px;
@@ -195,11 +186,6 @@
   .portfolio-carousel a {
     cursor: auto;
   }
-
-  .portfolio-carousel .glass-cursor {
-    display: none;
-  }
-
 }
 
 @media (prefers-reduced-motion: reduce) {
