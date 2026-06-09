@@ -5,6 +5,8 @@ import { MultiCardScrollSection } from '../components/HorizontalScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 
+import { GlassBallCursor } from '../components/cursor/GlassBallCursor';
+
 /**
  * HomePage component that renders all sections of the home page
  * This component is used for the "/" route
@@ -14,6 +16,7 @@ export function HomePage() {
     <>
       <Hero />
       <Portfolio />
+      <GlassBallCursor />
       <About />
       <MultiCardScrollSection />
       <Blog />
