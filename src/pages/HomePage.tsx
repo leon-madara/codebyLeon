@@ -13,6 +13,7 @@ import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 import { isVisualTestMode } from '../utils/runtimeFlags';
 import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_NAME, SITE_URL, usePageSeo } from '../utils/seo';
+import { GlassBallCursor } from '../components/cursor/GlassBallCursor';
 
 /**
  * HomePage component that renders all sections of the home page
@@ -105,6 +106,7 @@ export function HomePage() {
 
       {/* NEW: Stacked Portfolio with Carousel */}
       <PortfolioCarousel />
+      <GlassBallCursor />
 
       {/* OLD: Original Portfolio (commented for rollback)
       <Portfolio />
