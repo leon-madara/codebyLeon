@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import {
@@ -61,6 +61,7 @@ const ORB_PALETTES = [
 
 export function DelivahDispatchCaseStudyPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isScrollHidden, setIsScrollHidden] = useState(false);
 
@@ -69,6 +70,8 @@ export function DelivahDispatchCaseStudyPage() {
   const orb2Ref = useRef<HTMLDivElement>(null);
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
+  const pageWrapperRef = useRef<HTMLDivElement>(null);
+  const isNavigatingRef = useRef(false);
   const panel1Ref = useRef<HTMLDivElement>(null);
   const panel2Ref = useRef<HTMLDivElement>(null);
   const panel3Ref = useRef<HTMLDivElement>(null);
@@ -130,6 +133,62 @@ export function DelivahDispatchCaseStudyPage() {
       { x: 0, opacity: 1, duration: 0.22, ease: 'power2.out' },
       '<'
     );
+  });
+
+  // Entrance 3D flip transition animation if navigated via another project flip
+  useGSAP(() => {
+    const direction = location.state?.transitionDirection;
+    if (direction === 1 || direction === -1) {
+      const wrapper = pageWrapperRef.current;
+      if (wrapper) {
+        // Clear history state immediately to prevent re-trigger on reload
+        window.history.replaceState({}, document.title);
+        gsap.killTweensOf(wrapper);
+        gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
+        gsap.set(wrapper, {
+          transformOrigin: '50% 50%',
+          transformStyle: 'preserve-3d',
+          rotateY: direction * 90,
+          opacity: 0
+        });
+        gsap.to(wrapper, {
+          rotateY: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: 'power2.out',
+          onComplete: () => {
+            gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
+            gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
+          }
+        });
+      }
+    }
+  }, []);
+
+  // 3D flip transition to another project.
+  // Uses a ref guard to prevent double-fires and always cleans up.
+  const handleProjectNav = contextSafe((path: string, direction: -1 | 1 = 1) => {
+    if (isNavigatingRef.current) return;
+    const wrapper = pageWrapperRef.current;
+    if (!wrapper) { navigate(path, { state: { transitionDirection: direction } }); return; }
+
+    isNavigatingRef.current = true;
+    gsap.killTweensOf(wrapper);
+    gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
+    gsap.set(wrapper, { transformOrigin: '50% 50%', transformStyle: 'preserve-3d', rotateY: 0 });
+
+    gsap.to(wrapper, {
+      rotateY: direction * -90,
+      opacity: 0,
+      duration: 0.6,
+      ease: 'power2.in',
+      onComplete: () => {
+        gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
+        gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
+        isNavigatingRef.current = false;
+        navigate(path, { state: { transitionDirection: direction } });
+      },
+    });
   });
 
   usePageSeo({
@@ -202,7 +261,7 @@ export function DelivahDispatchCaseStudyPage() {
   }, [activeIndex]);
 
   return (
-    <div className="blog-post-page-wrapper case-study-white-bg case-study--delivah">
+    <div className="blog-post-page-wrapper case-study-white-bg case-study--delivah" ref={pageWrapperRef}>
       {/* Background Orbs */}
       <div className="blog__orbs">
         <div ref={orb1Ref} className="blog__orb blog__orb--1" />
@@ -261,9 +320,17 @@ export function DelivahDispatchCaseStudyPage() {
 
       {/* Subnav Strip */}
       <div className="v1-subnav-strip">
-        <span className="v1-subnav-edge">Strategy / Issue 05</span>
-        <span className="v1-subnav-brand">THE STUDIO.</span>
-        <span className="v1-subnav-edge">Archive 2026</span>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/legit-logistics', -1)}>
+          Legit Logistics
+        </button>
+        <div className="v1-subnav-brand-wrap">
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/legit-logistics', -1)} aria-label="Previous project">&lt;</button>
+          <span className="v1-subnav-brand">Delivah Dispatch</span>
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/kossy-langat', 1)} aria-label="Next project">&gt;</button>
+        </div>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/kossy-langat', 1)}>
+          Kossy Langat
+        </button>
       </div>
 
       {/* Fixed Gutter Sidebar Controls */}
