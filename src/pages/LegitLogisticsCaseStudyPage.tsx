@@ -128,6 +128,7 @@ export function LegitLogisticsCaseStudyPage() {
 
     const label = button.querySelector('.v1-back-pill-label');
     const arrow = button.querySelector('.v1-back-arrow');
+    const arrowContainer = button.querySelector('.v1-back-arrow-container');
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -149,6 +150,13 @@ export function LegitLogisticsCaseStudyPage() {
       paddingLeft: 0,
       paddingRight: 0,
       gap: 0,
+      duration: 0.22,
+      ease: 'power3.inOut'
+    }, '<');
+
+    // Expand arrow container to give the arrow space
+    tl.to(arrowContainer, {
+      width: 20,
       duration: 0.22,
       ease: 'power3.inOut'
     }, '<');

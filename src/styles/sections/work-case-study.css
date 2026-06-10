@@ -892,14 +892,14 @@
   border: none;
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color 0.2s ease, transform 0.2s ease;
+  transition: background-color 0.2s ease;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 
 .v1-back-pill:hover {
   background-color: #fca5a5; /* Redder on hover (red-300) */
-  transform: translateY(-1px);
+  color: #000000; /* Keep text black on hover */
 }
 
 /* Ensure background color and text color is same for both light and dark modes */
@@ -910,20 +910,23 @@
 
 [data-theme="dark"] .v1-back-pill:hover {
   background-color: #fca5a5;
+  color: #000000; /* Keep text black on hover in dark mode */
 }
 
 .v1-back-arrow-container {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 16px;
+  width: 0;
   height: 16px;
+  overflow: hidden;
 }
 
 .v1-back-arrow {
   display: inline-block;
   font-size: 18px;
   line-height: 1;
+  opacity: 0;
 }
 
 .v1-back-pill-label {
