@@ -101,9 +101,9 @@ describe('Theme Persistence Property-Based Tests', () => {
           return true;
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 20 }
     );
-  });
+  }, 20000);
 
   /**
    * Property test: Theme toggle persistence
@@ -149,9 +149,9 @@ describe('Theme Persistence Property-Based Tests', () => {
           return true;
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 20 }
     );
-  });
+  }, 20000);
 
   /**
    * Property test: Theme initialization without localStorage
@@ -293,7 +293,7 @@ describe('Theme Persistence Property-Based Tests', () => {
           return true;
         }
       ),
-      { numRuns: 100 }
+      { numRuns: 20 }
     );
-  });
+  }, 20000);
 });

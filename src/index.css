@@ -78,6 +78,7 @@
 @import './styles/components/cards.css';
 @import './styles/components/forms.css';
 @import './styles/components/modals.css';
+@import './styles/components/beat-card.css';
 
 /* ============================================
    6. SECTIONS
@@ -93,6 +94,8 @@
 @import './styles/sections/blog.css';
 @import './styles/sections/blog-post.css';
 @import './styles/sections/final-cta.css';
+@import './styles/sections/process.css';
+@import './styles/sections/work-case-study.css';
 
 /* ============================================
    7. FEATURES

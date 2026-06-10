@@ -70,7 +70,7 @@ export function BlogListingPage() {
       },
       blogPost: allPosts.map((post) => ({
         '@type': 'BlogPosting',
-        headline: post.title,
+        headline: post.titleItalic ? `${post.title} ${post.titleItalic}` : post.title,
         description: post.description,
         url: getAbsoluteUrl(`/blog/${post.slug}`),
         datePublished: post.publishedDate,
@@ -96,7 +96,9 @@ export function BlogListingPage() {
       if (sortBy === 'date') {
         return new Date(b.publishedDate).getTime() - new Date(a.publishedDate).getTime();
       } else {
-        return a.title.localeCompare(b.title);
+        const titleA = a.titleItalic ? `${a.title} ${a.titleItalic}` : a.title;
+        const titleB = b.titleItalic ? `${b.title} ${b.titleItalic}` : b.title;
+        return titleA.localeCompare(titleB);
       }
     });
 

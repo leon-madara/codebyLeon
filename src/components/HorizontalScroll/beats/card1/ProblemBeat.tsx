@@ -1,33 +1,23 @@
-import { AlertCircle } from 'lucide-react';
-import StoryBeat from '../../StoryBeat';
 import { forwardRef } from 'react';
+import { AlertCircle } from 'lucide-react';
+import { BeatCard } from '../../BeatCard';
+import image from '@/assets/horizontal-scroll/1.png';
 
-const Card1ProblemBeat = forwardRef<HTMLDivElement>((_, ref) => {
+const Card1ProblemBeat = forwardRef<HTMLElement>((_, ref) => {
   return (
-    <StoryBeat
+    <BeatCard
       ref={ref}
-      index={0}
-      title="The Problem"
-      subtitle="Your expertise deserves better visibility"
-      description="You're brilliant at what you do, but potential clients can only find you through word of mouth. Your skills are hidden behind a non-existent or outdated web presence."
-      icon={<AlertCircle className="w-12 h-12" />}
-      gradientClass="card1-beat-1"
-    >
-      <div className="hs-beat__tags-row flex flex-wrap gap-4 mt-8">
-        {['No website', 'Outdated design', 'Zero SEO', 'Lost leads'].map((problem, i) => (
-          <div
-            key={problem}
-            className="problem-tag px-4 py-2 bg-background/10 backdrop-blur-sm rounded-full text-primary-foreground/90 text-sm font-medium border border-background/20"
-            style={{ '--animation-delay': `${i * 0.1}s` } as React.CSSProperties}
-          >
-            {problem}
-          </div>
-        ))}
-      </div>
-    </StoryBeat>
+      step={1}
+      totalSteps={4}
+      tagText="PROBLEM"
+      imageSrc={image}
+      icon={<AlertCircle className="w-6 h-6" style={{ color: 'var(--color-primary, #10B981)' }} />}
+      heading="The Problem"
+      subheading="Your expertise deserves better visibility"
+      body="You're brilliant at what you do, but potential clients can only find you through word of mouth. Your skills are hidden behind a non-existent or outdated web presence."
+    />
   );
 });
 
 Card1ProblemBeat.displayName = 'Card1ProblemBeat';
-
 export default Card1ProblemBeat;

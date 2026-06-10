@@ -578,7 +578,8 @@ describe('getBlogPostBySlug', () => {
     const post = getBlogPostBySlug('3-mistakes-your-business-website-is-making');
     expect(post).toBeDefined();
     expect(post?.slug).toBe('3-mistakes-your-business-website-is-making');
-    expect(post?.title).toBe('3 Mistakes Your Business Website is Making');
+    expect(post?.title).toBe('3 Mistakes Your');
+    expect(post?.titleItalic).toBe('Business Website is Making');
   });
 
   it('should return blog post for second valid slug', () => {
@@ -609,7 +610,7 @@ describe('getAllBlogPosts', () => {
     const posts = getAllBlogPosts();
     expect(posts).toBeDefined();
     expect(posts.length).toBeGreaterThan(0);
-    expect(posts.length).toBe(3); // We have 3 posts in the data
+    expect(posts.length).toBe(6); // We have 6 posts in the data
   });
 
   it('should return posts sorted by date (newest first)', () => {

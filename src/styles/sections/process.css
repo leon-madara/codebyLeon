@@ -1,0 +1,33 @@
+/* =============================================
+   PROCESS PAGE STYLES
+   Code by Leon - Transparent Process Design
+   ============================================= */
+
+.process-hero-text {
+  /* Targeted by GSAP for the stagger animation */
+}
+
+/* Timeline specific styles */
+.timeline-rail {
+  background-image: var(--gradient-emerald);
+  transform-origin: top;
+}
+
+/* Step container for GSAP */
+.process-step {
+  /* Initial state set via GSAP, but fallback opacity 0 */
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+/* Fallback for no-js or visual test mode where GSAP might be disabled */
+html.no-js .process-step,
+body[data-test-mode="true"] .process-step {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Glow effects */
+.glow-ember {
+  background: var(--gradient-cta-glow);
+}

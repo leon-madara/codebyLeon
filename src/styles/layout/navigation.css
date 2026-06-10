@@ -73,13 +73,28 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   letter-spacing: 0.02em;
-  transition: color var(--duration-normal) var(--easing-standard);
+  opacity: 1;
+  transition:
+    color var(--duration-normal) var(--easing-standard),
+    opacity var(--duration-normal) var(--easing-standard);
   --link-hover-color: #fc5b45;
   --link-active-color: #fc5b45;
 }
 
+.navigation__links:has(.navigation__link:hover) .navigation__link,
+.navigation__links:focus-within .navigation__link {
+  opacity: 0.34;
+}
+
+.navigation__links:has(.navigation__link:hover) .navigation__link:hover,
+.navigation__links:focus-within .navigation__link:focus-visible,
 .navigation__link:hover {
   color: var(--link-hover-color);
+  opacity: 1;
+}
+
+.navigation__link:focus-visible {
+  opacity: 1;
 }
 
 /* Active state for navigation link */

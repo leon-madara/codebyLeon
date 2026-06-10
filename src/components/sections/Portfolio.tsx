@@ -457,7 +457,19 @@ export function Portfolio() {
               <div className="portfolio__showcase-content-track" aria-live="polite">
                 <div className="portfolio__showcase-content-pane" ref={currentContentRef}>
                   <p className="portfolio__showcase-kicker">{activeItem.type}</p>
-                  <h3 className="portfolio__showcase-title" data-testid="portfolio-active-title">
+                  <h3
+                    className="portfolio__showcase-title"
+                    data-testid="portfolio-active-title"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openModal(activeItem)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openModal(activeItem);
+                      }
+                    }}
+                  >
                     {activeItem.name}
                   </h3>
                   <p className="portfolio__showcase-description">{activeItem.description}</p>
@@ -481,7 +493,20 @@ export function Portfolio() {
                 {incomingItem && (
                   <div className="portfolio__showcase-content-pane portfolio__showcase-content-pane--incoming" ref={incomingContentRef}>
                     <p className="portfolio__showcase-kicker">{incomingItem.type}</p>
-                    <h3 className="portfolio__showcase-title">{incomingItem.name}</h3>
+                    <h3
+                      className="portfolio__showcase-title"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => openModal(incomingItem)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          openModal(incomingItem);
+                        }
+                      }}
+                    >
+                      {incomingItem.name}
+                    </h3>
                     <p className="portfolio__showcase-description">{incomingItem.description}</p>
                     <div className="portfolio__showcase-tech">
                       {incomingItem.techStack.slice(0, 4).map((tech) => (
@@ -506,7 +531,18 @@ export function Portfolio() {
                 <div className="portfolio__showcase-media-pane" ref={currentMediaRef}>
                   <div className="portfolio__showcase-depth-layer portfolio__showcase-depth-layer--rear"></div>
                   <div className="portfolio__showcase-depth-layer portfolio__showcase-depth-layer--front"></div>
-                  <div className="portfolio__showcase-image">
+                  <div
+                    className="portfolio__showcase-image"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => openModal(activeItem)}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter' || event.key === ' ') {
+                        event.preventDefault();
+                        openModal(activeItem);
+                      }
+                    }}
+                  >
                     <img src={activeItem.image} alt={activeItem.name} />
                   </div>
                 </div>
@@ -515,7 +551,18 @@ export function Portfolio() {
                   <div className="portfolio__showcase-media-pane portfolio__showcase-media-pane--incoming" ref={incomingMediaRef}>
                     <div className="portfolio__showcase-depth-layer portfolio__showcase-depth-layer--rear"></div>
                     <div className="portfolio__showcase-depth-layer portfolio__showcase-depth-layer--front"></div>
-                    <div className="portfolio__showcase-image">
+                    <div
+                      className="portfolio__showcase-image"
+                      role="button"
+                      tabIndex={0}
+                      onClick={() => openModal(incomingItem)}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter' || event.key === ' ') {
+                          event.preventDefault();
+                          openModal(incomingItem);
+                        }
+                      }}
+                    >
                       <img src={incomingItem.image} alt={incomingItem.name} />
                     </div>
                   </div>

@@ -225,7 +225,8 @@ export function searchBlogPosts(keyword: string): BlogPost[] {
   }
 
   return blogPosts.filter(post => {
-    const titleMatch = post.title.toLowerCase().includes(normalizedKeyword);
+    const titleMatch = post.title.toLowerCase().includes(normalizedKeyword) ||
+      (post.titleItalic && post.titleItalic.toLowerCase().includes(normalizedKeyword));
     const descriptionMatch = post.description.toLowerCase().includes(normalizedKeyword);
     const tagMatch = post.tags.some(tag => tag.toLowerCase().includes(normalizedKeyword));
     const categoryMatch = post.category.toLowerCase().includes(normalizedKeyword);

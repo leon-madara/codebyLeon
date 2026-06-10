@@ -21,6 +21,9 @@ export interface BlogPost {
   /** Title of the blog post */
   title: string;
   
+  /** Optional italicized subtitle/part of title */
+  titleItalic?: string;
+  
   /** Short preview text/description for the blog post */
   description: string;
   

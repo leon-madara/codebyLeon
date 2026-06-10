@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -14,52 +15,47 @@ gsap.registerPlugin(ScrollTrigger);
 
 const getElementTop = (element: HTMLElement) => element.getBoundingClientRect().top + window.scrollY;
 
+export function getPortfolioProjectCta(project: Pick<Project, "caseStudyPath">) {
+  if (project.caseStudyPath) {
+    return {
+      href: project.caseStudyPath,
+      isRoute: true,
+      label: "View Details",
+    } as const;
+  }
+
+  return {
+    href: "/get-started.html",
+    isRoute: false,
+    label: "Start Similar Project",
+  } as const;
+}
+
 const PortfolioCarousel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
   const orbPurpleRef = useRef<HTMLDivElement>(null);
   const orbOrangeRef = useRef<HTMLDivElement>(null);
   const orbBlueRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLDivElement>(null);
   const cardsContainerRef = useRef<HTMLDivElement>(null);
-  const cursorXTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorYTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorRotateTo = useRef<gsap.QuickToFunc | null>(null);
-  const cursorRotationRef = useRef(0);
-  const lastScrollYRef = useRef(0);
-  const cursorInsideSectionRef = useRef(false);
   const activeIndexRef = useRef(0);
   const prefersReducedMotion = useRef(false);
-  const isCoarsePointer = useRef(false);
 
   const [activeIndex, setActiveIndex] = useState(0);
-  const [cursorVisible, setCursorVisible] = useState(true);
-  const cursorVisibleRef = useRef(true);
 
   useEffect(() => {
     const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const pointerQuery = window.matchMedia("(pointer: coarse)");
 
     const syncPrefs = () => {
       prefersReducedMotion.current = motionQuery.matches;
-      isCoarsePointer.current = pointerQuery.matches;
-      if (pointerQuery.matches) {
-        cursorVisibleRef.current = false;
-        setCursorVisible(false);
-      } else {
-        cursorVisibleRef.current = true;
-        setCursorVisible(true);
-      }
     };
 
     syncPrefs();
     motionQuery.addEventListener("change", syncPrefs);
-    pointerQuery.addEventListener("change", syncPrefs);
 
     return () => {
       motionQuery.removeEventListener("change", syncPrefs);
-      pointerQuery.removeEventListener("change", syncPrefs);
     };
   }, []);
 
@@ -155,8 +151,7 @@ const PortfolioCarousel = () => {
     (index: number) => {
       if (!cardsContainerRef.current) return;
       const cards = cardsContainerRef.current.querySelectorAll(".portfolio-card");
-      const duration = getDuration(0.8);
-      const isDesktop = window.matchMedia("(min-width: 768px)").matches;
+      const duration = getDuration(0.7);
 
       cards.forEach((card, cardIndex) => {
         const step = cardIndex - index;
@@ -174,50 +169,14 @@ const PortfolioCarousel = () => {
           zIndex = 3;
           x = 0;
           y = 0;
-        } else if (step === -1) {
-          scale = 1.05;
-          rotateY = -12;
-          opacity = 0.5;
-          zIndex = 2;
-          x = isDesktop ? -88 : -40;
-          y = isDesktop ? -12 : -30;
-        } else if (step === -2) {
-          scale = 1.1;
-          rotateY = -22;
-          opacity = 0.2;
-          zIndex = 1;
-          x = isDesktop ? -148 : -70;
-          y = isDesktop ? -22 : -55;
-        } else if (step === 1) {
-          scale = 0.85;
-          rotateY = 12;
-          opacity = 0.5;
-          zIndex = 2;
-          x = isDesktop ? 84 : -30;
-          y = isDesktop ? 16 : 40;
-        } else if (step === 2) {
-          scale = 0.7;
-          rotateY = 22;
-          opacity = 0.2;
-          zIndex = 1;
-          x = isDesktop ? 142 : -50;
-          y = isDesktop ? 28 : 70;
         } else {
+          // Background/inactive cards are completely hidden
           opacity = 0;
           zIndex = 0;
-          scale = step < 0 ? 1.2 : 0.5;
-          rotateY = step < 0 ? -30 : 30;
-          x = step < 0 ? (isDesktop ? -188 : -90) : isDesktop ? 184 : -60;
-          y = step < 0 ? (isDesktop ? -32 : -80) : isDesktop ? 46 : 100;
-        }
-
-        if (!isDesktop && step !== 0) {
-          opacity = 0;
-          zIndex = 0;
-          scale = 0.94;
-          rotateY = 0;
-          x = 0;
-          y = 24;
+          scale = 0.95;
+          // Smooth slide offset depending on direction
+          x = step < 0 ? -40 : 40;
+          y = 0;
         }
 
         gsap.to(card, {
@@ -228,106 +187,13 @@ const PortfolioCarousel = () => {
           opacity,
           zIndex,
           duration,
-          ease: "expo.inOut",
+          ease: "power2.out",
           force3D: true,
           overwrite: "auto",
         });
       });
     },
     [getDuration]
-  );
-
-  useGSAP(
-    () => {
-      if (!cursorRef.current || !sectionRef.current || isCoarsePointer.current) return;
-
-      const section = sectionRef.current;
-      const cursorElement = cursorRef.current;
-
-      cursorXTo.current = gsap.quickTo(cursorElement, "x", {
-        duration: 0.24,
-        ease: "power3.out",
-      });
-      cursorYTo.current = gsap.quickTo(cursorElement, "y", {
-        duration: 0.24,
-        ease: "power3.out",
-      });
-      cursorRotateTo.current = gsap.quickTo(cursorElement, "rotate", {
-        duration: 0.3,
-        ease: "power2.out",
-      });
-
-      const interactiveSelector = "button, a, [role='button'], .nav-arrow, .view-details-btn";
-
-      const setVisibility = (visible: boolean) => {
-        if (visible !== cursorVisibleRef.current) {
-          cursorVisibleRef.current = visible;
-          setCursorVisible(visible);
-        }
-      };
-
-      const updatePosition = (event: MouseEvent) => {
-        cursorXTo.current?.(event.clientX - 32);
-        cursorYTo.current?.(event.clientY - 32);
-      };
-
-      const updateVisibility = (event: MouseEvent) => {
-        const hoveredElement = document.elementFromPoint(
-          event.clientX,
-          event.clientY
-        ) as HTMLElement | null;
-        const overInteractive = !!hoveredElement?.closest(interactiveSelector);
-        setVisibility(cursorInsideSectionRef.current && !overInteractive);
-      };
-
-      const handleMouseEnter = (event: MouseEvent) => {
-        cursorInsideSectionRef.current = true;
-        updatePosition(event);
-        updateVisibility(event);
-      };
-
-      const handleMove = (event: MouseEvent) => {
-        if (!cursorInsideSectionRef.current) return;
-        updatePosition(event);
-        updateVisibility(event);
-      };
-
-      const handleMouseLeave = () => {
-        cursorInsideSectionRef.current = false;
-        setVisibility(false);
-      };
-
-      const handleScroll = () => {
-        const nextScrollY = window.scrollY;
-        const delta = nextScrollY - lastScrollYRef.current;
-        lastScrollYRef.current = nextScrollY;
-
-        if (!cursorInsideSectionRef.current || !cursorVisibleRef.current) return;
-        if (Math.abs(delta) < 0.2) return;
-
-        cursorRotationRef.current += delta * 0.55;
-        cursorRotateTo.current?.(cursorRotationRef.current);
-      };
-
-      cursorInsideSectionRef.current = false;
-      setVisibility(false);
-      lastScrollYRef.current = window.scrollY;
-
-      section.addEventListener("mouseenter", handleMouseEnter);
-      section.addEventListener("mousemove", handleMove, { passive: true });
-      section.addEventListener("mouseleave", handleMouseLeave);
-      window.addEventListener("scroll", handleScroll, { passive: true });
-
-      return () => {
-        section.removeEventListener("mouseenter", handleMouseEnter);
-        section.removeEventListener("mousemove", handleMove);
-        section.removeEventListener("mouseleave", handleMouseLeave);
-        window.removeEventListener("scroll", handleScroll);
-        cursorInsideSectionRef.current = false;
-        setVisibility(false);
-      };
-    },
-    { scope: sectionRef, dependencies: [projects.length] }
   );
 
   useGSAP(
@@ -421,6 +287,7 @@ const PortfolioCarousel = () => {
   );
 
   const currentProject = projects[activeIndex] ?? projects[0];
+  const currentProjectCta = getPortfolioProjectCta(currentProject);
 
   return (
     <div className="portfolio-carousel__wrapper">
@@ -444,8 +311,8 @@ const PortfolioCarousel = () => {
 
         <div className="portfolio-carousel__overlay dot-grid absolute inset-0 pointer-events-none" />
 
-        <div className="relative z-10 px-8 pt-8 md:px-16">
-          <h2 className="portfolio-carousel__display text-2xl text-center text-foreground md:text-3xl">
+        <div className="portfolio-carousel__header relative z-10 px-8 md:px-16">
+          <h2 className="portfolio-carousel__display text-center text-foreground">
             Our Work
           </h2>
           <p className="mx-auto mt-2 max-w-lg text-center text-sm text-muted-foreground md:text-base">
@@ -453,16 +320,35 @@ const PortfolioCarousel = () => {
           </p>
         </div>
 
-        <div className="relative z-10 mx-auto flex h-[calc(100vh-200px)] w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
+        <div className="portfolio-carousel__content relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
           <div className="relative z-20 flex w-full max-w-xl flex-1 flex-col justify-center md:max-w-[34rem] md:flex-[0_1_34rem]">
             <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase">
               {currentProject.type}
             </p>
 
-            <div
-              ref={titleRef}
-              className="portfolio-carousel__display text-4xl leading-tight text-foreground sm:text-5xl md:text-6xl lg:text-7xl mb-6 min-h-[2.5em]"
-            />
+            {currentProjectCta.isRoute ? (
+              <Link
+                className="portfolio-carousel__title-link"
+                to={currentProjectCta.href}
+                aria-label={currentProject.name}
+              >
+                <div
+                  ref={titleRef}
+                  className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
+                />
+              </Link>
+            ) : (
+              <a
+                className="portfolio-carousel__title-link"
+                href={currentProjectCta.href}
+                aria-label={currentProject.name}
+              >
+                <div
+                  ref={titleRef}
+                  className="portfolio-carousel__title-frijole leading-tight text-foreground mb-6 min-h-[2.5em]"
+                />
+              </a>
+            )}
 
             <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
               {currentProject.description}
@@ -476,39 +362,74 @@ const PortfolioCarousel = () => {
               ))}
             </div>
 
-            <button className="view-details-btn w-fit">
-              View Details
-              <ArrowUpRight size={16} />
-            </button>
+            {currentProjectCta.isRoute ? (
+              <Link className="view-details-btn w-fit" to={currentProjectCta.href}>
+                {currentProjectCta.label}
+                <ArrowUpRight size={16} />
+              </Link>
+            ) : (
+              <a className="view-details-btn w-fit" href={currentProjectCta.href}>
+                {currentProjectCta.label}
+                <ArrowUpRight size={16} />
+              </a>
+            )}
           </div>
 
           <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
             <div
               ref={cardsContainerRef}
-              className="relative h-[260px] w-[195px] sm:h-[500px] sm:w-[380px] md:h-[500px] md:w-[360px] lg:h-[560px] lg:w-[420px]"
+              className="relative w-[280px] h-[186px] sm:w-[450px] sm:h-[300px] md:w-[480px] md:h-[320px] lg:w-[540px] lg:h-[360px]"
             >
-              {projects.map((project) => (
-                <div
-                  key={project.name}
-                  className="portfolio-card portfolio-carousel__card absolute inset-0 overflow-hidden rounded-2xl shadow-2xl"
-                >
-                  <img
-                    src={project.image}
-                    alt={project.name}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                  />
-                  <div
-                    className="portfolio-carousel__image-overlay absolute inset-0"
-                    style={{
-                      background: `linear-gradient(180deg, transparent 40%, ${project.accentColor.replace(
-                        ")",
-                        " / 0.3)"
-                      )})`,
-                    }}
-                  />
-                </div>
-              ))}
+              {projects.map((project, projectIndex) => {
+                const projectCta = getPortfolioProjectCta(project);
+                const isActiveProject = projectIndex === activeIndex;
+                const cardClassName = `portfolio-card portfolio-carousel__card ${
+                  isActiveProject ? "is-active" : "is-inactive"
+                } absolute inset-0 overflow-hidden rounded-2xl shadow-2xl`;
+                const cardContents = (
+                  <>
+                    <img
+                      src={project.image}
+                      alt={project.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
+                    <div
+                      className="portfolio-carousel__image-overlay absolute inset-0"
+                      style={{
+                        background: `linear-gradient(180deg, transparent 40%, ${project.accentColor.replace(
+                          ")",
+                          " / 0.3)"
+                        )})`,
+                      }}
+                    />
+                  </>
+                );
+
+                return projectCta.isRoute ? (
+                  <Link
+                    key={project.name}
+                    className={cardClassName}
+                    to={projectCta.href}
+                    aria-label={`Open ${project.name} case study`}
+                    aria-hidden={!isActiveProject}
+                    tabIndex={isActiveProject ? 0 : -1}
+                  >
+                    {cardContents}
+                  </Link>
+                ) : (
+                  <a
+                    key={project.name}
+                    className={cardClassName}
+                    href={projectCta.href}
+                    aria-label={`Open ${project.name} project details`}
+                    aria-hidden={!isActiveProject}
+                    tabIndex={isActiveProject ? 0 : -1}
+                  >
+                    {cardContents}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -537,9 +458,9 @@ const PortfolioCarousel = () => {
         </button>
 
         <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
-          <button className="rounded-full bg-accent px-8 py-3 text-sm font-semibold tracking-wide text-accent-foreground transition-opacity hover:opacity-90 cursor-pointer">
+          <a href="/get-started.html" className="rounded-full bg-accent px-8 py-3 text-sm font-semibold tracking-wide text-accent-foreground transition-opacity hover:opacity-90 cursor-pointer">
             Ready to Start Your Project?
-          </button>
+          </a>
         </div>
         </section>
       </div>

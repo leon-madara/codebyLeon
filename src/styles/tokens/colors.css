@@ -229,4 +229,22 @@
   /* Dynamic Animation Variables (set via JavaScript) */
   --line-progress: 0%;
   --beat-saturation: 0.3;
+
+  /* =============================================
+     PROCESS PAGE BRAND TOKENS
+     ============================================= */
+  
+  --brand-emerald: 35.6% 0.08 150;
+  --brand-amber: 65% 0.15 45;
+  --brand-ember: 60% 0.20 25;
+  --brand-navy: 15% 0.05 260;
+  --brand-canvas: 98% 0.01 260;
+  
+  --gradient-ember: linear-gradient(135deg, oklch(var(--brand-amber)) 0%, oklch(var(--brand-ember)) 100%);
+  --gradient-emerald: linear-gradient(180deg, oklch(var(--brand-emerald)) 0%, oklch(var(--mint)) 100%);
+  --gradient-cta-glow: radial-gradient(circle at center, rgba(252, 91, 69, 0.4) 0%, rgba(252, 91, 69, 0) 70%);
+
+  /* Workspace background tokens */
+  --workspace-bg-start: rgba(228, 228, 231, 0.25);
+  --workspace-bg-end: rgba(228, 228, 231, 0.05);
 }
