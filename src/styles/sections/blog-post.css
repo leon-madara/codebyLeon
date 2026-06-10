@@ -153,7 +153,7 @@
 
 /* Global design switcher */
 .v2-pills.global-v2-switcher {
-  --article-toggle-top: 130px;
+  --article-toggle-top: 158px;
   --article-toggle-z: 2000;
   --article-toggle-viewport-gutter: 48px;
   --article-toggle-shift-y: 0px;
@@ -279,7 +279,7 @@
   height: 58px;
   position: sticky;
   top: 72px;
-  margin-top: 0;
+  margin-top: 72px;
   z-index: 299;
   padding: 0 var(--spacing-xl, 40px);
   display: flex;
@@ -614,14 +614,18 @@
 }
 
 .v1-tag {
-  padding: 5px 12px;
-  background: var(--hero-accent);
-  color: var(--canvas-base);
+  padding: 0;
+  background: transparent;
+  color: var(--case-study-accent, var(--hero-accent));
   font-size: var(--article-meta-size);
   font-weight: 700;
   letter-spacing: var(--article-label-tracking);
   text-transform: uppercase;
   border-radius: 999px;
+}
+
+[data-theme="dark"] .v1-tag {
+  color: #ffffff;
 }
 
 .v1-dot {

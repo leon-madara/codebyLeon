@@ -651,10 +651,6 @@
 }
 
 .case-study--legit [data-design="v2"] .v1-tag {
-  background: transparent;
-  color: var(--case-study-accent);
-  border: none;
-  padding: 0;
   font-size: var(--font-size-sm, 14px);
   letter-spacing: 0.1em;
 }
