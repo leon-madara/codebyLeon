@@ -306,7 +306,7 @@ const BlogPostPage: React.FC = () => {
         {/* Subnav Strip */}
         <div className="v1-subnav-strip">
           <span className="v1-subnav-edge">Strategy / Issue 04</span>
-          <span className="v1-subnav-brand">THE STUDIO.</span>
+          <span className="v1-subnav-brand"><span className="v1-subnav-dot-indicator" />THE STUDIO.</span>
           <span className="v1-subnav-edge">Archive 2026</span>
         </div>
 

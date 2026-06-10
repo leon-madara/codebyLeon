@@ -330,9 +330,8 @@
   border-color: rgba(217, 117, 26, 0.25);
 }
 
-/* Pulse Dot Indicator */
-.v1-subnav-brand::before {
-  content: '';
+/* Inline Dot Indicator (replaces ::before for GSAP animatability) */
+.v1-subnav-dot-indicator {
   display: inline-block;
   width: 6px;
   height: 6px;
@@ -340,6 +339,13 @@
   background-color: var(--brand-orange, #D9751A);
   box-shadow: 0 0 8px var(--brand-orange, #D9751A);
   animation: subnav-dot-pulse 2s infinite ease-in-out;
+  flex-shrink: 0;
+}
+
+/* Dot inside edge buttons is hidden by default — GSAP reveals it during morph */
+.v1-subnav-edge .v1-subnav-dot-indicator {
+  display: none;
+  opacity: 0;
 }
 
 @keyframes subnav-dot-pulse {

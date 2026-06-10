@@ -208,13 +208,14 @@ export function LegitLogisticsCaseStudyPage() {
 
     // If a subnav edge link is clicked and we are on desktop, execute morph animation
     if (clickedElement && clickedElement.classList.contains('v1-subnav-edge') && window.innerWidth >= 768) {
-      const brandElement = document.querySelector('.v1-subnav-brand');
+      const brandElement = document.querySelector('.v1-subnav-brand') as HTMLElement;
       const strip = stripRef.current;
       
       if (brandElement && strip) {
-        const edgePrev = strip.querySelector('.v1-subnav-edge:first-child');
-        const edgeNext = strip.querySelector('.v1-subnav-edge:last-child');
+        const edgePrev = strip.querySelector('.v1-subnav-edge:first-child') as HTMLElement;
+        const edgeNext = strip.querySelector('.v1-subnav-edge:last-child') as HTMLElement;
         const chevrons = strip.querySelectorAll('.v1-subnav-chevron');
+        const brandDot = brandElement.querySelector('.v1-subnav-dot-indicator');
         
         if (edgePrev && edgeNext) {
           const clickedRect = clickedElement.getBoundingClientRect();
@@ -227,6 +228,8 @@ export function LegitLogisticsCaseStudyPage() {
           const prevCenter = prevRect.left + prevRect.width / 2;
           const nextCenter = nextRect.left + nextRect.width / 2;
 
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
           const tl = gsap.timeline({
             onComplete: () => {
               isNavigatingRef.current = false;
@@ -234,23 +237,32 @@ export function LegitLogisticsCaseStudyPage() {
             }
           });
 
-          // 1. Fade out chevrons
+          // 1. Fade out chevrons quickly
           tl.to(chevrons, {
             opacity: 0,
-            duration: 0.25,
+            duration: 0.18,
             ease: 'power2.out'
           }, 0);
 
-          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-          
+          // 2. Fade out the brand dot indicator
+          if (brandDot) {
+            tl.to(brandDot, {
+              opacity: 0,
+              scale: 0,
+              duration: 0.2,
+              ease: 'power2.in'
+            }, 0);
+          }
+
           // Identify elements for the 3-way swap
           const isNextClicked = clickedElement === edgeNext;
           const targetEdge = isNextClicked ? edgePrev : edgeNext;
           const targetEdgeCenter = isNextClicked ? prevCenter : nextCenter;
 
-          // Animate Clicked to Center (morphing to pill)
+          // 3. Animate Clicked edge → Center position (morphing into pill)
           tl.to(clickedElement, {
             x: brandCenter - clickedCenter,
+            y: 0,
             backgroundColor: isDark ? 'rgba(217, 117, 26, 0.12)' : 'rgba(217, 117, 26, 0.05)',
             borderColor: isDark ? 'rgba(217, 117, 26, 0.25)' : 'rgba(217, 117, 26, 0.15)',
             borderStyle: 'solid',
@@ -265,13 +277,14 @@ export function LegitLogisticsCaseStudyPage() {
             fontSize: '12px',
             scale: 1,
             opacity: 1,
-            duration: 0.55,
-            ease: 'power2.inOut'
+            duration: 0.6,
+            ease: 'power3.inOut'
           }, 0);
 
-          // Animate Brand to Opposite Edge (dropping pill style)
+          // 4. Animate Brand → Opposite edge position (shedding pill styling)
           tl.to(brandElement, {
             x: targetEdgeCenter - brandCenter,
+            y: 0,
             backgroundColor: 'transparent',
             borderColor: 'transparent',
             paddingLeft: '0px',
@@ -280,28 +293,29 @@ export function LegitLogisticsCaseStudyPage() {
             paddingBottom: '0px',
             color: 'var(--text-secondary)',
             fontWeight: '400',
-            fontSize: '14px',
+            fontSize: '11px',
             scale: 1,
-            opacity: 1,
-            duration: 0.55,
-            ease: 'power2.inOut'
+            opacity: 0.72,
+            duration: 0.6,
+            ease: 'power3.inOut'
           }, 0);
 
-          // Animate the other edge across the screen (keeping plain text style)
+          // 5. Animate the uninvolved edge → where clicked was (keeping plain style)
           tl.to(targetEdge, {
             x: clickedCenter - targetEdgeCenter,
-            opacity: 1,
-            duration: 0.55,
-            ease: 'power2.inOut'
+            y: 0,
+            opacity: 0.72,
+            duration: 0.6,
+            ease: 'power3.inOut'
           }, 0);
 
-          // Fade out the page body content smoothly
+          // 6. Fade out the page body content smoothly
           tl.to(wrapper, {
             opacity: 0,
             y: -10,
             duration: 0.45,
             ease: 'power2.in'
-          }, 0.1);
+          }, 0.12);
 
           return;
         }
@@ -408,7 +422,7 @@ export function LegitLogisticsCaseStudyPage() {
         </button>
         <div className="v1-subnav-brand-wrap">
           <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)} aria-label="Previous project">&lt;</button>
-          <span className="v1-subnav-brand">Legit Logistics</span>
+          <span className="v1-subnav-brand"><span className="v1-subnav-dot-indicator" />Legit Logistics</span>
           <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
         </div>
         <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
