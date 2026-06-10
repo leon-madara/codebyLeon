@@ -411,6 +411,10 @@ export function LegitLogisticsCaseStudyPage() {
           <span className="v1-subnav-brand">Legit Logistics</span>
           <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
         </div>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
+          Delivah Dispatch
+        </button>
+      </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
       {/* Background Orbs */}
@@ -466,9 +470,6 @@ export function LegitLogisticsCaseStudyPage() {
         >
           <span className="v2-pill-text-full">Tracking</span>
           <span className="v2-pill-text-short">Track</span>
-        </button>
-      </div>        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
-          Delivah Dispatch
         </button>
       </div>
 

@@ -369,6 +369,10 @@ export function DelivahDispatchCaseStudyPage() {
           <span className="v1-subnav-brand">Delivah Dispatch</span>
           <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/kossy-langat', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
         </div>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/kossy-langat', 1, e.currentTarget)}>
+          Kossy Langat
+        </button>
+      </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
       {/* Background Orbs */}
@@ -424,9 +428,6 @@ export function DelivahDispatchCaseStudyPage() {
         >
           <span className="v2-pill-text-full">Operations</span>
           <span className="v2-pill-text-short">Ops</span>
-        </button>
-      </div>        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/kossy-langat', 1, e.currentTarget)}>
-          Kossy Langat
         </button>
       </div>
 

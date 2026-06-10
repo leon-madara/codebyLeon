@@ -419,6 +419,10 @@ export function KossyLangatCaseStudyPage() {
           <span className="v1-subnav-brand">Kossy Langat</span>
           <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/legit-logistics', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
         </div>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/legit-logistics', 1, e.currentTarget)}>
+          Legit Logistics
+        </button>
+      </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
       {/* Background Orbs */}
@@ -474,9 +478,6 @@ export function KossyLangatCaseStudyPage() {
         >
           <span className="v2-pill-text-full">Mentorship & Voice</span>
           <span className="v2-pill-text-short">Mentorship</span>
-        </button>
-      </div>        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/legit-logistics', 1, e.currentTarget)}>
-          Legit Logistics
         </button>
       </div>
 
