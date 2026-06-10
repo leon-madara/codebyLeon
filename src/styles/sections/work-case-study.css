@@ -630,6 +630,44 @@
   --pill-width: 130px;
 }
 
+.case-study--legit {
+  --case-study-accent: #D9751A;
+  --case-study-accent-soft: rgba(217, 117, 26, 0.1);
+  --case-study-panel: hsl(var(--card));
+}
+
+[data-theme="dark"] .case-study--legit {
+  --case-study-accent: #FD9F68;
+  --case-study-accent-soft: rgba(253, 159, 104, 0.12);
+}
+
+.case-study--legit .v2-pills.global-v2-switcher {
+  --pill-width: 120px;
+}
+
+/* Legit Logistics Section 2 Centering and Tag Styling */
+.case-study--legit [data-design="v2"] .v1-meta {
+  justify-content: center;
+}
+
+.case-study--legit [data-design="v2"] .v1-tag {
+  background: transparent;
+  color: var(--case-study-accent);
+  border: none;
+  padding: 0;
+  font-size: var(--font-size-sm, 14px);
+  letter-spacing: 0.1em;
+}
+
+.case-study--legit [data-design="v2"] .v1-title {
+  text-align: center;
+}
+
+.case-study--legit [data-design="v2"] .v1-author {
+  justify-content: center;
+}
+
+
 .case-study--kossy .case-study__hero--editorial,
 .case-study--kossy .case-study__section--profile,
 .case-study--kossy .case-study__section--mentorship {

@@ -185,7 +185,7 @@ export function KossyLangatCaseStudyPage() {
     );
   });
 
-  // Entrance 3D flip transition animation if navigated via another project flip
+  // Entrance transition animation if navigated via switcher strip
   useGSAP(() => {
     const direction = location.state?.transitionDirection;
     if (direction === 1 || direction === -1) {
@@ -194,50 +194,113 @@ export function KossyLangatCaseStudyPage() {
         // Clear history state immediately to prevent re-trigger on reload
         window.history.replaceState({}, document.title);
         gsap.killTweensOf(wrapper);
-        gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
         gsap.set(wrapper, {
-          transformOrigin: '50% 50%',
-          transformStyle: 'preserve-3d',
-          rotateY: direction * 90,
-          opacity: 0
+          opacity: 0,
+          y: 15
         });
         gsap.to(wrapper, {
-          rotateY: 0,
           opacity: 1,
-          duration: 0.6,
+          y: 0,
+          duration: 0.5,
           ease: 'power2.out',
-          onComplete: () => {
-            gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
-            gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
-          }
         });
       }
     }
   }, []);
 
-  // 3D flip transition to another project.
+  // Sliding morph transition to another project.
   // Uses a ref guard to prevent double-fires and always cleans up.
-  const handleProjectNav = contextSafe((path: string, direction: -1 | 1 = 1) => {
+  const handleProjectNav = contextSafe((path: string, direction: -1 | 1 = 1, clickedElement?: HTMLElement) => {
     if (isNavigatingRef.current) return;
     const wrapper = pageWrapperRef.current;
     if (!wrapper) { navigate(path, { state: { transitionDirection: direction } }); return; }
 
     isNavigatingRef.current = true;
     gsap.killTweensOf(wrapper);
-    gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
-    gsap.set(wrapper, { transformOrigin: '50% 50%', transformStyle: 'preserve-3d', rotateY: 0 });
 
-    gsap.to(wrapper, {
-      rotateY: direction * -90,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.in',
+    // If a subnav edge link is clicked and we are on desktop, execute morph animation
+    if (clickedElement && clickedElement.classList.contains('v1-subnav-edge') && window.innerWidth >= 768) {
+      const brandElement = document.querySelector('.v1-subnav-brand');
+      const strip = document.querySelector('.v1-subnav-strip');
+      
+      if (brandElement && strip) {
+        const clickedRect = clickedElement.getBoundingClientRect();
+        const brandRect = brandElement.getBoundingClientRect();
+        const clickedCenter = clickedRect.left + clickedRect.width / 2;
+        const brandCenter = brandRect.left + brandRect.width / 2;
+        const deltaX = brandCenter - clickedCenter;
+
+        // Find other nav elements to fade out
+        const allNavs = Array.from(document.querySelectorAll('.v1-subnav-nav'));
+        const otherNavs = allNavs.filter(el => el !== clickedElement);
+
+        const tl = gsap.timeline({
+          onComplete: () => {
+            isNavigatingRef.current = false;
+            navigate(path, { state: { transitionDirection: direction } });
+          }
+        });
+
+        // 1. Fade out other navigation items and current active brand pill text
+        tl.to(otherNavs, {
+          opacity: 0,
+          duration: 0.25,
+          ease: 'power2.out'
+        }, 0);
+
+        tl.to(brandElement, {
+          opacity: 0,
+          scale: 0.9,
+          duration: 0.25,
+          ease: 'power2.out'
+        }, 0);
+
+        // 2. Slide and morph clicked element to center
+        tl.to(clickedElement, {
+          x: deltaX,
+          backgroundColor: 'var(--case-study-accent-soft)',
+          borderColor: 'var(--case-study-accent)',
+          borderStyle: 'solid',
+          borderWidth: '1px',
+          borderRadius: '9999px',
+          paddingLeft: '16px',
+          paddingRight: '16px',
+          paddingTop: '6px',
+          paddingBottom: '6px',
+          color: 'var(--case-study-accent)',
+          fontWeight: '700',
+          fontSize: '12px',
+          scale: 1,
+          opacity: 1,
+          duration: 0.55,
+          ease: 'power2.inOut'
+        }, 0.1);
+
+        // 3. Fade out the page body content smoothly
+        tl.to(wrapper, {
+          opacity: 0,
+          y: -10,
+          duration: 0.45,
+          ease: 'power2.in'
+        }, 0.15);
+
+        return;
+      }
+    }
+
+    // Fallback: simple fade transition of the page content
+    const tl = gsap.timeline({
       onComplete: () => {
-        gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
-        gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
         isNavigatingRef.current = false;
         navigate(path, { state: { transitionDirection: direction } });
-      },
+      }
+    });
+
+    tl.to(wrapper, {
+      opacity: 0,
+      y: -10,
+      duration: 0.45,
+      ease: 'power2.in'
     });
   });
 
@@ -370,15 +433,15 @@ export function KossyLangatCaseStudyPage() {
 
       {/* Subnav Strip */}
       <div className="v1-subnav-strip">
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/delivah-dispatch-hub', -1)}>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', -1, e.currentTarget)}>
           Delivah Dispatch
         </button>
         <div className="v1-subnav-brand-wrap">
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/delivah-dispatch-hub', -1)} aria-label="Previous project">&lt;</button>
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', -1, e.currentTarget)} aria-label="Previous project">&lt;</button>
           <span className="v1-subnav-brand">Kossy Langat</span>
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/legit-logistics', 1)} aria-label="Next project">&gt;</button>
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/legit-logistics', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
         </div>
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/legit-logistics', 1)}>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/legit-logistics', 1, e.currentTarget)}>
           Legit Logistics
         </button>
       </div>

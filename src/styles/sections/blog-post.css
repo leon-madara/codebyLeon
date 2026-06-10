@@ -418,13 +418,6 @@
 }
 
 /* Directional translates for Prev / Next links */
-button.v1-subnav-edge:first-child:hover {
-  transform: translateX(-4px);
-}
-
-button.v1-subnav-edge:last-child:hover {
-  transform: translateX(4px);
-}
 
 /* Responsive control layer */
 @media (min-width: 768px) {
