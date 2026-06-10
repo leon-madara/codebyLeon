@@ -102,6 +102,7 @@ export function LegitLogisticsCaseStudyPage() {
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
   const pageWrapperRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const isNavigatingRef = useRef(false);
   const panel1Ref = useRef<HTMLDivElement>(null);
   const panel2Ref = useRef<HTMLDivElement>(null);
@@ -208,71 +209,102 @@ export function LegitLogisticsCaseStudyPage() {
     // If a subnav edge link is clicked and we are on desktop, execute morph animation
     if (clickedElement && clickedElement.classList.contains('v1-subnav-edge') && window.innerWidth >= 768) {
       const brandElement = document.querySelector('.v1-subnav-brand');
-      const strip = document.querySelector('.v1-subnav-strip');
+      const strip = stripRef.current;
       
       if (brandElement && strip) {
-        const clickedRect = clickedElement.getBoundingClientRect();
-        const brandRect = brandElement.getBoundingClientRect();
-        const clickedCenter = clickedRect.left + clickedRect.width / 2;
-        const brandCenter = brandRect.left + brandRect.width / 2;
-        const deltaX = brandCenter - clickedCenter;
+        const edgePrev = strip.querySelector('.v1-subnav-edge:first-child');
+        const edgeNext = strip.querySelector('.v1-subnav-edge:last-child');
+        const chevrons = strip.querySelectorAll('.v1-subnav-chevron');
+        
+        if (edgePrev && edgeNext) {
+          const clickedRect = clickedElement.getBoundingClientRect();
+          const brandRect = brandElement.getBoundingClientRect();
+          const prevRect = edgePrev.getBoundingClientRect();
+          const nextRect = edgeNext.getBoundingClientRect();
+          
+          const clickedCenter = clickedRect.left + clickedRect.width / 2;
+          const brandCenter = brandRect.left + brandRect.width / 2;
+          const prevCenter = prevRect.left + prevRect.width / 2;
+          const nextCenter = nextRect.left + nextRect.width / 2;
 
-        // Find other nav elements to fade out
-        const allNavs = Array.from(document.querySelectorAll('.v1-subnav-nav'));
-        const otherNavs = allNavs.filter(el => el !== clickedElement);
+          const tl = gsap.timeline({
+            onComplete: () => {
+              isNavigatingRef.current = false;
+              navigate(path, { state: { transitionDirection: direction } });
+            }
+          });
 
-        const tl = gsap.timeline({
-          onComplete: () => {
-            isNavigatingRef.current = false;
-            navigate(path, { state: { transitionDirection: direction } });
-          }
-        });
+          // 1. Fade out chevrons
+          tl.to(chevrons, {
+            opacity: 0,
+            duration: 0.25,
+            ease: 'power2.out'
+          }, 0);
 
-        // 1. Fade out other navigation items and current active brand pill text
-        tl.to(otherNavs, {
-          opacity: 0,
-          duration: 0.25,
-          ease: 'power2.out'
-        }, 0);
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          
+          // Identify elements for the 3-way swap
+          const isNextClicked = clickedElement === edgeNext;
+          const targetEdge = isNextClicked ? edgePrev : edgeNext;
+          const targetEdgeCenter = isNextClicked ? prevCenter : nextCenter;
 
-        tl.to(brandElement, {
-          opacity: 0,
-          scale: 0.9,
-          duration: 0.25,
-          ease: 'power2.out'
-        }, 0);
+          // Animate Clicked to Center (morphing to pill)
+          tl.to(clickedElement, {
+            x: brandCenter - clickedCenter,
+            backgroundColor: isDark ? 'rgba(217, 117, 26, 0.12)' : 'rgba(217, 117, 26, 0.05)',
+            borderColor: isDark ? 'rgba(217, 117, 26, 0.25)' : 'rgba(217, 117, 26, 0.15)',
+            borderStyle: 'solid',
+            borderWidth: '1px',
+            borderRadius: '9999px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '6px',
+            paddingBottom: '6px',
+            color: isDark ? '#FD9F68' : '#D9751A',
+            fontWeight: '700',
+            fontSize: '12px',
+            scale: 1,
+            opacity: 1,
+            duration: 0.55,
+            ease: 'power2.inOut'
+          }, 0);
 
-        // 2. Slide and morph clicked element to center
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        tl.to(clickedElement, {
-          x: deltaX,
-          backgroundColor: isDark ? 'rgba(217, 117, 26, 0.12)' : 'rgba(217, 117, 26, 0.05)',
-          borderColor: isDark ? 'rgba(217, 117, 26, 0.25)' : 'rgba(217, 117, 26, 0.15)',
-          borderStyle: 'solid',
-          borderWidth: '1px',
-          borderRadius: '9999px',
-          paddingLeft: '16px',
-          paddingRight: '16px',
-          paddingTop: '6px',
-          paddingBottom: '6px',
-          color: isDark ? '#FD9F68' : '#D9751A',
-          fontWeight: '700',
-          fontSize: '12px',
-          scale: 1,
-          opacity: 1,
-          duration: 0.55,
-          ease: 'power2.inOut'
-        }, 0.1);
+          // Animate Brand to Opposite Edge (dropping pill style)
+          tl.to(brandElement, {
+            x: targetEdgeCenter - brandCenter,
+            backgroundColor: 'transparent',
+            borderColor: 'transparent',
+            paddingLeft: '0px',
+            paddingRight: '0px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            color: 'var(--text-secondary)',
+            fontWeight: '400',
+            fontSize: '14px',
+            scale: 1,
+            opacity: 1,
+            duration: 0.55,
+            ease: 'power2.inOut'
+          }, 0);
 
-        // 3. Fade out the page body content smoothly
-        tl.to(wrapper, {
-          opacity: 0,
-          y: -10,
-          duration: 0.45,
-          ease: 'power2.in'
-        }, 0.15);
+          // Animate the other edge across the screen (keeping plain text style)
+          tl.to(targetEdge, {
+            x: clickedCenter - targetEdgeCenter,
+            opacity: 1,
+            duration: 0.55,
+            ease: 'power2.inOut'
+          }, 0);
 
-        return;
+          // Fade out the page body content smoothly
+          tl.to(wrapper, {
+            opacity: 0,
+            y: -10,
+            duration: 0.45,
+            ease: 'power2.in'
+          }, 0.1);
+
+          return;
+        }
       }
     }
 
@@ -366,7 +398,21 @@ export function LegitLogisticsCaseStudyPage() {
   const Icon3 = workflowPillars[2].icon;
 
   return (
-    <div className="blog-post-page-wrapper case-study-white-bg case-study--legit" ref={pageWrapperRef}>
+    <div className="case-study--legit">
+
+
+      {/* Subnav Strip */}
+      <div className="v1-subnav-strip" ref={stripRef}>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)}>
+          Kossy Langat
+        </button>
+        <div className="v1-subnav-brand-wrap">
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)} aria-label="Previous project">&lt;</button>
+          <span className="v1-subnav-brand">Legit Logistics</span>
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
+        </div>
+
+      <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
       {/* Background Orbs */}
       <div className="blog__orbs">
         <div ref={orb1Ref} className="blog__orb blog__orb--1" />
@@ -421,19 +467,7 @@ export function LegitLogisticsCaseStudyPage() {
           <span className="v2-pill-text-full">Tracking</span>
           <span className="v2-pill-text-short">Track</span>
         </button>
-      </div>
-
-      {/* Subnav Strip */}
-      <div className="v1-subnav-strip">
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)}>
-          Kossy Langat
-        </button>
-        <div className="v1-subnav-brand-wrap">
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)} aria-label="Previous project">&lt;</button>
-          <span className="v1-subnav-brand">Legit Logistics</span>
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
-        </div>
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
+      </div>        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
           Delivah Dispatch
         </button>
       </div>
@@ -897,6 +931,7 @@ export function LegitLogisticsCaseStudyPage() {
           </section>
         </div>
       </div>
+    </div>
     </div>
   );
 }
