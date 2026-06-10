@@ -300,14 +300,23 @@ export function LegitLogisticsCaseStudyPage() {
             ease: 'power3.inOut'
           }, 0);
 
-          // 5. Animate the uninvolved edge → where clicked was (keeping plain style)
+          // 5. Fade out, reposition, and fade in the target edge (to avoid counter-sliding)
           tl.to(targetEdge, {
-            x: clickedCenter - targetEdgeCenter,
-            y: 0,
-            opacity: 0.72,
-            duration: 0.6,
-            ease: 'power3.inOut'
+            opacity: 0,
+            duration: 0.2,
+            ease: 'power2.out'
           }, 0);
+
+          tl.set(targetEdge, {
+            x: clickedCenter - targetEdgeCenter,
+            y: 0
+          }, 0.2);
+
+          tl.to(targetEdge, {
+            opacity: 0.72,
+            duration: 0.4,
+            ease: 'power2.in'
+          }, 0.2);
 
           // 6. Fade out the page body content smoothly
           tl.to(wrapper, {
