@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { projects } from '@/data/projects';
@@ -74,6 +76,27 @@ describe('PortfolioCarousel', () => {
     expect(detailsLink).toHaveAttribute('href', '/work/legit-logistics');
     expect(titleLink).toHaveAttribute('href', '/work/legit-logistics');
     expect(imageLink).toHaveAttribute('href', '/work/legit-logistics');
+  });
+
+  it('uses one custom-cursor target for the title, image, and details link', () => {
+    renderCarousel();
+
+    const detailsLink = screen.getByRole('link', { name: /view details/i });
+    const titleLink = screen.getByRole('link', { name: 'Legit Logistics', exact: true });
+    const imageLink = screen.getByRole('link', { name: /open legit logistics case study/i });
+    const cursorCss = readFileSync(
+      resolve(process.cwd(), 'src/styles/features/glass-ball-cursor.css'),
+      'utf8'
+    );
+
+    expect(titleLink).toHaveClass('work-cursor-target');
+    expect(imageLink).toHaveClass('work-cursor-target');
+    expect(detailsLink).toHaveClass('work-cursor-target');
+    expect(cursorCss).toMatch(/\.work-cursor-target\s*{[^}]*cursor:\s*none;/s);
+    expect(cursorCss).not.toMatch(/\.portfolio-carousel:hover[\s\S]*cursor:\s*none;/s);
+    expect(cursorCss).toMatch(
+      /@media \(prefers-reduced-motion: reduce\), \(pointer: coarse\)[\s\S]*\.work-cursor-target\s*{[^}]*cursor:\s*auto;/s
+    );
   });
 
   it('uses the approved Phase 2 active carousel project set', () => {

@@ -391,7 +391,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           // 10. Create "designs" label (Handwritten style)
           const designsLabel = document.createElement('div');
           designsLabel.textContent = "designs";
-          designsLabel.className = "euphoria-script-regular";
+          designsLabel.className = "euphoria-script-regular hero__word-grow-designs";
 
           Object.assign(designsLabel.style, {
             position: 'absolute',
@@ -399,7 +399,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             left: '50%', // Center horizontally
             top: 'calc(80% - 15vh)', // Moved up by 15vh
             transform: 'translate(-50%, 0) rotate(-6deg)', // True center alignment + Tilt
-            color: '#1a1a1a',
             zIndex: '15',
             whiteSpace: 'nowrap',
             pointerEvents: 'none',
