@@ -64,7 +64,7 @@ describe('App routes', () => {
     render(<App />);
 
     expect(await screen.findByRole('heading', {
-      name: /what happens after you choose code by leon/i,
+      name: /you bring the ambition\. i'll keep the work clear\./i,
     })).toBeInTheDocument();
     expect(screen.getAllByRole('link', { name: /build your quote/i })[0]).toHaveAttribute(
       'href',
