@@ -398,15 +398,6 @@ export function DelivahDispatchCaseStudyPage() {
         </button>
       </div>
 
-      <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
-      {/* Background Orbs */}
-      <div className="blog__orbs">
-        <div ref={orb1Ref} className="blog__orb blog__orb--1" />
-        <div ref={orb2Ref} className="blog__orb blog__orb--2" />
-        <div ref={orb3Ref} className="blog__orb blog__orb--3" />
-      </div>
-      <div className="blog__overlay" />
-
       {/* Global Design Switcher (Floating pills) */}
       <div 
         className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
@@ -454,6 +445,15 @@ export function DelivahDispatchCaseStudyPage() {
           <span className="v2-pill-text-short">Ops</span>
         </button>
       </div>
+
+      <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
+      {/* Background Orbs */}
+      <div className="blog__orbs">
+        <div ref={orb1Ref} className="blog__orb blog__orb--1" />
+        <div ref={orb2Ref} className="blog__orb blog__orb--2" />
+        <div ref={orb3Ref} className="blog__orb blog__orb--3" />
+      </div>
+      <div className="blog__overlay" />
 
       {/* Fixed Gutter Sidebar Controls */}
       <aside className="v1-gutter-sticky">
