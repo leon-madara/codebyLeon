@@ -787,7 +787,7 @@
 
 /* Media Query Adaptations */
 @media (max-width: 1100px) {
-  .global-v2-switcher.v2-pills {
+  .v2-pills.global-v2-switcher {
     --article-toggle-top: 158px;
   }
   .v1-main {
