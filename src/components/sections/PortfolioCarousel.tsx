@@ -388,12 +388,20 @@ const PortfolioCarousel = () => {
                 } absolute inset-0 overflow-hidden rounded-2xl shadow-2xl`;
                 const cardContents = (
                   <>
-                    <img
-                      src={project.image}
-                      alt={project.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
+                    <picture className="block h-full w-full">
+                      {project.mobileImage ? (
+                        <source
+                          media="(max-width: 767px)"
+                          srcSet={project.mobileImage}
+                        />
+                      ) : null}
+                      <img
+                        src={project.image}
+                        alt={project.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </picture>
                     <div
                       className="portfolio-carousel__image-overlay absolute inset-0"
                       style={{

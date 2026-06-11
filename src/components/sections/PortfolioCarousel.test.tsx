@@ -99,6 +99,40 @@ describe('PortfolioCarousel', () => {
     );
   });
 
+  it('renders responsive desktop and mobile artwork for Kossy Langat', () => {
+    const { container } = renderCarousel();
+
+    const kossyImage = container.querySelector<HTMLImageElement>('img[alt="Kossy Langat"]')!;
+    const picture = kossyImage.closest('picture');
+    const mobileSource = picture?.querySelector('source[media="(max-width: 767px)"]');
+
+    expect(kossyImage).toHaveAttribute(
+      'src',
+      '/portfolio/case-studies/kossy/kossy-home-hero.png'
+    );
+    expect(mobileSource).toHaveAttribute(
+      'srcset',
+      '/portfolio/case-studies/kossy/kossy-home-hero-mobile.png'
+    );
+  });
+
+  it('renders responsive desktop and mobile artwork for Delivah Dispatch', () => {
+    const { container } = renderCarousel();
+
+    const delivahImage = container.querySelector<HTMLImageElement>('img[alt="Delivah Dispatch"]')!;
+    const picture = delivahImage.closest('picture');
+    const mobileSource = picture?.querySelector('source[media="(max-width: 767px)"]');
+
+    expect(delivahImage).toHaveAttribute(
+      'src',
+      '/portfolio/case-studies/delivah/delivah-home-hero.png'
+    );
+    expect(mobileSource).toHaveAttribute(
+      'srcset',
+      '/portfolio/case-studies/delivah/delivah-home-hero-mobile.png'
+    );
+  });
+
   it('sends secondary projects to the configurator with a non-dead CTA', () => {
     expect(getPortfolioProjectCta({})).toEqual({
       href: '/get-started.html',
