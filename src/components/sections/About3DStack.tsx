@@ -32,12 +32,16 @@ type AboutStackCard = {
 const CARD_STACK_OFFSET_Y = 28;
 const CARD_STACK_SCALE_STEP = 0.04;
 const CARD_STACK_BRIGHTNESS_STEP = 0.18;
-const PIN_TOTAL_VH = 640;
-const FIRST_EXIT_START_VH = 60;
+// Increased total pinned scroll to give all three cards more breathing room
+const PIN_TOTAL_VH = 820;
+// Cards now dwell fully visible for much longer before any exit begins
+const FIRST_EXIT_START_VH = 160;
 const TRANSITION_PHASE_COUNT = 3;
 const PHASE_SPAN_VH = (PIN_TOTAL_VH - FIRST_EXIT_START_VH) / TRANSITION_PHASE_COUNT;
-const EXIT_PORTION_OF_PHASE = 0.46;
+// Exit occupies only 30% of each phase — slow, deliberate departure
+const EXIT_PORTION_OF_PHASE = 0.30;
 const CARD_EXIT_DURATION_VH = PHASE_SPAN_VH * EXIT_PORTION_OF_PHASE;
+// Remaining 70% of each phase holds the newly promoted card for reading
 const CARD_SETTLE_DURATION_VH = PHASE_SPAN_VH - CARD_EXIT_DURATION_VH;
 const STACK_SCRUB = 3.4;
 const CARD_LAYER_CLASSES = [
@@ -250,7 +254,8 @@ export function About3DStack() {
           opacity: 0,
           scale: 0.95,
           duration: CARD_EXIT_DURATION_VH,
-          ease: "power2.inOut",
+          // power1.out: gentle, decelerating exit — no aggressive mid-acceleration
+          ease: "power1.out",
           force3D: true,
         },
         beatStartVh
@@ -266,7 +271,7 @@ export function About3DStack() {
             rotationX: 0,
             rotationZ: 0,
             duration: CARD_EXIT_DURATION_VH,
-            ease: "power2.inOut",
+            ease: "power1.out",
             force3D: true,
           },
           beatStartVh

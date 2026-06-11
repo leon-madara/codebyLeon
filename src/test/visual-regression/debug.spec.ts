@@ -10,6 +10,11 @@ test('Compare screenshot with baseline', async ({ page }) => {
 
   const baselinePath = 'c:/Users/Leon/Pictures/Screenshots/Screenshot 2026-02-10 035834.png';
 
+  if (!fs.existsSync(baselinePath)) {
+    test.skip(true, 'Local baseline screenshot not found.');
+    return;
+  }
+
   const img1 = PNG.sync.read(fs.readFileSync(baselinePath));
   const img2 = PNG.sync.read(fs.readFileSync(screenshotPath));
   const { width, height } = img1;

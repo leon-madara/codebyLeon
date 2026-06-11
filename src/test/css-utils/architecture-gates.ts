@@ -39,26 +39,38 @@ function findDuplicateTokenKeysInSameFile(cssFiles: CSSFileInfo[]): DuplicateTok
 
   cssFiles.forEach((fileInfo) => {
     const scopes = new Map<string, Map<string, number[]>>();
+    const mediaStack: string[] = [];
 
     csstree.walk(fileInfo.ast, {
-      visit: 'Rule',
       enter(node: any) {
-        if (!node.block || !node.prelude) return;
-        const scope = csstree.generate(node.prelude);
-        const scopeMap = scopes.get(scope) ?? new Map<string, number[]>();
+        if (node.type === 'Atrule' && node.name === 'media') {
+          mediaStack.push(csstree.generate(node.prelude));
+        } else if (node.type === 'Rule') {
+          if (!node.block || !node.prelude) return;
+          const selector = csstree.generate(node.prelude);
+          const scope = mediaStack.length > 0
+            ? `@media ${mediaStack.join(' and ')} -> ${selector}`
+            : selector;
+          const scopeMap = scopes.get(scope) ?? new Map<string, number[]>();
 
-        node.block.children.forEach((child: any) => {
-          if (child.type !== 'Declaration') return;
-          if (!child.property || !child.property.startsWith('--')) return;
+          node.block.children.forEach((child: any) => {
+            if (child.type !== 'Declaration') return;
+            if (!child.property || !child.property.startsWith('--')) return;
 
-          const token = child.property;
-          const existing = scopeMap.get(token) ?? [];
-          existing.push(child.loc?.start.line ?? 0);
-          scopeMap.set(token, existing);
-        });
+            const token = child.property;
+            const existing = scopeMap.get(token) ?? [];
+            existing.push(child.loc?.start.line ?? 0);
+            scopeMap.set(token, existing);
+          });
 
-        scopes.set(scope, scopeMap);
+          scopes.set(scope, scopeMap);
+        }
       },
+      leave(node: any) {
+        if (node.type === 'Atrule' && node.name === 'media') {
+          mediaStack.pop();
+        }
+      }
     });
 
     scopes.forEach((scopeMap, scope) => {

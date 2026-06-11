@@ -552,6 +552,17 @@ class ServiceConfigurator {
         }
     }
 
+    getReturnUrl() {
+        // If the user came from a specific page (case study, blog post, etc.),
+        // return them there. Otherwise fall back to the homepage.
+        const params = new URLSearchParams(window.location.search);
+        const from = params.get('from');
+        if (from && from.startsWith('/')) {
+            return from;
+        }
+        return '/?no-burn=true';
+    }
+
     handleClose() {
         const currentDataStep = this.getCurrentDataStep();
         const currentStepId = this.stepFlow[this.currentIndex];
@@ -562,10 +573,9 @@ class ServiceConfigurator {
             return;
         }
 
-        // Delay navigation to allow vapor effect to be visible if staying internal
-        // But user requested "do not run the burning animation" on home page, 
-        // so we exit directly with the flag.
-        const navigateHome = () => {
+        const returnUrl = this.getReturnUrl();
+
+        const navigateBack = () => {
             // Step 7+ (not 8): Clear progress and exit
             if (currentDataStep === 7 || currentStepId === 'processing') {
                 this.clearProgress();
@@ -573,11 +583,10 @@ class ServiceConfigurator {
                 // Steps 1-6: Preserve progress and exit
                 this.saveProgress();
             }
-            window.location.href = '/?no-burn=true';
+            window.location.href = returnUrl;
         };
 
-        // If we are exiting, we don't need much delay if the target doesn't have an entrance transition
-        setTimeout(navigateHome, 100);
+        setTimeout(navigateBack, 100);
     }
 
     clearProgress() {
@@ -586,12 +595,12 @@ class ServiceConfigurator {
 
     handleSaveAndExit() {
         this.saveProgress();
-        window.location.href = '/?no-burn=true';
+        window.location.href = this.getReturnUrl();
     }
 
     handleExitAndReset() {
         this.clearProgress();
-        window.location.href = '/?no-burn=true';
+        window.location.href = this.getReturnUrl();
     }
 
     showSaveInfoModal() {

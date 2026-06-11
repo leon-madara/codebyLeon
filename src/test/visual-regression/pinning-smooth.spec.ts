@@ -65,8 +65,12 @@ test.describe('Smooth-Mode Pinning Invariants', () => {
 
     const captureAt = async (targetY: number): Promise<SmoothSnapshot> => {
       return page.evaluate(async (y) => {
-        window.scrollTo({ top: y, left: 0, behavior: 'auto' });
-        await new Promise((resolve) => setTimeout(resolve, 1800));
+        if ((window as any).smoother) {
+          (window as any).smoother.scrollTo(y, false);
+        } else {
+          window.scrollTo({ top: y, left: 0, behavior: 'auto' });
+        }
+        await new Promise((resolve) => setTimeout(resolve, 200));
 
         const wrapper = document.querySelector('.portfolio-carousel__wrapper') as HTMLElement;
         const portfolio = document.querySelector('#portfolio') as HTMLElement;

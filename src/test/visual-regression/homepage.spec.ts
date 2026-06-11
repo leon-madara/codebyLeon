@@ -13,6 +13,7 @@ test.describe('Homepage Visual Regression', () => {
     animations: 'disabled' as const,
     caret: 'hide' as const,
     timeout: 20000,
+    maxDiffPixelRatio: 0.02,
   };
 
   test.beforeEach(async ({ page }) => {

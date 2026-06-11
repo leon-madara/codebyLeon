@@ -102,6 +102,7 @@ export function LegitLogisticsCaseStudyPage() {
   const orb3Ref = useRef<HTMLDivElement>(null);
   const backButtonRef = useRef<HTMLAnchorElement>(null);
   const pageWrapperRef = useRef<HTMLDivElement>(null);
+  const stripRef = useRef<HTMLDivElement>(null);
   const isNavigatingRef = useRef(false);
   const panel1Ref = useRef<HTMLDivElement>(null);
   const panel2Ref = useRef<HTMLDivElement>(null);
@@ -172,7 +173,7 @@ export function LegitLogisticsCaseStudyPage() {
     );
   });
 
-  // Entrance 3D flip transition animation if navigated via another project flip
+  // Entrance transition animation if navigated via switcher strip
   useGSAP(() => {
     const direction = location.state?.transitionDirection;
     if (direction === 1 || direction === -1) {
@@ -181,50 +182,168 @@ export function LegitLogisticsCaseStudyPage() {
         // Clear history state immediately to prevent re-trigger on reload
         window.history.replaceState({}, document.title);
         gsap.killTweensOf(wrapper);
-        gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
         gsap.set(wrapper, {
-          transformOrigin: '50% 50%',
-          transformStyle: 'preserve-3d',
-          rotateY: direction * 90,
-          opacity: 0
+          opacity: 0,
+          y: 15
         });
         gsap.to(wrapper, {
-          rotateY: 0,
           opacity: 1,
-          duration: 0.6,
+          y: 0,
+          duration: 0.5,
           ease: 'power2.out',
-          onComplete: () => {
-            gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
-            gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
-          }
         });
       }
     }
   }, []);
 
-  // 3D flip transition to another project.
+  // Sliding morph transition to another project.
   // Uses a ref guard to prevent double-fires and always cleans up.
-  const handleProjectNav = contextSafe((path: string, direction: -1 | 1 = 1) => {
+  const handleProjectNav = contextSafe((path: string, direction: -1 | 1 = 1, clickedElement?: HTMLElement) => {
     if (isNavigatingRef.current) return;
     const wrapper = pageWrapperRef.current;
     if (!wrapper) { navigate(path, { state: { transitionDirection: direction } }); return; }
 
     isNavigatingRef.current = true;
     gsap.killTweensOf(wrapper);
-    gsap.set(document.body, { perspective: 1800, perspectiveOrigin: '50% 50%' });
-    gsap.set(wrapper, { transformOrigin: '50% 50%', transformStyle: 'preserve-3d', rotateY: 0 });
 
-    gsap.to(wrapper, {
-      rotateY: direction * -90,
-      opacity: 0,
-      duration: 0.6,
-      ease: 'power2.in',
+    // If a subnav edge link is clicked and we are on desktop, execute morph animation
+    if (clickedElement && clickedElement.classList.contains('v1-subnav-edge') && window.innerWidth >= 768) {
+      const brandElement = document.querySelector('.v1-subnav-brand') as HTMLElement;
+      const strip = stripRef.current;
+      
+      if (brandElement && strip) {
+        const edgePrev = strip.querySelector('.v1-subnav-edge:first-child') as HTMLElement;
+        const edgeNext = strip.querySelector('.v1-subnav-edge:last-child') as HTMLElement;
+        const chevrons = strip.querySelectorAll('.v1-subnav-chevron');
+        const brandDot = brandElement.querySelector('.v1-subnav-dot-indicator');
+        
+        if (edgePrev && edgeNext) {
+          const clickedRect = clickedElement.getBoundingClientRect();
+          const brandRect = brandElement.getBoundingClientRect();
+          const prevRect = edgePrev.getBoundingClientRect();
+          const nextRect = edgeNext.getBoundingClientRect();
+          
+          const clickedCenter = clickedRect.left + clickedRect.width / 2;
+          const brandCenter = brandRect.left + brandRect.width / 2;
+          const prevCenter = prevRect.left + prevRect.width / 2;
+          const nextCenter = nextRect.left + nextRect.width / 2;
+
+          const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+          const tl = gsap.timeline({
+            onComplete: () => {
+              isNavigatingRef.current = false;
+              navigate(path, { state: { transitionDirection: direction } });
+            }
+          });
+
+          // 1. Fade out chevrons quickly
+          tl.to(chevrons, {
+            opacity: 0,
+            duration: 0.18,
+            ease: 'power2.out'
+          }, 0);
+
+          // 2. Fade out the brand dot indicator
+          if (brandDot) {
+            tl.to(brandDot, {
+              opacity: 0,
+              scale: 0,
+              duration: 0.2,
+              ease: 'power2.in'
+            }, 0);
+          }
+
+          // Identify elements for the 3-way swap
+          const isNextClicked = clickedElement === edgeNext;
+          const targetEdge = isNextClicked ? edgePrev : edgeNext;
+          const targetEdgeCenter = isNextClicked ? prevCenter : nextCenter;
+
+          // 3. Animate Clicked edge → Center position (morphing into pill)
+          tl.to(clickedElement, {
+            x: brandCenter - clickedCenter,
+            y: 0,
+            backgroundColor: isDark ? 'rgba(217, 117, 26, 0.12)' : 'rgba(217, 117, 26, 0.05)',
+            borderColor: isDark ? 'rgba(217, 117, 26, 0.25)' : 'rgba(217, 117, 26, 0.15)',
+            borderStyle: 'solid',
+            borderWidth: '1px',
+            borderRadius: '9999px',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: '6px',
+            paddingBottom: '6px',
+            color: isDark ? '#FD9F68' : '#D9751A',
+            fontWeight: '700',
+            fontSize: '12px',
+            scale: 1,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power3.inOut'
+          }, 0);
+
+          // 4. Animate Brand → Opposite edge position (shedding pill styling)
+          tl.to(brandElement, {
+            x: targetEdgeCenter - brandCenter,
+            y: 0,
+            backgroundColor: 'transparent',
+            borderColor: 'transparent',
+            paddingLeft: '0px',
+            paddingRight: '0px',
+            paddingTop: '0px',
+            paddingBottom: '0px',
+            color: 'var(--text-secondary)',
+            fontWeight: '400',
+            fontSize: '11px',
+            scale: 1,
+            opacity: 0.72,
+            duration: 0.6,
+            ease: 'power3.inOut'
+          }, 0);
+
+          // 5. Fade out, reposition, and fade in the target edge (to avoid counter-sliding)
+          tl.to(targetEdge, {
+            opacity: 0,
+            duration: 0.2,
+            ease: 'power2.out'
+          }, 0);
+
+          tl.set(targetEdge, {
+            x: clickedCenter - targetEdgeCenter,
+            y: 0
+          }, 0.2);
+
+          tl.to(targetEdge, {
+            opacity: 0.72,
+            duration: 0.4,
+            ease: 'power2.in'
+          }, 0.2);
+
+          // 6. Fade out the page body content smoothly
+          tl.to(wrapper, {
+            opacity: 0,
+            y: -10,
+            duration: 0.45,
+            ease: 'power2.in'
+          }, 0.12);
+
+          return;
+        }
+      }
+    }
+
+    // Fallback: simple fade transition of the page content
+    const tl = gsap.timeline({
       onComplete: () => {
-        gsap.set(document.body, { clearProps: 'perspective,perspectiveOrigin' });
-        gsap.set(wrapper, { clearProps: 'transform,opacity,rotateY,transformOrigin,transformStyle' });
         isNavigatingRef.current = false;
         navigate(path, { state: { transitionDirection: direction } });
-      },
+      }
+    });
+
+    tl.to(wrapper, {
+      opacity: 0,
+      y: -10,
+      duration: 0.45,
+      ease: 'power2.in'
     });
   });
 
@@ -302,14 +421,23 @@ export function LegitLogisticsCaseStudyPage() {
   const Icon3 = workflowPillars[2].icon;
 
   return (
-    <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
-      {/* Background Orbs */}
-      <div className="blog__orbs">
-        <div ref={orb1Ref} className="blog__orb blog__orb--1" />
-        <div ref={orb2Ref} className="blog__orb blog__orb--2" />
-        <div ref={orb3Ref} className="blog__orb blog__orb--3" />
+    <div className="case-study--legit">
+
+
+      {/* Subnav Strip */}
+      <div className="v1-subnav-strip" ref={stripRef}>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)}>
+          Kossy Langat
+        </button>
+        <div className="v1-subnav-brand-wrap">
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/kossy-langat', -1, e.currentTarget)} aria-label="Previous project">&lt;</button>
+          <span className="v1-subnav-brand"><span className="v1-subnav-dot-indicator" />Legit Logistics</span>
+          <button className="v1-subnav-nav v1-subnav-chevron" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)} aria-label="Next project">&gt;</button>
+        </div>
+        <button className="v1-subnav-edge v1-subnav-nav" onClick={(e) => handleProjectNav('/work/delivah-dispatch-hub', 1, e.currentTarget)}>
+          Delivah Dispatch
+        </button>
       </div>
-      <div className="blog__overlay" />
 
       {/* Global Design Switcher (Floating pills) */}
       <div 
@@ -359,20 +487,14 @@ export function LegitLogisticsCaseStudyPage() {
         </button>
       </div>
 
-      {/* Subnav Strip */}
-      <div className="v1-subnav-strip">
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/kossy-langat', -1)}>
-          Kossy Langat
-        </button>
-        <div className="v1-subnav-brand-wrap">
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/kossy-langat', -1)} aria-label="Previous project">&lt;</button>
-          <span className="v1-subnav-brand">Legit Logistics</span>
-          <button className="v1-subnav-nav v1-subnav-chevron" onClick={() => handleProjectNav('/work/delivah-dispatch-hub', 1)} aria-label="Next project">&gt;</button>
-        </div>
-        <button className="v1-subnav-edge v1-subnav-nav" onClick={() => handleProjectNav('/work/delivah-dispatch-hub', 1)}>
-          Delivah Dispatch
-        </button>
+      <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
+      {/* Background Orbs */}
+      <div className="blog__orbs">
+        <div ref={orb1Ref} className="blog__orb blog__orb--1" />
+        <div ref={orb2Ref} className="blog__orb blog__orb--2" />
+        <div ref={orb3Ref} className="blog__orb blog__orb--3" />
       </div>
+      <div className="blog__overlay" />
 
       {/* Fixed Gutter Sidebar Controls */}
       <aside className="v1-gutter-sticky">
@@ -560,8 +682,6 @@ export function LegitLogisticsCaseStudyPage() {
               <article className="v1-article">
                 <div className="v1-meta case-study__article-meta">
                   <span className="v1-tag">{workflowPillars[1].label}</span>
-                  <span className="v1-dot" />
-                  <span className="v1-read">System 2 of 3</span>
                 </div>
 
                 <h1 className="v1-title">
@@ -835,6 +955,7 @@ export function LegitLogisticsCaseStudyPage() {
           </section>
         </div>
       </div>
+    </div>
     </div>
   );
 }
