@@ -45,12 +45,15 @@ function SmoothScrollShell({ visualTestMode, children }: SmoothScrollShellProps)
       ignoreMobileResize: true
     });
 
+    (window as any).smoother = smoother;
+
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => ScrollTrigger.refresh()).catch(() => { });
     }
 
     return () => {
       smoother?.kill();
+      delete (window as any).smoother;
     };
   }, { dependencies: [visualTestMode, location.pathname] });
 
