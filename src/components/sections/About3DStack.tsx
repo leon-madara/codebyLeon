@@ -295,6 +295,7 @@ export function About3DStack() {
       style={{ backgroundColor: "var(--color-canvas-light)" }}
     >
       <div className="about__orbs absolute inset-0 z-[1] pointer-events-none">
+        <div className="about-3d-stack__background-glow" aria-hidden="true" />
         <div
           className="absolute rounded-full"
           style={{
@@ -383,7 +384,6 @@ export function About3DStack() {
             >
               <div className="about-3d-stack__card-bg" />
               <div className="about-3d-stack__card-grid" />
-              <div className="about-3d-stack__card-accent" />
               <div className="about__card-noise" />
               <div className="about__card-gloss" />
 

@@ -25,6 +25,21 @@
   pointer-events: none;
 }
 
+.about-3d-stack__background-glow {
+  position: absolute;
+  top: 46%;
+  left: 50%;
+  width: min(72rem, 88vw);
+  height: min(38rem, 58vw);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background:
+    radial-gradient(ellipse at 42% 52%, rgba(255, 108, 55, 0.3), transparent 56%),
+    radial-gradient(ellipse at 68% 46%, rgba(102, 92, 255, 0.22), transparent 58%);
+  filter: blur(64px);
+  opacity: 0.72;
+}
+
 .about__orb {
   position: absolute;
   border-radius: 50%;
@@ -520,7 +535,6 @@
 
 .about-3d-stack__card {
   --about-stack-card-bg: linear-gradient(135deg, #19385f 0%, #102c4e 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(26, 64, 109, 0.52);
   --about-stack-card-accent: #79b9eb;
   --about-stack-chip-track: rgba(255, 255, 255, 0.06);
   position: absolute;
@@ -532,7 +546,7 @@
   border-radius: clamp(1.5rem, 2.4vw, 2.5rem);
   transform: translateX(-50%);
   overflow: hidden;
-  box-shadow: var(--about-stack-card-shadow);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.24);
   will-change: transform, opacity, filter;
 }
@@ -551,19 +565,16 @@
 
 .about-3d-stack__card--indigo {
   --about-stack-card-bg: linear-gradient(135deg, hsl(243, 64%, 36%) 0%, hsl(243, 64%, 26%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(55, 48, 163, 0.55);
   --about-stack-card-accent: hsl(243, 64%, 60%);
 }
 
 .about-3d-stack__card--orange {
   --about-stack-card-bg: linear-gradient(135deg, hsl(22, 95%, 42%) 0%, hsl(22, 95%, 30%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(234, 88, 12, 0.55);
   --about-stack-card-accent: hsl(22, 95%, 65%);
 }
 
 .about-3d-stack__card--crimson {
   --about-stack-card-bg: linear-gradient(135deg, hsl(0, 72%, 44%) 0%, hsl(0, 72%, 30%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(239, 68, 68, 0.55);
   --about-stack-card-accent: hsl(0, 72%, 65%);
 }
 
@@ -593,17 +604,6 @@
     repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 18px),
     repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 24px);
   opacity: 0.45;
-}
-
-.about-3d-stack__card-accent {
-  position: absolute;
-  inset: -35% -20% auto;
-  height: 80%;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--about-stack-card-accent) 42%, white 8%), transparent 66%),
-    radial-gradient(ellipse at 65% 15%, rgba(255, 255, 255, 0.28), transparent 60%);
-  opacity: 0.72;
 }
 
 .about-3d-stack__card-content {
