@@ -106,7 +106,7 @@
 
 /* About headline */
 .about__headline {
-  font-family: 'Gladolia DEMO', 'Inter', sans-serif;
+  font-family: var(--font-handwritten);
   font-size: clamp(1.92rem, 8vw, 3.36rem);
   font-weight: 400;
   color: var(--text-primary);
@@ -1021,14 +1021,17 @@
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-eyebrow {
+  font-size: 0.81rem;
   color: rgba(247, 251, 255, 0.84);
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+  font-size: 0.91rem;
   color: rgba(247, 251, 255, 0.95);
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-metric {
+  font-size: 0.695rem;
   color: #f7fbff;
   min-height: 1.3rem;
   padding: 0.18rem 0.5rem;
@@ -1154,8 +1157,16 @@
     line-height: 1.4;
   }
 
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+    font-size: 0.87rem;
+  }
+
   .about-3d-stack__chip-metric {
     font-size: 0.55rem;
+  }
+
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-metric {
+    font-size: 0.675rem;
   }
 }
 
@@ -1191,6 +1202,10 @@
   .about-3d-stack__chip-detail {
     font-size: 0.58rem;
     line-height: 1.35;
+  }
+
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+    font-size: 0.83rem;
   }
 }
 

@@ -53,6 +53,7 @@ export function Navigation() {
           <li><a href={getSectionHref('portfolio')} onClick={handleSectionLinkClick('portfolio')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>PORTFOLIO</a></li>
           <li><a href={getSectionHref('about')} onClick={handleSectionLinkClick('about')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>ABOUT</a></li>
           <li><a href={getSectionHref('services')} onClick={handleSectionLinkClick('services')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>SERVICES</a></li>
+          <li><Link to="/process" className={`navigation__link ${isActiveLink('/process') ? 'is-active' : ''}`}>PROCESS</Link></li>
           <li><Link to="/blog" state={{ preserveScroll: true }} className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>BLOG</Link></li>
         </ul>
 

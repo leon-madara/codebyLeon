@@ -350,7 +350,6 @@ export function About3DStack() {
               className="italic"
               style={{
                 color: "var(--hero-accent)",
-                fontFamily: "'Gladolia DEMO', serif",
               }}
             >
               Look Professional Online
