@@ -36,51 +36,29 @@ describe("About3DStack", () => {
     expect(getAboutStackPinDistance(900)).toBeCloseTo(4320);
   });
 
-  it("keeps the decorative glow behind the card stack", () => {
+  it("renders the card stack on a plain section background", () => {
     const { container } = render(<About3DStack />);
 
-    const glow = container.querySelector(".about-3d-stack__background-glow");
     const cards = container.querySelector(".about-3d-stack__stack");
 
-    expect(glow).toBeNull();
     expect(cards).not.toBeNull();
+    expect(container.querySelector(".about__orbs")).toBeNull();
+    expect(container.querySelector(".about__overlay--3d")).toBeNull();
+    expect(container.querySelector(".about-3d-stack__background-glow")).toBeNull();
     expect(
       container.querySelector(".about-3d-stack__card .about-3d-stack__card-accent"),
     ).toBeNull();
   });
 
-  it("keeps the halo in the static background instead of moving card shadows", () => {
+  it("does not define a dotted or translucent overlay for the 3D stack", () => {
     const aboutCss = readFileSync(
       resolve(process.cwd(), "src/styles/sections/about.css"),
       "utf8",
     );
 
-    expect(aboutCss).not.toContain("--about-stack-card-shadow");
-    expect(aboutCss).toMatch(
-      /\.about-3d-stack__card\s*{[^}]*box-shadow:\s*0 24px 70px rgba\(15, 23, 42, 0\.18\)/s,
-    );
-  });
-
-  it("keeps the glow below the dotted overlay and card content", () => {
-    const { container } = render(<About3DStack />);
-    const aboutCss = readFileSync(
-      resolve(process.cwd(), "src/styles/sections/about.css"),
-      "utf8",
-    );
-
-    expect(container.querySelector(".about-3d-stack__content-layer")).not.toBeNull();
-    expect(aboutCss).toMatch(/\.about\s*{[^}]*isolation:\s*isolate/s);
-    expect(aboutCss).toMatch(/\.about__orbs\s*{[^}]*z-index:\s*0/s);
-    expect(aboutCss).toMatch(/\.about__overlay--3d\s*{[^}]*z-index:\s*1/s);
-    expect(aboutCss).toMatch(
-      /\.about-3d-stack__content-layer\s*{[^}]*z-index:\s*2/s,
-    );
-    const dottedOverlayRule = aboutCss.match(
-      /\.about__overlay--3d\s*{([^}]*)}/s,
-    )?.[1];
-
-    expect(dottedOverlayRule).toBeDefined();
-    expect(dottedOverlayRule).not.toContain("backdrop-filter");
+    expect(aboutCss).not.toMatch(/\.about__overlay--3d\s*{/);
+    expect(aboutCss).not.toMatch(/\.about-3d-stack__background-glow\s*{/);
+    expect(aboutCss).not.toMatch(/\.about-3d-stack__orb(?:--[a-z]+)?\s*{/);
   });
 
   it("keeps the card surfaces free of translucent haze layers", () => {

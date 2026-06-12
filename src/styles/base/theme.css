@@ -23,10 +23,6 @@
   --color-canvas-dark: #F2EFFD;
   --canvas-base: #000000;
 
-  /* Dot grid overlay overrides */
-  --color-overlay-dot: rgba(255, 255, 255, 0.05);
-  --color-overlay-bg: transparent;
-
   /* About 3D Stack Card 02 (Orange) overrides for dark mode contrast */
   --about-stack-orange-start: hsl(22, 90%, 28%);
   --about-stack-orange-end: hsl(22, 90%, 18%);

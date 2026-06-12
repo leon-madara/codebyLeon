@@ -13,10 +13,6 @@
   --color-canvas-dark: #0A0F0D;
   --canvas-base: #F2EFFD;  /* Alias for compatibility */
   
-  /* Dot grid overlay settings */
-  --color-overlay-dot: rgba(150, 150, 150, 0.15);
-  --color-overlay-bg: rgba(255, 255, 255, 0.25);
-
   /* About 3D Stack Card 02 (Orange) gradients */
   --about-stack-orange-start: hsl(22, 95%, 42%);
   --about-stack-orange-end: hsl(22, 95%, 30%);

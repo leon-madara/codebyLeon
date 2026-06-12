@@ -26,21 +26,6 @@
   pointer-events: none;
 }
 
-.about-3d-stack__background-glow {
-  position: absolute;
-  top: 46%;
-  left: 50%;
-  width: min(72rem, 88vw);
-  height: min(38rem, 58vw);
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background:
-    radial-gradient(ellipse at 42% 52%, rgba(255, 108, 55, 0.3), transparent 56%),
-    radial-gradient(ellipse at 68% 46%, rgba(102, 92, 255, 0.22), transparent 58%);
-  filter: blur(64px);
-  opacity: 0.72;
-}
-
 .about__orb {
   position: absolute;
   border-radius: 50%;
@@ -74,18 +59,6 @@
   bottom: -15%;
   right: -10%;
   animation-delay: -10s;
-}
-
-/* Frosted overlay - Refined for 3D Stack (Light Mode) */
-.about__overlay--3d {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background-color: var(--color-overlay-bg);
-  background-image: radial-gradient(circle, var(--color-overlay-dot) 1.2px, transparent 1.2px);
-  background-size: 12px 12px;
-  pointer-events: none;
-  transition: background-color var(--duration-normal) ease;
 }
 
 .about-3d-stack__content-layer {
@@ -526,45 +499,6 @@
 .about-3d-stack {
   background-color: var(--color-canvas-light);
   transition: background-color var(--duration-normal) ease;
-}
-
-/* Morphic background glow orbs */
-.about-3d-stack__orb {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: none;
-  mix-blend-mode: normal;
-  will-change: transform, opacity;
-}
-
-.about-3d-stack__orb--purple {
-  width: 60vw;
-  height: 60vw;
-  top: -15%;
-  left: -15%;
-  background: var(--orb-purple);
-  opacity: 0.45;
-  filter: blur(90px);
-}
-
-.about-3d-stack__orb--orange {
-  width: 50vw;
-  height: 50vw;
-  bottom: -10%;
-  right: -10%;
-  background: var(--orb-orange);
-  opacity: 0.4;
-  filter: blur(80px);
-}
-
-.about-3d-stack__orb--blue {
-  width: 40vw;
-  height: 40vw;
-  top: 25%;
-  right: 5%;
-  background: var(--orb-blue);
-  opacity: 0.35;
-  filter: blur(70px);
 }
 
 .about-3d-stack__headline {

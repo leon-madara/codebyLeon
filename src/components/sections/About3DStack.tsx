@@ -375,10 +375,6 @@ export function About3DStack() {
       id="about"
       className="about about-3d-stack relative overflow-hidden h-screen"
     >
-      <div className="about__orbs absolute inset-0 pointer-events-none">
-        <div className="about__overlay--3d absolute inset-0" />
-      </div>
-
       <div
         ref={contentRef}
         className="about-3d-stack__content-layer relative flex flex-col items-center h-full"
