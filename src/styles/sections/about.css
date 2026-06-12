@@ -5,6 +5,7 @@
 /* About section container - Mobile First */
 .about {
   position: relative;
+  isolation: isolate;
   min-height: 80vh;
   width: 100%;
   padding: 5rem 1rem 3rem;
@@ -20,7 +21,7 @@
 .about__orbs {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
@@ -60,17 +61,9 @@
   animation-delay: -10s;
 }
 
-/* Frosted overlay - Refined for 3D Stack (Light Mode) */
-.about__overlay--3d {
-  position: absolute;
-  inset: 0;
+.about-3d-stack__content-layer {
+  position: relative;
   z-index: 2;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background-color: rgba(255, 255, 255, 0.25);
-  background-image: radial-gradient(circle, rgba(150, 150, 150, 0.1) 1.2px, transparent 1.2px);
-  background-size: 12px 12px;
-  pointer-events: none;
 }
 
 /* Card highlight gloss */
@@ -82,16 +75,6 @@
   opacity: 0.3;
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
   z-index: 11;
-}
-
-/* Card inner noise texture */
-.about__card-noise {
-  position: absolute;
-  inset: 0;
-  opacity: 0.06;
-  background-image: radial-gradient(circle at 25% 75%, white 1px, transparent 1px), radial-gradient(circle at 75% 25%, white 1px, transparent 1px);
-  background-size: 30px 30px;
-  z-index: 1;
 }
 
 /* About content wrapper */
@@ -106,7 +89,7 @@
 
 /* About headline */
 .about__headline {
-  font-family: 'Gladolia DEMO', 'Inter', sans-serif;
+  font-family: var(--font-handwritten);
   font-size: clamp(1.92rem, 8vw, 3.36rem);
   font-weight: 400;
   color: var(--text-primary);
@@ -509,6 +492,40 @@
 }
 
 /* About 3D stack cards */
+/* =============================================
+   ABOUT 3D STACK SECTION RULES
+   ============================================= */
+
+.about-3d-stack {
+  background-color: var(--color-canvas-light);
+  transition: background-color var(--duration-normal) ease;
+}
+
+.about-3d-stack__headline {
+  font-family: var(--font-heading), serif; /* Gladolia DEMO */
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+}
+
+.about-3d-stack__headline em {
+  font-style: italic;
+  color: var(--hero-accent);
+}
+
+.about-3d-stack__subheadline {
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(0.88rem, 1.4vw, 1.05rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.7;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
 .about-3d-stack__stack {
   position: relative;
   width: 100%;
@@ -520,7 +537,6 @@
 
 .about-3d-stack__card {
   --about-stack-card-bg: linear-gradient(135deg, #19385f 0%, #102c4e 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(26, 64, 109, 0.52);
   --about-stack-card-accent: #79b9eb;
   --about-stack-chip-track: rgba(255, 255, 255, 0.06);
   position: absolute;
@@ -532,7 +548,7 @@
   border-radius: clamp(1.5rem, 2.4vw, 2.5rem);
   transform: translateX(-50%);
   overflow: hidden;
-  box-shadow: var(--about-stack-card-shadow);
+  box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
   border: 1px solid rgba(255, 255, 255, 0.24);
   will-change: transform, opacity, filter;
 }
@@ -551,59 +567,23 @@
 
 .about-3d-stack__card--indigo {
   --about-stack-card-bg: linear-gradient(135deg, hsl(243, 64%, 36%) 0%, hsl(243, 64%, 26%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(55, 48, 163, 0.55);
   --about-stack-card-accent: hsl(243, 64%, 60%);
 }
 
 .about-3d-stack__card--orange {
-  --about-stack-card-bg: linear-gradient(135deg, hsl(22, 95%, 42%) 0%, hsl(22, 95%, 30%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(234, 88, 12, 0.55);
+  --about-stack-card-bg: linear-gradient(135deg, var(--about-stack-orange-start) 0%, var(--about-stack-orange-end) 100%);
   --about-stack-card-accent: hsl(22, 95%, 65%);
 }
 
 .about-3d-stack__card--crimson {
   --about-stack-card-bg: linear-gradient(135deg, hsl(0, 72%, 44%) 0%, hsl(0, 72%, 30%) 100%);
-  --about-stack-card-shadow: 0 60px 120px -20px rgba(239, 68, 68, 0.55);
   --about-stack-card-accent: hsl(0, 72%, 65%);
-}
-
-.about-3d-stack__card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0) 35%),
-    linear-gradient(0deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0) 42%);
-  z-index: 9;
 }
 
 .about-3d-stack__card-bg {
   position: absolute;
   inset: 0;
   background: var(--about-stack-card-bg);
-}
-
-.about-3d-stack__card-grid {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(110deg, rgba(255, 255, 255, 0.07), transparent 48%),
-    repeating-linear-gradient(120deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 24px);
-  opacity: 0.45;
-}
-
-.about-3d-stack__card-accent {
-  position: absolute;
-  inset: -35% -20% auto;
-  height: 80%;
-  pointer-events: none;
-  background:
-    radial-gradient(ellipse at top, color-mix(in srgb, var(--about-stack-card-accent) 42%, white 8%), transparent 66%),
-    radial-gradient(ellipse at 65% 15%, rgba(255, 255, 255, 0.28), transparent 60%);
-  opacity: 0.72;
 }
 
 .about-3d-stack__card-content {
@@ -960,7 +940,8 @@
 }
 
 .about-3d-stack__chip:hover .about-3d-stack__chip-inner,
-.about-3d-stack__chip:focus-visible .about-3d-stack__chip-inner {
+.about-3d-stack__chip:focus-visible .about-3d-stack__chip-inner,
+.about-3d-stack__chip.is-flipped .about-3d-stack__chip-inner {
   transform: rotateX(-180deg);
 }
 
@@ -1021,14 +1002,17 @@
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-eyebrow {
+  font-size: 0.81rem;
   color: rgba(247, 251, 255, 0.84);
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+  font-size: 0.91rem;
   color: rgba(247, 251, 255, 0.95);
 }
 
 .about-3d-stack__chip-face--back .about-3d-stack__chip-metric {
+  font-size: 0.695rem;
   color: #f7fbff;
   min-height: 1.3rem;
   padding: 0.18rem 0.5rem;
@@ -1154,8 +1138,16 @@
     line-height: 1.4;
   }
 
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+    font-size: 0.87rem;
+  }
+
   .about-3d-stack__chip-metric {
     font-size: 0.55rem;
+  }
+
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-metric {
+    font-size: 0.675rem;
   }
 }
 
@@ -1191,6 +1183,10 @@
   .about-3d-stack__chip-detail {
     font-size: 0.58rem;
     line-height: 1.35;
+  }
+
+  .about-3d-stack__chip-face--back .about-3d-stack__chip-detail {
+    font-size: 0.83rem;
   }
 }
 

@@ -6,6 +6,7 @@
   --hs-sticky-top: 0;
   --hs-top-chrome-height: 168px;
   --hs-nav-height: 72px;
+  --hs-nav-clearance: 12px;
   --hs-sidebar-height: 0px;
   --hs-surface: hsl(var(--background) / 0.94);
   --hs-border: hsl(var(--border) / 0.45);
@@ -70,7 +71,7 @@
 
 .hs__top-chrome {
   position: sticky;
-  top: calc(var(--hs-sticky-top) + var(--hs-nav-height));
+  top: calc(var(--hs-sticky-top) + var(--hs-nav-height) + var(--hs-nav-clearance));
   z-index: 60;
   background: var(--hs-surface);
   border-bottom: 1px solid var(--hs-border);
@@ -110,7 +111,10 @@
 }
 
 .hs__story--horizontal .hs__viewport {
-  height: max(420px, calc(100vh - var(--hs-top-chrome-height) - (var(--hs-nav-height) * 2)));
+  height: max(
+    420px,
+    calc(100vh - var(--hs-top-chrome-height) - var(--hs-nav-height) - var(--hs-nav-clearance))
+  );
 }
 
 .hs__story--vertical .hs__viewport {

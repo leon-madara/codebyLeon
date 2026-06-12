@@ -11,6 +11,7 @@ interface SmoothSnapshot {
   scrollY: number;
   wrapperTransform: string;
   wrapperInlineStyle: string;
+  navigationBottom: number;
   portfolioTop: number;
   portfolioBottom: number;
   portfolioPosition: string;
@@ -74,9 +75,11 @@ test.describe('Smooth-Mode Pinning Invariants', () => {
 
         const wrapper = document.querySelector('.portfolio-carousel__wrapper') as HTMLElement;
         const portfolio = document.querySelector('#portfolio') as HTMLElement;
+        const navigation = document.querySelector('.navigation') as HTMLElement;
         const hsTopChrome = document.querySelector('.hs__top-chrome') as HTMLElement;
         const smoothContent = document.querySelector('#smooth-content') as HTMLElement;
 
+        const navigationRect = navigation.getBoundingClientRect();
         const portfolioRect = portfolio.getBoundingClientRect();
         const hsRect = hsTopChrome.getBoundingClientRect();
 
@@ -84,6 +87,7 @@ test.describe('Smooth-Mode Pinning Invariants', () => {
           scrollY: Math.round(window.scrollY),
           wrapperTransform: getComputedStyle(wrapper).transform,
           wrapperInlineStyle: wrapper.getAttribute('style') || '',
+          navigationBottom: Number(navigationRect.bottom.toFixed(2)),
           portfolioTop: Number(portfolioRect.top.toFixed(2)),
           portfolioBottom: Number(portfolioRect.bottom.toFixed(2)),
           portfolioPosition: getComputedStyle(portfolio).position,
@@ -104,7 +108,8 @@ test.describe('Smooth-Mode Pinning Invariants', () => {
     expect(Math.abs(mid.portfolioTop)).toBeLessThanOrEqual(8);
     expect(mid.smoothContentTransform).not.toBe('none');
 
-    expect(Math.abs(services.hsTop)).toBeLessThanOrEqual(16);
+    expect(services.hsTop - services.navigationBottom).toBeGreaterThanOrEqual(8);
+    expect(services.hsTop - services.navigationBottom).toBeLessThanOrEqual(24);
     expect(services.hsPinSpacerClass).toContain('pin-spacer');
 
     expect(enter.wrapperTransform).toBe('none');

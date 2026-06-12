@@ -63,6 +63,7 @@
 
 /* Page Wrapper and Background Orbs */
 .blog-post-page-wrapper {
+  --blog-post-orb-opacity: 0.6;
   position: relative;
   width: 100%;
   min-height: 100vh;
@@ -71,7 +72,7 @@
   transition: background var(--duration-normal) ease;
 }
 
-.blog__orbs {
+.blog-post-page-wrapper .blog__orbs {
   position: fixed;
   inset: 0;
   z-index: 1;
@@ -79,34 +80,34 @@
   pointer-events: none;
 }
 
-.blog__orb {
+.blog-post-page-wrapper .blog__orb {
   position: absolute;
   border-radius: 50%;
   filter: blur(120px);
-  opacity: 0.6;
+  opacity: var(--blog-post-orb-opacity);
   transition: opacity var(--duration-normal) ease;
   will-change: background-color;
 }
 
-[data-theme="dark"] .blog__orb {
-  opacity: 0.15;
+[data-theme="dark"] .blog-post-page-wrapper {
+  --blog-post-orb-opacity: 0.15;
 }
 
-.blog__orb--1 {
+.blog-post-page-wrapper .blog__orb--1 {
   width: 50vw;
   height: 50vw;
   top: -10%;
   left: -10%;
 }
 
-.blog__orb--2 {
+.blog-post-page-wrapper .blog__orb--2 {
   width: 60vw;
   height: 60vw;
   top: 25%;
   right: -10%;
 }
 
-.blog__orb--3 {
+.blog-post-page-wrapper .blog__orb--3 {
   width: 45vw;
   height: 45vw;
   bottom: -10%;

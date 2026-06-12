@@ -49,6 +49,14 @@ describe('Navigation', () => {
     expect(screen.getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '/#services');
   });
 
+  it('links to the process page and marks it active on the process route', () => {
+    renderNavigation('/process');
+
+    expect(screen.getByRole('link', { name: 'PROCESS' }))
+      .toHaveAttribute('href', '/process');
+    expect(screen.getByRole('link', { name: 'PROCESS' })).toHaveClass('is-active');
+  });
+
   it('marks the blog link active on blog routes', () => {
     renderNavigation('/blog/how-to-design');
 

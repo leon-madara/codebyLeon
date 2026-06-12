@@ -19,9 +19,13 @@
      ============================================= */
   
   /* Canvas/Background Base - Override for dark mode */
-  --color-canvas-light: #0A0F0D;
+  --color-canvas-light: #000000;
   --color-canvas-dark: #F2EFFD;
-  --canvas-base: #021127;
+  --canvas-base: #000000;
+
+  /* About 3D Stack Card 02 (Orange) overrides for dark mode contrast */
+  --about-stack-orange-start: hsl(22, 90%, 28%);
+  --about-stack-orange-end: hsl(22, 90%, 18%);
 
   /* =============================================
      SEMANTIC COLORS - DARK MODE OVERRIDES

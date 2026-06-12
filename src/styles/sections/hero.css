@@ -406,6 +406,14 @@
   mix-blend-mode: screen;
 }
 
+.hero__word-grow-designs {
+  color: #1a1a1a;
+}
+
+[data-theme='dark'] .hero__word-grow-designs {
+  color: #ffffff;
+}
+
 /* =============================================
    CTA BUTTONS - Mobile First
    ============================================= */

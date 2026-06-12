@@ -328,7 +328,7 @@ const PortfolioCarousel = () => {
 
             {currentProjectCta.isRoute ? (
               <Link
-                className="portfolio-carousel__title-link"
+                className="portfolio-carousel__title-link work-cursor-target"
                 to={currentProjectCta.href}
                 aria-label={currentProject.name}
               >
@@ -339,7 +339,7 @@ const PortfolioCarousel = () => {
               </Link>
             ) : (
               <a
-                className="portfolio-carousel__title-link"
+                className="portfolio-carousel__title-link work-cursor-target"
                 href={currentProjectCta.href}
                 aria-label={currentProject.name}
               >
@@ -363,12 +363,12 @@ const PortfolioCarousel = () => {
             </div>
 
             {currentProjectCta.isRoute ? (
-              <Link className="view-details-btn w-fit" to={currentProjectCta.href}>
+              <Link className="view-details-btn work-cursor-target w-fit" to={currentProjectCta.href}>
                 {currentProjectCta.label}
                 <ArrowUpRight size={16} />
               </Link>
             ) : (
-              <a className="view-details-btn w-fit" href={currentProjectCta.href}>
+              <a className="view-details-btn work-cursor-target w-fit" href={currentProjectCta.href}>
                 {currentProjectCta.label}
                 <ArrowUpRight size={16} />
               </a>
@@ -383,17 +383,25 @@ const PortfolioCarousel = () => {
               {projects.map((project, projectIndex) => {
                 const projectCta = getPortfolioProjectCta(project);
                 const isActiveProject = projectIndex === activeIndex;
-                const cardClassName = `portfolio-card portfolio-carousel__card ${
+                const cardClassName = `portfolio-card portfolio-carousel__card work-cursor-target ${
                   isActiveProject ? "is-active" : "is-inactive"
                 } absolute inset-0 overflow-hidden rounded-2xl shadow-2xl`;
                 const cardContents = (
                   <>
-                    <img
-                      src={project.image}
-                      alt={project.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
+                    <picture className="block h-full w-full">
+                      {project.mobileImage ? (
+                        <source
+                          media="(max-width: 767px)"
+                          srcSet={project.mobileImage}
+                        />
+                      ) : null}
+                      <img
+                        src={project.image}
+                        alt={project.name}
+                        className="h-full w-full object-cover"
+                        loading="lazy"
+                      />
+                    </picture>
                     <div
                       className="portfolio-carousel__image-overlay absolute inset-0"
                       style={{

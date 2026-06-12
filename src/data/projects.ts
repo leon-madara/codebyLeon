@@ -4,6 +4,7 @@ export interface Project {
   category: "Small Business" | "SaaS" | "Creative";
   description: string;
   image: string;
+  mobileImage?: string;
   caseStudyPath?: string;
   accentColor: string;
   techStack: string[];
@@ -37,7 +38,8 @@ export const projects: Project[] = [
     category: "Small Business",
     description:
       "A cinematic personal brand site for a structural engineer, built around trust, authority, mentorship, and a clear path to conversation.",
-    image: "/portfolio/kossy-langat.png",
+    image: "/portfolio/case-studies/kossy/kossy-home-hero.png",
+    mobileImage: "/portfolio/case-studies/kossy/kossy-home-hero-mobile.png",
     caseStudyPath: "/work/kossy-langat",
     accentColor: "hsl(28 78% 48%)",
     techStack: ["Next.js", "TypeScript", "Tailwind CSS", "GSAP"],
@@ -53,7 +55,8 @@ export const projects: Project[] = [
     category: "Small Business",
     description:
       "A customer-acquisition and carrier intake platform for an American truck dispatch business, connecting services, registration, document upload, and admin review.",
-    image: "/portfolio/delivah-dispatch.png",
+    image: "/portfolio/case-studies/delivah/delivah-home-hero.png",
+    mobileImage: "/portfolio/case-studies/delivah/delivah-home-hero-mobile.png",
     caseStudyPath: "/work/delivah-dispatch-hub",
     accentColor: "hsl(143 40% 21%)",
     techStack: ["React", "TypeScript", "Supabase", "EmailJS"],

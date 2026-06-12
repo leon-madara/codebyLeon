@@ -42,6 +42,21 @@ function createPortfolioSection() {
   return section;
 }
 
+function addClickableProjectSurfaces(section: HTMLElement) {
+  const title = document.createElement('a');
+  title.className = 'portfolio-carousel__title-link work-cursor-target';
+
+  const image = document.createElement('a');
+  image.className = 'portfolio-carousel__card is-active work-cursor-target';
+
+  const details = document.createElement('a');
+  details.className = 'view-details-btn work-cursor-target';
+
+  section.append(title, image, details);
+
+  return { title, image, details };
+}
+
 async function waitForCursorEligibilityCheck() {
   await waitFor(() => {
     expect(window.matchMedia).toHaveBeenCalled();
@@ -101,18 +116,25 @@ describe('GlassBallCursor', () => {
     expect(screen.getByText('DRAG')).toBeInTheDocument();
   });
 
-  it('only activates while the pointer is inside the portfolio Our Work section', async () => {
+  it('shows the ring-and-dot cursor across Our Work and restores the system cursor outside it', async () => {
     const portfolioSection = createPortfolioSection();
 
     render(<GlassBallCursor />);
 
     const cursor = await screen.findByTestId('glass-ball-cursor');
+    const ring = screen.getByTestId('work-cursor-ring');
+    const dot = screen.getByTestId('work-cursor-dot');
+    const hand = screen.getByTestId('work-cursor-hand');
 
     window.dispatchEvent(new MouseEvent('mousemove', { clientX: 240, clientY: 240 }));
 
     await waitFor(() => {
       expect(cursor).toHaveAttribute('data-active', 'true');
+      expect(cursor).toHaveAttribute('data-interactive', 'false');
       expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
+      expect(ring).not.toHaveClass('is-hidden');
+      expect(dot).not.toHaveClass('is-hidden');
+      expect(hand).not.toHaveClass('is-visible');
     });
 
     window.dispatchEvent(new MouseEvent('mousemove', { clientX: 240, clientY: 80 }));
@@ -124,6 +146,53 @@ describe('GlassBallCursor', () => {
 
     portfolioSection.remove();
   });
+
+  it.each(['light', 'dark'] as const)(
+    'shows only a 2x macOS-style hand over clickable project surfaces in %s mode',
+    async (theme) => {
+      document.documentElement.setAttribute('data-theme', theme);
+      const portfolioSection = createPortfolioSection();
+      const surfaces = addClickableProjectSurfaces(portfolioSection);
+
+      render(<GlassBallCursor />);
+
+      const cursor = await screen.findByTestId('glass-ball-cursor');
+      const ring = screen.getByTestId('work-cursor-ring');
+      const dot = screen.getByTestId('work-cursor-dot');
+      const hand = screen.getByTestId('work-cursor-hand');
+
+      for (const surface of Object.values(surfaces)) {
+        surface.dispatchEvent(
+          new MouseEvent('mousemove', { bubbles: true, clientX: 240, clientY: 240 })
+        );
+
+        await waitFor(() => {
+          expect(cursor).toHaveAttribute('data-active', 'true');
+          expect(cursor).toHaveAttribute('data-interactive', 'true');
+          expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
+          expect(hand).toHaveAttribute('data-size', '2x');
+          expect(hand).toHaveClass('is-visible');
+          expect(ring).toHaveClass('is-hidden');
+          expect(dot).toHaveClass('is-hidden');
+        });
+      }
+
+      portfolioSection.dispatchEvent(
+        new MouseEvent('mousemove', { bubbles: true, clientX: 260, clientY: 260 })
+      );
+
+      await waitFor(() => {
+        expect(cursor).toHaveAttribute('data-active', 'true');
+        expect(cursor).toHaveAttribute('data-interactive', 'false');
+        expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
+        expect(hand).not.toHaveClass('is-visible');
+        expect(ring).not.toHaveClass('is-hidden');
+        expect(dot).not.toHaveClass('is-hidden');
+      });
+
+      portfolioSection.remove();
+    }
+  );
 
   it('moves the dot farther toward the travel edge as pointer speed increases', () => {
     const slow = getMomentumDotOffset({

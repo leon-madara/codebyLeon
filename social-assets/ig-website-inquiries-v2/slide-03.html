@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeByLeon IG Carousel Slide 03</title>
+    <style>
+      @font-face {
+        font-family: "Gladolia";
+        src: url("../../public/fonts/GladoliaDEMO-Regular.otf") format("opentype");
+        font-display: swap;
+      }
+
+      :root {
+        --ink: #07111a;
+        --navy: #061827;
+        --blue: #76bdd9;
+        --paper: #f7f5ef;
+        --orange: #ec5f3b;
+        --cyan: #68e6f2;
+        --line: rgba(7, 17, 26, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #222;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      .slide {
+        position: relative;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        color: var(--ink);
+        background: linear-gradient(180deg, #76bdd9 0 46%, #efeeee 46% 100%);
+      }
+
+      .sky {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 622px;
+        background:
+          radial-gradient(circle at 22% 15%, rgba(255, 255, 255, 0.44), transparent 30%),
+          linear-gradient(135deg, #98d6e9 0%, #72bad7 48%, #57a5c7 100%);
+      }
+
+      .floor {
+        position: absolute;
+        inset: 622px 0 0;
+        background:
+          radial-gradient(circle at 54% 9%, rgba(255, 255, 255, 0.92), transparent 32%),
+          linear-gradient(180deg, #f5f4f2, #e7e4df);
+      }
+
+      .brand-lockup {
+        position: absolute;
+        z-index: 6;
+        top: 52px;
+        left: 64px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 18px 12px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.24);
+        box-shadow: 0 16px 36px rgba(7, 17, 26, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand-lockup img {
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
+      }
+
+      .brand-name {
+        color: var(--navy);
+        font-size: 23px;
+        font-weight: 850;
+        line-height: 1;
+      }
+
+      .brand-sub {
+        margin-top: 2px;
+        color: rgba(6, 24, 39, 0.62);
+        font-size: 13px;
+        font-weight: 760;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .page-chip {
+        position: absolute;
+        z-index: 6;
+        top: 72px;
+        right: 66px;
+        color: rgba(6, 24, 39, 0.7);
+        font-size: 20px;
+        font-weight: 830;
+      }
+
+      .board-shadow {
+        position: absolute;
+        z-index: 1;
+        left: 104px;
+        top: 208px;
+        width: 872px;
+        height: 845px;
+        border-radius: 20px;
+        background: rgba(7, 17, 26, 0.2);
+        filter: blur(36px);
+        transform: translateY(42px);
+      }
+
+      .board {
+        position: absolute;
+        z-index: 2;
+        left: 104px;
+        top: 208px;
+        width: 872px;
+        height: 845px;
+        overflow: hidden;
+        border-radius: 5px;
+        background:
+          radial-gradient(circle at 16% 74%, rgba(104, 230, 242, 0.18), transparent 28%),
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px),
+          var(--paper);
+        background-size: auto, 32px 32px, 32px 32px, auto;
+        box-shadow:
+          0 32px 72px rgba(7, 17, 26, 0.18),
+          0 1px 0 rgba(255, 255, 255, 0.8) inset;
+      }
+
+      .board::after {
+        content: "";
+        position: absolute;
+        right: -72px;
+        top: 88px;
+        width: 300px;
+        height: 560px;
+        border-radius: 999px 0 0 999px;
+        background: linear-gradient(180deg, #f08061, #e85c38);
+      }
+
+      .inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 58px 62px 44px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 52px;
+      }
+
+      .kicker {
+        color: rgba(7, 17, 26, 0.6);
+        font-size: 17px;
+        font-weight: 860;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .mini-logo {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+      }
+
+      .headline {
+        max-width: 660px;
+        margin: 0;
+        font-family: "Gladolia", Georgia, serif;
+        font-size: 86px;
+        line-height: 0.92;
+        letter-spacing: 0;
+      }
+
+      .headline span {
+        color: var(--orange);
+      }
+
+      .body {
+        max-width: 565px;
+        margin: 30px 0 0;
+        color: rgba(7, 17, 26, 0.68);
+        font-size: 25px;
+        font-weight: 620;
+        line-height: 1.22;
+      }
+
+      .trust-path {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        width: 694px;
+        margin-top: 58px;
+      }
+
+      .trust-path::before {
+        content: "";
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        top: 45px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(7, 17, 26, 0.16);
+      }
+
+      .trust-path::after {
+        content: "";
+        position: absolute;
+        left: 72px;
+        top: 45px;
+        width: 268px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--orange);
+      }
+
+      .trust-card {
+        position: relative;
+        z-index: 1;
+        min-height: 198px;
+        padding: 22px 20px;
+        border: 1px solid rgba(7, 17, 26, 0.11);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.62);
+        box-shadow: 0 14px 26px rgba(7, 17, 26, 0.07);
+      }
+
+      .node {
+        display: grid;
+        place-items: center;
+        width: 54px;
+        height: 54px;
+        margin-bottom: 22px;
+        border-radius: 50%;
+        color: white;
+        background: var(--navy);
+        font-size: 18px;
+        font-weight: 880;
+      }
+
+      .trust-card:nth-child(2) .node {
+        background: var(--orange);
+      }
+
+      .trust-card:nth-child(3) .node {
+        background: #58a5c7;
+      }
+
+      .trust-title {
+        margin-bottom: 10px;
+        color: var(--ink);
+        font-size: 24px;
+        font-weight: 860;
+        line-height: 1.05;
+      }
+
+      .trust-copy {
+        color: rgba(7, 17, 26, 0.62);
+        font-size: 17px;
+        font-weight: 620;
+        line-height: 1.18;
+      }
+
+      .receipt {
+        position: absolute;
+        z-index: 3;
+        right: 78px;
+        bottom: 145px;
+        width: 258px;
+        padding: 24px 24px 28px;
+        border-radius: 24px;
+        color: white;
+        background: var(--navy);
+        box-shadow: 0 28px 52px rgba(7, 17, 26, 0.26);
+      }
+
+      .receipt-kicker {
+        margin-bottom: 14px;
+        color: var(--cyan);
+        font-size: 14px;
+        font-weight: 860;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .receipt-copy {
+        font-size: 22px;
+        font-weight: 780;
+        line-height: 1.12;
+      }
+
+      .card-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: rgba(7, 17, 26, 0.57);
+        font-size: 18px;
+        font-weight: 760;
+      }
+
+      .ig-icons {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+
+      .heart {
+        color: #ed3f35;
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      .bubble,
+      .send,
+      .save {
+        width: 19px;
+        height: 19px;
+        border: 2px solid rgba(7, 17, 26, 0.52);
+      }
+
+      .bubble {
+        border-radius: 50%;
+      }
+
+      .send {
+        transform: rotate(45deg);
+        border-left: 0;
+        border-bottom: 0;
+      }
+
+      .save {
+        border-radius: 2px 2px 5px 5px;
+      }
+
+      .lower-strip {
+        position: absolute;
+        z-index: 2;
+        left: 72px;
+        right: 72px;
+        bottom: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .visit {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        height: 72px;
+        padding: 0 29px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.78);
+        color: #111;
+        font-size: 22px;
+        font-weight: 850;
+        box-shadow: 0 16px 28px rgba(7, 17, 26, 0.08);
+      }
+
+      .progress {
+        width: 350px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(7, 17, 26, 0.13);
+        overflow: hidden;
+      }
+
+      .progress::before {
+        content: "";
+        display: block;
+        width: 50%;
+        height: 100%;
+        background: var(--orange);
+      }
+
+      .next-note {
+        color: rgba(7, 17, 26, 0.55);
+        font-size: 18px;
+        font-weight: 780;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="slide" id="slide-03">
+      <div class="sky"></div>
+      <div class="floor"></div>
+
+      <div class="brand-lockup">
+        <img src="../../public/icons/main-logo.svg" alt="CodeByLeon logo" />
+        <div>
+          <div class="brand-name">codebyleon</div>
+          <div class="brand-sub">Website audit</div>
+        </div>
+      </div>
+      <div class="page-chip">03 / 06</div>
+
+      <div class="board-shadow"></div>
+      <article class="board">
+        <div class="inner">
+          <div class="topline">
+            <div class="kicker">Audit leak 02</div>
+            <img class="mini-logo" src="../../public/icons/main-logo.svg" alt="" />
+          </div>
+
+          <h1 class="headline">There is no <span>trust path.</span></h1>
+          <p class="body">
+            People do not inquire because a page looks expensive. They inquire when the page makes risk feel smaller.
+          </p>
+
+          <div class="trust-path">
+            <div class="trust-card">
+              <div class="node">1</div>
+              <div class="trust-title">Proof</div>
+              <div class="trust-copy">Show work, outcomes, testimonials, or visible expertise.</div>
+            </div>
+            <div class="trust-card">
+              <div class="node">2</div>
+              <div class="trust-title">Process</div>
+              <div class="trust-copy">Explain how you take them from problem to result.</div>
+            </div>
+            <div class="trust-card">
+              <div class="node">3</div>
+              <div class="trust-title">Next step</div>
+              <div class="trust-copy">Make the ask feel natural, not sudden.</div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <span>Page 03</span>
+            <span class="ig-icons"><span class="heart">♥</span><span class="bubble"></span><span class="send"></span><span class="save"></span></span>
+          </div>
+        </div>
+      </article>
+
+      <aside class="receipt">
+        <div class="receipt-kicker">Trust is built</div>
+        <div class="receipt-copy">A strong page answers doubt before asking for action.</div>
+      </aside>
+
+      <div class="lower-strip">
+        <div class="visit">↗ Visit site</div>
+        <div class="progress"></div>
+        <div class="next-note">Next: CTA flow</div>
+      </div>
+    </section>
+  </body>
+</html>

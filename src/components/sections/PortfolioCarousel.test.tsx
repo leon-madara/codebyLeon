@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { resolve } from 'node:path';
 import { MemoryRouter } from 'react-router-dom';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { projects } from '@/data/projects';
@@ -76,6 +78,36 @@ describe('PortfolioCarousel', () => {
     expect(imageLink).toHaveAttribute('href', '/work/legit-logistics');
   });
 
+  it('uses the custom cursor across Our Work and the hand state on project targets', () => {
+    renderCarousel();
+
+    const detailsLink = screen.getByRole('link', { name: /view details/i });
+    const titleLink = screen.getByRole('link', { name: 'Legit Logistics', exact: true });
+    const imageLink = screen.getByRole('link', { name: /open legit logistics case study/i });
+    const cursorCss = readFileSync(
+      resolve(process.cwd(), 'src/styles/features/glass-ball-cursor.css'),
+      'utf8'
+    );
+    const torchEffectSource = readFileSync(
+      resolve(process.cwd(), 'src/components/TorchEffect.tsx'),
+      'utf8'
+    );
+
+    expect(titleLink).toHaveClass('work-cursor-target');
+    expect(imageLink).toHaveClass('work-cursor-target');
+    expect(detailsLink).toHaveClass('work-cursor-target');
+    expect(cursorCss).toMatch(
+      /html\[data-work-cursor-active='true'\]\s+#portfolio,[\s\S]*html\[data-work-cursor-active='true'\]\s+#portfolio\s+\*\s*{[^}]*cursor:\s*none;/s
+    );
+    expect(cursorCss).toMatch(/\.work-cursor-target\s*{[^}]*cursor:\s*none;/s);
+    expect(cursorCss).toMatch(
+      /@media \(prefers-reduced-motion: reduce\), \(pointer: coarse\)[\s\S]*\.work-cursor-target\s*{[^}]*cursor:\s*auto;/s
+    );
+    expect(torchEffectSource).toMatch(
+      /\.torch-expanding #portfolio, \.torch-expanding #portfolio \* \{ cursor: none !important; \}/
+    );
+  });
+
   it('uses the approved Phase 2 active carousel project set', () => {
     expect(projects.map((project) => project.name)).toEqual([
       'Legit Logistics',
@@ -96,6 +128,40 @@ describe('PortfolioCarousel', () => {
     );
     expect(projects.find((project) => project.name === 'Delivah Dispatch')?.caseStudyPath).toBe(
       '/work/delivah-dispatch-hub'
+    );
+  });
+
+  it('renders responsive desktop and mobile artwork for Kossy Langat', () => {
+    const { container } = renderCarousel();
+
+    const kossyImage = container.querySelector<HTMLImageElement>('img[alt="Kossy Langat"]')!;
+    const picture = kossyImage.closest('picture');
+    const mobileSource = picture?.querySelector('source[media="(max-width: 767px)"]');
+
+    expect(kossyImage).toHaveAttribute(
+      'src',
+      '/portfolio/case-studies/kossy/kossy-home-hero.png'
+    );
+    expect(mobileSource).toHaveAttribute(
+      'srcset',
+      '/portfolio/case-studies/kossy/kossy-home-hero-mobile.png'
+    );
+  });
+
+  it('renders responsive desktop and mobile artwork for Delivah Dispatch', () => {
+    const { container } = renderCarousel();
+
+    const delivahImage = container.querySelector<HTMLImageElement>('img[alt="Delivah Dispatch"]')!;
+    const picture = delivahImage.closest('picture');
+    const mobileSource = picture?.querySelector('source[media="(max-width: 767px)"]');
+
+    expect(delivahImage).toHaveAttribute(
+      'src',
+      '/portfolio/case-studies/delivah/delivah-home-hero.png'
+    );
+    expect(mobileSource).toHaveAttribute(
+      'srcset',
+      '/portfolio/case-studies/delivah/delivah-home-hero-mobile.png'
     );
   });
 

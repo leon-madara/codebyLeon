@@ -2,14 +2,19 @@ import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+import { Pointer } from 'lucide-react';
 import { isVisualTestMode } from '@/utils/runtimeFlags';
 import { useTheme } from '@/contexts/ThemeContext';
 
 const CURSOR_SIZE = 50;
 const HALF_CURSOR_SIZE = CURSOR_SIZE / 2;
+const HAND_CURSOR_SIZE = 48;
+const HAND_HOTSPOT_X = 12;
+const HAND_HOTSPOT_Y = 3;
 const DESKTOP_FINE_POINTER_QUERY = '(min-width: 1024px) and (pointer: fine)';
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const OUR_WORK_SECTION_SELECTOR = '#portfolio';
+const CLICKABLE_PROJECT_SURFACE_SELECTOR = '.work-cursor-target';
 const DOT_NORMAL_SPEED_OFFSET = 18;
 const DOT_MAX_OVERSHOOT_OFFSET = 28;
 
@@ -97,12 +102,14 @@ export function GlassBallCursor() {
   const cursorRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const activeRef = useRef(false);
+  const interactiveRef = useRef(false);
   const previousPointRef = useRef<Point | null>(null);
   const previousMoveTimeRef = useRef<number | null>(null);
   const dotReturnTimerRef = useRef<number | null>(null);
   const [portalHost, setPortalHost] = useState<HTMLElement | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isCursorActive, setIsCursorActive] = useState(false);
+  const [isInteractive, setIsInteractive] = useState(false);
 
   let theme: 'light' | 'dark' = 'dark';
   try {
@@ -143,7 +150,9 @@ export function GlassBallCursor() {
     if (!isEnabled) {
       document.documentElement.removeAttribute('data-work-cursor-active');
       activeRef.current = false;
+      interactiveRef.current = false;
       setIsCursorActive(false);
+      setIsInteractive(false);
     }
   }, [isEnabled]);
 
@@ -170,10 +179,14 @@ export function GlassBallCursor() {
         duration: 0.22,
         ease: 'power3.out',
       });
-      const scaleTo = gsap.quickTo(cursor, 'scale', {
-        duration: 0.18,
-        ease: 'power2.out',
-      });
+      const animateScale = (scale: number) => {
+        gsap.to(cursor, {
+          scale,
+          duration: 0.18,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      };
       const dotXTo = gsap.quickTo(dot, 'x', {
         duration: 0.12,
         ease: 'power3.out',
@@ -215,6 +228,15 @@ export function GlassBallCursor() {
         document.documentElement.removeAttribute('data-work-cursor-active');
       };
 
+      const setInteractive = (nextIsInteractive: boolean) => {
+        if (interactiveRef.current === nextIsInteractive) {
+          return;
+        }
+
+        interactiveRef.current = nextIsInteractive;
+        setIsInteractive(nextIsInteractive);
+      };
+
       const updateCursor = (event: MouseEvent) => {
         const nextPoint = {
           x: event.clientX,
@@ -222,12 +244,22 @@ export function GlassBallCursor() {
         };
         const nextMoveTime = event.timeStamp || performance.now();
         const isInside = isPointInsideOurWork(nextPoint);
+        const isInteractive =
+          isInside &&
+          event.target instanceof Element &&
+          event.target.closest(CLICKABLE_PROJECT_SURFACE_SELECTOR) !== null;
+        const cursorStateChanged = interactiveRef.current !== isInteractive;
 
-        xTo(nextPoint.x - HALF_CURSOR_SIZE);
-        yTo(nextPoint.y - HALF_CURSOR_SIZE);
+        xTo(nextPoint.x - (isInteractive ? HAND_HOTSPOT_X : HALF_CURSOR_SIZE));
+        yTo(nextPoint.y - (isInteractive ? HAND_HOTSPOT_Y : HALF_CURSOR_SIZE));
         setActive(isInside);
+        setInteractive(isInteractive);
 
-        if (!isInside) {
+        if (cursorStateChanged) {
+          animateScale(isInteractive ? 1 : 0.92);
+        }
+
+        if (!isInteractive) {
           previousPointRef.current = null;
           previousMoveTimeRef.current = null;
           returnDotToCenter();
@@ -256,18 +288,19 @@ export function GlassBallCursor() {
         }
 
         cursor.setAttribute('data-pressed', 'true');
-        scaleTo(0.82);
+        animateScale(interactiveRef.current ? 0.92 : 0.82);
       };
 
       const handleMouseUp = () => {
         cursor.removeAttribute('data-pressed');
-        scaleTo(activeRef.current ? 1 : 0.92);
+        animateScale(activeRef.current ? 1 : 0.92);
       };
 
       const handleWindowBlur = () => {
         cursor.removeAttribute('data-pressed');
         setActive(false);
-        scaleTo(0.92);
+        setInteractive(false);
+        animateScale(0.92);
       };
 
       window.addEventListener('mousemove', updateCursor, { passive: true });
@@ -288,7 +321,9 @@ export function GlassBallCursor() {
         previousPointRef.current = null;
         previousMoveTimeRef.current = null;
         activeRef.current = false;
+        interactiveRef.current = false;
         setIsCursorActive(false);
+        setIsInteractive(false);
       };
     },
     { dependencies: [isEnabled, portalHost] }
@@ -304,13 +339,29 @@ export function GlassBallCursor() {
       className="glass-ball-cursor"
       data-testid="glass-ball-cursor"
       data-active={isCursorActive ? 'true' : 'false'}
+      data-interactive={isInteractive ? 'true' : 'false'}
       data-theme={theme}
       aria-hidden="true"
     >
-      <div className="glass-ball-cursor__ring" data-testid="work-cursor-ring">
+      <div
+        className={`glass-ball-cursor__ring${isInteractive ? ' is-hidden' : ''}`}
+        data-testid="work-cursor-ring"
+      >
         <span className="glass-ball-cursor__text">DRAG</span>
       </div>
-      <div ref={dotRef} className="glass-ball-cursor__dot" data-testid="work-cursor-dot" />
+      <div
+        ref={dotRef}
+        className={`glass-ball-cursor__dot${isInteractive ? ' is-hidden' : ''}`}
+        data-testid="work-cursor-dot"
+      />
+      <div
+        className={`glass-ball-cursor__hand${isInteractive ? ' is-visible' : ''}`}
+        data-testid="work-cursor-hand"
+        data-size="2x"
+      >
+        <Pointer className="glass-ball-cursor__hand-outline" size={HAND_CURSOR_SIZE} />
+        <Pointer className="glass-ball-cursor__hand-fill" size={HAND_CURSOR_SIZE} />
+      </div>
     </div>,
     portalHost
   );

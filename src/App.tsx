@@ -9,6 +9,7 @@ import { Navigation } from './components/Layout/Navigation';
 import { TorchEffect } from './components/TorchEffect';
 import { ScrollToTop } from './components/ScrollToTop';
 import { HomePage } from './pages/HomePage';
+import { ProcessPage } from './pages/ProcessPage';
 import RouteLoadingFallback from './components/RouteLoadingFallback';
 import { BurningReveal } from './components/BurningReveal';
 import { isVisualTestMode } from './utils/runtimeFlags';
@@ -93,6 +94,9 @@ function App() {
 
               {/* Blog listing page route */}
               <Route path="/blog" element={<BlogListingPage />} />
+
+              {/* Process page route */}
+              <Route path="/process" element={<ProcessPage />} />
 
               {/* Individual blog post route */}
               <Route path="/blog/:slug" element={<BlogPostPage />} />
