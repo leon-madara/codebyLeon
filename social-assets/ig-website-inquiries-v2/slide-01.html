@@ -1,0 +1,703 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeByLeon IG Carousel Slide 01</title>
+    <style>
+      @font-face {
+        font-family: "Gladolia";
+        src: url("../../public/fonts/GladoliaDEMO-Regular.otf") format("opentype");
+        font-display: swap;
+      }
+
+      :root {
+        --ink: #07111a;
+        --navy: #061827;
+        --blue: #78bdd7;
+        --blue-deep: #4c99bb;
+        --paper: #f2f1ee;
+        --warm-paper: #e6e2dc;
+        --orange: #ec5f3b;
+        --orange-soft: #ee8065;
+        --cyan: #68e6f2;
+        --line: rgba(7, 17, 26, 0.14);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #222;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      .slide {
+        position: relative;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        color: var(--ink);
+        background: linear-gradient(180deg, #77bdd9 0 53%, #efeeee 53% 100%);
+      }
+
+      .top-plane {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 720px;
+        background:
+          radial-gradient(circle at 21% 20%, rgba(255, 255, 255, 0.42), transparent 28%),
+          linear-gradient(135deg, #91d0e5 0%, #6eb5d2 48%, #58a5c7 100%);
+      }
+
+      .bottom-plane {
+        position: absolute;
+        inset: 720px 0 0;
+        background:
+          radial-gradient(circle at 50% 28%, rgba(255, 255, 255, 0.7), transparent 26%),
+          linear-gradient(180deg, #f3f2f1, #e8e6e3);
+      }
+
+      .brand-lockup {
+        position: absolute;
+        z-index: 4;
+        top: 52px;
+        left: 64px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 18px 12px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.22);
+        box-shadow: 0 16px 36px rgba(7, 17, 26, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand-lockup img {
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
+      }
+
+      .brand-copy {
+        display: grid;
+        gap: 1px;
+      }
+
+      .brand-name {
+        color: #061827;
+        font-size: 23px;
+        font-weight: 850;
+        line-height: 1;
+      }
+
+      .brand-sub {
+        color: rgba(6, 24, 39, 0.62);
+        font-size: 13px;
+        font-weight: 760;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .page-chip {
+        position: absolute;
+        z-index: 4;
+        top: 67px;
+        right: 65px;
+        color: rgba(6, 24, 39, 0.68);
+        font-size: 20px;
+        font-weight: 820;
+      }
+
+      .deck {
+        position: absolute;
+        z-index: 1;
+        left: 66px;
+        right: 56px;
+        top: 214px;
+        height: 410px;
+      }
+
+      .card {
+        position: absolute;
+        width: 325px;
+        height: 392px;
+        border-radius: 3px;
+        background: var(--paper);
+        box-shadow:
+          0 22px 42px rgba(7, 17, 26, 0.14),
+          0 1px 0 rgba(255, 255, 255, 0.8) inset;
+        overflow: hidden;
+      }
+
+      .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 28px 28px;
+        opacity: 0.15;
+      }
+
+      .card-1 {
+        left: 0;
+        top: 24px;
+      }
+
+      .card-2 {
+        left: 258px;
+        top: -2px;
+        background: #f8f8f5;
+      }
+
+      .card-3 {
+        left: 548px;
+        top: 25px;
+        background:
+          radial-gradient(circle at 70% 28%, rgba(236, 95, 59, 0.38), transparent 34%),
+          linear-gradient(135deg, #ee8065, #e85c38);
+      }
+
+      .card-4 {
+        left: 820px;
+        top: 24px;
+        background: #f4f2ed;
+      }
+
+      .card-content {
+        position: relative;
+        height: 100%;
+        padding: 34px 34px 28px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .card-kicker {
+        margin-bottom: 22px;
+        font-size: 13px;
+        font-weight: 820;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba(7, 17, 26, 0.56);
+      }
+
+      .card-title {
+        font-family: "Gladolia", Georgia, serif;
+        font-size: 42px;
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      .card-3 .card-title,
+      .card-3 .card-kicker,
+      .card-3 .small-lines {
+        color: rgba(7, 17, 26, 0.9);
+      }
+
+      .small-lines {
+        margin-top: 18px;
+        max-width: 210px;
+        color: rgba(7, 17, 26, 0.58);
+        font-size: 12px;
+        font-weight: 620;
+        line-height: 1.36;
+      }
+
+      .card-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: rgba(7, 17, 26, 0.58);
+        font-size: 15px;
+        font-weight: 720;
+      }
+
+      .ig-icons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .heart {
+        color: #ed3f35;
+        font-size: 20px;
+        line-height: 1;
+      }
+
+      .bubble,
+      .send,
+      .save {
+        width: 17px;
+        height: 17px;
+        border: 2px solid rgba(7, 17, 26, 0.55);
+      }
+
+      .bubble {
+        border-radius: 50%;
+      }
+
+      .send {
+        transform: rotate(45deg);
+        border-left: 0;
+        border-bottom: 0;
+      }
+
+      .save {
+        margin-left: 4px;
+        border-radius: 2px 2px 5px 5px;
+      }
+
+      .phone-shadow {
+        position: absolute;
+        z-index: 2;
+        left: 381px;
+        top: 178px;
+        width: 310px;
+        height: 615px;
+        border-radius: 52px;
+        background: rgba(7, 17, 26, 0.38);
+        filter: blur(26px);
+        transform: translate(16px, 32px);
+      }
+
+      .phone {
+        position: absolute;
+        z-index: 3;
+        left: 376px;
+        top: 165px;
+        width: 322px;
+        height: 646px;
+        border: 9px solid #101010;
+        border-radius: 54px;
+        background: #fbfaf7;
+        box-shadow:
+          0 36px 74px rgba(7, 17, 26, 0.34),
+          0 0 0 2px rgba(255, 255, 255, 0.14) inset;
+        overflow: hidden;
+      }
+
+      .dynamic-island {
+        position: absolute;
+        top: 17px;
+        left: 50%;
+        width: 96px;
+        height: 27px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: #050505;
+        z-index: 5;
+      }
+
+      .status {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 8px 24px 0;
+        color: #161616;
+        font-size: 11px;
+        font-weight: 780;
+      }
+
+      .stories {
+        display: flex;
+        gap: 11px;
+        padding: 6px 18px 12px;
+      }
+
+      .story {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        padding: 2px;
+        background: linear-gradient(135deg, var(--orange), var(--cyan));
+      }
+
+      .story-inner {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        border: 2px solid #fbfaf7;
+        background:
+          radial-gradient(circle at 42% 28%, #f8d1ad 0 17%, transparent 18%),
+          linear-gradient(145deg, #21384b, #cbd6d8);
+      }
+
+      .post-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 20px 9px;
+      }
+
+      .post-user {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 12px;
+        font-weight: 820;
+      }
+
+      .avatar {
+        width: 26px;
+        height: 26px;
+        object-fit: contain;
+      }
+
+      .dots {
+        letter-spacing: 2px;
+        font-size: 16px;
+      }
+
+      .phone-post {
+        margin: 0 17px;
+        height: 405px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 2px;
+        background:
+          radial-gradient(circle at 84% 18%, rgba(236, 95, 59, 0.28), transparent 33%),
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px),
+          #f5f2ec;
+        background-size: auto, 24px 24px, 24px 24px, auto;
+        box-shadow: 0 1px 0 rgba(7, 17, 26, 0.08);
+      }
+
+      .post-logo {
+        position: absolute;
+        top: 28px;
+        left: 24px;
+        width: 64px;
+        height: 64px;
+        object-fit: contain;
+      }
+
+      .post-title {
+        position: absolute;
+        left: 24px;
+        right: 24px;
+        top: 116px;
+        font-family: "Gladolia", Georgia, serif;
+        color: #111;
+        font-size: 38px;
+        line-height: 0.96;
+        letter-spacing: 0;
+      }
+
+      .post-title span {
+        color: var(--orange);
+      }
+
+      .post-note {
+        position: absolute;
+        left: 25px;
+        right: 42px;
+        bottom: 61px;
+        color: rgba(7, 17, 26, 0.63);
+        font-size: 11px;
+        font-weight: 650;
+        line-height: 1.32;
+      }
+
+      .post-page {
+        position: absolute;
+        left: 25px;
+        bottom: 25px;
+        color: rgba(7, 17, 26, 0.58);
+        font-size: 14px;
+        font-weight: 760;
+      }
+
+      .phone-actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 21px 3px;
+      }
+
+      .phone-caption {
+        padding: 0 21px;
+        color: #1c1c1c;
+        font-size: 11px;
+        line-height: 1.32;
+      }
+
+      .nav {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 42px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        color: #151515;
+        font-size: 17px;
+        border-top: 1px solid rgba(7, 17, 26, 0.1);
+      }
+
+      .lower-deck {
+        position: absolute;
+        left: 73px;
+        right: 73px;
+        bottom: 235px;
+        height: 188px;
+      }
+
+      .mini-card {
+        position: absolute;
+        top: 28px;
+        width: 188px;
+        height: 140px;
+        border-radius: 2px;
+        background:
+          linear-gradient(rgba(6, 24, 39, 0.08) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 24, 39, 0.08) 1px, transparent 1px),
+          #fbfbf9;
+        background-size: 18px 18px;
+        box-shadow: 0 10px 20px rgba(7, 17, 26, 0.16);
+      }
+
+      .mini-card::after {
+        content: "Page 0" attr(data-page);
+        position: absolute;
+        left: 16px;
+        bottom: 15px;
+        color: rgba(7, 17, 26, 0.52);
+        font-size: 12px;
+        font-weight: 740;
+      }
+
+      .mini-card:nth-child(1) {
+        left: 0;
+      }
+
+      .mini-card:nth-child(2) {
+        left: 214px;
+      }
+
+      .mini-card:nth-child(3) {
+        right: 214px;
+      }
+
+      .mini-card:nth-child(4) {
+        right: 0;
+      }
+
+      .mini-phone-shadow {
+        position: absolute;
+        left: 352px;
+        top: -11px;
+        width: 214px;
+        height: 252px;
+        border-radius: 36px;
+        background: rgba(7, 17, 26, 0.24);
+        filter: blur(22px);
+      }
+
+      .mini-phone {
+        position: absolute;
+        left: 352px;
+        top: -24px;
+        width: 210px;
+        height: 282px;
+        border: 7px solid #101010;
+        border-radius: 38px;
+        background:
+          linear-gradient(rgba(6, 24, 39, 0.06) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(6, 24, 39, 0.06) 1px, transparent 1px),
+          #fff;
+        background-size: 18px 18px;
+        box-shadow: 0 20px 34px rgba(7, 17, 26, 0.25);
+      }
+
+      .mini-phone::before {
+        content: "";
+        position: absolute;
+        top: 11px;
+        left: 50%;
+        width: 67px;
+        height: 18px;
+        transform: translateX(-50%);
+        border-radius: 999px;
+        background: #050505;
+      }
+
+      .bottom-copy {
+        position: absolute;
+        left: 72px;
+        right: 72px;
+        bottom: 74px;
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+      }
+
+      .visit {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        height: 72px;
+        padding: 0 29px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.78);
+        color: #111;
+        font-size: 22px;
+        font-weight: 850;
+        box-shadow: 0 16px 28px rgba(7, 17, 26, 0.08);
+      }
+
+      .search-pill {
+        width: 214px;
+        height: 72px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 24px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.58);
+        color: rgba(7, 17, 26, 0.2);
+        font-size: 18px;
+        font-weight: 750;
+      }
+
+      .magnifier {
+        width: 32px;
+        height: 32px;
+        border: 4px solid #101010;
+        border-radius: 50%;
+        position: relative;
+      }
+
+      .magnifier::after {
+        content: "";
+        position: absolute;
+        width: 14px;
+        height: 4px;
+        right: -12px;
+        bottom: -6px;
+        background: #101010;
+        transform: rotate(45deg);
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="slide" id="slide-01">
+      <div class="top-plane"></div>
+      <div class="bottom-plane"></div>
+
+      <div class="brand-lockup">
+        <img src="../../public/icons/main-logo.svg" alt="CodeByLeon logo" />
+        <div class="brand-copy">
+          <div class="brand-name">codebyleon</div>
+          <div class="brand-sub">Website audit</div>
+        </div>
+      </div>
+      <div class="page-chip">01 / 06</div>
+
+      <div class="deck" aria-hidden="true">
+        <article class="card card-1">
+          <div class="card-content">
+            <div class="card-kicker">Unlock the problem</div>
+            <div class="card-title">Looks good is not enough.</div>
+            <p class="small-lines">Design should explain, prove, and guide the next step.</p>
+            <div class="card-footer">
+              <span>Page 01</span>
+              <span class="ig-icons"><span class="heart">♥</span><span class="bubble"></span><span class="send"></span><span class="save"></span></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-2">
+          <div class="card-content">
+            <div class="card-kicker">Cover</div>
+            <div class="card-title">Your website looks good. Why no inquiries?</div>
+            <p class="small-lines">A conversion audit for business owners.</p>
+            <div class="card-footer">
+              <span>Page 02</span>
+              <span class="ig-icons"><span class="heart">♥</span><span class="bubble"></span><span class="send"></span><span class="save"></span></span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-3">
+          <div class="card-content">
+            <div class="card-kicker">Audit leak</div>
+            <div class="card-title">The CTA cannot carry the whole page.</div>
+            <p class="small-lines">A button works after the page earns the click.</p>
+            <div class="card-footer">
+              <span>Page 03</span>
+              <span>→</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card card-4">
+          <div class="card-content">
+            <div class="card-kicker">Built for action</div>
+            <div class="card-title">Every section needs a job.</div>
+            <p class="small-lines">Offer, proof, process, then inquiry.</p>
+            <div class="card-footer">
+              <span>Page 04</span>
+              <span>→</span>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <div class="phone-shadow"></div>
+      <div class="phone">
+        <div class="dynamic-island"></div>
+        <div class="status"><span>9:50</span><span>5G ▰</span></div>
+        <div class="stories">
+          <div class="story"><div class="story-inner"></div></div>
+          <div class="story"><div class="story-inner"></div></div>
+          <div class="story"><div class="story-inner"></div></div>
+          <div class="story"><div class="story-inner"></div></div>
+        </div>
+        <div class="post-head">
+          <div class="post-user"><img class="avatar" src="../../public/icons/main-logo.svg" alt="" />codebyleon</div>
+          <div class="dots">•••</div>
+        </div>
+        <div class="phone-post">
+          <img class="post-logo" src="../../public/icons/main-logo.svg" alt="" />
+          <div class="post-title">Your website looks good. <span>Why no inquiries?</span></div>
+          <div class="post-note">A clean homepage still loses leads when offer, proof, and action are not connected.</div>
+          <div class="post-page">Page 01</div>
+        </div>
+        <div class="phone-actions">
+          <span class="ig-icons"><span class="heart">♥</span><span class="bubble"></span><span class="send"></span></span>
+          <span class="save"></span>
+        </div>
+        <div class="phone-caption"><strong>codebyleon</strong> Website audit series for businesses that want better inquiries.</div>
+        <div class="nav"><span>⌂</span><span>⌕</span><span>▣</span><span>◎</span><span>♙</span></div>
+      </div>
+
+      <div class="lower-deck" aria-hidden="true">
+        <div class="mini-card" data-page="2"></div>
+        <div class="mini-card" data-page="3"></div>
+        <div class="mini-card" data-page="4"></div>
+        <div class="mini-card" data-page="5"></div>
+        <div class="mini-phone-shadow"></div>
+        <div class="mini-phone"></div>
+      </div>
+
+      <div class="bottom-copy">
+        <div class="visit">↗ Visit site</div>
+        <div class="search-pill"><span>Search inquiry</span><span class="magnifier"></span></div>
+      </div>
+    </section>
+  </body>
+</html>

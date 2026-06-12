@@ -81,10 +81,11 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background-color: rgba(255, 255, 255, 0.25);
-  background-image: radial-gradient(circle, rgba(150, 150, 150, 0.1) 1.2px, transparent 1.2px);
+  background-color: var(--color-overlay-bg);
+  background-image: radial-gradient(circle, var(--color-overlay-dot) 1.2px, transparent 1.2px);
   background-size: 12px 12px;
   pointer-events: none;
+  transition: background-color var(--duration-normal) ease;
 }
 
 .about-3d-stack__content-layer {
@@ -518,6 +519,79 @@
 }
 
 /* About 3D stack cards */
+/* =============================================
+   ABOUT 3D STACK SECTION RULES
+   ============================================= */
+
+.about-3d-stack {
+  background-color: var(--color-canvas-light);
+  transition: background-color var(--duration-normal) ease;
+}
+
+/* Morphic background glow orbs */
+.about-3d-stack__orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  mix-blend-mode: normal;
+  will-change: transform, opacity;
+}
+
+.about-3d-stack__orb--purple {
+  width: 60vw;
+  height: 60vw;
+  top: -15%;
+  left: -15%;
+  background: var(--orb-purple);
+  opacity: 0.45;
+  filter: blur(90px);
+}
+
+.about-3d-stack__orb--orange {
+  width: 50vw;
+  height: 50vw;
+  bottom: -10%;
+  right: -10%;
+  background: var(--orb-orange);
+  opacity: 0.4;
+  filter: blur(80px);
+}
+
+.about-3d-stack__orb--blue {
+  width: 40vw;
+  height: 40vw;
+  top: 25%;
+  right: 5%;
+  background: var(--orb-blue);
+  opacity: 0.35;
+  filter: blur(70px);
+}
+
+.about-3d-stack__headline {
+  font-family: var(--font-heading), serif; /* Gladolia DEMO */
+  font-size: clamp(2rem, 5.5vw, 3.5rem);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin-bottom: 1.25rem;
+}
+
+.about-3d-stack__headline em {
+  font-style: italic;
+  color: var(--hero-accent);
+}
+
+.about-3d-stack__subheadline {
+  font-family: var(--font-body), sans-serif;
+  font-size: clamp(0.88rem, 1.4vw, 1.05rem);
+  color: var(--text-secondary);
+  font-weight: 400;
+  line-height: 1.7;
+  max-width: 550px;
+  margin: 0 auto;
+}
+
 .about-3d-stack__stack {
   position: relative;
   width: 100%;
@@ -563,7 +637,7 @@
 }
 
 .about-3d-stack__card--orange {
-  --about-stack-card-bg: linear-gradient(135deg, hsl(22, 95%, 42%) 0%, hsl(22, 95%, 30%) 100%);
+  --about-stack-card-bg: linear-gradient(135deg, var(--about-stack-orange-start) 0%, var(--about-stack-orange-end) 100%);
   --about-stack-card-accent: hsl(22, 95%, 65%);
 }
 
@@ -932,7 +1006,8 @@
 }
 
 .about-3d-stack__chip:hover .about-3d-stack__chip-inner,
-.about-3d-stack__chip:focus-visible .about-3d-stack__chip-inner {
+.about-3d-stack__chip:focus-visible .about-3d-stack__chip-inner,
+.about-3d-stack__chip.is-flipped .about-3d-stack__chip-inner {
   transform: rotateX(-180deg);
 }
 

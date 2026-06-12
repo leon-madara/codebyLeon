@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeByLeon IG Carousel Slide 05</title>
+    <style>
+      @font-face {
+        font-family: "Gladolia";
+        src: url("../../public/fonts/GladoliaDEMO-Regular.otf") format("opentype");
+        font-display: swap;
+      }
+
+      :root {
+        --ink: #07111a;
+        --navy: #061827;
+        --paper: #f7f5ef;
+        --orange: #ec5f3b;
+        --orange-soft: #f08061;
+        --cyan: #68e6f2;
+        --line: rgba(7, 17, 26, 0.12);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: #222;
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+          "Segoe UI", sans-serif;
+      }
+
+      .slide {
+        position: relative;
+        width: 1080px;
+        height: 1350px;
+        overflow: hidden;
+        color: var(--ink);
+        background: linear-gradient(180deg, #78bdd9 0 43%, #efeeee 43% 100%);
+      }
+
+      .sky {
+        position: absolute;
+        inset: 0 0 auto;
+        height: 582px;
+        background:
+          radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.46), transparent 30%),
+          linear-gradient(135deg, #9bd7e9 0%, #72bad7 48%, #57a5c7 100%);
+      }
+
+      .floor {
+        position: absolute;
+        inset: 582px 0 0;
+        background:
+          radial-gradient(circle at 52% 8%, rgba(255, 255, 255, 0.95), transparent 32%),
+          linear-gradient(180deg, #f5f4f2, #e7e4df);
+      }
+
+      .brand-lockup {
+        position: absolute;
+        z-index: 6;
+        top: 52px;
+        left: 64px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        padding: 12px 18px 12px 12px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.24);
+        box-shadow: 0 16px 36px rgba(7, 17, 26, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      .brand-lockup img {
+        width: 58px;
+        height: 58px;
+        object-fit: contain;
+      }
+
+      .brand-name {
+        color: var(--navy);
+        font-size: 23px;
+        font-weight: 850;
+        line-height: 1;
+      }
+
+      .brand-sub {
+        margin-top: 2px;
+        color: rgba(6, 24, 39, 0.62);
+        font-size: 13px;
+        font-weight: 760;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .page-chip {
+        position: absolute;
+        z-index: 6;
+        top: 72px;
+        right: 66px;
+        color: rgba(6, 24, 39, 0.7);
+        font-size: 20px;
+        font-weight: 830;
+      }
+
+      .paper-shadow {
+        position: absolute;
+        z-index: 1;
+        left: 120px;
+        top: 204px;
+        width: 840px;
+        height: 838px;
+        border-radius: 20px;
+        background: rgba(7, 17, 26, 0.2);
+        filter: blur(36px);
+        transform: translateY(42px);
+      }
+
+      .paper {
+        position: absolute;
+        z-index: 2;
+        left: 120px;
+        top: 204px;
+        width: 840px;
+        height: 838px;
+        overflow: hidden;
+        border-radius: 5px;
+        background:
+          radial-gradient(circle at 80% 22%, rgba(236, 95, 59, 0.19), transparent 34%),
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px),
+          var(--paper);
+        background-size: auto, 32px 32px, 32px 32px, auto;
+        box-shadow:
+          0 32px 72px rgba(7, 17, 26, 0.18),
+          0 1px 0 rgba(255, 255, 255, 0.82) inset;
+      }
+
+      .paper::before {
+        content: "";
+        position: absolute;
+        right: -92px;
+        top: 76px;
+        width: 330px;
+        height: 650px;
+        border-radius: 999px 0 0 999px;
+        background: linear-gradient(180deg, var(--orange-soft), var(--orange));
+      }
+
+      .inner {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        padding: 58px 62px 44px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .topline {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 48px;
+      }
+
+      .kicker {
+        color: rgba(7, 17, 26, 0.6);
+        font-size: 17px;
+        font-weight: 860;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+
+      .mini-logo {
+        width: 72px;
+        height: 72px;
+        object-fit: contain;
+      }
+
+      .headline {
+        max-width: 680px;
+        margin: 0;
+        font-family: "Gladolia", Georgia, serif;
+        font-size: 88px;
+        line-height: 0.92;
+        letter-spacing: 0;
+      }
+
+      .headline span {
+        color: var(--orange);
+      }
+
+      .body {
+        max-width: 570px;
+        margin: 30px 0 0;
+        color: rgba(7, 17, 26, 0.66);
+        font-size: 25px;
+        font-weight: 620;
+        line-height: 1.22;
+      }
+
+      .comparison {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 28px;
+        width: 686px;
+        margin-top: 56px;
+      }
+
+      .mini-board {
+        min-height: 272px;
+        padding: 26px 24px;
+        border: 1px solid rgba(7, 17, 26, 0.11);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.58);
+        box-shadow: 0 14px 26px rgba(7, 17, 26, 0.07);
+      }
+
+      .mini-label {
+        margin-bottom: 24px;
+        color: rgba(7, 17, 26, 0.54);
+        font-size: 14px;
+        font-weight: 880;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .layout-lines {
+        display: grid;
+        gap: 14px;
+      }
+
+      .line {
+        height: 18px;
+        border-radius: 999px;
+        background: rgba(7, 17, 26, 0.12);
+      }
+
+      .line.big {
+        width: 78%;
+        height: 34px;
+        background: rgba(236, 95, 59, 0.72);
+      }
+
+      .line.mid {
+        width: 62%;
+      }
+
+      .line.short {
+        width: 42%;
+      }
+
+      .decorate .line:nth-child(4) {
+        width: 82%;
+        height: 78px;
+        border-radius: 18px;
+        background:
+          radial-gradient(circle at 70% 40%, rgba(104, 230, 242, 0.28), transparent 35%),
+          rgba(7, 17, 26, 0.1);
+      }
+
+      .direct .step {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        color: rgba(7, 17, 26, 0.78);
+        font-size: 19px;
+        font-weight: 760;
+      }
+
+      .dot {
+        display: grid;
+        place-items: center;
+        flex: 0 0 34px;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        color: white;
+        background: var(--navy);
+        font-size: 13px;
+        font-weight: 860;
+      }
+
+      .direct .step:nth-child(3) .dot {
+        background: var(--orange);
+      }
+
+      .direct .step:nth-child(4) .dot {
+        background: #56a7c9;
+      }
+
+      .quote {
+        position: absolute;
+        z-index: 4;
+        right: 76px;
+        bottom: 247px;
+        width: 286px;
+        padding: 23px 24px;
+        border-radius: 24px;
+        color: white;
+        background: var(--navy);
+        box-shadow: 0 28px 52px rgba(7, 17, 26, 0.26);
+      }
+
+      .quote-kicker {
+        margin-bottom: 10px;
+        color: var(--cyan);
+        font-size: 14px;
+        font-weight: 860;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+      }
+
+      .quote-copy {
+        font-size: 22px;
+        font-weight: 780;
+        line-height: 1.12;
+      }
+
+      .card-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        color: rgba(7, 17, 26, 0.57);
+        font-size: 18px;
+        font-weight: 760;
+      }
+
+      .ig-icons {
+        display: flex;
+        align-items: center;
+        gap: 11px;
+      }
+
+      .heart {
+        color: #ed3f35;
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      .bubble,
+      .send,
+      .save {
+        width: 19px;
+        height: 19px;
+        border: 2px solid rgba(7, 17, 26, 0.52);
+      }
+
+      .bubble {
+        border-radius: 50%;
+      }
+
+      .send {
+        transform: rotate(45deg);
+        border-left: 0;
+        border-bottom: 0;
+      }
+
+      .save {
+        border-radius: 2px 2px 5px 5px;
+      }
+
+      .lower-strip {
+        position: absolute;
+        z-index: 2;
+        left: 72px;
+        right: 72px;
+        bottom: 76px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .visit {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        height: 72px;
+        padding: 0 29px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.78);
+        color: #111;
+        font-size: 22px;
+        font-weight: 850;
+        box-shadow: 0 16px 28px rgba(7, 17, 26, 0.08);
+      }
+
+      .progress {
+        width: 350px;
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(7, 17, 26, 0.13);
+        overflow: hidden;
+      }
+
+      .progress::before {
+        content: "";
+        display: block;
+        width: 83%;
+        height: 100%;
+        background: var(--orange);
+      }
+
+      .next-note {
+        color: rgba(7, 17, 26, 0.55);
+        font-size: 18px;
+        font-weight: 780;
+      }
+    </style>
+  </head>
+  <body>
+    <section class="slide" id="slide-05">
+      <div class="sky"></div>
+      <div class="floor"></div>
+
+      <div class="brand-lockup">
+        <img src="../../public/icons/main-logo.svg" alt="CodeByLeon logo" />
+        <div>
+          <div class="brand-name">codebyleon</div>
+          <div class="brand-sub">Website audit</div>
+        </div>
+      </div>
+      <div class="page-chip">05 / 06</div>
+
+      <div class="paper-shadow"></div>
+      <article class="paper">
+        <div class="inner">
+          <div class="topline">
+            <div class="kicker">Design role</div>
+            <img class="mini-logo" src="../../public/icons/main-logo.svg" alt="" />
+          </div>
+
+          <h1 class="headline">Pretty is not <span>strategy.</span></h1>
+          <p class="body">
+            Visuals should support the decision. Every section needs a reason to exist.
+          </p>
+
+          <div class="comparison">
+            <div class="mini-board decorate">
+              <div class="mini-label">Decoration</div>
+              <div class="layout-lines">
+                <div class="line big"></div>
+                <div class="line mid"></div>
+                <div class="line short"></div>
+                <div class="line"></div>
+              </div>
+            </div>
+
+            <div class="mini-board direct">
+              <div class="mini-label">Direction</div>
+              <div class="step"><span class="dot">1</span><span>Clarify the offer</span></div>
+              <div class="step"><span class="dot">2</span><span>Reduce doubt</span></div>
+              <div class="step"><span class="dot">3</span><span>Guide the action</span></div>
+            </div>
+          </div>
+
+          <div class="card-footer">
+            <span>Page 05</span>
+            <span class="ig-icons"><span class="heart">♥</span><span class="bubble"></span><span class="send"></span><span class="save"></span></span>
+          </div>
+        </div>
+      </article>
+
+      <aside class="quote">
+        <div class="quote-kicker">Design should work</div>
+        <div class="quote-copy">If a section cannot explain, prove, or move someone forward, it is probably noise.</div>
+      </aside>
+
+      <div class="lower-strip">
+        <div class="visit">↗ Visit site</div>
+        <div class="progress"></div>
+        <div class="next-note">Next: free audit</div>
+      </div>
+    </section>
+  </body>
+</html>

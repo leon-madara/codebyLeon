@@ -25,6 +25,7 @@ const MOBILE_BEAT_DWELL_RATIO = 0.08;
 const DESKTOP_FINAL_BEAT_HOLD_RATIO = 0.22;
 const MOBILE_FINAL_BEAT_HOLD_RATIO = 0.1;
 const SNAP_DURATION = { min: 0.2, max: 0.55 } as const;
+const NAV_CLEARANCE = 12;
 
 type BeatComponent = ForwardRefExoticComponent<RefAttributes<HTMLElement>>;
 
@@ -285,7 +286,9 @@ const MultiCardScrollSection = () => {
               trigger: section,
               pin: true,
               pinSpacing: true,
-              start: isDesktop ? `top top+=${topChromeHeightRef.current}` : 'top top',
+              start: isDesktop
+                ? () => `top top+=${navHeightRef.current + NAV_CLEARANCE + topChromeHeightRef.current}`
+                : 'top top',
               end: () => {
                 recalculateDistances();
                 return `+=${totalDistance}`;
@@ -385,7 +388,7 @@ const MultiCardScrollSection = () => {
         if (isDesktop && container && topChrome) {
           ScrollTrigger.create({
             trigger: container,
-            start: 'top top',
+            start: () => `top top+=${navHeightRef.current + NAV_CLEARANCE}`,
             end: () => {
               const storyTriggers = scrollTriggersRef.current.filter(
                 (t): t is ScrollTrigger => Boolean(t)
@@ -436,6 +439,7 @@ const MultiCardScrollSection = () => {
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,
     '--hs-nav-height': `${navHeight}px`,
+    '--hs-nav-clearance': `${NAV_CLEARANCE}px`,
   } as CSSProperties;
 
   return (

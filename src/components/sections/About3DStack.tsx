@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -29,26 +29,49 @@ type AboutStackCard = {
   chips: CardChip[];
 };
 
-const CARD_STACK_OFFSET_Y = 28;
 const CARD_STACK_SCALE_STEP = 0.04;
 const CARD_STACK_BRIGHTNESS_STEP = 0.18;
-// Increased total pinned scroll to give all three cards more breathing room
-const PIN_TOTAL_VH = 820;
-// Cards now dwell fully visible for much longer before any exit begins
-const FIRST_EXIT_START_VH = 160;
-const TRANSITION_PHASE_COUNT = 3;
-const PHASE_SPAN_VH = (PIN_TOTAL_VH - FIRST_EXIT_START_VH) / TRANSITION_PHASE_COUNT;
-// Exit occupies only 30% of each phase — slow, deliberate departure
-const EXIT_PORTION_OF_PHASE = 0.30;
-const CARD_EXIT_DURATION_VH = PHASE_SPAN_VH * EXIT_PORTION_OF_PHASE;
-// Remaining 70% of each phase holds the newly promoted card for reading
-const CARD_SETTLE_DURATION_VH = PHASE_SPAN_VH - CARD_EXIT_DURATION_VH;
-const STACK_SCRUB = 3.4;
+const INITIAL_CARD_DWELL_VH = 90;
+const CARD_EXIT_DURATION_VH = 55;
+const CARD_DWELL_DURATION_VH = 130;
+const CARD_TRANSITION_COUNT = 2;
+const FINAL_SCENE_EXIT_DURATION_VH = 0;
+const POST_EXIT_HOLD_VH = 20;
+const STACK_SCRUB = 1.5;
 const CARD_LAYER_CLASSES = [
   "about-3d-stack__card--layer-3",
   "about-3d-stack__card--layer-2",
   "about-3d-stack__card--layer-1",
 ] as const;
+
+export function getAboutStackMotionPlan() {
+  const cardExitStartsVh = Array.from(
+    { length: CARD_TRANSITION_COUNT },
+    (_, index) =>
+      INITIAL_CARD_DWELL_VH +
+      index * (CARD_EXIT_DURATION_VH + CARD_DWELL_DURATION_VH),
+  );
+  const finalSceneExitStartVh =
+    INITIAL_CARD_DWELL_VH +
+    CARD_TRANSITION_COUNT * (CARD_EXIT_DURATION_VH + CARD_DWELL_DURATION_VH);
+  const animationCompleteVh = finalSceneExitStartVh + FINAL_SCENE_EXIT_DURATION_VH;
+
+  return {
+    cardExitStartsVh,
+    finalCardDwellVh: CARD_DWELL_DURATION_VH,
+    finalSceneExitStartVh,
+    animationCompleteVh,
+    totalDurationVh: animationCompleteVh + POST_EXIT_HOLD_VH,
+  };
+}
+
+export function getAboutStackPinDistance(viewportHeight: number) {
+  return viewportHeight * (getAboutStackMotionPlan().totalDurationVh / 100);
+}
+
+export function getAboutStackLayerOffset(_layerIndex: number) {
+  return 0;
+}
 
 const CARDS: AboutStackCard[] = [
   {
@@ -183,9 +206,27 @@ const CARDS: AboutStackCard[] = [
 ];
 
 function MockupChip({ chip }: { chip: CardChip }) {
+  const handleToggleFlip = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.currentTarget.classList.toggle("is-flipped");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleToggleFlip(e);
+    }
+  };
+
   return (
-    <article className={`about-3d-stack__chip ${chip.toneClass}`.trim()} tabIndex={0}>
-      <div className="about-3d-stack__chip-inner">
+    <article
+      className={`about-3d-stack__chip ${chip.toneClass}`.trim()}
+      tabIndex={0}
+      onClick={handleToggleFlip}
+      onKeyDown={handleKeyDown}
+      role="button"
+      aria-label={`${chip.title} outcome details`}
+    >
+      <div className="about-3d-stack__chip-inner pointer-events-none">
         <div className="about-3d-stack__chip-face about-3d-stack__chip-face--front">
           <p className="about-3d-stack__chip-eyebrow">{chip.label}</p>
           <h3 className="about-3d-stack__chip-title">{chip.title}</h3>
@@ -204,6 +245,7 @@ function MockupChip({ chip }: { chip: CardChip }) {
 
 export function About3DStack() {
   const sectionRef = useRef<HTMLElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useGSAP(() => {
@@ -212,79 +254,119 @@ export function About3DStack() {
 
     const cards = cardRefs.current.filter(Boolean);
     if (cards.length === 0) return;
-    const totalScrollVh = PIN_TOTAL_VH;
+    const motionPlan = getAboutStackMotionPlan();
 
-    cards.forEach((card, i) => {
-      if (!card) return;
-      gsap.set(card, {
-        y: i * CARD_STACK_OFFSET_Y,
-        scale: 1 - i * CARD_STACK_SCALE_STEP,
-        filter: `brightness(${1 - i * CARD_STACK_BRIGHTNESS_STEP})`,
-        rotationX: 0,
-        rotationZ: 0,
-        opacity: 1,
-        force3D: true,
-      });
-    });
+    const mm = gsap.matchMedia();
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: section,
-        start: "top top",
-        end: `+=${totalScrollVh}vh`,
-        pin: true,
-        pinSpacing: true,
-        scrub: STACK_SCRUB,
-        pinType: "transform",
-        invalidateOnRefresh: true,
-      },
-    });
-
-    for (let i = 0; i < CARDS.length - 1; i++) {
-      const card = cards[i] as HTMLDivElement;
-      const belowCards = cards.slice(i + 1) as HTMLDivElement[];
-      const beatStartVh = FIRST_EXIT_START_VH + i * PHASE_SPAN_VH;
-
-      tl.to(
-        card,
-        {
-          y: "-102vh",
-          rotationX: 20,
-          rotationZ: -3,
-          opacity: 0,
-          scale: 0.95,
-          duration: CARD_EXIT_DURATION_VH,
-          // power1.out: gentle, decelerating exit — no aggressive mid-acceleration
-          ease: "power1.out",
+    // Desktop pinned 3D stack (min-width: 900px)
+    mm.add("(min-width: 900px)", () => {
+      cards.forEach((card, i) => {
+        if (!card) return;
+        gsap.set(card, {
+          y: getAboutStackLayerOffset(i),
+          scale: 1 - i * CARD_STACK_SCALE_STEP,
+          filter: `brightness(${1 - i * CARD_STACK_BRIGHTNESS_STEP})`,
+          rotationX: 0,
+          rotationZ: 0,
+          opacity: 1,
           force3D: true,
-        },
-        beatStartVh
-      );
+        });
+      });
 
-      belowCards.forEach((belowCard, j) => {
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top top",
+          end: () => `+=${getAboutStackPinDistance(window.innerHeight)}`,
+          pin: true,
+          pinSpacing: true,
+          scrub: STACK_SCRUB,
+          pinType: "transform",
+          invalidateOnRefresh: true,
+        },
+      });
+
+      for (let i = 0; i < CARDS.length - 1; i++) {
+        const card = cards[i] as HTMLDivElement;
+        const belowCards = cards.slice(i + 1) as HTMLDivElement[];
+        const beatStartVh = motionPlan.cardExitStartsVh[i];
+
         tl.to(
-          belowCard,
+          card,
           {
-            y: j * CARD_STACK_OFFSET_Y,
-            scale: 1 - j * CARD_STACK_SCALE_STEP,
-            filter: `brightness(${1 - j * CARD_STACK_BRIGHTNESS_STEP})`,
-            rotationX: 0,
-            rotationZ: 0,
+            y: "-120vh",
+            rotationX: 12,
+            rotationZ: -4,
+            opacity: 0,
+            scale: 0.94,
             duration: CARD_EXIT_DURATION_VH,
-            ease: "power1.out",
+            ease: "none",
             force3D: true,
           },
           beatStartVh
         );
+
+        belowCards.forEach((belowCard, j) => {
+          tl.to(
+            belowCard,
+            {
+              y: getAboutStackLayerOffset(j),
+              scale: 1 - j * CARD_STACK_SCALE_STEP,
+              filter: `brightness(${1 - j * CARD_STACK_BRIGHTNESS_STEP})`,
+              rotationX: 0,
+              rotationZ: 0,
+              duration: CARD_EXIT_DURATION_VH,
+              ease: "none",
+              force3D: true,
+            },
+            beatStartVh
+          );
+        });
+
+        tl.to({}, { duration: CARD_DWELL_DURATION_VH }, beatStartVh + CARD_EXIT_DURATION_VH);
+      }
+
+      tl.to(
+        {},
+        { duration: POST_EXIT_HOLD_VH },
+        motionPlan.animationCompleteVh,
+      );
+    });
+
+    // Mobile natural scrolling column with standard reveals (max-width: 899px)
+    mm.add("(max-width: 899px)", () => {
+      cards.forEach((card) => {
+        if (!card) return;
+        gsap.set(card, {
+          clearProps: "all",
+        });
       });
 
-      tl.to({}, { duration: CARD_SETTLE_DURATION_VH }, beatStartVh + CARD_EXIT_DURATION_VH);
-    }
-
-    const finalPhaseStartVh = FIRST_EXIT_START_VH + PHASE_SPAN_VH * (CARDS.length - 1);
-    tl.to({}, { duration: PHASE_SPAN_VH }, finalPhaseStartVh);
+      cards.forEach((card) => {
+        if (!card) return;
+        gsap.fromTo(
+          card,
+          { y: 40, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    });
 
     ScrollTrigger.refresh();
+
+    return () => {
+      mm.revert();
+    };
   }, { scope: sectionRef });
 
   return (
@@ -292,82 +374,21 @@ export function About3DStack() {
       ref={sectionRef}
       id="about"
       className="about about-3d-stack relative overflow-hidden h-screen"
-      style={{ backgroundColor: "var(--color-canvas-light)" }}
     >
       <div className="about__orbs absolute inset-0 pointer-events-none">
-        <div className="about-3d-stack__background-glow" aria-hidden="true" />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: "60vw",
-            height: "60vw",
-            top: "-15%",
-            left: "-15%",
-            background: "var(--orb-purple)",
-            opacity: 0.45,
-            filter: "blur(90px)",
-          }}
-        />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: "50vw",
-            height: "50vw",
-            bottom: "-10%",
-            right: "-10%",
-            background: "var(--orb-orange)",
-            opacity: 0.4,
-            filter: "blur(80px)",
-          }}
-        />
-        <div
-          className="absolute rounded-full"
-          style={{
-            width: "40vw",
-            height: "40vw",
-            top: "25%",
-            right: "5%",
-            background: "var(--orb-blue)",
-            opacity: 0.35,
-            filter: "blur(70px)",
-          }}
-        />
+        <div className="about__overlay--3d absolute inset-0" />
       </div>
 
-      <div className="about__overlay--3d absolute inset-0" />
-
-      <div className="about-3d-stack__content-layer relative flex flex-col items-center h-full">
+      <div
+        ref={contentRef}
+        className="about-3d-stack__content-layer relative flex flex-col items-center h-full"
+      >
         <header className="text-center pt-[4vh] px-6 w-full max-w-4xl mx-auto flex-shrink-0">
-          <h1
-            className="about__headline font-black leading-[1.08] mb-5"
-            style={{
-              fontSize: "clamp(2rem, 5.5vw, 3.5rem)",
-              letterSpacing: "-0.025em",
-              color: "var(--text-primary)",
-            }}
-          >
+          <h1 className="about-3d-stack__headline">
             Helping Kenyan Businesses{" "}
-            <em
-              className="italic"
-              style={{
-                color: "var(--hero-accent)",
-              }}
-            >
-              Look Professional Online
-            </em>
+            <em>Look Professional Online</em>
           </h1>
-          <p
-            className="about__subheadline"
-            style={{
-              fontFamily: "var(--font-body)",
-              fontSize: "clamp(0.88rem, 1.4vw, 1.05rem)",
-              color: "var(--text-secondary)",
-              fontWeight: 400,
-              lineHeight: 1.7,
-              maxWidth: "550px",
-              margin: "0 auto",
-            }}
-          >
+          <p className="about-3d-stack__subheadline">
             I design websites and visuals that help Kenyan businesses look
             professional, get more inquiries, and build trust online.
           </p>
