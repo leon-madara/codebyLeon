@@ -383,8 +383,6 @@ export function About3DStack() {
               className={`about-3d-stack__card ${card.themeClass} ${CARD_LAYER_CLASSES[i] ?? ""}`.trim()}
             >
               <div className="about-3d-stack__card-bg" />
-              <div className="about-3d-stack__card-grid" />
-              <div className="about__card-noise" />
               <div className="about__card-gloss" />
 
               <div className="about-3d-stack__card-content">
