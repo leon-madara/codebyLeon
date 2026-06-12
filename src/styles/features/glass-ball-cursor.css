@@ -114,6 +114,11 @@
   border-color: var(--work-cursor-dot);
 }
 
+html[data-work-cursor-active='true'] #portfolio,
+html[data-work-cursor-active='true'] #portfolio * {
+  cursor: none;
+}
+
 .work-cursor-target {
   cursor: none;
 }

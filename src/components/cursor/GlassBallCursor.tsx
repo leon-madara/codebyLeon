@@ -252,7 +252,7 @@ export function GlassBallCursor() {
 
         xTo(nextPoint.x - (isInteractive ? HAND_HOTSPOT_X : HALF_CURSOR_SIZE));
         yTo(nextPoint.y - (isInteractive ? HAND_HOTSPOT_Y : HALF_CURSOR_SIZE));
-        setActive(isInteractive);
+        setActive(isInside);
         setInteractive(isInteractive);
 
         if (cursorStateChanged) {

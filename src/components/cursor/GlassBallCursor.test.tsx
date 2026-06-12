@@ -116,18 +116,25 @@ describe('GlassBallCursor', () => {
     expect(screen.getByText('DRAG')).toBeInTheDocument();
   });
 
-  it('keeps the normal system cursor over non-interactive areas of Our Work', async () => {
+  it('shows the ring-and-dot cursor across Our Work and restores the system cursor outside it', async () => {
     const portfolioSection = createPortfolioSection();
 
     render(<GlassBallCursor />);
 
     const cursor = await screen.findByTestId('glass-ball-cursor');
+    const ring = screen.getByTestId('work-cursor-ring');
+    const dot = screen.getByTestId('work-cursor-dot');
+    const hand = screen.getByTestId('work-cursor-hand');
 
     window.dispatchEvent(new MouseEvent('mousemove', { clientX: 240, clientY: 240 }));
 
     await waitFor(() => {
-      expect(cursor).toHaveAttribute('data-active', 'false');
-      expect(document.documentElement).not.toHaveAttribute('data-work-cursor-active');
+      expect(cursor).toHaveAttribute('data-active', 'true');
+      expect(cursor).toHaveAttribute('data-interactive', 'false');
+      expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
+      expect(ring).not.toHaveClass('is-hidden');
+      expect(dot).not.toHaveClass('is-hidden');
+      expect(hand).not.toHaveClass('is-visible');
     });
 
     window.dispatchEvent(new MouseEvent('mousemove', { clientX: 240, clientY: 80 }));
@@ -160,7 +167,9 @@ describe('GlassBallCursor', () => {
         );
 
         await waitFor(() => {
+          expect(cursor).toHaveAttribute('data-active', 'true');
           expect(cursor).toHaveAttribute('data-interactive', 'true');
+          expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
           expect(hand).toHaveAttribute('data-size', '2x');
           expect(hand).toHaveClass('is-visible');
           expect(ring).toHaveClass('is-hidden');
@@ -173,7 +182,9 @@ describe('GlassBallCursor', () => {
       );
 
       await waitFor(() => {
+        expect(cursor).toHaveAttribute('data-active', 'true');
         expect(cursor).toHaveAttribute('data-interactive', 'false');
+        expect(document.documentElement).toHaveAttribute('data-work-cursor-active', 'true');
         expect(hand).not.toHaveClass('is-visible');
         expect(ring).not.toHaveClass('is-hidden');
         expect(dot).not.toHaveClass('is-hidden');

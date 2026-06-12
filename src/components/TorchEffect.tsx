@@ -101,7 +101,7 @@ export const TorchEffect = () => {
             const style = document.createElement('style');
             style.id = 'cursor-style';
             // Only apply 'none' if NOT expanding class
-            style.innerHTML = 'body:not(.torch-expanding) *, body:not(.torch-expanding) { cursor: none !important; } .torch-expanding, .torch-expanding * { cursor: auto !important; }';
+            style.innerHTML = 'body:not(.torch-expanding) *, body:not(.torch-expanding) { cursor: none !important; } .torch-expanding, .torch-expanding * { cursor: auto !important; } .torch-expanding #portfolio, .torch-expanding #portfolio * { cursor: none !important; }';
             document.head.appendChild(style);
 
             return () => {
