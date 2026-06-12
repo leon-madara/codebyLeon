@@ -5,6 +5,7 @@
 /* About section container - Mobile First */
 .about {
   position: relative;
+  isolation: isolate;
   min-height: 80vh;
   width: 100%;
   padding: 5rem 1rem 3rem;
@@ -20,7 +21,7 @@
 .about__orbs {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
@@ -79,13 +80,16 @@
 .about__overlay--3d {
   position: absolute;
   inset: 0;
-  z-index: 2;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  z-index: 1;
   background-color: rgba(255, 255, 255, 0.25);
   background-image: radial-gradient(circle, rgba(150, 150, 150, 0.1) 1.2px, transparent 1.2px);
   background-size: 12px 12px;
   pointer-events: none;
+}
+
+.about-3d-stack__content-layer {
+  position: relative;
+  z-index: 2;
 }
 
 /* Card highlight gloss */

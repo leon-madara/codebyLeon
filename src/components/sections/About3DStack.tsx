@@ -294,7 +294,7 @@ export function About3DStack() {
       className="about about-3d-stack relative overflow-hidden h-screen"
       style={{ backgroundColor: "var(--color-canvas-light)" }}
     >
-      <div className="about__orbs absolute inset-0 z-[1] pointer-events-none">
+      <div className="about__orbs absolute inset-0 pointer-events-none">
         <div className="about-3d-stack__background-glow" aria-hidden="true" />
         <div
           className="absolute rounded-full"
@@ -334,9 +334,9 @@ export function About3DStack() {
         />
       </div>
 
-      <div className="about__overlay--3d absolute inset-0 z-[2]" />
+      <div className="about__overlay--3d absolute inset-0" />
 
-      <div className="relative z-[10] flex flex-col items-center h-full">
+      <div className="about-3d-stack__content-layer relative flex flex-col items-center h-full">
         <header className="text-center pt-[4vh] px-6 w-full max-w-4xl mx-auto flex-shrink-0">
           <h1
             className="about__headline font-black leading-[1.08] mb-5"
