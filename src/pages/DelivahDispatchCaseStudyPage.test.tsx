@@ -100,4 +100,18 @@ describe('DelivahDispatchCaseStudyPage', () => {
       /@media\s*\(max-width:\s*1100px\)\s*{[^}]*\.v2-pills\.global-v2-switcher\s*{[^}]*--article-toggle-top:/s
     );
   });
+
+  it('keeps the gutter controls fixed across every case study', () => {
+    const css = readFileSync(
+      join(process.cwd(), 'src', 'styles', 'sections', 'blog-post.css'),
+      'utf8'
+    );
+
+    expect(css).toMatch(
+      /\.v1-gutter-sticky\s*{[^}]*position:\s*fixed;[^}]*top:\s*180px;/s
+    );
+    expect(css).not.toMatch(
+      /\.case-study--(?:delivah|kossy|legit)\s+\.v1-gutter-sticky\s*{[^}]*position:\s*(?:absolute|static|relative);/s
+    );
+  });
 });
