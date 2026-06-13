@@ -5,18 +5,18 @@
 .beat-card {
   --bc-radius: 1.5rem;
   --bc-padding: clamp(2rem, 4vw, 3rem);
-  --bc-bg: hsl(220 18% 7%); /* Deep dark background */
+  --bc-surface: hsl(var(--card));
   
   display: grid;
   grid-template-columns: minmax(0, 42%) minmax(0, 58%);
-  background: var(--bc-bg);
+  background: var(--bc-surface);
   border-radius: var(--bc-radius);
   overflow: hidden;
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
-  box-shadow: 0 24px 48px hsl(0 0% 0% / 0.4);
-  border: 1px solid hsl(var(--border) / 0.2);
+  box-shadow: 0 24px 48px hsl(var(--foreground) / 0.12);
+  border: 1px solid hsl(var(--border));
 }
 
 .beat-card__media {
@@ -30,7 +30,7 @@
   left: 0;
   bottom: 0;
   width: 4px;
-  background: var(--color-primary, hsl(var(--primary)));
+  background: hsl(var(--primary));
   z-index: 10;
 }
 
@@ -42,15 +42,6 @@
   inset: 0;
 }
 
-.beat-card__overlay {
-  position: absolute;
-  inset: 0;
-  background: 
-    linear-gradient(to right, hsl(var(--primary) / 0.15), hsl(220 18% 7% / 0.85)),
-    linear-gradient(180deg, hsl(0 0% 0% / 0.1), hsl(0 0% 0% / 0.5));
-  z-index: 5;
-}
-
 .beat-card__badge {
   position: absolute;
   bottom: 2rem;
@@ -59,23 +50,23 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: hsl(0 0% 0% / 0.4);
-  backdrop-filter: blur(8px);
+  background: hsl(var(--card));
   padding: 0.4rem 0.9rem;
   border-radius: 999px;
   font-family: var(--font-body);
   font-size: 0.7rem;
   font-weight: 700;
-  color: hsl(var(--foreground));
+  color: hsl(var(--card-foreground));
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  border: 1px solid hsl(var(--foreground) / 0.1);
+  border: 1px solid hsl(var(--border));
+  box-shadow: 0 8px 20px hsl(var(--foreground) / 0.16);
 }
 
 .beat-card__badge-dot {
   width: 6px;
   height: 6px;
-  background: var(--color-primary, hsl(var(--primary)));
+  background: hsl(var(--primary));
   border-radius: 50%;
 }
 
@@ -84,7 +75,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background: var(--bc-bg);
+  background: var(--bc-surface);
 }
 
 .beat-card__step-indicator {
@@ -95,7 +86,7 @@
 }
 
 .beat-card__step-text {
-  color: var(--color-primary, hsl(var(--primary)));
+  color: hsl(var(--primary));
   font-family: var(--font-body);
   font-size: 0.72rem;
   font-weight: 700;
@@ -105,16 +96,16 @@
 
 .beat-card__step-line {
   height: 1px;
-  background: var(--color-primary, hsl(var(--primary)));
+  background: hsl(var(--primary));
   flex: 0 0 48px;
-  opacity: 0.6;
 }
 
 .beat-card__icon {
   width: 3.2rem;
   height: 3.2rem;
-  background: hsl(220 18% 10%);
-  border: 1px solid hsl(var(--border) / 0.4);
+  background: hsl(var(--muted));
+  color: hsl(var(--primary));
+  border: 1px solid hsl(var(--border));
   border-radius: 14px;
   display: inline-flex;
   align-items: center;
@@ -125,7 +116,7 @@
 }
 
 .beat-card__title {
-  color: hsl(var(--foreground));
+  color: hsl(var(--card-foreground));
   font-family: var(--font-display, sans-serif);
   font-size: clamp(2rem, 3.5vw, 2.8rem);
   font-weight: 800;
@@ -135,7 +126,7 @@
 }
 
 .beat-card__subheading {
-  color: var(--color-primary, hsl(var(--primary)));
+  color: hsl(var(--primary));
   font-family: var(--font-body);
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   font-weight: 600;
@@ -146,13 +137,13 @@
 .beat-card__divider {
   border: 0;
   height: 1px;
-  background: hsl(var(--border) / 0.3);
+  background: hsl(var(--border));
   margin: 0 0 1.5rem 0;
   width: 100%;
 }
 
 .beat-card__body {
-  color: hsl(var(--muted-foreground));
+  color: var(--text-secondary);
   font-family: var(--font-body);
   font-size: 1rem;
   line-height: 1.65;
@@ -163,6 +154,7 @@
 /* Responsive adjustments */
 @media (max-width: 1023px) {
   .beat-card {
+    --bc-padding: clamp(1.5rem, 4vw, 2rem);
     grid-template-columns: 1fr;
     grid-template-rows: 240px auto;
   }

@@ -27,7 +27,6 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
       <div className="beat-card__media">
         <div className="beat-card__accent-line" />
         <img src={imageSrc} alt={heading} className="beat-card__image" />
-        <div className="beat-card__overlay" />
         
         <div className="beat-card__badge hs-beat-reveal">
           <span className="beat-card__badge-dot" />

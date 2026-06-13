@@ -2,6 +2,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useTheme } from '../../contexts/ThemeContext';
 
+const SECTION_NAV_CLEARANCE = 12;
+const SECTION_SNAP_BUFFER = 4;
+
 export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -30,9 +33,15 @@ export function Navigation() {
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const smoother = ScrollSmoother.get();
+    window.history.replaceState(window.history.state, '', `#${sectionId}`);
 
     if (smoother) {
-      smoother.scrollTo(target, !prefersReducedMotion, 'top top');
+      const navigation = document.querySelector<HTMLElement>('.navigation');
+      const navigationHeight = navigation?.getBoundingClientRect().height ?? 0;
+      const sectionOffset = Math.ceil(
+        navigationHeight + SECTION_NAV_CLEARANCE + SECTION_SNAP_BUFFER,
+      );
+      smoother.scrollTo(target, false, `top top+=${sectionOffset}`);
     } else {
       target.scrollIntoView({
         behavior: prefersReducedMotion ? 'auto' : 'smooth',
