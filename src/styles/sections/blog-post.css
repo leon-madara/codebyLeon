@@ -164,7 +164,7 @@
   --pill-text-active: #0a0a0a;
   --pill-indicator-bg: #fff;
   --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.12);
-  --article-toggle-top: 136px;
+  --article-toggle-top: 144px;
   --article-toggle-z: 2000;
   --article-toggle-viewport-gutter: 48px;
   --article-toggle-shift-y: 0px;
@@ -808,9 +808,6 @@
 
 /* Media Query Adaptations */
 @media (max-width: 1100px) {
-  .v2-pills.global-v2-switcher {
-    --article-toggle-top: 158px;
-  }
   .v1-main {
     grid-template-columns: 1fr;
     padding-top: calc(var(--article-top-space) + 40px);

@@ -86,4 +86,18 @@ describe('DelivahDispatchCaseStudyPage', () => {
       /\[data-theme="dark"\]\s+\.v2-pills\.global-v2-switcher\s*{[^}]*--pill-surface-bg:\s*#fff;[^}]*--pill-text:\s*rgba\(10,\s*10,\s*10,\s*0\.62\);[^}]*--pill-text-active:\s*#fff;[^}]*--pill-indicator-bg:\s*#0a0a0a;/s
     );
   });
+
+  it('keeps the floating design switcher centered in the gap below the project strip', () => {
+    const css = readFileSync(
+      join(process.cwd(), 'src', 'styles', 'sections', 'blog-post.css'),
+      'utf8'
+    );
+
+    expect(css).toMatch(
+      /\.v2-pills\.global-v2-switcher\s*{[^}]*--article-toggle-top:\s*144px;/s
+    );
+    expect(css).not.toMatch(
+      /@media\s*\(max-width:\s*1100px\)\s*{[^}]*\.v2-pills\.global-v2-switcher\s*{[^}]*--article-toggle-top:/s
+    );
+  });
 });
