@@ -53,9 +53,8 @@
   --article-label-tracking: 0.18em;
 }
 
-/* Dark mode switcher colors */
-[data-theme="dark"] .blog-post-page-wrapper,
-[data-theme="dark"] .global-v2-switcher {
+/* Dark mode workspace switcher colors */
+[data-theme="dark"] .blog-post-page-wrapper {
   --pill-surface-bg: rgba(24, 24, 27, 0.76);
   --pill-surface-border: rgba(255,255,255,0.08);
   --pill-surface-shadow: inset 0 0 0 1px var(--pill-surface-border), 0 12px 32px rgba(0,0,0,0.28);
@@ -158,6 +157,13 @@
 
 /* Global design switcher */
 .v2-pills.global-v2-switcher {
+  --pill-surface-bg: #0a0a0a;
+  --pill-surface-border: rgba(255, 255, 255, 0.12);
+  --pill-surface-shadow: inset 0 0 0 1px var(--pill-surface-border), 0 12px 32px rgba(0, 0, 0, 0.18);
+  --pill-text: rgba(255, 255, 255, 0.68);
+  --pill-text-active: #0a0a0a;
+  --pill-indicator-bg: #fff;
+  --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.12);
   --article-toggle-top: 136px;
   --article-toggle-z: 2000;
   --article-toggle-viewport-gutter: 48px;
@@ -186,6 +192,16 @@
     transform 0.24s var(--ease-out-expo),
     visibility 0s linear 0s;
   will-change: transform, opacity;
+}
+
+[data-theme="dark"] .v2-pills.global-v2-switcher {
+  --pill-surface-bg: #fff;
+  --pill-surface-border: rgba(10, 10, 10, 0.1);
+  --pill-surface-shadow: inset 0 0 0 1px var(--pill-surface-border), 0 12px 32px rgba(0, 0, 0, 0.28);
+  --pill-text: rgba(10, 10, 10, 0.62);
+  --pill-text-active: #fff;
+  --pill-indicator-bg: #0a0a0a;
+  --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(10, 10, 10, 0.08);
 }
 
 .v2-pills.global-v2-switcher.is-scroll-hidden {
