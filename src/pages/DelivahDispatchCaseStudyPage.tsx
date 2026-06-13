@@ -154,6 +154,7 @@ export function DelivahDispatchCaseStudyPage() {
           y: 0,
           duration: 0.5,
           ease: 'power2.out',
+          clearProps: 'transform'
         });
       }
     }
@@ -501,6 +502,9 @@ export function DelivahDispatchCaseStudyPage() {
           </a>
         </div>
       </aside>
+
+      {/* Spacer to offset fixed subnav + nav height */}
+      <div className="v1-subnav-spacer" aria-hidden="true" />
 
       {/* Slider Stage */}
       <div className="stage" style={{ height: stageHeight }}>
