@@ -1,7 +1,19 @@
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
+
+const { scrollToMock, scrollSmootherGetMock } = vi.hoisted(() => ({
+  scrollToMock: vi.fn(),
+  scrollSmootherGetMock: vi.fn(),
+}));
+
+vi.mock('gsap/ScrollSmoother', () => ({
+  ScrollSmoother: {
+    get: scrollSmootherGetMock,
+  },
+}));
+
 import { Navigation } from './Navigation';
 import { ThemeProvider } from '../../contexts/ThemeContext';
 
@@ -21,6 +33,14 @@ describe('Navigation', () => {
   beforeEach(() => {
     localStorage.clear();
     document.documentElement.removeAttribute('data-theme');
+    window.history.replaceState(null, '', '/');
+    scrollToMock.mockReset();
+    scrollSmootherGetMock.mockReset();
+    window.matchMedia = vi.fn().mockReturnValue({
+      matches: false,
+      addEventListener: vi.fn(),
+      removeEventListener: vi.fn(),
+    });
   });
 
   it('renders as a full-width attached header', () => {
@@ -47,6 +67,34 @@ describe('Navigation', () => {
     expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveAttribute('href', '/#portfolio');
     expect(screen.getByRole('link', { name: 'ABOUT' })).toHaveAttribute('href', '/#about');
     expect(screen.getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '/#services');
+  });
+
+  it('snaps ScrollSmoother to an in-page section without rebounding to the hero', async () => {
+    const user = userEvent.setup();
+    const services = document.createElement('section');
+    services.id = 'services';
+    document.body.appendChild(services);
+    scrollSmootherGetMock.mockReturnValue({ scrollTo: scrollToMock });
+    window.history.replaceState(null, '', '/#hero');
+
+    renderNavigation('/');
+    const navigation = screen.getByRole('navigation', { name: 'Main navigation' });
+    vi.spyOn(navigation, 'getBoundingClientRect').mockReturnValue({
+      bottom: 72,
+      height: 72,
+      left: 0,
+      right: 1280,
+      top: 0,
+      width: 1280,
+      x: 0,
+      y: 0,
+      toJSON: () => ({}),
+    });
+    await user.click(screen.getByRole('link', { name: 'SERVICES' }));
+
+    expect(scrollToMock).toHaveBeenCalledWith(services, false, 'top top+=88');
+    expect(window.location.hash).toBe('#services');
+    services.remove();
   });
 
   it('links to the process page and marks it active on the process route', () => {
