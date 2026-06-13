@@ -298,9 +298,10 @@
 .v1-subnav-strip {
   width: 100%;
   height: 58px;
-  position: sticky;
+  position: fixed;
   top: 72px;
-  margin-top: 72px;
+  left: 0;
+  right: 0;
   z-index: 299;
   padding: 0 var(--spacing-xl, 40px);
   display: flex;
@@ -326,6 +327,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+}
+
+.v1-subnav-spacer {
+  height: calc(72px + 58px);
+  flex-shrink: 0;
 }
 
 .v1-subnav-brand {
@@ -811,13 +817,53 @@
   .v1-main {
     grid-template-columns: 1fr;
     padding-top: calc(var(--article-top-space) + 40px);
+    padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
   .v1-gutter {
     display: none;
   }
   .v1-gutter-sticky {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    z-index: 298;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0;
+    padding: 10px 20px;
+    padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-top: 1px solid var(--border);
+    box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.04);
+  }
+
+  .v1-gutter-sticky .v1-share {
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .v1-gutter-sticky .v1-share-label {
     display: none;
   }
+
+  .v1-gutter-sticky .v1-share-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 11px;
+  }
+
+  .v1-back-pill {
+    height: 36px;
+    font-size: 12px;
+    padding: 0 14px;
+  }
+
   .v1-article {
     width: 100%;
     max-width: 700px;
