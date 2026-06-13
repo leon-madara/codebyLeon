@@ -1,4 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { DelivahDispatchCaseStudyPage } from './DelivahDispatchCaseStudyPage';
@@ -69,5 +71,19 @@ describe('DelivahDispatchCaseStudyPage', () => {
     expect(pageCopy).not.toMatch(/fully licensed/i);
     expect(pageCopy).not.toMatch(/insurance/i);
     expect(pageCopy).not.toMatch(/\b\d{3}[-.)\s]\d{3}[-.\s]\d{4}\b/);
+  });
+
+  it('keeps the floating design switcher pill tokens on the switcher in both themes', () => {
+    const css = readFileSync(
+      join(process.cwd(), 'src', 'styles', 'sections', 'blog-post.css'),
+      'utf8'
+    );
+
+    expect(css).toMatch(
+      /\.blog-post-page-wrapper,\s*\.v2-pills\.global-v2-switcher\s*{[^}]*--pill-pad:\s*4px;[^}]*--pill-radius:\s*999px;[^}]*--pill-surface-bg:/s
+    );
+    expect(css).toMatch(
+      /\[data-theme="dark"\]\s+\.blog-post-page-wrapper,\s*\[data-theme="dark"\]\s+\.global-v2-switcher\s*{[^}]*--pill-surface-bg:[^}]*--pill-indicator-bg:\s*#fff;/s
+    );
   });
 });
