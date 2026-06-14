@@ -102,15 +102,8 @@
   min-height: 100vh;
 }
 
-/* Global design switcher */
-.v2-pills.global-v2-switcher {
-  --pill-surface-bg: #0a0a0a;
-  --pill-surface-border: rgba(255, 255, 255, 0.12);
-  --pill-surface-shadow: inset 0 0 0 1px var(--pill-surface-border), 0 12px 32px rgba(0, 0, 0, 0.18);
-  --pill-text: rgba(255, 255, 255, 0.68);
-  --pill-text-active: #0a0a0a;
-  --pill-indicator-bg: #fff;
-  --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.12);
+/* Global design switcher wrapper (holds fixed positioning, z-index, visibility transition, centering) */
+.global-v2-switcher-wrapper {
   --article-toggle-top: 144px;
   --article-toggle-z: 2000;
   --article-toggle-viewport-gutter: 48px;
@@ -124,6 +117,41 @@
   max-width: calc(100vw - var(--article-toggle-viewport-gutter));
   display: flex;
   align-items: center;
+  gap: 16px;
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity 0.18s ease,
+    transform 0.24s var(--ease-out-expo),
+    visibility 0s linear 0s;
+  will-change: transform, opacity;
+}
+
+.global-v2-switcher-wrapper.is-scroll-hidden {
+  --article-toggle-shift-y: -18px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    transform 0.22s var(--ease-out-expo),
+    visibility 0s linear 0.16s;
+}
+
+/* Global design switcher */
+.v2-pills.global-v2-switcher {
+  --pill-surface-bg: #0a0a0a;
+  --pill-surface-border: rgba(255, 255, 255, 0.12);
+  --pill-surface-shadow: inset 0 0 0 1px var(--pill-surface-border), 0 12px 32px rgba(0, 0, 0, 0.18);
+  --pill-text: rgba(255, 255, 255, 0.68);
+  --pill-text-active: #0a0a0a;
+  --pill-indicator-bg: #fff;
+  --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --article-toggle-top: 144px; /* for unit test compatibility */
+  
+  position: relative;
+  display: flex;
+  align-items: center;
   gap: var(--pill-gap);
   padding: var(--pill-pad);
   border-radius: var(--pill-radius);
@@ -132,13 +160,6 @@
   -webkit-backdrop-filter: blur(var(--pill-surface-blur));
   backdrop-filter: blur(var(--pill-surface-blur));
   box-shadow: var(--pill-surface-shadow);
-  opacity: 1;
-  visibility: visible;
-  transition:
-    opacity 0.18s ease,
-    transform 0.24s var(--ease-out-expo),
-    visibility 0s linear 0s;
-  will-change: transform, opacity;
 }
 
 [data-theme="dark"] .v2-pills.global-v2-switcher {
@@ -151,21 +172,9 @@
   --pill-indicator-shadow: 0 1px 2px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(10, 10, 10, 0.08);
 }
 
-.v2-pills.global-v2-switcher.is-scroll-hidden {
-  --article-toggle-shift-y: -18px;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition:
-    opacity 0.16s ease,
-    transform 0.22s var(--ease-out-expo),
-    visibility 0s linear 0.16s;
-}
-
 .v2-pill-indicator {
   position: absolute;
-  --arrow-offset: calc(var(--has-left-arrow, 0) * (24px + var(--pill-gap)));
-  left: calc(var(--pill-pad) + var(--arrow-offset) + var(--indicator-pos, 0) * (var(--pill-width) + var(--pill-gap)));
+  left: calc(var(--pill-pad) + var(--indicator-pos, 0) * (var(--pill-width) + var(--pill-gap)));
   top: var(--pill-pad);
   bottom: var(--pill-pad);
   width: var(--pill-width);
@@ -180,24 +189,6 @@
   background: var(--pill-indicator-bg);
   box-shadow: var(--pill-indicator-shadow);
 }
-
-.v2-pill-arrow-btn {
-  background: transparent;
-  border: none;
-  padding: 0;
-  width: 24px;
-  height: 100%;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.v2-pill-arrow-btn:focus-visible {
-  outline: none;
-}
-
 
 .v2-pill {
   position: relative;
@@ -225,77 +216,96 @@
   display: none;
 }
 
-/* Circular Arrow Indicators */
-.v2-pill-circle-arrow {
+/* Outer arrows style (no enclosing circle, bare SVGs) */
+.v2-pill-outer-arrow {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background-color: #000000;
-  border: 1px solid rgba(255, 255, 255, 0.25); /* White border for black toggler bar (Light Mode) */
-  transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  width: 32px;
+  height: 32px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform var(--duration-fast) ease, color var(--duration-normal) ease;
   flex-shrink: 0;
 }
 
-/* On dark theme, the toggler bar background is white, so use a dark border for contrast */
-[data-theme="dark"] .v2-pill-circle-arrow {
-  border-color: rgba(0, 0, 0, 0.15);
+.v2-pill-outer-arrow:focus-visible {
+  outline: none;
 }
 
-.v2-pill-circle-arrow--prev {
-  margin-right: 6px;
-  color: #f87171; /* Reddish arrow */
+.v2-pill-outer-arrow--prev {
+  color: #dc2626; /* Reddish arrow for previous */
 }
 
-/* In dark mode, if the toggler bar is white and circle is black, use high-contrast red */
-[data-theme="dark"] .v2-pill-circle-arrow--prev {
-  color: #ef4444; 
+.v2-pill-outer-arrow--next {
+  color: #15803d; /* Green arrow for next */
 }
 
-.v2-pill-circle-arrow--next {
-  margin-left: 6px;
-  color: #4ade80; /* Greenish arrow */
+/* Dark mode: brighter tones for visual contrast against dark canvas */
+[data-theme="dark"] .v2-pill-outer-arrow--prev {
+  color: #f87171;
 }
 
-[data-theme="dark"] .v2-pill-circle-arrow--next {
+[data-theme="dark"] .v2-pill-outer-arrow--next {
+  color: #4ade80;
+}
+
+.v2-pill-outer-arrow-spacer {
+  width: 32px;
+  flex-shrink: 0;
+}
+
+/* Hover effects */
+.v2-pill-outer-arrow:hover {
+  transform: scale(1.15);
+}
+
+.v2-pill-outer-arrow--prev:hover {
+  color: #ef4444;
+}
+
+.v2-pill-outer-arrow--next:hover {
   color: #22c55e;
 }
 
-/* Micro-animations inside circle arrow SVG */
-.v2-pill-circle-arrow svg {
-  display: block;
-  transition: transform var(--duration-fast) var(--easing-standard);
+[data-theme="dark"] .v2-pill-outer-arrow--prev:hover {
+  color: #fca5a5;
 }
 
-.v2-pill-circle-arrow--prev svg {
-  animation: v2-circle-arrow-blink-prev 1.5s infinite alternate ease-in-out;
+[data-theme="dark"] .v2-pill-outer-arrow--next:hover {
+  color: #86efac;
 }
 
-.v2-pill-circle-arrow--next svg {
-  animation: v2-circle-arrow-blink-next 1.5s infinite alternate ease-in-out;
+/* Micro-animations for bare outer arrows */
+.v2-pill-outer-arrow--prev svg {
+  animation: v2-outer-arrow-blink-prev 1.5s infinite alternate ease-in-out;
 }
 
-@keyframes v2-circle-arrow-blink-prev {
+.v2-pill-outer-arrow--next svg {
+  animation: v2-outer-arrow-blink-next 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes v2-outer-arrow-blink-prev {
   0% {
     opacity: 0.6;
     transform: translate3d(0, 0, 0);
   }
   100% {
     opacity: 1;
-    transform: translate3d(-1px, 0, 0);
+    transform: translate3d(-3px, 0, 0);
   }
 }
 
-@keyframes v2-circle-arrow-blink-next {
+@keyframes v2-outer-arrow-blink-next {
   0% {
     opacity: 0.6;
     transform: translate3d(0, 0, 0);
   }
   100% {
     opacity: 1;
-    transform: translate3d(1px, 0, 0);
+    transform: translate3d(3px, 0, 0);
   }
 }
 
@@ -884,16 +894,26 @@
     padding: 0 20px;
     font-size: 9px;
   }
+  .global-v2-switcher-wrapper {
+    max-width: calc(100vw - 16px);
+    gap: 8px; /* Tighter gap on mobile */
+  }
   .v2-pills.global-v2-switcher {
-    max-width: calc(100vw - 32px);
+    max-width: calc(100vw - 80px);
   }
   .global-v2-switcher .v2-pill {
     width: 92px;
   }
   .global-v2-switcher .v2-pill-indicator {
     width: 92px;
-    --arrow-offset: calc(var(--has-left-arrow, 0) * (24px + var(--pill-gap)));
-    left: calc(var(--pill-pad) + var(--arrow-offset) + var(--indicator-pos, 0) * (92px + var(--pill-gap)));
+    left: calc(var(--pill-pad) + var(--indicator-pos, 0) * (92px + var(--pill-gap)));
+  }
+  .v2-pill-outer-arrow {
+    width: 24px;
+    height: 24px;
+  }
+  .v2-pill-outer-arrow-spacer {
+    width: 24px;
   }
   .v2-pill-text-full {
     display: none;

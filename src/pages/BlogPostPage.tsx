@@ -218,74 +218,75 @@ const BlogPostPage: React.FC = () => {
   return (
     <BlogPostErrorBoundary>
       <div className="blog-post-page-wrapper">
-        {/* Global Design Switcher (Floating pills) */}
-        <div 
-          className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
-          role="tablist" 
-          aria-label="Design directions"
-          style={{ 
-            '--indicator-pos': activeIndex - visibleStartIndex,
-            '--has-left-arrow': visibleStartIndex > 0 ? 1 : 0
-          } as React.CSSProperties}
-        >
-          <div className="v2-pill-indicator" />
-          
-          {visibleStartIndex > 0 && (
+        {/* Global Design Switcher (Floating pills with outer arrows) */}
+        <div className={`global-v2-switcher-wrapper ${isScrollHidden ? 'is-scroll-hidden' : ''}`}>
+          {visibleStartIndex > 0 ? (
             <button
-              className="v2-pill-arrow-btn v2-pill-arrow-btn--prev"
+              className="v2-pill-outer-arrow v2-pill-outer-arrow--prev"
               onClick={handlePrevClick}
               aria-label="Previous article"
             >
-              <span className="v2-pill-circle-arrow v2-pill-circle-arrow--prev" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
-              </span>
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
             </button>
+          ) : (
+            <div className="v2-pill-outer-arrow-spacer" />
           )}
 
-          {allPosts.slice(visibleStartIndex, visibleStartIndex + 3).map((p, index) => {
-            const globalIndex = visibleStartIndex + index;
-            const isActive = activeIndex === globalIndex;
-            
-            return (
-              <button
-                key={p.slug}
-                className={`v2-pill ${isActive ? 'is-active' : ''}`}
-                data-design={`v${globalIndex + 1}`}
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                  navigate(`/blog/${p.slug}`, { replace: true });
-                  
-                  // Viewport shift logic:
-                  if (index === 2) {
-                    // Clicked rightmost boundary -> make it the new first pill
-                    setVisibleStartIndex(globalIndex);
-                  } else if (index === 0 && visibleStartIndex > 0) {
-                    // Clicked leftmost boundary -> shift back by 2 positions
-                    setVisibleStartIndex(Math.max(0, visibleStartIndex - 2));
-                  }
-                }}
-                role="tab"
-                aria-selected={isActive}
-              >
-                Article {globalIndex + 1}
-              </button>
-            );
-          })}
+          <div 
+            className="v2-pills global-v2-switcher" 
+            role="tablist" 
+            aria-label="Design directions"
+            style={{ 
+              '--indicator-pos': activeIndex - visibleStartIndex,
+            } as React.CSSProperties}
+          >
+            <div className="v2-pill-indicator" />
 
-          {visibleStartIndex + 2 < allPosts.length - 1 && (
+            {allPosts.slice(visibleStartIndex, visibleStartIndex + 3).map((p, index) => {
+              const globalIndex = visibleStartIndex + index;
+              const isActive = activeIndex === globalIndex;
+              
+              return (
+                <button
+                  key={p.slug}
+                  className={`v2-pill ${isActive ? 'is-active' : ''}`}
+                  data-design={`v${globalIndex + 1}`}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    navigate(`/blog/${p.slug}`, { replace: true });
+                    
+                    // Viewport shift logic:
+                    if (index === 2) {
+                      // Clicked rightmost boundary -> make it the new first pill
+                      setVisibleStartIndex(globalIndex);
+                    } else if (index === 0 && visibleStartIndex > 0) {
+                      // Clicked leftmost boundary -> shift back by 2 positions
+                      setVisibleStartIndex(Math.max(0, visibleStartIndex - 2));
+                    }
+                  }}
+                  role="tab"
+                  aria-selected={isActive}
+                >
+                  Article {globalIndex + 1}
+                </button>
+              );
+            })}
+          </div>
+
+          {visibleStartIndex + 2 < allPosts.length - 1 ? (
             <button
-              className="v2-pill-arrow-btn v2-pill-arrow-btn--next"
+              className="v2-pill-outer-arrow v2-pill-outer-arrow--next"
               onClick={handleNextClick}
               aria-label="Next article"
             >
-              <span className="v2-pill-circle-arrow v2-pill-circle-arrow--next" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
-              </span>
+              <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" strokeWidth="3" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
             </button>
+          ) : (
+            <div className="v2-pill-outer-arrow-spacer" />
           )}
         </div>
 
