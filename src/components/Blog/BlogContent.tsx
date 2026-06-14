@@ -1,4 +1,4 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
+import React, { Component, ErrorInfo, ReactNode, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
@@ -57,6 +57,7 @@ class ContentErrorBoundary extends Component<
     if (this.state.retryCount < 3) {
       this.setState({ 
         hasError: false, 
+        // eslint-disable-next-line react/no-unused-state
         error: undefined, 
         retryCount: this.state.retryCount + 1 
       });
@@ -71,6 +72,80 @@ class ContentErrorBoundary extends Component<
     return this.props.children;
   }
 }
+
+// Recursive helper to extract text content from a react node tree
+const getPlainText = (node: React.ReactNode): string => {
+  if (node === null || node === undefined) return '';
+  if (typeof node === 'string' || typeof node === 'number') return String(node);
+  if (Array.isArray(node)) return node.map(getPlainText).join('');
+  if (React.isValidElement(node)) {
+    return getPlainText((node.props as any).children);
+  }
+  return '';
+};
+
+// Premium wrapper for block code with window controls and copy button
+const BlogCodeWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [copied, setCopied] = useState(false);
+  
+  let lang = '';
+  let codeText = '';
+  
+  React.Children.forEach(children, (child) => {
+    if (React.isValidElement(child)) {
+      const className = (child.props as any).className || '';
+      const match = /language-(\w+)/.exec(className);
+      if (match) {
+        lang = match[1];
+      }
+      
+      codeText = getPlainText((child.props as any).children);
+    }
+  });
+
+  if (!codeText) {
+    codeText = getPlainText(children);
+  }
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(codeText.replace(/\n$/, ''));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  return (
+    <div className="blog-code-container">
+      <div className="blog-code-header">
+        <div className="blog-code-dots">
+          <span className="blog-code-dot dot-red" />
+          <span className="blog-code-dot dot-yellow" />
+          <span className="blog-code-dot dot-green" />
+        </div>
+        {lang && <span className="blog-code-lang">{lang.toUpperCase()}</span>}
+        <button 
+          className="blog-code-copy" 
+          onClick={handleCopy}
+          aria-label={copied ? "Code copied" : "Copy code"}
+        >
+          {copied ? (
+            <>
+              <svg className="blog-copy-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              <span>Copied!</span>
+            </>
+          ) : (
+            <>
+              <svg className="blog-copy-icon" viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Copy</span>
+            </>
+          )}
+        </button>
+      </div>
+      <pre className="blog-code-pre">
+        {children}
+      </pre>
+    </div>
+  );
+};
 
 const BlogContent: React.FC<BlogContentProps> = ({ content, format }) => {
   const renderContent = () => {
@@ -90,6 +165,10 @@ const BlogContent: React.FC<BlogContentProps> = ({ content, format }) => {
           remarkPlugins={[remarkGfm]}
           rehypePlugins={[rehypeHighlight]}
           components={{
+            // Custom pre wrapper for code blocks
+            pre: ({ node, children, ...props }) => (
+              <BlogCodeWrapper>{children}</BlogCodeWrapper>
+            ),
             // Custom image component for responsive images with error handling
             img: ({ node, ...props }) => (
               <SafeImage
