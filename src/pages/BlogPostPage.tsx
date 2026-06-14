@@ -243,12 +243,20 @@ const BlogPostPage: React.FC = () => {
                 role="tab"
                 aria-selected={isActive}
               >
-                {showLeftArrow && (
-                  <span className="v2-pill-arrow v2-pill-arrow--left" aria-hidden="true">&larr;</span>
+                 {showLeftArrow && (
+                  <span className="v2-pill-circle-arrow v2-pill-circle-arrow--prev" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                  </span>
                 )}
                 Article {globalIndex + 1}
                 {showRightArrow && (
-                  <span className="v2-pill-arrow v2-pill-arrow--right" aria-hidden="true">&rarr;</span>
+                  <span className="v2-pill-circle-arrow v2-pill-circle-arrow--next" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                  </span>
                 )}
               </button>
             );

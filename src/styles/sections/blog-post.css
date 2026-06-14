@@ -206,39 +206,80 @@
   display: none;
 }
 
-/* Blinking Arrow Indicators */
-.v2-pill-arrow {
-  display: inline-block;
-  animation: v2-pill-arrow-blink 1.5s infinite alternate ease-in-out;
-  color: var(--hero-accent, #2563eb);
-  font-family: system-ui, -apple-system, sans-serif;
-  font-weight: bold;
+/* Circular Arrow Indicators */
+.v2-pill-circle-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.25); /* White border for black toggler bar (Light Mode) */
+  transition: transform var(--duration-fast) ease, border-color var(--duration-fast) ease;
+  flex-shrink: 0;
 }
 
-.v2-pill.is-active .v2-pill-arrow {
-  color: inherit;
+/* On dark theme, the toggler bar background is white, so use a dark border for contrast */
+[data-theme="dark"] .v2-pill-circle-arrow {
+  border-color: rgba(0, 0, 0, 0.15);
 }
 
-@keyframes v2-pill-arrow-blink {
+.v2-pill-circle-arrow--prev {
+  margin-right: 6px;
+  color: #f87171; /* Reddish arrow */
+}
+
+/* In dark mode, if the toggler bar is white and circle is black, use high-contrast red */
+[data-theme="dark"] .v2-pill-circle-arrow--prev {
+  color: #ef4444; 
+}
+
+.v2-pill-circle-arrow--next {
+  margin-left: 6px;
+  color: #4ade80; /* Greenish arrow */
+}
+
+[data-theme="dark"] .v2-pill-circle-arrow--next {
+  color: #22c55e;
+}
+
+/* Micro-animations inside circle arrow SVG */
+.v2-pill-circle-arrow svg {
+  display: block;
+  transition: transform var(--duration-fast) var(--easing-standard);
+}
+
+.v2-pill-circle-arrow--prev svg {
+  animation: v2-circle-arrow-blink-prev 1.5s infinite alternate ease-in-out;
+}
+
+.v2-pill-circle-arrow--next svg {
+  animation: v2-circle-arrow-blink-next 1.5s infinite alternate ease-in-out;
+}
+
+@keyframes v2-circle-arrow-blink-prev {
   0% {
-    opacity: 0.25;
-    transform: translateX(0);
+    opacity: 0.6;
+    transform: translate3d(0, 0, 0);
   }
   100% {
     opacity: 1;
-    transform: translateX(var(--arrow-slide, 2px));
+    transform: translate3d(-1px, 0, 0);
   }
 }
 
-.v2-pill-arrow--left {
-  --arrow-slide: -2px;
-  margin-right: 2px;
+@keyframes v2-circle-arrow-blink-next {
+  0% {
+    opacity: 0.6;
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(1px, 0, 0);
+  }
 }
 
-.v2-pill-arrow--right {
-  --arrow-slide: 2px;
-  margin-left: 2px;
-}
 
 
 /* Subnav Strip */
