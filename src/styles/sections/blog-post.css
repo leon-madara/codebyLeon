@@ -34,6 +34,7 @@
   --article-shell-max: 1280px;
   --article-gutter-x: clamp(24px, 3.125vw, 40px);
   --article-top-space: clamp(64px, 7.5vw, 96px);
+  --article-control-clearance: clamp(200px, 16vw, 224px);
   --article-bottom-space: clamp(96px, 10vw, 128px);
   --article-column: 700px;
   --article-image-ratio: 16 / 10;
@@ -64,72 +65,18 @@
   --pill-indicator-shadow: 0 1px 2px rgba(0,0,0,0.16), 0 0 0 1px rgba(255,255,255,0.12);
 }
 
-/* Page Wrapper and Background Orbs */
+/* Static editorial page canvas */
 .blog-post-page-wrapper {
-  --blog-post-orb-opacity: 0.6;
   position: relative;
   width: 100%;
   min-height: 100vh;
   overflow: hidden;
-  background: var(--canvas-base);
+  background: #FCFAF7;
   transition: background var(--duration-normal) ease;
 }
 
-.blog-post-page-wrapper .blog__orbs {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.blog-post-page-wrapper .blog__orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(120px);
-  opacity: var(--blog-post-orb-opacity);
-  transition: opacity var(--duration-normal) ease;
-  will-change: background-color;
-}
-
 [data-theme="dark"] .blog-post-page-wrapper {
-  --blog-post-orb-opacity: 0.15;
-}
-
-.blog-post-page-wrapper .blog__orb--1 {
-  width: 50vw;
-  height: 50vw;
-  top: -10%;
-  left: -10%;
-}
-
-.blog-post-page-wrapper .blog__orb--2 {
-  width: 60vw;
-  height: 60vw;
-  top: 25%;
-  right: -10%;
-}
-
-.blog-post-page-wrapper .blog__orb--3 {
-  width: 45vw;
-  height: 45vw;
-  bottom: -10%;
-  left: 20%;
-}
-
-.blog-post-page-wrapper .blog__overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 2;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  background-image: radial-gradient(circle, var(--dot-color, rgba(18, 18, 18, 0.05)) 1px, transparent 1px);
-  background-size: 12px 12px;
-  pointer-events: none;
-}
-
-[data-theme="dark"] .blog-post-page-wrapper .blog__overlay {
-  background-image: radial-gradient(circle, var(--dot-color, rgba(255, 255, 255, 0.05)) 1px, transparent 1px);
+  background: var(--canvas-base);
 }
 
 /* Stage & sliding track */
@@ -481,7 +428,7 @@
   max-width: var(--article-shell-max);
   margin: 0 auto;
   padding: var(--article-top-space) var(--article-gutter-x);
-  padding-top: 50px;
+  padding-top: var(--article-control-clearance);
   display: grid;
   grid-template-columns: 1fr var(--article-column) 1fr;
   gap: var(--article-header-gap);
@@ -816,7 +763,7 @@
 @media (max-width: 1100px) {
   .v1-main {
     grid-template-columns: 1fr;
-    padding-top: calc(var(--article-top-space) + 40px);
+    padding-top: var(--article-control-clearance);
     padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
   }
   .v1-gutter {

@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useGSAP } from '@gsap/react';
-import gsap from 'gsap';
 import { BlogPost } from '../types/blog';
 import { getAllBlogPosts } from '../utils/blogUtils';
 import BlogContent from '../components/Blog/BlogContent';
@@ -64,16 +62,6 @@ const createBlogPostStructuredData = (blogPost: BlogPost): Record<string, unknow
   return structuredData;
 };
 
-// Background Orb Colors corresponding to each article (v1, v2, v3)
-const ORB_PALETTES = [
-  // Article 1 (Business Strategy): Blues, Purples, Cyan
-  ['#2563eb', '#8b5cf6', '#06b6d4'],
-  // Article 2 (Tech & Reliability): Greens, Deep Teals
-  ['#10b981', '#0d9488', '#115e59'],
-  // Article 3 (User Experience): Pinks, Oranges, Purples
-  ['#ec4899', '#f97316', '#a855f7']
-];
-
 const BlogPostPage: React.FC = () => {
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
@@ -90,10 +78,7 @@ const BlogPostPage: React.FC = () => {
   const [isScrollHidden, setIsScrollHidden] = useState(false);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
 
-  // References for GSAP background orb animations and layout measuring
-  const orb1Ref = useRef<HTMLDivElement>(null);
-  const orb2Ref = useRef<HTMLDivElement>(null);
-  const orb3Ref = useRef<HTMLDivElement>(null);
+  // References for article layout measuring
   const postRefs = useRef<React.RefObject<HTMLDivElement>[]>([]);
   const [stageHeight, setStageHeight] = useState<number | 'auto'>('auto');
 
@@ -178,31 +163,6 @@ const BlogPostPage: React.FC = () => {
     }
   }, [activeIndex, visibleStartIndex, allPosts.length]);
 
-  // GSAP Background orb color-morphing animation
-  useGSAP(() => {
-    if (allPosts.length === 0) return;
-    
-    const palette = ORB_PALETTES[activeIndex % ORB_PALETTES.length];
-    
-    gsap.to(orb1Ref.current, {
-      backgroundColor: palette[0],
-      duration: 0.75,
-      ease: 'power2.out'
-    });
-    
-    gsap.to(orb2Ref.current, {
-      backgroundColor: palette[1],
-      duration: 0.75,
-      ease: 'power2.out'
-    });
-    
-    gsap.to(orb3Ref.current, {
-      backgroundColor: palette[2],
-      duration: 0.75,
-      ease: 'power2.out'
-    });
-  }, [activeIndex, allPosts.length]);
-
   // Set Page SEO
   usePageSeo(post ? {
     title: `${postTitle} | ${SITE_NAME} Blog`,
@@ -242,14 +202,6 @@ const BlogPostPage: React.FC = () => {
   return (
     <BlogPostErrorBoundary>
       <div className="blog-post-page-wrapper">
-        {/* Background Orbs */}
-        <div className="blog__orbs">
-          <div ref={orb1Ref} className="blog__orb blog__orb--1" />
-          <div ref={orb2Ref} className="blog__orb blog__orb--2" />
-          <div ref={orb3Ref} className="blog__orb blog__orb--3" />
-        </div>
-        <div className="blog__overlay" />
-
         {/* Global Design Switcher (Floating pills) */}
         <div 
           className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
