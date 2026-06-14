@@ -1531,3 +1531,118 @@ pre.blog-code-pre::-webkit-scrollbar-thumb:hover {
 .hljs-link {
   text-decoration: underline;
 }
+
+/* =============================================
+   EDITORIAL TYPOGRAPHY & VISUAL HIERARCHY
+   ============================================= */
+
+/* Body Copy Spacing & Hierarchy */
+.blog-content-paragraph {
+  font-family: var(--font-body), 'Inter', sans-serif;
+  font-size: var(--article-body-size, 18px);
+  line-height: var(--article-body-leading, 1.75);
+  color: var(--color-text-secondary, #4a4a6a);
+  margin-bottom: var(--article-block-gap, 24px);
+}
+
+/* Heading Visual Coupling (Tight Coupling) */
+.blog-content-h1,
+.blog-content-h2,
+.blog-content-h3,
+.blog-content-h4,
+.blog-content-h5,
+.blog-content-h6 {
+  font-family: var(--font-heading), 'Playfair Display', serif;
+  color: var(--color-text-primary, #1a1a2e);
+  font-weight: 700;
+  line-height: 1.25;
+  /* Top spacing pushes away previous content; bottom spacing groups with following content */
+  margin-top: clamp(36px, 4.5vw, 52px);
+  margin-bottom: clamp(12px, 1.5vw, 18px);
+}
+
+.blog-content-h1 {
+  font-size: clamp(26px, 3.2vw, 36px);
+  letter-spacing: -0.01em;
+}
+
+.blog-content-h2 {
+  font-size: clamp(22px, 2.6vw, 30px);
+  letter-spacing: -0.01em;
+}
+
+.blog-content-h3 {
+  font-size: clamp(18px, 2.2vw, 24px);
+}
+
+/* Ensure the first heading directly below the article header does not have excess top margin */
+.v1-article > .blog-content-markdown > div > *:first-child {
+  margin-top: 0;
+}
+
+/* Links inside article text - Accessible color contrast */
+.blog-content-link {
+  color: var(--brand-orange, #D9751A);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(217, 117, 26, 0.2);
+  transition: all var(--duration-fast, 150ms) ease;
+}
+
+.blog-content-link:hover {
+  color: var(--color-accent, #D9751A);
+  border-bottom-color: var(--brand-orange, #D9751A);
+  background-color: rgba(217, 117, 26, 0.04);
+}
+
+[data-theme="dark"] .blog-content-link {
+  color: #ff9d42;
+  border-bottom-color: rgba(255, 157, 66, 0.25);
+}
+
+[data-theme="dark"] .blog-content-link:hover {
+  color: #ffb46e;
+  border-bottom-color: #ff9d42;
+  background-color: rgba(255, 157, 66, 0.06);
+}
+
+/* Lists Spacing */
+.blog-content-list,
+.blog-content-ordered-list {
+  margin-top: var(--spacing-sm, 12px);
+  margin-bottom: var(--article-block-gap, 24px);
+  padding-left: var(--spacing-xl, 32px);
+}
+
+.blog-content-list-item {
+  font-family: var(--font-body), 'Inter', sans-serif;
+  font-size: var(--article-body-size, 18px);
+  line-height: var(--article-body-leading, 1.75);
+  color: var(--color-text-secondary, #4a4a6a);
+  margin-bottom: var(--spacing-xs, 8px);
+}
+
+/* Premium Blockquote Styling */
+.blog-content-blockquote {
+  margin: clamp(32px, 4.5vw, 48px) 0;
+  padding: var(--spacing-md, 16px) var(--spacing-lg, 24px);
+  background-color: var(--code-bg, #f6f8fa);
+  border-left: 4px solid var(--brand-orange, #D9751A);
+  border-radius: 0 12px 12px 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="dark"] .blog-content-blockquote {
+  border-left-color: #ff9d42;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.blog-content-blockquote p {
+  font-family: var(--font-heading), 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(18px, 2.2vw, 22px);
+  line-height: 1.6;
+  color: var(--color-text-primary, #1a1a2e);
+  margin-bottom: 0;
+}
+
