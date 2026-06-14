@@ -251,4 +251,27 @@
   /* Workspace background tokens */
   --workspace-bg-start: rgba(228, 228, 231, 0.25);
   --workspace-bg-end: rgba(228, 228, 231, 0.05);
+
+  /* =============================================
+     CODE BLOCK COLOR TOKENS (Light Theme - GitHub style)
+     ============================================= */
+  --code-bg: #f6f8fa;
+  --code-header-bg: #f0f3f6;
+  --code-border: rgba(31, 35, 40, 0.12);
+  --code-text: #24292f;
+  --code-copy-color: #57606a;
+  --code-copy-hover-bg: rgba(0, 0, 0, 0.05);
+  --code-lang-color: #57606a;
+  --code-scrollbar-thumb: rgba(0, 0, 0, 0.15);
+  --code-scrollbar-thumb-hover: rgba(0, 0, 0, 0.3);
+
+  /* Syntax Highlight Tokens (Light Theme) */
+  --code-token-comment: #6e7781;
+  --code-token-keyword: #cf222e;
+  --code-token-section: #0550ae;
+  --code-token-literal: #0550ae;
+  --code-token-string: #1a7f37;
+  --code-token-built_in: #953800;
+  --code-token-attr: #953800;
+  --code-token-symbol: #0550ae;
 }
