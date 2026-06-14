@@ -100,6 +100,22 @@ const BlogPostPage: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [activeIndex, allPosts.length]);
 
+  const handlePrevClick = () => {
+    if (visibleStartIndex > 0) {
+      const prevIndex = Math.max(0, activeIndex - 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navigate(`/blog/${allPosts[prevIndex].slug}`, { replace: true });
+    }
+  };
+
+  const handleNextClick = () => {
+    if (visibleStartIndex + 2 < allPosts.length - 1) {
+      const nextIndex = Math.min(allPosts.length - 1, activeIndex + 1);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      navigate(`/blog/${allPosts[nextIndex].slug}`, { replace: true });
+    }
+  };
+
   // Redirect to the first post if the slug is invalid or missing
   useEffect(() => {
     if (!slug || slugIndex === -1) {
@@ -208,19 +224,29 @@ const BlogPostPage: React.FC = () => {
           role="tablist" 
           aria-label="Design directions"
           style={{ 
-            '--indicator-pos': activeIndex - visibleStartIndex 
+            '--indicator-pos': activeIndex - visibleStartIndex,
+            '--has-left-arrow': visibleStartIndex > 0 ? 1 : 0
           } as React.CSSProperties}
         >
           <div className="v2-pill-indicator" />
+          
+          {visibleStartIndex > 0 && (
+            <button
+              className="v2-pill-arrow-btn v2-pill-arrow-btn--prev"
+              onClick={handlePrevClick}
+              aria-label="Previous article"
+            >
+              <span className="v2-pill-circle-arrow v2-pill-circle-arrow--prev" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+              </span>
+            </button>
+          )}
+
           {allPosts.slice(visibleStartIndex, visibleStartIndex + 3).map((p, index) => {
             const globalIndex = visibleStartIndex + index;
             const isActive = activeIndex === globalIndex;
-            
-            // Render left arrow if we are at the first visible pill (index === 0) AND there are posts to the left
-            const showLeftArrow = index === 0 && visibleStartIndex > 0;
-            
-            // Render right arrow if we are at the last visible pill (index === 2) AND there are posts to the right
-            const showRightArrow = index === 2 && (visibleStartIndex + 2 < allPosts.length - 1);
             
             return (
               <button
@@ -243,24 +269,24 @@ const BlogPostPage: React.FC = () => {
                 role="tab"
                 aria-selected={isActive}
               >
-                 {showLeftArrow && (
-                  <span className="v2-pill-circle-arrow v2-pill-circle-arrow--prev" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="15 18 9 12 15 6"></polyline>
-                    </svg>
-                  </span>
-                )}
                 Article {globalIndex + 1}
-                {showRightArrow && (
-                  <span className="v2-pill-circle-arrow v2-pill-circle-arrow--next" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                  </span>
-                )}
               </button>
             );
           })}
+
+          {visibleStartIndex + 2 < allPosts.length - 1 && (
+            <button
+              className="v2-pill-arrow-btn v2-pill-arrow-btn--next"
+              onClick={handleNextClick}
+              aria-label="Next article"
+            >
+              <span className="v2-pill-circle-arrow v2-pill-circle-arrow--next" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="10" height="10" stroke="currentColor" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+              </span>
+            </button>
+          )}
         </div>
 
         {/* Subnav Strip */}

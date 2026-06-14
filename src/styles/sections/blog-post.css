@@ -164,7 +164,8 @@
 
 .v2-pill-indicator {
   position: absolute;
-  left: calc(var(--pill-pad) + var(--indicator-pos, 0) * (var(--pill-width) + var(--pill-gap)));
+  --arrow-offset: calc(var(--has-left-arrow, 0) * (24px + var(--pill-gap)));
+  left: calc(var(--pill-pad) + var(--arrow-offset) + var(--indicator-pos, 0) * (var(--pill-width) + var(--pill-gap)));
   top: var(--pill-pad);
   bottom: var(--pill-pad);
   width: var(--pill-width);
@@ -179,6 +180,24 @@
   background: var(--pill-indicator-bg);
   box-shadow: var(--pill-indicator-shadow);
 }
+
+.v2-pill-arrow-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 24px;
+  height: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.v2-pill-arrow-btn:focus-visible {
+  outline: none;
+}
+
 
 .v2-pill {
   position: relative;
@@ -873,7 +892,8 @@
   }
   .global-v2-switcher .v2-pill-indicator {
     width: 92px;
-    left: calc(var(--pill-pad) + var(--indicator-pos, 0) * (92px + var(--pill-gap)));
+    --arrow-offset: calc(var(--has-left-arrow, 0) * (24px + var(--pill-gap)));
+    left: calc(var(--pill-pad) + var(--arrow-offset) + var(--indicator-pos, 0) * (92px + var(--pill-gap)));
   }
   .v2-pill-text-full {
     display: none;
