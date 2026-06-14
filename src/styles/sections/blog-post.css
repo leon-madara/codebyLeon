@@ -921,6 +921,10 @@
   .v2-pill-text-short {
     display: inline;
   }
+  .v1-title {
+    font-size: clamp(20px, 5.5vw, 26px);
+    margin-bottom: 24px;
+  }
   .v1-quote p {
     font-size: 24px;
   }
