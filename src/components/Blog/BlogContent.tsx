@@ -15,6 +15,11 @@ interface ContentErrorBoundaryState {
   retryCount: number;
 }
 
+interface CodeElementProps {
+  children?: React.ReactNode;
+  className?: string;
+}
+
 // Enhanced Error Boundary for content rendering
 class ContentErrorBoundary extends Component<
   { children: ReactNode; fallback: ReactNode; content: string },
@@ -78,8 +83,8 @@ const getPlainText = (node: React.ReactNode): string => {
   if (node === null || node === undefined) return '';
   if (typeof node === 'string' || typeof node === 'number') return String(node);
   if (Array.isArray(node)) return node.map(getPlainText).join('');
-  if (React.isValidElement(node)) {
-    return getPlainText((node.props as any).children);
+  if (React.isValidElement<CodeElementProps>(node)) {
+    return getPlainText(node.props.children);
   }
   return '';
 };
@@ -92,14 +97,14 @@ const BlogCodeWrapper: React.FC<{ children: React.ReactNode }> = ({ children }) 
   let codeText = '';
   
   React.Children.forEach(children, (child) => {
-    if (React.isValidElement(child)) {
-      const className = (child.props as any).className || '';
+    if (React.isValidElement<CodeElementProps>(child)) {
+      const className = child.props.className || '';
       const match = /language-(\w+)/.exec(className);
       if (match) {
         lang = match[1];
       }
       
-      codeText = getPlainText((child.props as any).children);
+      codeText = getPlainText(child.props.children);
     }
   });
 
