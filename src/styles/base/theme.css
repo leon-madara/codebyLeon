@@ -143,6 +143,29 @@
   /* Progress Indicators - Override for dark mode */
   --progress-track: #2d2d2d;
   --progress-fill: #f0f0f5;
+
+  /* =============================================
+     CODE BLOCK COLOR TOKENS (Dark Theme - One Dark Style)
+     ============================================= */
+  --code-bg: #0b0f19;
+  --code-header-bg: rgba(2, 8, 20, 0.7);
+  --code-border: rgba(255, 255, 255, 0.08);
+  --code-text: #e2e8f0;
+  --code-copy-color: rgba(255, 255, 255, 0.4);
+  --code-copy-hover-bg: rgba(255, 255, 255, 0.06);
+  --code-lang-color: rgba(255, 255, 255, 0.45);
+  --code-scrollbar-thumb: rgba(255, 255, 255, 0.12);
+  --code-scrollbar-thumb-hover: rgba(255, 255, 255, 0.25);
+
+  /* Syntax Highlight Tokens (Dark Theme) */
+  --code-token-comment: #5c6370;
+  --code-token-keyword: #c678dd;
+  --code-token-section: #e06c75;
+  --code-token-literal: #56b6c2;
+  --code-token-string: #98c379;
+  --code-token-built_in: #e5c07b;
+  --code-token-attr: #d19a66;
+  --code-token-symbol: #61afef;
 }
 
 /* =============================================
