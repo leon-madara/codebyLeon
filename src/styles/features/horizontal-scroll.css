@@ -38,6 +38,14 @@
   --hs-sidebar-cta-bg: hsl(0 73% 50%);
   --hs-sidebar-cta-bg-hover: hsl(0 73% 38%);
 
+  /* Service Tabs variables */
+  --hs-tabs-bg: hsl(var(--primary) / 0.12);
+  --hs-tabs-border: hsl(var(--primary) / 0.2);
+  --hs-tab-bg: hsl(var(--primary));
+  --hs-tabs-btn-color: hsl(var(--primary));
+  --hs-tabs-btn-hover-color: hsl(var(--primary) / 0.85);
+  --hs-tabs-btn-active-color: hsl(var(--primary-foreground));
+
   position: relative;
   padding-bottom: 0;
 }
@@ -67,6 +75,14 @@
   --hs-sidebar-step-text: hsl(220 33% 9%);
   --hs-sidebar-cta-bg: hsl(0 73% 50%);
   --hs-sidebar-cta-bg-hover: hsl(0 73% 38%);
+
+  /* Service Tabs dark mode overrides */
+  --hs-tabs-bg: hsl(220 18% 7%);
+  --hs-tabs-border: hsl(var(--border) / 0.2);
+  --hs-tab-bg: hsl(var(--primary));
+  --hs-tabs-btn-color: hsl(var(--muted-foreground));
+  --hs-tabs-btn-hover-color: hsl(var(--foreground));
+  --hs-tabs-btn-active-color: hsl(var(--primary-foreground));
 }
 
 .hs__top-chrome {
@@ -501,16 +517,23 @@
 }
 
 .hs-tabs {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 1rem;
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .hs-tabs__inner {
-  max-width: 980px;
-  margin: 0 auto;
-  display: flex;
+  background: var(--hs-tabs-bg);
+  border: 1px solid var(--hs-tabs-border);
+  padding: 0;
+  border-radius: 999px;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
 }
 
 /* Tabs are chrome UI, not beat surfaces — rounded corners intentionally kept */
@@ -518,20 +541,24 @@
   position: relative;
   border: 0;
   background: transparent;
-  color: hsl(var(--muted-foreground));
-  padding: 0.55rem 1rem;
-  border-radius: 0.75rem;
-  font-weight: 600;
-  font-size: 0.98rem;
+  color: var(--hs-tabs-btn-color);
+  padding: 0.5rem 1.5rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   transition: color 0.24s ease;
+  z-index: 1;
+  cursor: pointer;
 }
 
 .hs-tabs__button:hover {
-  color: hsl(var(--foreground));
+  color: var(--hs-tabs-btn-hover-color);
 }
 
 .hs-tabs__button.is-active {
-  color: hsl(var(--primary-foreground));
+  color: var(--hs-tabs-btn-active-color);
 }
 
 .hs-tabs__active-bg {
@@ -539,6 +566,8 @@
   inset: 0;
   border-radius: inherit;
   background: var(--hs-tab-bg);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .hs-tabs__label {

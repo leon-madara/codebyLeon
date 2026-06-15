@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import { useGSAP } from '@gsap/react';
+import gsap from 'gsap';
 
 interface ServiceTabsProps {
   cards: { id: string; title: string }[];
@@ -8,53 +10,74 @@ interface ServiceTabsProps {
 }
 
 const ServiceTabs = ({ cards, activeCard, onCardClick, className = '' }: ServiceTabsProps) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const activeBgRef = useRef<HTMLSpanElement>(null);
+  const buttonsRef = useRef<(HTMLButtonElement | null)[]>([]);
+  const isFirstRender = useRef(true);
+
+  useGSAP(() => {
+    const updateActiveBg = (immediate = false) => {
+      const activeButton = buttonsRef.current[activeCard];
+      const activeBg = activeBgRef.current;
+      if (activeButton && activeBg) {
+        const container = activeButton.parentElement;
+        if (container) {
+          const containerRect = container.getBoundingClientRect();
+          const btnRect = activeButton.getBoundingClientRect();
+          const left = btnRect.left - containerRect.left;
+          const width = btnRect.width;
+
+          if (immediate) {
+            gsap.set(activeBg, {
+              x: left,
+              width: width,
+            });
+          } else {
+            gsap.to(activeBg, {
+              x: left,
+              width: width,
+              duration: 0.35,
+              ease: 'power2.out',
+              overwrite: 'auto',
+            });
+          }
+        }
+      }
+    };
+
+    updateActiveBg(isFirstRender.current);
+    isFirstRender.current = false;
+
+    const handleResize = () => updateActiveBg(true);
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, { dependencies: [activeCard], scope: containerRef });
+
   return (
-    <div className={`hs-tabs ${className}`.trim()}>
-      <div className="hs-tabs__inner" style={{ 
-        background: 'hsl(220 18% 7%)', 
-        padding: '0.35rem', 
-        borderRadius: '999px',
-        border: '1px solid hsl(var(--border) / 0.2)',
-        display: 'inline-flex',
-        margin: '0 auto'
-      }}>
+    <div className={`hs-tabs ${className}`.trim()} ref={containerRef}>
+      <div className="hs-tabs__inner">
+        {/* Single sliding active indicator background */}
+        <span
+          ref={activeBgRef}
+          className="hs-tabs__active-bg"
+          aria-hidden="true"
+          style={{ width: 0 }}
+        />
         {cards.map((card, index) => {
           const isActive = activeCard === index;
 
           return (
             <button
               key={card.id}
+              ref={(el) => {
+                buttonsRef.current[index] = el;
+              }}
               onClick={() => onCardClick(index)}
               className={`hs-tabs__button ${isActive ? 'is-active' : ''}`.trim()}
               type="button"
-              style={{
-                position: 'relative',
-                border: 0,
-                background: 'transparent',
-                color: isActive ? 'hsl(var(--background))' : 'hsl(var(--muted-foreground))',
-                padding: '0.6rem 1.5rem',
-                borderRadius: '999px',
-                fontWeight: 700,
-                fontSize: '0.85rem',
-                letterSpacing: '0.05em',
-                textTransform: 'uppercase',
-                transition: 'color 0.24s ease',
-                zIndex: 1
-              }}
             >
-              {isActive && (
-                <span
-                  className="hs-tabs__active-bg"
-                  style={{ 
-                    position: 'absolute',
-                    inset: 0,
-                    borderRadius: 'inherit',
-                    background: 'var(--color-primary, hsl(var(--primary)))',
-                    zIndex: -1
-                  }}
-                  aria-hidden="true"
-                />
-              )}
               <span className="hs-tabs__label">{card.title}</span>
             </button>
           );
