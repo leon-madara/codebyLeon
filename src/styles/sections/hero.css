@@ -407,7 +407,23 @@
 }
 
 .hero__word-grow-designs {
+  position: absolute;
+  font-size: clamp(70px, 21.5vw, 310px);
+  left: 50%;
+  top: calc(80% - 15vh);
+  transform: translate(-50%, 0) rotate(-6deg);
+  z-index: 15;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 1;
+  clip-path: polygon(0 0, 0 100%, 0 100%, 0 0);
   color: #1a1a1a;
+}
+
+@media (max-width: 768px) {
+  .hero__word-grow-designs {
+    font-size: clamp(32px, 13vw, 70px);
+  }
 }
 
 [data-theme='dark'] .hero__word-grow-designs {

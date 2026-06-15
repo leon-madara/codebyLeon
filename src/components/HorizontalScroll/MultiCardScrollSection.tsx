@@ -26,6 +26,7 @@ const DESKTOP_FINAL_BEAT_HOLD_RATIO = 0.22;
 const MOBILE_FINAL_BEAT_HOLD_RATIO = 0.1;
 const SNAP_DURATION = { min: 0.2, max: 0.55 } as const;
 const NAV_CLEARANCE = 12;
+const MOBILE_NAV_CLEARANCE = 48;
 
 type BeatComponent = ForwardRefExoticComponent<RefAttributes<HTMLElement>>;
 
@@ -286,9 +287,7 @@ const MultiCardScrollSection = () => {
               trigger: section,
               pin: true,
               pinSpacing: true,
-              start: isDesktop
-                ? () => `top top+=${navHeightRef.current + NAV_CLEARANCE + topChromeHeightRef.current}`
-                : 'top top',
+              start: () => `top top+=${navHeightRef.current + (isDesktop ? NAV_CLEARANCE : MOBILE_NAV_CLEARANCE) + topChromeHeightRef.current}`,
               end: () => {
                 recalculateDistances();
                 return `+=${totalDistance}`;
@@ -439,7 +438,7 @@ const MultiCardScrollSection = () => {
   const rootStyle = {
     '--hs-top-chrome-height': `${topChromeHeight}px`,
     '--hs-nav-height': `${navHeight}px`,
-    '--hs-nav-clearance': `${NAV_CLEARANCE}px`,
+    '--hs-nav-clearance': `${isDesktop ? NAV_CLEARANCE : MOBILE_NAV_CLEARANCE}px`,
   } as CSSProperties;
 
   return (
@@ -453,14 +452,6 @@ const MultiCardScrollSection = () => {
           progress={cardProgress[activeCard]}
           labels={STORIES[activeCard].labels}
         />
-        {!isDesktop && (
-          <div className="hs__mobile-step">
-            <span className="hs__mobile-step-title">{STORIES[activeCard].title}</span>
-            <span>
-              Step {currentBeats[activeCard] + 1} of {TOTAL_BEATS}
-            </span>
-          </div>
-        )}
       </div>
 
       {STORIES.map((story, storyIndex) => (

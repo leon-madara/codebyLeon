@@ -64,7 +64,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   }));
 
   useGSAP(() => {
-    if (isMobile || visualTestMode) return;
+    if (visualTestMode) return;
     const heroScrollLength = HERO_TOTAL_SCROLL_VH;
     document.body.classList.add('hero-torch-tint-active');
 
@@ -392,19 +392,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           const designsLabel = document.createElement('div');
           designsLabel.textContent = "designs";
           designsLabel.className = "euphoria-script-regular hero__word-grow-designs";
-
-          Object.assign(designsLabel.style, {
-            position: 'absolute',
-            fontSize: `310px`, // Increased by 2.5x from 124px
-            left: '50%', // Center horizontally
-            top: 'calc(80% - 15vh)', // Moved up by 15vh
-            transform: 'translate(-50%, 0) rotate(-6deg)', // True center alignment + Tilt
-            zIndex: '15',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-            opacity: '1',
-            clipPath: 'polygon(0 0, 0 100%, 0 100%, 0 0)' // Initially hidden
-          });
 
           wordFace.appendChild(designsLabel);
 

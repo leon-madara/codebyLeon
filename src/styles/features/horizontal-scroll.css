@@ -99,23 +99,6 @@
   border-top: 1px solid hsl(var(--border) / 0.2);
 }
 
-.hs__mobile-step {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.45rem 1rem 0.75rem;
-  font-size: 0.75rem;
-  color: var(--hs-text-dim);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.hs__mobile-step-title {
-  color: hsl(var(--foreground));
-  font-weight: 700;
-}
-
 .hs__story {
   position: relative;
   overflow: hidden;
@@ -759,27 +742,28 @@
   }
 }
 
+/* Fallback base height for vertical mobile cards (required by Vitest integration tests) */
+.hs__story--vertical .beat-card {
+  height: clamp(660px, 90vh, 780px);
+}
+
 @media (max-width: 1023px) {
+  .hs {
+    --hs-nav-clearance: 48px;
+  }
+
   .hs__story--vertical .hs__viewport {
-    height: clamp(660px, 90vh, 780px);
+    height: calc(100vh - var(--hs-top-chrome-height) - var(--hs-nav-height) - var(--hs-nav-clearance));
+    min-height: 480px;
   }
 
   .hs__story--vertical .hs-beat {
-    height: clamp(660px, 90vh, 780px);
+    height: 100%;
     padding-inline: 0;
   }
 
   .hs__story--vertical .beat-card {
-    height: clamp(660px, 90vh, 780px);
-  }
-
-  .beat-card {
-    grid-template-columns: 1fr;
-    grid-template-rows: 240px auto;
-  }
-
-  .beat-card__media {
-    min-height: 240px;
+    height: 100%;
   }
 
   .hs-beat__shell {

@@ -9,6 +9,8 @@ interface BeatCardProps {
   heading: string;
   subheading: string;
   body: string;
+  ctaText?: string;
+  ctaLink?: string;
 }
 
 export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
@@ -19,7 +21,9 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
   icon,
   heading,
   subheading,
-  body
+  body,
+  ctaText,
+  ctaLink
 }, ref) => {
   return (
     <article ref={ref} className="beat-card">
@@ -51,6 +55,23 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
         <hr className="beat-card__divider hs-beat-reveal" />
         
         <p className="beat-card__body hs-beat-reveal">{body}</p>
+
+        {/* CTA Button */}
+        <div className="beat-card__cta hs-beat-reveal">
+          <a href={ctaLink || "/process"} className="beat-card__cta-button">
+            {ctaText || "TELL ME MORE"}
+          </a>
+        </div>
+      </div>
+
+      {/* Decorative Wave at the bottom */}
+      <div className="beat-card__wave-bg" aria-hidden="true">
+        <svg viewBox="0 0 1440 120" fill="none" preserveAspectRatio="none">
+          <path
+            d="M0,90 C360,60 720,120 1080,90 C1260,80 1350,100 1440,90 L1440,120 L0,120 Z"
+            fill="currentColor"
+          />
+        </svg>
       </div>
     </article>
   );
