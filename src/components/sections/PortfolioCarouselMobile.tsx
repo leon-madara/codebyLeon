@@ -1,78 +1,229 @@
+import { useRef, useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { projects } from "@/data/projects";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { projects, type Project } from "@/data/projects";
 import { getPortfolioProjectCta } from "./PortfolioCarousel";
 import { ArrowUpRight } from "lucide-react";
 import "@/styles/sections/portfolio-mobile.css";
 
-const PortfolioCarouselMobile = () => {
-  return (
-    <section id="portfolio-mobile" className="portfolio-mobile py-20 px-6 relative bg-background overflow-hidden border-y border-border/10">
-      <div className="relative z-10">
-        <h2 className="font-heading text-4xl leading-tight text-foreground text-center mb-8">
-          Our Work
-        </h2>
+gsap.registerPlugin(ScrollTrigger);
 
-        <div className="portfolio-mobile__scroll-container flex overflow-x-auto snap-x snap-mandatory gap-5 pb-8">
-          {projects.map((project) => {
+const PortfolioCarouselMobile = () => {
+  const scrollWrapperRef = useRef<HTMLDivElement>(null);
+  const pinnedRef = useRef<HTMLDivElement>(null);
+  const cardStageRef = useRef<HTMLDivElement>(null);
+  const activeIndexRef = useRef(0);
+  const prefersReducedMotion = useRef(false);
+
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const sync = () => {
+      prefersReducedMotion.current = mq.matches;
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
+  const getDuration = useCallback(
+    (d: number) => (prefersReducedMotion.current ? 0.01 : d),
+    []
+  );
+
+  const animateCards = useCallback(
+    (index: number) => {
+      if (!cardStageRef.current) return;
+      const cards =
+        cardStageRef.current.querySelectorAll<HTMLElement>(
+          ".portfolio-mobile__card"
+        );
+      const duration = getDuration(0.5);
+
+      cards.forEach((card, i) => {
+        const step = i - index;
+
+        if (step === 0) {
+          // Active card — visible and centered
+          gsap.to(card, {
+            y: 0,
+            autoAlpha: 1,
+            scale: 1,
+            zIndex: 3,
+            duration,
+            ease: "power2.out",
+            force3D: true,
+            overwrite: "auto",
+          });
+        } else {
+          // Inactive — faded out and offset
+          gsap.to(card, {
+            y: step < 0 ? -30 : 30,
+            autoAlpha: 0,
+            scale: 0.97,
+            zIndex: 0,
+            duration,
+            ease: "power2.out",
+            force3D: true,
+            overwrite: "auto",
+          });
+        }
+      });
+    },
+    [getDuration]
+  );
+
+  useGSAP(
+    () => {
+      if (
+        !scrollWrapperRef.current ||
+        !pinnedRef.current ||
+        projects.length === 0
+      )
+        return;
+
+      // Initialize first card
+      activeIndexRef.current = 0;
+      setActiveIndex(0);
+      animateCards(0);
+
+      const maxIndex = projects.length - 1;
+
+      const trigger = ScrollTrigger.create({
+        trigger: scrollWrapperRef.current,
+        start: "top top",
+        end: "bottom bottom",
+        pin: pinnedRef.current,
+        pinSpacing: false,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: (self) => {
+          const progressIndex = Math.min(
+            maxIndex,
+            Math.max(0, Math.round(self.progress * maxIndex))
+          );
+
+          if (progressIndex === activeIndexRef.current) return;
+
+          activeIndexRef.current = progressIndex;
+          setActiveIndex(progressIndex);
+          animateCards(progressIndex);
+        },
+      });
+
+      const handleRefresh = () => {
+        animateCards(activeIndexRef.current);
+      };
+
+      ScrollTrigger.addEventListener("refresh", handleRefresh);
+
+      return () => {
+        ScrollTrigger.removeEventListener("refresh", handleRefresh);
+        trigger.kill();
+      };
+    },
+    {
+      scope: scrollWrapperRef,
+      dependencies: [animateCards],
+    }
+  );
+
+  return (
+    <div
+      ref={scrollWrapperRef}
+      className="portfolio-mobile__scroll-wrapper"
+      style={{
+        height: `${Math.max(projects.length, 1) * 100}vh`,
+      }}
+    >
+      <div ref={pinnedRef} className="portfolio-mobile__pinned portfolio-mobile">
+        <h2 className="portfolio-mobile__heading">Our Work</h2>
+
+        <div ref={cardStageRef} className="portfolio-mobile__card-stage">
+          {projects.map((project, projectIndex) => {
             const cta = getPortfolioProjectCta(project);
-            
-            return (
-              <div key={project.name} className="portfolio-mobile__card snap-center shrink-0 w-[85vw] max-w-[320px] flex flex-col gap-4 rounded-2xl bg-card/40 border border-border/50 p-4 shadow-lg relative overflow-hidden backdrop-blur-sm">
-                <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ background: `linear-gradient(135deg, ${project.blobColors.purple}, transparent)` }} />
-                
-                <div className="w-full aspect-[4/3] rounded-xl overflow-hidden relative shadow-sm">
-                  {project.mobileImage ? (
-                     <img src={project.mobileImage} alt={project.name} className="w-full h-full object-cover" loading="lazy" />
-                  ) : (
-                     <img src={project.image} alt={project.name} className="w-full h-full object-cover" loading="lazy" />
-                  )}
+
+            const cardContent = (
+              <>
+                {/* Image */}
+                <div className="portfolio-mobile__image-wrap">
+                  <span className="portfolio-mobile__chip">
+                    {project.type}
+                  </span>
+                  <img
+                    src={project.mobileImage || project.image}
+                    alt={project.name}
+                    loading={projectIndex === 0 ? "eager" : "lazy"}
+                  />
                   <div
-                    className="absolute inset-0 pointer-events-none"
+                    className="portfolio-mobile__image-overlay"
                     style={{
-                      background: `linear-gradient(180deg, transparent 40%, ${project.accentColor.replace(")", " / 0.3)")})`,
+                      background: `linear-gradient(180deg, transparent 50%, ${project.accentColor.replace(
+                        ")",
+                        " / 0.25)"
+                      )})`,
                     }}
                   />
                 </div>
 
-                <div className="flex flex-col flex-1 z-10 pt-2">
-                  <p className="text-[0.65rem] font-bold tracking-[0.15em] text-accent uppercase mb-2">
-                    {project.type}
-                  </p>
-                  
-                  <h3 className="font-frijole text-2xl text-foreground mb-3 leading-tight tracking-tight">
-                    {project.name}
-                  </h3>
-
-                  <p className="text-sm text-muted-foreground line-clamp-3 mb-5 flex-1 leading-relaxed">
+                {/* Text */}
+                <div className="portfolio-mobile__text">
+                  <h3 className="portfolio-mobile__name">{project.name}</h3>
+                  <p className="portfolio-mobile__description">
                     {project.description}
                   </p>
-
-                  <div className="flex flex-wrap gap-1.5 mb-6">
-                    {project.techStack.map((tech) => (
-                      <span key={tech} className="portfolio-mobile__tag">
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-
-                  {cta.isRoute ? (
-                    <Link className="portfolio-mobile__btn flex items-center justify-center gap-2 w-full py-3 rounded-full font-semibold text-sm transition-colors work-cursor-target" to={cta.href}>
-                      {cta.label}
-                      <ArrowUpRight size={16} />
-                    </Link>
-                  ) : (
-                    <a className="portfolio-mobile__btn flex items-center justify-center gap-2 w-full py-3 rounded-full font-semibold text-sm transition-colors work-cursor-target" href={cta.href}>
-                      {cta.label}
-                      <ArrowUpRight size={16} />
-                    </a>
-                  )}
+                  <span className="portfolio-mobile__arrow" aria-hidden="true">
+                    <ArrowUpRight size={16} />
+                  </span>
                 </div>
-              </div>
+              </>
+            );
+
+            const isActive = projectIndex === activeIndex;
+
+            return cta.isRoute ? (
+              <Link
+                key={project.name}
+                className="portfolio-mobile__card"
+                to={cta.href}
+                aria-label={`View ${project.name} case study`}
+                aria-hidden={!isActive}
+                tabIndex={isActive ? 0 : -1}
+              >
+                {cardContent}
+              </Link>
+            ) : (
+              <a
+                key={project.name}
+                className="portfolio-mobile__card"
+                href={cta.href}
+                aria-label={`View ${project.name} project`}
+                aria-hidden={!isActive}
+                tabIndex={isActive ? 0 : -1}
+              >
+                {cardContent}
+              </a>
             );
           })}
         </div>
+
+        {/* Dot indicators */}
+        <div className="portfolio-mobile__dots" aria-label="Project indicators">
+          {projects.map((project, i) => (
+            <span
+              key={project.name}
+              className={`portfolio-mobile__dot${
+                i === activeIndex ? " portfolio-mobile__dot--active" : ""
+              }`}
+              aria-current={i === activeIndex ? "true" : undefined}
+            />
+          ))}
+        </div>
       </div>
-    </section>
+    </div>
   );
 };
 
