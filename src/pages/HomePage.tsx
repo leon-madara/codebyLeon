@@ -5,6 +5,8 @@ import { Hero, HeroHandle } from '../components/sections/Hero';
 import { Portfolio } from '../components/sections/Portfolio'; // OLD - kept for rollback
 // import { PortfolioStacked } from '../components/sections/PortfolioStacked'; // OLD
 import PortfolioCarousel from '../components/sections/PortfolioCarousel'; // NEW
+import PortfolioCarouselMobile from '../components/sections/PortfolioCarouselMobile';
+import { useIsMobile } from '../hooks/use-mobile';
 // import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
 // import { About } from '../components/sections/About'; // OLD
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
@@ -21,6 +23,7 @@ import { GlassBallCursor } from '../components/cursor/GlassBallCursor';
  */
 export function HomePage() {
   const isVisualTest = isVisualTestMode();
+  const isMobile = useIsMobile();
   const heroRef = useRef<HeroHandle>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroWrapperRef = useRef<HTMLDivElement>(null);
@@ -105,7 +108,7 @@ export function HomePage() {
       </div>
 
       {/* NEW: Stacked Portfolio with Carousel */}
-      <PortfolioCarousel />
+      {isMobile ? <PortfolioCarouselMobile /> : <PortfolioCarousel />}
       <GlassBallCursor />
 
       {/* OLD: Original Portfolio (commented for rollback)

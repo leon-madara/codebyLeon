@@ -354,7 +354,7 @@ const PortfolioCarousel = () => {
               {currentProject.description}
             </p>
 
-            <div className="mb-6 flex flex-wrap gap-2">
+            <div className="mb-6 flex flex-wrap gap-1.5 md:gap-2">
               {currentProject.techStack.map((tech) => (
                 <span key={tech} className="tag-pill">
                   {tech}
