@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { useTheme } from '../../contexts/ThemeContext';
@@ -9,6 +10,52 @@ export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isHomeRoute = location.pathname === '/';
+  const [activeSection, setActiveSection] = useState<string>('');
+
+  useEffect(() => {
+    if (!isHomeRoute) {
+      setActiveSection('');
+      return;
+    }
+
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      return;
+    }
+
+    const sections = ['portfolio', 'about', 'services'];
+    const observerOptions = {
+      root: null,
+      rootMargin: '-30% 0px -40% 0px',
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((sectionId) => {
+      const el = document.getElementById(sectionId);
+      if (el) observer.observe(el);
+    });
+
+    const handleScroll = () => {
+      if (window.scrollY < 100) {
+        setActiveSection('');
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isHomeRoute]);
 
   const isActiveLink = (path: string) => {
     if (path === '/') {
@@ -48,7 +95,6 @@ export function Navigation() {
         block: 'start',
       });
     }
-
   };
 
   return (
@@ -59,11 +105,50 @@ export function Navigation() {
         </Link>
 
         <ul className="navigation__links">
-          <li><a href={getSectionHref('portfolio')} onClick={handleSectionLinkClick('portfolio')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>PORTFOLIO</a></li>
-          <li><a href={getSectionHref('about')} onClick={handleSectionLinkClick('about')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>ABOUT</a></li>
-          <li><a href={getSectionHref('services')} onClick={handleSectionLinkClick('services')} className={`navigation__link ${location.pathname === '/' ? 'is-active' : ''}`}>SERVICES</a></li>
-          <li><Link to="/process" className={`navigation__link ${isActiveLink('/process') ? 'is-active' : ''}`}>PROCESS</Link></li>
-          <li><Link to="/blog" state={{ preserveScroll: true }} className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>BLOG</Link></li>
+          <li>
+            <a
+              href={getSectionHref('portfolio')}
+              onClick={handleSectionLinkClick('portfolio')}
+              className={`navigation__link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
+            >
+              PORTFOLIO
+            </a>
+          </li>
+          <li>
+            <a
+              href={getSectionHref('about')}
+              onClick={handleSectionLinkClick('about')}
+              className={`navigation__link ${activeSection === 'about' ? 'is-active' : ''}`}
+            >
+              ABOUT
+            </a>
+          </li>
+          <li>
+            <a
+              href={getSectionHref('services')}
+              onClick={handleSectionLinkClick('services')}
+              className={`navigation__link ${activeSection === 'services' ? 'is-active' : ''}`}
+            >
+              SERVICES
+            </a>
+          </li>
+          <li>
+            <Link
+              to="/process"
+              className={`navigation__link ${isActiveLink('/process') ? 'is-active' : ''}`}
+            >
+              PROCESS
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/blog"
+              state={{ preserveScroll: true }}
+              className={`navigation__link ${isActiveLink('/blog') ? 'is-active' : ''}`}
+            >
+              BLOG
+            </Link>
+          </li>
         </ul>
 
         <a

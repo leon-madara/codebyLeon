@@ -77,8 +77,8 @@
   transition:
     color var(--duration-normal) var(--easing-standard),
     opacity var(--duration-normal) var(--easing-standard);
-  --link-hover-color: #fc5b45;
-  --link-active-color: #fc5b45;
+  --link-hover-color: var(--brand-orange);
+  --link-active-color: var(--brand-orange);
 }
 
 .navigation__links:has(.navigation__link:hover) .navigation__link,
@@ -106,8 +106,8 @@
 /* Dark mode link styles - use CSS custom properties for hover/active colors */
 [data-theme="dark"] .navigation__link {
   color: #ffffff;
-  --link-hover-color: #fc5b45;
-  --link-active-color: #fc5b45;
+  --link-hover-color: var(--brand-orange);
+  --link-active-color: var(--brand-orange);
 }
 
 /* Navigation CTA Button - Mobile first: smaller size */
