@@ -66,11 +66,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   useGSAP(() => {
     if (visualTestMode) return;
     const heroScrollLength = HERO_TOTAL_SCROLL_VH;
-    document.body.classList.add('hero-torch-tint-active');
 
-    // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
-    // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
-    const triggerEl = scrollWrapperRef?.current || sectionRef.current;
     const getFadeTargets = (): Element[] => {
       return [
         badgeRef.current,
@@ -81,11 +77,8 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         line3Ref.current
       ].filter((target): target is Element => Boolean(target));
     };
-    const showBaseHeroState = (restartTyping: boolean) => {
-      isInitializedRef.current = false;
-      hasReachedWordStageRef.current = false;
-      reverseCompletionAppliedRef.current = false;
 
+    const clearHeroAnimationArtifacts = () => {
       if (timelineRef.current) {
         timelineRef.current.kill();
         timelineRef.current = null;
@@ -100,6 +93,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         wordContainerRef.current.remove();
         wordContainerRef.current = null;
       }
+    };
+
+    const showBaseHeroState = (restartTyping: boolean) => {
+      isInitializedRef.current = false;
+      hasReachedWordStageRef.current = false;
+      reverseCompletionAppliedRef.current = false;
+      clearHeroAnimationArtifacts();
 
       if (typingRef.current) {
         gsap.set(typingRef.current, {
@@ -113,6 +113,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         gsap.set(fadeTargets, {
           autoAlpha: 1,
           pointerEvents: "auto"
+        });
+      }
+
+      if (line2Ref.current) {
+        gsap.set(line2Ref.current, {
+          autoAlpha: 1,
+          pointerEvents: 'auto'
         });
       }
 
@@ -131,417 +138,438 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       }
     };
 
-    const heroPinTrigger = ScrollTrigger.create({
-      trigger: triggerEl,
-      start: "top top",
-      end: scrollWrapperRef?.current ? "bottom bottom" : `+=${heroScrollLength}%`,
-      pin: true,
-      pinSpacing: false,
-      anticipatePin: 1,
-      scrub: 0.2,
-      onLeave: () => {
-        hasReachedWordStageRef.current = true;
-        if (timelineRef.current) {
+    const mm = gsap.matchMedia();
+
+    mm.add('(max-width: 768px)', () => {
+      document.body.classList.remove('hero-torch-tint-active');
+      showBaseHeroState(true);
+
+      return () => {
+        document.body.classList.remove('hero-torch-tint-active');
+      };
+    });
+
+    mm.add('(min-width: 769px)', () => {
+      document.body.classList.add('hero-torch-tint-active');
+
+      // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
+      // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
+      const triggerEl = scrollWrapperRef?.current || sectionRef.current;
+
+      const heroPinTrigger = ScrollTrigger.create({
+        trigger: triggerEl,
+        start: "top top",
+        end: scrollWrapperRef?.current ? "bottom bottom" : `+=${heroScrollLength}%`,
+        pin: true,
+        pinSpacing: false,
+        anticipatePin: 1,
+        scrub: 0.2,
+        onLeave: () => {
+          hasReachedWordStageRef.current = true;
+          if (timelineRef.current) {
+            timelineRef.current.progress(1);
+          }
+          if (reversePeelTlRef.current) {
+            reversePeelTlRef.current.pause(0);
+          }
+        },
+        onEnterBack: () => {
+          if (!timelineRef.current) return;
+          hasReachedWordStageRef.current = true;
           timelineRef.current.progress(1);
-        }
-        if (reversePeelTlRef.current) {
-          reversePeelTlRef.current.pause(0);
-        }
-      },
-      onEnterBack: () => {
-        if (!timelineRef.current) return;
-        hasReachedWordStageRef.current = true;
-        timelineRef.current.progress(1);
-        if (reversePeelTlRef.current) {
-          reversePeelTlRef.current.pause(0);
-        }
-        if (wordContainerRef.current) {
-          gsap.set(wordContainerRef.current, {
-            autoAlpha: 1,
-            yPercent: 0,
-            scale: 1,
-            filter: "blur(0px)"
-          });
-          const wordFace = wordContainerRef.current.querySelector('.hero__word-grow-face') as HTMLDivElement | null;
-          if (wordFace) {
-            gsap.set(wordFace, {
+          if (reversePeelTlRef.current) {
+            reversePeelTlRef.current.pause(0);
+          }
+          if (wordContainerRef.current) {
+            gsap.set(wordContainerRef.current, {
               autoAlpha: 1,
               yPercent: 0,
-              rotateX: 0,
-              rotateY: 0,
-              z: 0,
               scale: 1,
-              filter: "blur(0px)",
-              transformOrigin: '50% 100%',
-              transformPerspective: HERO_CUBE_PERSPECTIVE,
-              force3D: true
+              filter: "blur(0px)"
             });
-          }
-        }
-        if (contentRef.current) {
-          gsap.set(contentRef.current, {
-            autoAlpha: 0,
-            y: 28,
-            scale: 0.9,
-            pointerEvents: "none"
-          });
-        }
-      },
-      onUpdate: (self) => {
-        const clampedProgress = Math.min(self.progress, 1);
-        const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
-        const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
-        document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
-
-        // Case 1: Start Scroll Interaction
-        if (!isInitializedRef.current && self.direction >= 0 && self.progress > 0.01 && typingRef.current) {
-          isInitializedRef.current = true;
-          reverseCompletionAppliedRef.current = false;
-
-          // 1. Stop the typing animation immediately
-          stopTyping();
-
-          // 2. Get the state of the CURRENTLY typed letters
-          const existingSpans = typingRef.current.querySelectorAll('span');
-          const numExisting = existingSpans.length;
-
-          // 3. Get the FULL target word
-          const wordToAnimate = currentWordRef.current || "AMBITIOUS";
-
-          // 4. Create separate lists for "preserved" and "new" letters to animate
-          const lettersToAnimate: HTMLSpanElement[] = [];
-
-          // ... ( Measurement Logic stays mostly the same ) ... 
-          // Re-implementing measurement for context
-          const measureElement = document.createElement('div');
-          Object.assign(measureElement.style, {
-            position: 'absolute',
-            visibility: 'hidden',
-            whiteSpace: 'nowrap',
-            fontFamily: 'ChristmasCandyInline, sans-serif',
-            fontSize: getComputedStyle(typingRef.current).fontSize,
-            fontWeight: getComputedStyle(typingRef.current).fontWeight,
-            letterSpacing: getComputedStyle(typingRef.current).letterSpacing,
-            textTransform: 'uppercase',
-            color: '#D9751A'
-          });
-          measureElement.textContent = wordToAnimate;
-          sectionRef.current?.appendChild(measureElement);
-          const initialWidth = measureElement.getBoundingClientRect().width;
-          const initialHeight = measureElement.getBoundingClientRect().height;
-          if (measureElement.parentNode) measureElement.parentNode.removeChild(measureElement);
-
-          const typingRect = typingRef.current.getBoundingClientRect();
-          const sectionRect = sectionRef.current!.getBoundingClientRect();
-          const initialX = typingRect.left - sectionRect.left;
-          const initialY = typingRect.top - sectionRect.top;
-
-          const targetWidth = window.innerWidth * 0.8;
-          const scaleFactor = targetWidth / initialWidth;
-
-          const wordContainer = document.createElement('div');
-          wordContainer.className = 'hero__word-grow-container';
-          Object.assign(wordContainer.style, {
-            position: 'absolute',
-            left: `${initialX}px`,
-            top: `${initialY}px`,
-            width: `${initialWidth * scaleFactor}px`,
-            height: `${initialHeight * scaleFactor}px`,
-            transformOrigin: 'top left',
-            willChange: 'transform',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-            zIndex: '10',
-            perspective: `${HERO_CUBE_PERSPECTIVE}px`,
-            perspectiveOrigin: '50% 50%'
-          });
-
-          const wordFace = document.createElement('div');
-          wordFace.className = 'hero__word-grow-face';
-          Object.assign(wordFace.style, {
-            position: 'relative',
-            width: '100%',
-            height: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            whiteSpace: 'nowrap',
-            pointerEvents: 'none',
-            transformStyle: 'preserve-3d',
-            backfaceVisibility: 'hidden',
-            willChange: 'transform, filter, opacity'
-          });
-
-          wordContainer.appendChild(wordFace);
-          sectionRef.current?.appendChild(wordContainer);
-          wordContainerRef.current = wordContainer;
-
-          // HIDE original
-          gsap.set(typingRef.current, { opacity: 0, visibility: 'hidden' });
-
-          // BUILD SPANS
-          const computedStyle = getComputedStyle(typingRef.current);
-          const originalFontSize = parseFloat(computedStyle.fontSize);
-          const largeFontSize = originalFontSize * scaleFactor;
-
-          const colorIndices = [1, 2, 3, 4, 5]; // From config
-
-          wordToAnimate.split('').forEach((char, index) => {
-            const span = document.createElement('span');
-            span.textContent = char;
-
-            // Determine Color and Opacity
-            let colorClass = '';
-            let initialOpacity = "0";
-
-            if (index < numExisting) {
-              // Preserved letter: Copy class and force visible
-              colorClass = existingSpans[index].className;
-              initialOpacity = "1";
-            } else {
-              // New letter: Pick random color (simple logic for now)
-              // Filter to avoid repeating last color if possible
-              const idx = colorIndices[Math.floor(Math.random() * colorIndices.length)];
-              colorClass = `rainbow-color-${idx}`;
-              initialOpacity = "0";
-            }
-
-            span.className = colorClass; // Applying the class for color
-
-            Object.assign(span.style, {
-              opacity: initialOpacity,
-              display: "inline-block",
-              fontFamily: 'ChristmasCandyInline, sans-serif',
-              fontSize: `${largeFontSize}px`,
-              fontWeight: computedStyle.fontWeight,
-              letterSpacing: computedStyle.letterSpacing,
-              textTransform: 'uppercase',
-              // color is handled by className, but we can set a fallback or rely on CSS
-              textShadow: "0px 10px 20px rgba(0,0,0,0.1)"
-            });
-
-            wordFace.appendChild(span);
-
-            if (index >= numExisting) {
-              lettersToAnimate.push(span);
-            }
-          });
-
-          const tl = gsap.timeline({ paused: true });
-          const fadeTargets = getFadeTargets();
-
-          // Fade out elements (instant)
-          if (fadeTargets.length > 0) {
-            tl.to(fadeTargets, {
-              autoAlpha: 0,
-              duration: 0,
-              ease: "none",
-              pointerEvents: "none"
-            }, 0);
-          }
-
-          // Animate ONLY the new letters appearing
-          // We distribute them over a portion of the scroll
-          if (lettersToAnimate.length > 0) {
-            const letterRevealDuration = 0.38;
-            const stagger = letterRevealDuration / lettersToAnimate.length;
-
-            lettersToAnimate.forEach((char, i) => {
-              tl.to(char, {
-                opacity: 1,
-                duration: stagger,
-                ease: "none"
-              }, i * stagger);
-            });
-          }
-
-          // Grow word and center it
-          const wordGrowthDuration = 0.62;
-
-          // Initial State: Tiny Scale (looks normal size)
-          gsap.set(wordContainer, {
-            scale: 1 / scaleFactor,
-            x: 0,
-            y: 0
-          });
-
-          // Target Calculations for Centering
-          const viewportCenterX = window.innerWidth / 2 - sectionRect.left;
-          const viewportCenterY = window.innerHeight / 2 - sectionRect.top;
-
-          // Since transformOrigin is 'top left', we move the top-left corner
-          // so that the center of the HUGE element aligns with viewport center
-          const finalWidth = initialWidth * scaleFactor; // equals targetWidth
-          const finalHeight = initialHeight * scaleFactor;
-
-          const targetLeft = viewportCenterX - (finalWidth / 2);
-          const targetTop = viewportCenterY - (finalHeight / 2);
-
-          const xMove = targetLeft - initialX;
-          const yMove = targetTop - initialY;
-
-          tl.to(wordContainer, {
-            x: xMove,
-            y: yMove,
-            scale: 1, // Go to "natural" huge size (crisp!)
-            duration: wordGrowthDuration,
-            ease: "power2.inOut"
-          }, WORD_GROWTH_START_PROGRESS);
-
-          // 10. Create "designs" label (Handwritten style)
-          const designsLabel = document.createElement('div');
-          designsLabel.textContent = "designs";
-          designsLabel.className = "euphoria-script-regular hero__word-grow-designs";
-
-          wordFace.appendChild(designsLabel);
-
-          // Animate "designs" appearing (Handwritten Wipe)
-          tl.to(designsLabel, {
-            clipPath: 'polygon(0 0, 0 100%, 150% 100%, 150% 0)', // Reveal fully
-            duration: 0.36,
-            ease: "power1.inOut"
-          }, ">");
-
-          // Hero-local transition only.
-          // Never transform downstream section wrappers from here.
-          if (contentRef.current) {
-            tl.to(
-              contentRef.current,
-              {
-                autoAlpha: 0,
-                duration: 0.42,
-                ease: "power2.inOut",
-                pointerEvents: "none"
-              },
-              ">+=0.05"
-            );
-          }
-
-          timelineRef.current = tl;
-
-          if (reversePeelTlRef.current) {
-            reversePeelTlRef.current.kill();
-            reversePeelTlRef.current = null;
-          }
-
-          const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-          const reversePeelTl = gsap.timeline({ paused: true });
-
-          if (prefersReducedMotion) {
-            reversePeelTl.to(wordFace, {
-              autoAlpha: 0,
-              duration: 1,
-              ease: "none"
-            }, 0);
-            if (contentRef.current) {
-              reversePeelTl.fromTo(
-                contentRef.current,
-                { autoAlpha: 0, y: 0, scale: 1, pointerEvents: "none" },
-                { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "none" },
-                0
-              );
-            }
-            if (fadeTargets.length > 0) {
-              reversePeelTl.to(fadeTargets, {
+            const wordFace = wordContainerRef.current.querySelector('.hero__word-grow-face') as HTMLDivElement | null;
+            if (wordFace) {
+              gsap.set(wordFace, {
                 autoAlpha: 1,
-                duration: 0.8,
-                ease: "none",
-                pointerEvents: "auto"
-              }, 0.2);
-            }
-          } else {
-            reversePeelTl
-              .to(wordFace, {
-                yPercent: HERO_CUBE_PEEL_LIFT_PERCENT,
-                rotateX: HERO_CUBE_PEEL_ROTATION_DEG,
-                rotateY: -8,
-                z: HERO_CUBE_PEEL_DEPTH,
-                scale: 0.94,
-                autoAlpha: 0,
-                filter: "blur(10px)",
+                yPercent: 0,
+                rotateX: 0,
+                rotateY: 0,
+                z: 0,
+                scale: 1,
+                filter: "blur(0px)",
                 transformOrigin: '50% 100%',
                 transformPerspective: HERO_CUBE_PERSPECTIVE,
-                force3D: true,
-                duration: 1,
-                ease: "power3.inOut"
-              }, 0);
-            if (contentRef.current) {
-              reversePeelTl.fromTo(
-                contentRef.current,
-                { autoAlpha: 0, y: 36, scale: 0.88, transformOrigin: '50% 80%', pointerEvents: "none" },
-                { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "power2.out" },
-                0
-              );
-            }
-            if (fadeTargets.length > 0) {
-              reversePeelTl.to(fadeTargets, {
-                autoAlpha: 1,
-                duration: 0.75,
-                ease: "power2.out",
-                pointerEvents: "auto"
-              }, 0.15);
+                force3D: true
+              });
             }
           }
+          if (contentRef.current) {
+            gsap.set(contentRef.current, {
+              autoAlpha: 0,
+              y: 28,
+              scale: 0.9,
+              pointerEvents: "none"
+            });
+          }
+        },
+        onUpdate: (self) => {
+          const clampedProgress = Math.min(self.progress, 1);
+          const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
+          const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
+          document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
 
-          reversePeelTlRef.current = reversePeelTl;
-        }
+          // Case 1: Start Scroll Interaction
+          if (!isInitializedRef.current && self.direction >= 0 && self.progress > 0.01 && typingRef.current) {
+            isInitializedRef.current = true;
+            reverseCompletionAppliedRef.current = false;
 
-        // Case 2: Revert (Back to Top)
-        if (isInitializedRef.current && self.progress <= 0.01) {
-          hasReachedWordStageRef.current = false;
-          showBaseHeroState(true);
-        }
+            // 1. Stop the typing animation immediately
+            stopTyping();
 
-        if (timelineRef.current) {
-          const isReverseScroll = self.direction < 0;
+            // 2. Get the state of the CURRENTLY typed letters
+            const existingSpans = typingRef.current.querySelectorAll('span');
+            const numExisting = existingSpans.length;
 
-          if (!isReverseScroll || !hasReachedWordStageRef.current) {
-            timelineRef.current.progress(animationProgress);
-            hasReachedWordStageRef.current = hasReachedWordStageRef.current || animationProgress >= 1;
-            if (reversePeelTlRef.current) {
-              reversePeelTlRef.current.pause(0);
+            // 3. Get the FULL target word
+            const wordToAnimate = currentWordRef.current || "AMBITIOUS";
+
+            // 4. Create separate lists for "preserved" and "new" letters to animate
+            const lettersToAnimate: HTMLSpanElement[] = [];
+
+            // ... ( Measurement Logic stays mostly the same ) ... 
+            // Re-implementing measurement for context
+            const measureElement = document.createElement('div');
+            Object.assign(measureElement.style, {
+              position: 'absolute',
+              visibility: 'hidden',
+              whiteSpace: 'nowrap',
+              fontFamily: 'ChristmasCandyInline, sans-serif',
+              fontSize: getComputedStyle(typingRef.current).fontSize,
+              fontWeight: getComputedStyle(typingRef.current).fontWeight,
+              letterSpacing: getComputedStyle(typingRef.current).letterSpacing,
+              textTransform: 'uppercase',
+              color: '#D9751A'
+            });
+            measureElement.textContent = wordToAnimate;
+            sectionRef.current?.appendChild(measureElement);
+            const initialWidth = measureElement.getBoundingClientRect().width;
+            const initialHeight = measureElement.getBoundingClientRect().height;
+            if (measureElement.parentNode) measureElement.parentNode.removeChild(measureElement);
+
+            const typingRect = typingRef.current.getBoundingClientRect();
+            const sectionRect = sectionRef.current!.getBoundingClientRect();
+            const initialX = typingRect.left - sectionRect.left;
+            const initialY = typingRect.top - sectionRect.top;
+
+            const targetWidth = window.innerWidth * 0.8;
+            const scaleFactor = targetWidth / initialWidth;
+
+            const wordContainer = document.createElement('div');
+            wordContainer.className = 'hero__word-grow-container';
+            Object.assign(wordContainer.style, {
+              position: 'absolute',
+              left: `${initialX}px`,
+              top: `${initialY}px`,
+              width: `${initialWidth * scaleFactor}px`,
+              height: `${initialHeight * scaleFactor}px`,
+              transformOrigin: 'top left',
+              willChange: 'transform',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              zIndex: '10',
+              perspective: `${HERO_CUBE_PERSPECTIVE}px`,
+              perspectiveOrigin: '50% 50%'
+            });
+
+            const wordFace = document.createElement('div');
+            wordFace.className = 'hero__word-grow-face';
+            Object.assign(wordFace.style, {
+              position: 'relative',
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              whiteSpace: 'nowrap',
+              pointerEvents: 'none',
+              transformStyle: 'preserve-3d',
+              backfaceVisibility: 'hidden',
+              willChange: 'transform, filter, opacity'
+            });
+
+            wordContainer.appendChild(wordFace);
+            sectionRef.current?.appendChild(wordContainer);
+            wordContainerRef.current = wordContainer;
+
+            // HIDE original
+            gsap.set(typingRef.current, { opacity: 0, visibility: 'hidden' });
+
+            // BUILD SPANS
+            const computedStyle = getComputedStyle(typingRef.current);
+            const originalFontSize = parseFloat(computedStyle.fontSize);
+            const largeFontSize = originalFontSize * scaleFactor;
+
+            const colorIndices = [1, 2, 3, 4, 5]; // From config
+
+            wordToAnimate.split('').forEach((char, index) => {
+              const span = document.createElement('span');
+              span.textContent = char;
+
+              // Determine Color and Opacity
+              let colorClass = '';
+              let initialOpacity = "0";
+
+              if (index < numExisting) {
+                // Preserved letter: Copy class and force visible
+                colorClass = existingSpans[index].className;
+                initialOpacity = "1";
+              } else {
+                // New letter: Pick random color (simple logic for now)
+                // Filter to avoid repeating last color if possible
+                const idx = colorIndices[Math.floor(Math.random() * colorIndices.length)];
+                colorClass = `rainbow-color-${idx}`;
+                initialOpacity = "0";
+              }
+
+              span.className = colorClass; // Applying the class for color
+
+              Object.assign(span.style, {
+                opacity: initialOpacity,
+                display: "inline-block",
+                fontFamily: 'ChristmasCandyInline, sans-serif',
+                fontSize: `${largeFontSize}px`,
+                fontWeight: computedStyle.fontWeight,
+                letterSpacing: computedStyle.letterSpacing,
+                textTransform: 'uppercase',
+                // color is handled by className, but we can set a fallback or rely on CSS
+                textShadow: "0px 10px 20px rgba(0,0,0,0.1)"
+              });
+
+              wordFace.appendChild(span);
+
+              if (index >= numExisting) {
+                lettersToAnimate.push(span);
+              }
+            });
+
+            const tl = gsap.timeline({ paused: true });
+            const fadeTargets = getFadeTargets();
+
+            // Fade out elements (instant)
+            if (fadeTargets.length > 0) {
+              tl.to(fadeTargets, {
+                autoAlpha: 0,
+                duration: 0,
+                ease: "none",
+                pointerEvents: "none"
+              }, 0);
             }
-          } else {
-            timelineRef.current.progress(1);
+
+            // Animate ONLY the new letters appearing
+            // We distribute them over a portion of the scroll
+            if (lettersToAnimate.length > 0) {
+              const letterRevealDuration = 0.38;
+              const stagger = letterRevealDuration / lettersToAnimate.length;
+
+              lettersToAnimate.forEach((char, i) => {
+                tl.to(char, {
+                  opacity: 1,
+                  duration: stagger,
+                  ease: "none"
+                }, i * stagger);
+              });
+            }
+
+            // Grow word and center it
+            const wordGrowthDuration = 0.62;
+
+            // Initial State: Tiny Scale (looks normal size)
+            gsap.set(wordContainer, {
+              scale: 1 / scaleFactor,
+              x: 0,
+              y: 0
+            });
+
+            // Target Calculations for Centering
+            const viewportCenterX = window.innerWidth / 2 - sectionRect.left;
+            const viewportCenterY = window.innerHeight / 2 - sectionRect.top;
+
+            // Since transformOrigin is 'top left', we move the top-left corner
+            // so that the center of the HUGE element aligns with viewport center
+            const finalWidth = initialWidth * scaleFactor; // equals targetWidth
+            const finalHeight = initialHeight * scaleFactor;
+
+            const targetLeft = viewportCenterX - (finalWidth / 2);
+            const targetTop = viewportCenterY - (finalHeight / 2);
+
+            const xMove = targetLeft - initialX;
+            const yMove = targetTop - initialY;
+
+            tl.to(wordContainer, {
+              x: xMove,
+              y: yMove,
+              scale: 1, // Go to "natural" huge size (crisp!)
+              duration: wordGrowthDuration,
+              ease: "power2.inOut"
+            }, WORD_GROWTH_START_PROGRESS);
+
+            // 10. Create "designs" label (Handwritten style)
+            const designsLabel = document.createElement('div');
+            designsLabel.textContent = "designs";
+            designsLabel.className = "euphoria-script-regular hero__word-grow-designs";
+
+            wordFace.appendChild(designsLabel);
+
+            // Animate "designs" appearing (Handwritten Wipe)
+            tl.to(designsLabel, {
+              clipPath: 'polygon(0 0, 0 100%, 150% 100%, 150% 0)', // Reveal fully
+              duration: 0.36,
+              ease: "power1.inOut"
+            }, ">");
+
+            // Hero-local transition only.
+            // Never transform downstream section wrappers from here.
+            if (contentRef.current) {
+              tl.to(
+                contentRef.current,
+                {
+                  autoAlpha: 0,
+                  duration: 0.42,
+                  ease: "power2.inOut",
+                  pointerEvents: "none"
+                },
+                ">+=0.05"
+              );
+            }
+
+            timelineRef.current = tl;
 
             if (reversePeelTlRef.current) {
-              const safeReverseWindow = HERO_REVERSE_PEEL_PROGRESS_WINDOW > 0
-                ? HERO_REVERSE_PEEL_PROGRESS_WINDOW
-                : Number.EPSILON;
-              const peelProgress = clampedProgress >= HERO_ANIMATION_PROGRESS_CAP
-                ? 0
-                : Math.min(
-                  Math.max(
-                    (HERO_ANIMATION_PROGRESS_CAP - clampedProgress) / safeReverseWindow,
-                    0
-                  ),
-                  1
+              reversePeelTlRef.current.kill();
+              reversePeelTlRef.current = null;
+            }
+
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const reversePeelTl = gsap.timeline({ paused: true });
+
+            if (prefersReducedMotion) {
+              reversePeelTl.to(wordFace, {
+                autoAlpha: 0,
+                duration: 1,
+                ease: "none"
+              }, 0);
+              if (contentRef.current) {
+                reversePeelTl.fromTo(
+                  contentRef.current,
+                  { autoAlpha: 0, y: 0, scale: 1, pointerEvents: "none" },
+                  { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "none" },
+                  0
                 );
+              }
+              if (fadeTargets.length > 0) {
+                reversePeelTl.to(fadeTargets, {
+                  autoAlpha: 1,
+                  duration: 0.8,
+                  ease: "none",
+                  pointerEvents: "auto"
+                }, 0.2);
+              }
+            } else {
+              reversePeelTl
+                .to(wordFace, {
+                  yPercent: HERO_CUBE_PEEL_LIFT_PERCENT,
+                  rotateX: HERO_CUBE_PEEL_ROTATION_DEG,
+                  rotateY: -8,
+                  z: HERO_CUBE_PEEL_DEPTH,
+                  scale: 0.94,
+                  autoAlpha: 0,
+                  filter: "blur(10px)",
+                  transformOrigin: '50% 100%',
+                  transformPerspective: HERO_CUBE_PERSPECTIVE,
+                  force3D: true,
+                  duration: 1,
+                  ease: "power3.inOut"
+                }, 0);
+              if (contentRef.current) {
+                reversePeelTl.fromTo(
+                  contentRef.current,
+                  { autoAlpha: 0, y: 36, scale: 0.88, transformOrigin: '50% 80%', pointerEvents: "none" },
+                  { autoAlpha: 1, y: 0, scale: 1, pointerEvents: "auto", duration: 1, ease: "power2.out" },
+                  0
+                );
+              }
+              if (fadeTargets.length > 0) {
+                reversePeelTl.to(fadeTargets, {
+                  autoAlpha: 1,
+                  duration: 0.75,
+                  ease: "power2.out",
+                  pointerEvents: "auto"
+                }, 0.15);
+              }
+            }
 
-              reversePeelTlRef.current.progress(peelProgress);
+            reversePeelTlRef.current = reversePeelTl;
+          }
 
-              // Once reverse peel is fully completed, restore the base hero experience:
-              // content + typing loop (word iteration) and clear grown-word layer.
-              if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
-                reverseCompletionAppliedRef.current = true;
-                showBaseHeroState(true);
-                return;
+          // Case 2: Revert (Back to Top)
+          if (isInitializedRef.current && self.progress <= 0.01) {
+            hasReachedWordStageRef.current = false;
+            showBaseHeroState(true);
+          }
+
+          if (timelineRef.current) {
+            const isReverseScroll = self.direction < 0;
+
+            if (!isReverseScroll || !hasReachedWordStageRef.current) {
+              timelineRef.current.progress(animationProgress);
+              hasReachedWordStageRef.current = hasReachedWordStageRef.current || animationProgress >= 1;
+              if (reversePeelTlRef.current) {
+                reversePeelTlRef.current.pause(0);
+              }
+            } else {
+              timelineRef.current.progress(1);
+
+              if (reversePeelTlRef.current) {
+                const safeReverseWindow = HERO_REVERSE_PEEL_PROGRESS_WINDOW > 0
+                  ? HERO_REVERSE_PEEL_PROGRESS_WINDOW
+                  : Number.EPSILON;
+                const peelProgress = clampedProgress >= HERO_ANIMATION_PROGRESS_CAP
+                  ? 0
+                  : Math.min(
+                    Math.max(
+                      (HERO_ANIMATION_PROGRESS_CAP - clampedProgress) / safeReverseWindow,
+                      0
+                    ),
+                    1
+                  );
+
+                reversePeelTlRef.current.progress(peelProgress);
+
+                // Once reverse peel is fully completed, restore the base hero experience:
+                // content + typing loop (word iteration) and clear grown-word layer.
+                if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
+                  reverseCompletionAppliedRef.current = true;
+                  showBaseHeroState(true);
+                  return;
+                }
               }
             }
           }
         }
-      }
+      });
+
+      return () => {
+        heroPinTrigger.kill();
+        showBaseHeroState(false);
+        document.body.classList.remove('hero-torch-tint-active');
+      };
     });
 
     return () => {
-      heroPinTrigger.kill();
-      if (reversePeelTlRef.current) {
-        reversePeelTlRef.current.kill();
-        reversePeelTlRef.current = null;
-      }
+      mm.revert();
       document.body.classList.remove('hero-torch-tint-active');
     };
-  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, isMobile, visualTestMode] });
+  }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, visualTestMode] });
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
@@ -549,19 +577,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     window.addEventListener('resize', check);
     return () => window.removeEventListener('resize', check);
   }, []);
-
-  useEffect(() => {
-    if (visualTestMode || !isMobile || !sectionRef.current || !contentRef.current) return;
-    const handleScroll = () => {
-      const rect = sectionRef.current!.getBoundingClientRect();
-      const translate = Math.min(Math.max(-rect.top, 0), window.innerHeight) * 0.1;
-      contentRef.current!.style.setProperty('--parallax-translate', `${translate}px`);
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isMobile, visualTestMode]);
 
   return (
     <section ref={sectionRef} id="hero" className="hero">
@@ -571,7 +586,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       />
 
       {/* LAYER 2: Abstract Orbs (Grouped for Scaling) */}
-      <div ref={bgRef} className="hero__bg-wrapper absolute inset-0 z-0 scale-110 origin-center will-change-transform">
+      <div ref={bgRef} className="hero__bg-wrapper absolute inset-0 z-0 origin-center will-change-transform">
         <div className="hero__orbs-container">
           <div className="hero__orb hero__orb--purple"></div>
           <div className="hero__orb hero__orb--orange"></div>
