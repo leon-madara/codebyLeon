@@ -1,229 +1,178 @@
-import { useRef, useState, useCallback, useEffect } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { projects, type Project } from "@/data/projects";
 import { getPortfolioProjectCta } from "./PortfolioCarousel";
-import { ArrowUpRight } from "lucide-react";
 import "@/styles/sections/portfolio-mobile.css";
 
 gsap.registerPlugin(ScrollTrigger);
 
+const projectProof: Record<Project["name"], string> = {
+  "Legit Logistics":
+    "A logistics business needed more than a brochure. This proof cut shows how dispatch, driver updates, proof collection, and customer tracking became one usable operating system.",
+  "Kossy Langat":
+    "A professional brand needed to feel trustworthy before the first conversation. This proof cut shows how identity, authority, mentorship, and project credibility were shaped into a site people can believe in.",
+  "Delivah Dispatch":
+    "A freight service needed a clearer path from interest to intake. This proof cut shows how services, registration, document collection, and admin review became one conversion funnel.",
+};
+
+const formatProgress = (index: number) =>
+  `${String(index + 1).padStart(2, "0")} / ${String(projects.length).padStart(2, "0")}`;
+
 const PortfolioCarouselMobile = () => {
-  const scrollWrapperRef = useRef<HTMLDivElement>(null);
-  const pinnedRef = useRef<HTMLDivElement>(null);
-  const cardStageRef = useRef<HTMLDivElement>(null);
-  const activeIndexRef = useRef(0);
-  const prefersReducedMotion = useRef(false);
-
-  const [activeIndex, setActiveIndex] = useState(0);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const sync = () => {
-      prefersReducedMotion.current = mq.matches;
-    };
-    sync();
-    mq.addEventListener("change", sync);
-    return () => mq.removeEventListener("change", sync);
-  }, []);
-
-  const getDuration = useCallback(
-    (d: number) => (prefersReducedMotion.current ? 0.01 : d),
-    []
-  );
-
-  const animateCards = useCallback(
-    (index: number) => {
-      if (!cardStageRef.current) return;
-      const cards =
-        cardStageRef.current.querySelectorAll<HTMLElement>(
-          ".portfolio-mobile__card"
-        );
-      const duration = getDuration(0.5);
-
-      cards.forEach((card, i) => {
-        const step = i - index;
-
-        if (step === 0) {
-          // Active card — visible and centered
-          gsap.to(card, {
-            y: 0,
-            autoAlpha: 1,
-            scale: 1,
-            zIndex: 3,
-            duration,
-            ease: "power2.out",
-            force3D: true,
-            overwrite: "auto",
-          });
-        } else {
-          // Inactive — faded out and offset
-          gsap.to(card, {
-            y: step < 0 ? -30 : 30,
-            autoAlpha: 0,
-            scale: 0.97,
-            zIndex: 0,
-            duration,
-            ease: "power2.out",
-            force3D: true,
-            overwrite: "auto",
-          });
-        }
-      });
-    },
-    [getDuration]
-  );
+  const sectionRef = useRef<HTMLElement>(null);
+  const introRef = useRef<HTMLDivElement>(null);
+  const galleryRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      if (
-        !scrollWrapperRef.current ||
-        !pinnedRef.current ||
-        projects.length === 0
-      )
-        return;
+      if (!introRef.current || !galleryRef.current || !trackRef.current) return;
 
-      // Initialize first card
-      activeIndexRef.current = 0;
-      setActiveIndex(0);
-      animateCards(0);
+      const getHorizontalDistance = () =>
+        Math.max(trackRef.current!.scrollWidth - galleryRef.current!.clientWidth, 0);
 
-      const maxIndex = projects.length - 1;
-
-      const trigger = ScrollTrigger.create({
-        trigger: scrollWrapperRef.current,
+      const introTrigger = ScrollTrigger.create({
+        trigger: introRef.current,
         start: "top top",
-        end: "bottom bottom",
-        pin: pinnedRef.current,
-        pinSpacing: false,
+        end: "+=55%",
+        pin: introRef.current,
+        pinSpacing: true,
         anticipatePin: 1,
         invalidateOnRefresh: true,
-        onUpdate: (self) => {
-          const progressIndex = Math.min(
-            maxIndex,
-            Math.max(0, Math.round(self.progress * maxIndex))
-          );
+      });
 
-          if (progressIndex === activeIndexRef.current) return;
-
-          activeIndexRef.current = progressIndex;
-          setActiveIndex(progressIndex);
-          animateCards(progressIndex);
+      const galleryTween = gsap.to(trackRef.current, {
+        x: () => -getHorizontalDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: galleryRef.current,
+          start: "top top",
+          end: () => `+=${Math.max(getHorizontalDistance(), window.innerHeight * 1.35)}`,
+          pin: galleryRef.current,
+          scrub: 0.7,
+          snap: {
+            snapTo: projects.length > 1 ? 1 / (projects.length - 1) : 1,
+            duration: { min: 0.18, max: 0.45 },
+            delay: 0.06,
+            ease: "power1.inOut",
+          },
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          fastScrollEnd: true,
         },
       });
 
-      const handleRefresh = () => {
-        animateCards(activeIndexRef.current);
-      };
-
-      ScrollTrigger.addEventListener("refresh", handleRefresh);
+      const refresh = () => ScrollTrigger.refresh();
+      const images = Array.from(trackRef.current.querySelectorAll("img"));
+      images.forEach((image) => {
+        if (!image.complete) image.addEventListener("load", refresh, { once: true });
+      });
 
       return () => {
-        ScrollTrigger.removeEventListener("refresh", handleRefresh);
-        trigger.kill();
+        images.forEach((image) => image.removeEventListener("load", refresh));
+        introTrigger.kill();
+        galleryTween.kill();
       };
     },
-    {
-      scope: scrollWrapperRef,
-      dependencies: [animateCards],
-    }
+    { scope: sectionRef }
   );
 
   return (
-    <div
-      ref={scrollWrapperRef}
-      className="portfolio-mobile__scroll-wrapper"
-      style={{
-        height: `${Math.max(projects.length, 1) * 100}vh`,
-      }}
+    <section
+      ref={sectionRef}
+      id="portfolio"
+      className="portfolio-mobile"
+      aria-labelledby="portfolio-mobile-title"
     >
-      <div ref={pinnedRef} className="portfolio-mobile__pinned portfolio-mobile">
-        <h2 className="portfolio-mobile__heading">Our Work</h2>
+      <div ref={introRef} className="portfolio-mobile__intro-chapter">
+        <div className="portfolio-mobile__atmosphere" aria-hidden="true" />
 
-        <div ref={cardStageRef} className="portfolio-mobile__card-stage">
+        <div className="portfolio-mobile__intro-inner">
+          <p className="portfolio-mobile__eyebrow">Selected proof</p>
+          <h2 id="portfolio-mobile-title" className="portfolio-mobile__heading">
+            Our Work
+          </h2>
+          <p className="portfolio-mobile__intro-lede">
+            Three projects, three business problems, and three ways strategy, design, and engineering
+            turned into digital systems people can trust, understand, and use.
+          </p>
+          <p className="portfolio-mobile__intro-copy">
+            Swipe through the proof cuts next. Each one is a short preview of the problem, the shape
+            of the solution, and the article-style case study waiting behind the arrow.
+          </p>
+
+          <div className="portfolio-mobile__intro-projects" aria-label="Projects included in Our Work">
+            {projects.map((project, index) => (
+              <div key={project.name} className="portfolio-mobile__intro-project">
+                <span className="portfolio-mobile__intro-project-count">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="portfolio-mobile__intro-project-name">{project.name}</span>
+                <span className="portfolio-mobile__intro-project-type">{project.type}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="portfolio-mobile__scroll-cue" aria-hidden="true">
+            <span>Drop into the work</span>
+            <ArrowDown size={16} />
+          </div>
+        </div>
+      </div>
+
+      <div
+        ref={galleryRef}
+        className="portfolio-mobile__proof-gallery"
+        aria-label="Swipe through project proof cuts"
+      >
+        <div ref={trackRef} className="portfolio-mobile__proof-track" tabIndex={0}>
           {projects.map((project, projectIndex) => {
             const cta = getPortfolioProjectCta(project);
+            const imageSrc = project.mobileImage || project.image;
+            const actionLabel = cta.isRoute
+              ? `View ${project.name} case study`
+              : `View ${project.name} project`;
 
-            const cardContent = (
-              <>
-                {/* Image */}
-                <div className="portfolio-mobile__image-wrap">
-                  <span className="portfolio-mobile__chip">
-                    {project.type}
-                  </span>
+            return (
+              <article key={project.name} className="portfolio-mobile__proof-panel">
+                <div className="portfolio-mobile__proof-image">
                   <img
-                    src={project.mobileImage || project.image}
+                    src={imageSrc}
                     alt={project.name}
                     loading={projectIndex === 0 ? "eager" : "lazy"}
                   />
-                  <div
-                    className="portfolio-mobile__image-overlay"
-                    style={{
-                      background: `linear-gradient(180deg, transparent 50%, ${project.accentColor.replace(
-                        ")",
-                        " / 0.25)"
-                      )})`,
-                    }}
-                  />
                 </div>
 
-                {/* Text */}
-                <div className="portfolio-mobile__text">
-                  <h3 className="portfolio-mobile__name">{project.name}</h3>
-                  <p className="portfolio-mobile__description">
-                    {project.description}
+                <div className="portfolio-mobile__proof-content">
+                  <div className="portfolio-mobile__proof-meta">
+                    <span>{formatProgress(projectIndex)}</span>
+                    <span>{project.type}</span>
+                  </div>
+
+                  <h3 className="portfolio-mobile__proof-title">{project.name}</h3>
+                  <p className="portfolio-mobile__proof-description">
+                    {projectProof[project.name]}
                   </p>
-                  <span className="portfolio-mobile__arrow" aria-hidden="true">
-                    <ArrowUpRight size={16} />
-                  </span>
+
+                  <Link
+                    className="portfolio-mobile__proof-action"
+                    to={cta.href}
+                    aria-label={actionLabel}
+                  >
+                    <span>{cta.label}</span>
+                    <ArrowUpRight size={16} aria-hidden="true" />
+                  </Link>
                 </div>
-              </>
-            );
-
-            const isActive = projectIndex === activeIndex;
-
-            return cta.isRoute ? (
-              <Link
-                key={project.name}
-                className="portfolio-mobile__card"
-                to={cta.href}
-                aria-label={`View ${project.name} case study`}
-                aria-hidden={!isActive}
-                tabIndex={isActive ? 0 : -1}
-              >
-                {cardContent}
-              </Link>
-            ) : (
-              <a
-                key={project.name}
-                className="portfolio-mobile__card"
-                href={cta.href}
-                aria-label={`View ${project.name} project`}
-                aria-hidden={!isActive}
-                tabIndex={isActive ? 0 : -1}
-              >
-                {cardContent}
-              </a>
+              </article>
             );
           })}
         </div>
-
-        {/* Dot indicators */}
-        <div className="portfolio-mobile__dots" aria-label="Project indicators">
-          {projects.map((project, i) => (
-            <span
-              key={project.name}
-              className={`portfolio-mobile__dot${
-                i === activeIndex ? " portfolio-mobile__dot--active" : ""
-              }`}
-              aria-current={i === activeIndex ? "true" : undefined}
-            />
-          ))}
-        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
