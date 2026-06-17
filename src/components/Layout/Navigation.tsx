@@ -263,11 +263,20 @@ export function Navigation() {
             <ul className="navigation__mobile-links">
               <li>
                 <a
+                  href={getSectionHref('hero')}
+                  onClick={handleMobileSectionLinkClick('hero')}
+                  className={`navigation__link navigation__mobile-link ${isHomeRoute && activeSection === '' ? 'is-active' : ''}`}
+                >
+                  Home
+                </a>
+              </li>
+              <li>
+                <a
                   href={getSectionHref('portfolio')}
                   onClick={handleMobileSectionLinkClick('portfolio')}
                   className={`navigation__link navigation__mobile-link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
                 >
-                  PORTFOLIO
+                  Portfolio
                 </a>
               </li>
               <li>
@@ -276,7 +285,7 @@ export function Navigation() {
                   onClick={handleMobileSectionLinkClick('about')}
                   className={`navigation__link navigation__mobile-link ${activeSection === 'about' ? 'is-active' : ''}`}
                 >
-                  ABOUT
+                  About
                 </a>
               </li>
               <li>
@@ -285,7 +294,7 @@ export function Navigation() {
                   onClick={handleMobileSectionLinkClick('services')}
                   className={`navigation__link navigation__mobile-link ${activeSection === 'services' ? 'is-active' : ''}`}
                 >
-                  SERVICES
+                  Services
                 </a>
               </li>
               <li>
@@ -294,7 +303,7 @@ export function Navigation() {
                   onClick={closeMobileMenu}
                   className={`navigation__link navigation__mobile-link ${isActiveLink('/process') ? 'is-active' : ''}`}
                 >
-                  PROCESS
+                  Process
                 </Link>
               </li>
               <li>
@@ -304,7 +313,7 @@ export function Navigation() {
                   onClick={closeMobileMenu}
                   className={`navigation__link navigation__mobile-link ${isActiveLink('/blog') ? 'is-active' : ''}`}
                 >
-                  BLOG
+                  Blog
                 </Link>
               </li>
             </ul>

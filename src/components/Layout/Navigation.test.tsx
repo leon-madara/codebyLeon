@@ -156,11 +156,12 @@ describe('Navigation', () => {
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
 
     const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
-    expect(within(menu).getByRole('link', { name: 'PORTFOLIO' })).toHaveAttribute('href', '#portfolio');
-    expect(within(menu).getByRole('link', { name: 'ABOUT' })).toHaveAttribute('href', '#about');
-    expect(within(menu).getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '#services');
-    expect(within(menu).getByRole('link', { name: 'PROCESS' })).toHaveAttribute('href', '/process');
-    expect(within(menu).getByRole('link', { name: 'BLOG' })).toHaveAttribute('href', '/blog');
+    expect(within(menu).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '#hero');
+    expect(within(menu).getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '#portfolio');
+    expect(within(menu).getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
+    expect(within(menu).getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
+    expect(within(menu).getByRole('link', { name: 'Process' })).toHaveAttribute('href', '/process');
+    expect(within(menu).getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
     expect(within(menu).queryByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
       .not.toBeInTheDocument();
     expect(within(menu).getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument();
@@ -173,7 +174,7 @@ describe('Navigation', () => {
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
     const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
 
-    await user.click(within(menu).getByRole('link', { name: 'BLOG' }));
+    await user.click(within(menu).getByRole('link', { name: 'Blog' }));
 
     expect(screen.queryByRole('dialog', { name: 'Mobile navigation' })).not.toBeInTheDocument();
   });
