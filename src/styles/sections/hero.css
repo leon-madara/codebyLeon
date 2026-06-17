@@ -704,8 +704,8 @@
   }
 
   .hero__headline {
-    max-width: min(100%, 10.5ch);
-    font-size: clamp(2.35rem, 10.6cqi, 3.7rem);
+    max-width: min(100%, 12.25ch);
+    font-size: clamp(2.22rem, 9.9cqi, 3.5rem);
     line-height: 1.04;
     letter-spacing: 0;
     text-wrap: balance;
@@ -775,8 +775,8 @@
   }
 
   .hero__headline {
-    max-width: min(100%, 10.25ch);
-    font-size: clamp(2.1rem, 11.5cqi, 3.1rem);
+    max-width: min(100%, 12ch);
+    font-size: clamp(1.98rem, 10.7cqi, 2.95rem);
   }
 
   .hero__subheadline {

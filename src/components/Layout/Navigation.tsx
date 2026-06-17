@@ -309,15 +309,6 @@ export function Navigation() {
               </li>
             </ul>
 
-            <a
-              href="/get-started.html"
-              className="navigation__cta navigation__mobile-cta"
-              aria-label="Build Your Quote - Configure your project and see pricing"
-              onClick={closeMobileMenu}
-            >
-              <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
-            </a>
-
             {renderThemeToggle('mobile')}
           </div>
         </div>

@@ -150,6 +150,9 @@ describe('Navigation', () => {
     const user = userEvent.setup();
     renderNavigation('/');
 
+    expect(screen.getByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+      .toHaveAttribute('href', '/get-started.html');
+
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
 
     const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
@@ -158,8 +161,8 @@ describe('Navigation', () => {
     expect(within(menu).getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '#services');
     expect(within(menu).getByRole('link', { name: 'PROCESS' })).toHaveAttribute('href', '/process');
     expect(within(menu).getByRole('link', { name: 'BLOG' })).toHaveAttribute('href', '/blog');
-    expect(within(menu).getByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
-      .toHaveAttribute('href', '/get-started.html');
+    expect(within(menu).queryByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+      .not.toBeInTheDocument();
     expect(within(menu).getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument();
   });
 

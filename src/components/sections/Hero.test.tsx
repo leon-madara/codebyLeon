@@ -26,6 +26,11 @@ describe('Hero mobile rebuild', () => {
     expect(heroCss).toContain('@container hero (max-width: 24rem)');
     expect(heroCss).toMatch(/\.hero__cta\s*{[^}]*min-height:\s*44px;/s);
   });
+
+  it('gives the longest animated word enough mobile line width', () => {
+    expect(heroCss).toMatch(/max-width:\s*min\(100%,\s*12\.25ch\);/);
+    expect(heroCss).toMatch(/max-width:\s*min\(100%,\s*12ch\);/);
+  });
 });
 
 describe('Hero growing-word label', () => {

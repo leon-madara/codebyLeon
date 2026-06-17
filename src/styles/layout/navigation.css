@@ -32,9 +32,9 @@
 .navigation__container {
   max-width: 1400px;
   margin: 0 auto;
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
   gap: var(--spacing-md);
   position: relative;
   z-index: 2;
@@ -44,6 +44,7 @@
 .navigation__logo {
   display: flex;
   align-items: center;
+  justify-self: start;
   text-decoration: none;
 }
 
@@ -117,17 +118,21 @@
 .navigation__cta {
   background: #fc5b45;
   color: black;
-  padding: 0.6rem 1rem;
+  padding: 0.58rem 0.8rem;
   border-radius: 50px;
   text-decoration: none;
-  font-size: var(--font-size-xs);
+  font-size: clamp(0.62rem, 2.8vw, var(--font-size-xs));
   font-weight: var(--font-weight-semibold);
   letter-spacing: 0.02em;
   transition: background var(--duration-normal) var(--easing-standard);
   border: none;
   cursor: pointer;
-  display: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  justify-self: center;
   position: relative;
+  white-space: nowrap;
 }
 
 /* CTA text wrapper for wave effect */
@@ -250,6 +255,7 @@
 .navigation__theme-toggle--desktop {
   display: none;
   margin-left: var(--spacing-md);
+  justify-self: end;
 }
 
 .navigation__toggle-switch {
@@ -433,6 +439,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  justify-self: end;
   cursor: pointer;
   transition:
     background var(--duration-normal) var(--easing-standard),
@@ -497,15 +504,6 @@
   letter-spacing: 0;
 }
 
-.navigation__mobile-cta {
-  width: fit-content;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: var(--spacing-sm) var(--spacing-xl);
-  font-size: var(--font-size-sm);
-}
-
 .navigation__theme-toggle--mobile {
   justify-content: space-between;
   width: min(100%, 22rem);
@@ -543,12 +541,20 @@
 
 /* Desktop and up: show navigation links */
 @media (min-width: 900px) {
+  .navigation__container {
+    display: flex;
+    justify-content: space-between;
+  }
+
   .navigation__links {
     display: flex;
   }
 
   .navigation__cta {
     display: inline-block;
+    justify-self: auto;
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-size: var(--font-size-sm);
   }
 
   .navigation__theme-toggle--desktop {
