@@ -50,6 +50,16 @@ describe("About3DStack", () => {
     ).toBeNull();
   });
 
+  it("renders the mobile intro and expanded card panels", () => {
+    const { container, getByText } = render(<About3DStack />);
+
+    expect(getByText("What this section shows")).toBeInTheDocument();
+    expect(container.querySelector(".about-3d-stack__mobile-intro")).not.toBeNull();
+    expect(container.querySelectorAll(".about-3d-stack__mobile-panel")).toHaveLength(3);
+    expect(container.querySelectorAll(".about-3d-stack__mobile-line")).toHaveLength(12);
+    expect(container.querySelectorAll(".about-3d-stack__mobile-rule-pack span")).toHaveLength(4);
+  });
+
   it("does not define a dotted or translucent overlay for the 3D stack", () => {
     const aboutCss = readFileSync(
       resolve(process.cwd(), "src/styles/sections/about.css"),

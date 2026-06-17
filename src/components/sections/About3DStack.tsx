@@ -243,23 +243,45 @@ function MockupChip({ chip }: { chip: CardChip }) {
   );
 }
 
+function MobileOutcomeLine({ chip, index }: { chip: CardChip; index: number }) {
+  return (
+    <article className={`about-3d-stack__mobile-line ${chip.toneClass}`.trim()}>
+      <span className="about-3d-stack__mobile-line-index">
+        {String(index + 1).padStart(2, "0")}
+      </span>
+      <div className="about-3d-stack__mobile-line-copy">
+        <p className="about-3d-stack__mobile-line-label">{chip.label}</p>
+        <h3 className="about-3d-stack__mobile-line-title">{chip.title}</h3>
+        <p className="about-3d-stack__mobile-line-detail">{chip.detail}</p>
+      </div>
+      <span className="about-3d-stack__mobile-line-metric">{chip.metric}</span>
+    </article>
+  );
+}
+
 export function About3DStack() {
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const mobileRootRef = useRef<HTMLDivElement>(null);
+  const mobileIntroRef = useRef<HTMLElement>(null);
+  const mobileStageRef = useRef<HTMLDivElement>(null);
+  const mobilePanelRefs = useRef<(HTMLElement | null)[]>([]);
 
   useGSAP(() => {
     const section = sectionRef.current;
     if (!section) return;
 
     const cards = cardRefs.current.filter(Boolean);
-    if (cards.length === 0) return;
+    const mobilePanels = mobilePanelRefs.current.filter(Boolean);
     const motionPlan = getAboutStackMotionPlan();
 
     const mm = gsap.matchMedia();
 
     // Desktop pinned 3D stack (min-width: 900px)
     mm.add("(min-width: 900px)", () => {
+      if (cards.length === 0) return;
+
       cards.forEach((card, i) => {
         if (!card) return;
         gsap.set(card, {
@@ -333,8 +355,12 @@ export function About3DStack() {
       );
     });
 
-    // Mobile natural scrolling column with standard reveals (max-width: 899px)
+    // Mobile card-deck scroll story (max-width: 899px)
     mm.add("(max-width: 899px)", () => {
+      const mobileRoot = mobileRootRef.current;
+      const mobileIntro = mobileIntroRef.current;
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
       cards.forEach((card) => {
         if (!card) return;
         gsap.set(card, {
@@ -342,24 +368,158 @@ export function About3DStack() {
         });
       });
 
-      cards.forEach((card) => {
-        if (!card) return;
-        gsap.fromTo(
-          card,
-          { y: 40, opacity: 0 },
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: card,
-              start: "top 85%",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+      if (!mobileRoot || !mobileIntro || mobilePanels.length === 0) return;
+
+      if (reduceMotion) {
+        gsap.set([mobileIntro, ...mobilePanels], { clearProps: "all", autoAlpha: 1 });
+        return;
+      }
+
+      gsap.set(mobileIntro, {
+        zIndex: mobilePanels.length + 5,
+        y: "0svh",
+        autoAlpha: 1,
+        force3D: true,
       });
+
+      gsap.set(mobileIntro.querySelectorAll(".about-3d-stack__mobile-reveal"), {
+        y: 0,
+        autoAlpha: 1,
+      });
+
+      mobilePanels.forEach((panel, index) => {
+        const depth = Math.min(index, 2);
+
+        gsap.set(panel, {
+          zIndex: mobilePanels.length - index,
+          y: `${10 + depth * 6}svh`,
+          scale: 0.86 - depth * 0.06,
+          rotationX: -7,
+          autoAlpha: index === 0 ? 0.64 : index === 1 ? 0.38 : 0,
+          transformOrigin: "50% 76%",
+          force3D: true,
+        });
+      });
+
+      const mobileTl = gsap.timeline({ paused: true });
+
+      mobileTl.to(
+        mobileIntro,
+        {
+          y: "-105svh",
+          autoAlpha: 0,
+          duration: 0.82,
+          ease: "none",
+          force3D: true,
+        },
+        0,
+      );
+
+      mobileTl.to(
+        mobilePanels[0],
+        {
+          y: "0svh",
+          rotationX: 0,
+          scale: 1,
+          autoAlpha: 1,
+          duration: 0.82,
+          ease: "none",
+          force3D: true,
+        },
+        0,
+      );
+
+      if (mobilePanels[1]) {
+        mobileTl.to(
+          mobilePanels[1],
+          {
+            y: "11svh",
+            rotationX: -7,
+            scale: 0.84,
+            autoAlpha: 0.56,
+            duration: 0.82,
+            ease: "none",
+            force3D: true,
+          },
+          0,
+        );
+      }
+
+      mobileTl.to({}, { duration: 0.35 }, 0.82);
+
+      for (let i = 0; i < mobilePanels.length - 1; i++) {
+        const current = mobilePanels[i] as HTMLElement;
+        const next = mobilePanels[i + 1] as HTMLElement;
+        const following = mobilePanels[i + 2] as HTMLElement | undefined;
+        const beatStart = 1.17 + i * 1.17;
+
+        mobileTl.to(
+          current,
+          {
+            y: "-112svh",
+            rotationX: 10,
+            scale: 1.05,
+            autoAlpha: 0,
+            duration: 0.78,
+            ease: "none",
+            force3D: true,
+          },
+          beatStart,
+        );
+
+        mobileTl.to(
+          next,
+          {
+            y: "0svh",
+            rotationX: 0,
+            scale: 1,
+            autoAlpha: 1,
+            duration: 0.78,
+            ease: "none",
+            force3D: true,
+          },
+          beatStart,
+        );
+
+        if (following) {
+          mobileTl.to(
+            following,
+            {
+              y: "11svh",
+              rotationX: -7,
+              scale: 0.84,
+              autoAlpha: 0.56,
+              duration: 0.78,
+              ease: "none",
+              force3D: true,
+            },
+            beatStart,
+          );
+        }
+
+        mobileTl.to({}, { duration: 0.39 }, beatStart + 0.78);
+      }
+
+      const clampMobileProgress = gsap.utils.clamp(0, 1);
+      const getMobileScrollDistance = () => window.innerHeight * (mobilePanels.length + 0.9);
+      const syncMobileProgress = () => {
+        const rect = section.getBoundingClientRect();
+        mobileTl.progress(clampMobileProgress(-rect.top / getMobileScrollDistance()));
+      };
+      const mobileProgressTrigger = ScrollTrigger.create({
+        start: 0,
+        end: () => ScrollTrigger.maxScroll(window),
+        invalidateOnRefresh: true,
+        onUpdate: syncMobileProgress,
+        onRefresh: syncMobileProgress,
+      });
+
+      syncMobileProgress();
+
+      return () => {
+        mobileProgressTrigger.kill();
+        mobileTl.kill();
+      };
     });
 
     ScrollTrigger.refresh();
@@ -373,11 +533,11 @@ export function About3DStack() {
     <section
       ref={sectionRef}
       id="about"
-      className="about about-3d-stack relative overflow-hidden h-screen"
+      className="about about-3d-stack"
     >
       <div
         ref={contentRef}
-        className="about-3d-stack__content-layer relative flex flex-col items-center h-full"
+        className="about-3d-stack__desktop about-3d-stack__content-layer relative flex flex-col items-center h-full"
       >
         <header className="text-center pt-[4vh] px-6 w-full max-w-4xl mx-auto flex-shrink-0">
           <h1 className="about-3d-stack__headline">
@@ -437,6 +597,77 @@ export function About3DStack() {
               </div>
             </article>
           ))}
+        </div>
+      </div>
+
+      <div
+        ref={mobileRootRef}
+        className="about-3d-stack__mobile"
+        aria-label="Helping Kenyan businesses mobile story"
+      >
+        <section ref={mobileIntroRef} className="about-3d-stack__mobile-intro">
+          <div className="about-3d-stack__mobile-intro-content">
+            <p className="about-3d-stack__mobile-kicker about-3d-stack__mobile-reveal">
+              What this section shows
+            </p>
+            <h1 className="about-3d-stack__mobile-headline about-3d-stack__mobile-reveal">
+              Helping Kenyan Businesses <em>Look Professional Online</em>
+            </h1>
+            <p className="about-3d-stack__mobile-subheadline about-3d-stack__mobile-reveal">
+              A quick walk through the three layers that make a business look credible,
+              easier to trust, and ready for better inquiries.
+            </p>
+
+            <div className="about-3d-stack__mobile-rule-pack about-3d-stack__mobile-reveal" aria-hidden="true">
+              <span />
+              <span />
+              <span />
+              <span />
+            </div>
+
+            <div className="about-3d-stack__mobile-chapters about-3d-stack__mobile-reveal">
+              {CARDS.map((card) => (
+                <div key={card.number} className="about-3d-stack__mobile-chapter">
+                  <span>{card.number}</span>
+                  <p>{card.badge}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <div ref={mobileStageRef} className="about-3d-stack__mobile-stage">
+          <div className="about-3d-stack__mobile-stage-pin">
+            {CARDS.map((card, cardIndex) => (
+              <article
+                key={`mobile-${card.number}`}
+                ref={(el) => {
+                  mobilePanelRefs.current[cardIndex] = el;
+                }}
+                className={`about-3d-stack__mobile-panel ${card.themeClass}`.trim()}
+              >
+                <div className="about-3d-stack__mobile-panel-gloss" />
+                <header className="about-3d-stack__mobile-panel-header">
+                  <div className="about-3d-stack__mobile-panel-meta">
+                    <span>{card.number}</span>
+                    <p>{card.badge}</p>
+                  </div>
+                  <h2 className="about-3d-stack__mobile-panel-title">{card.title}</h2>
+                  <p className="about-3d-stack__mobile-panel-description">{card.description}</p>
+                </header>
+
+                <div className="about-3d-stack__mobile-lines">
+                  {card.chips.map((chip, chipIndex) => (
+                    <MobileOutcomeLine
+                      key={`${card.number}-${chip.label}`}
+                      chip={chip}
+                      index={chipIndex}
+                    />
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>
