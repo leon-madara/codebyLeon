@@ -236,6 +236,50 @@ const MultiCardScrollSection = () => {
         const container = containerRef.current;
         const topChrome = topChromeRef.current;
 
+        if (!isDesktop) {
+          STORIES.forEach((_, storyIndex) => {
+            const beats = beatRefs.current[storyIndex].filter(
+              (beat): beat is HTMLElement => Boolean(beat)
+            );
+
+            beats.forEach((beat, beatIndex) => {
+              ScrollTrigger.create({
+                trigger: beat,
+                start: 'top center',
+                end: 'bottom center',
+                onEnter: () => {
+                  setActiveCard(storyIndex);
+                  updateStoryProgress(storyIndex, beatIndex / (TOTAL_BEATS - 1));
+                },
+                onEnterBack: () => {
+                  setActiveCard(storyIndex);
+                  updateStoryProgress(storyIndex, beatIndex / (TOTAL_BEATS - 1));
+                }
+              });
+
+              const revealNodes = beat.querySelectorAll<HTMLElement>('.hs-beat-reveal');
+              if (!revealNodes.length) return;
+
+              gsap.set(revealNodes, { opacity: 0, y: 18 });
+              gsap.timeline({
+                scrollTrigger: {
+                  trigger: beat,
+                  start: 'top 85%',
+                  toggleActions: 'play none none none',
+                },
+              }).to(revealNodes, {
+                opacity: 1,
+                y: 0,
+                stagger: 0.05,
+                duration: 0.4,
+                ease: 'power2.out',
+              });
+            });
+          });
+          ScrollTrigger.refresh();
+          return;
+        }
+
         STORIES.forEach((_, storyIndex) => {
           const section = sectionRefs.current[storyIndex];
           const track = trackRefs.current[storyIndex];
@@ -436,23 +480,25 @@ const MultiCardScrollSection = () => {
   }, { dependencies: [isDesktop, isReady, updateStoryProgress, visualTestMode], scope: containerRef });
 
   const rootStyle = {
-    '--hs-top-chrome-height': `${topChromeHeight}px`,
+    '--hs-top-chrome-height': `${isDesktop ? topChromeHeight : 0}px`,
     '--hs-nav-height': `${navHeight}px`,
     '--hs-nav-clearance': `${isDesktop ? NAV_CLEARANCE : MOBILE_NAV_CLEARANCE}px`,
   } as CSSProperties;
 
   return (
     <div id="services" ref={containerRef} className="hs" style={rootStyle}>
-      <div ref={topChromeRef} className="hs__top-chrome">
-        <ServiceTabs cards={STORIES} activeCard={activeCard} onCardClick={handleCardClick} />
-        <ProgressIndicator
-          className="hs__progress"
-          currentBeat={currentBeats[activeCard]}
-          totalBeats={TOTAL_BEATS}
-          progress={cardProgress[activeCard]}
-          labels={STORIES[activeCard].labels}
-        />
-      </div>
+      {isDesktop && (
+        <div ref={topChromeRef} className="hs__top-chrome">
+          <ServiceTabs cards={STORIES} activeCard={activeCard} onCardClick={handleCardClick} />
+          <ProgressIndicator
+            className="hs__progress"
+            currentBeat={currentBeats[activeCard]}
+            totalBeats={TOTAL_BEATS}
+            progress={cardProgress[activeCard]}
+            labels={STORIES[activeCard].labels}
+          />
+        </div>
+      )}
 
       {STORIES.map((story, storyIndex) => (
         <section
@@ -464,6 +510,32 @@ const MultiCardScrollSection = () => {
           id={`service-${story.id}`}
           data-story-card={story.id}
         >
+          {!isDesktop && (
+            <div className="hs-mobile-header" style={{
+              position: 'sticky',
+              top: `calc(var(--hs-nav-height) + ${MOBILE_NAV_CLEARANCE}px)`,
+              zIndex: 50,
+              background: 'var(--hs-surface)',
+              borderBottom: '1px solid var(--hs-border)',
+              padding: '0.85rem 1.25rem',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '0.35rem',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              marginBottom: '1rem'
+            }}>
+              <div style={{ fontSize: '0.72rem', fontWeight: 700, textTransform: 'uppercase', color: 'hsl(var(--primary))', letterSpacing: '0.06em' }}>
+                {story.title} <span style={{ opacity: 0.5, margin: '0 0.25rem' }}>·</span> Step {currentBeats[storyIndex] + 1} of {TOTAL_BEATS}
+              </div>
+              <div style={{ fontSize: '0.95rem', fontWeight: 700, color: 'hsl(var(--foreground))', letterSpacing: '0.02em' }}>
+                {story.labels[currentBeats[storyIndex]]}
+              </div>
+              <div style={{ width: '100%', height: '3px', background: 'hsl(var(--muted-foreground)/0.15)', marginTop: '0.3rem', borderRadius: '4px', overflow: 'hidden' }}>
+                 <div style={{ width: `${(cardProgress[storyIndex]) * 100}%`, height: '100%', background: 'hsl(var(--primary))', transition: 'width 0.3s ease-out' }} />
+              </div>
+            </div>
+          )}
           <div className="hs__viewport">
             <div
               ref={(el) => {

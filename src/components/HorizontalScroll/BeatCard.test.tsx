@@ -45,7 +45,7 @@ describe('BeatCard visibility', () => {
       /\.hs__story--vertical \.beat-card\s*{\s*height:\s*clamp\(400px,\s*64vh,\s*660px\)/,
     );
     expect(css).toMatch(
-      /\.hs__story--vertical \.beat-card\s*{\s*height:\s*clamp\(660px,\s*90vh,\s*780px\)/,
+      /\.hs__story--vertical \.beat-card\s*{[^}]*height:\s*auto;[^}]*}/,
     );
   });
 });

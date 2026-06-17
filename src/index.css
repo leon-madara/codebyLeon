@@ -87,6 +87,7 @@
    Each section has its own file with BEM naming. */
 @import './styles/sections/hero.css';
 @import './styles/sections/services.css';
+@import './styles/sections/services-intro.css';
 @import './styles/sections/portfolio.css';
 @import './styles/sections/portfolio-stacked.css';
 @import './styles/sections/about.css';

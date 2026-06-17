@@ -10,6 +10,7 @@ import { useIsMobile } from '../hooks/use-mobile';
 // import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
 // import { About } from '../components/sections/About'; // OLD
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
+import { ServicesIntro } from '../components/sections/ServicesIntro';
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
@@ -115,6 +116,7 @@ export function HomePage() {
       <Portfolio />
       */}
       <About3DStack />
+      <ServicesIntro />
       <MultiCardScrollSection />
       <Blog />
       <FinalCTA />
