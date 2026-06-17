@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 
@@ -34,6 +34,7 @@ describe('Navigation', () => {
     localStorage.clear();
     document.documentElement.removeAttribute('data-theme');
     window.history.replaceState(null, '', '/');
+    document.body.style.overflow = '';
     scrollToMock.mockReset();
     scrollSmootherGetMock.mockReset();
     window.matchMedia = vi.fn().mockReturnValue({
@@ -115,13 +116,88 @@ describe('Navigation', () => {
     const user = userEvent.setup();
     const { container } = renderNavigation('/');
 
-    const toggle = container.querySelector('.navigation__toggle-switch');
+    const toggle = container.querySelector('.navigation__theme-toggle--desktop .navigation__toggle-switch');
     expect(toggle).not.toBeNull();
     expect(toggle).not.toHaveClass('is-active');
 
     await user.click(toggle as HTMLElement);
 
     expect(toggle).toHaveClass('is-active');
+    expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
+  });
+
+  it('opens and closes the mobile menu from the hamburger button', async () => {
+    const user = userEvent.setup();
+    renderNavigation('/');
+
+    const menuButton = screen.getByRole('button', { name: 'Open navigation menu' });
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+    expect(screen.queryByRole('dialog', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+
+    await user.click(menuButton);
+
+    expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+    expect(screen.getByRole('dialog', { name: 'Mobile navigation' })).toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('hidden');
+
+    await user.click(screen.getByRole('button', { name: 'Close navigation menu' }));
+
+    expect(screen.queryByRole('dialog', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+    expect(document.body.style.overflow).toBe('');
+  });
+
+  it('renders mobile menu links, quote CTA, and theme toggle inside the menu', async () => {
+    const user = userEvent.setup();
+    renderNavigation('/');
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+
+    const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
+    expect(within(menu).getByRole('link', { name: 'PORTFOLIO' })).toHaveAttribute('href', '#portfolio');
+    expect(within(menu).getByRole('link', { name: 'ABOUT' })).toHaveAttribute('href', '#about');
+    expect(within(menu).getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '#services');
+    expect(within(menu).getByRole('link', { name: 'PROCESS' })).toHaveAttribute('href', '/process');
+    expect(within(menu).getByRole('link', { name: 'BLOG' })).toHaveAttribute('href', '/blog');
+    expect(within(menu).getByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+      .toHaveAttribute('href', '/get-started.html');
+    expect(within(menu).getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument();
+  });
+
+  it('closes the mobile menu when a menu link is selected', async () => {
+    const user = userEvent.setup();
+    renderNavigation('/');
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
+
+    await user.click(within(menu).getByRole('link', { name: 'BLOG' }));
+
+    expect(screen.queryByRole('dialog', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+  });
+
+  it('closes the mobile menu when Escape is pressed', async () => {
+    const user = userEvent.setup();
+    renderNavigation('/');
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    expect(screen.getByRole('dialog', { name: 'Mobile navigation' })).toBeInTheDocument();
+
+    await user.keyboard('{Escape}');
+
+    expect(screen.queryByRole('dialog', { name: 'Mobile navigation' })).not.toBeInTheDocument();
+  });
+
+  it('toggles theme from inside the mobile menu', async () => {
+    const user = userEvent.setup();
+    renderNavigation('/');
+
+    await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
+    const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
+    const mobileToggle = within(menu).getByRole('button', { name: 'Switch to dark theme' });
+
+    await user.click(mobileToggle);
+
+    expect(mobileToggle).toHaveClass('is-active');
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   });
 });

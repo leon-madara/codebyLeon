@@ -1,16 +1,19 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
+import { Menu, X } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const SECTION_NAV_CLEARANCE = 12;
 const SECTION_SNAP_BUFFER = 4;
+const MOBILE_MENU_ID = 'mobile-navigation-menu';
 
 export function Navigation() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isHomeRoute = location.pathname === '/';
   const [activeSection, setActiveSection] = useState<string>('');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!isHomeRoute) {
@@ -57,6 +60,30 @@ export function Navigation() {
     };
   }, [isHomeRoute]);
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [location.pathname, location.hash]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
   const isActiveLink = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
@@ -96,6 +123,54 @@ export function Navigation() {
       });
     }
   };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleMobileSectionLinkClick = (sectionId: string) => (
+    event: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    closeMobileMenu();
+    handleSectionLinkClick(sectionId)(event);
+  };
+
+  const renderThemeToggle = (modifier: 'desktop' | 'mobile') => (
+    <div className={`navigation__theme-toggle navigation__theme-toggle--${modifier}`}>
+      {modifier === 'mobile' && (
+        <span className="navigation__theme-label">
+          Theme
+        </span>
+      )}
+      <button
+        type="button"
+        className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
+        onClick={toggleTheme}
+        aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+        aria-pressed={theme === 'dark'}
+      >
+        <span className="navigation__toggle-background" aria-hidden="true">
+          <span className="navigation__scenery navigation__scenery--day">
+            <span className="navigation__cloud navigation__cloud--1"></span>
+            <span className="navigation__cloud navigation__cloud--2"></span>
+            <span className="navigation__cloud navigation__cloud--3"></span>
+            <span className="navigation__cloud navigation__cloud--4"></span>
+            <span className="navigation__cloud navigation__cloud--5"></span>
+          </span>
+          <span className="navigation__scenery navigation__scenery--night">
+            <span className="navigation__star navigation__star--1">✦</span>
+            <span className="navigation__star navigation__star--2">★</span>
+            <span className="navigation__star navigation__star--3">✦</span>
+          </span>
+        </span>
+        <span className="navigation__toggle-knob" aria-hidden="true">
+          <span className="navigation__crater navigation__crater--1"></span>
+          <span className="navigation__crater navigation__crater--2"></span>
+          <span className="navigation__crater navigation__crater--3"></span>
+        </span>
+      </button>
+    </div>
+  );
 
   return (
     <nav className="navigation" aria-label="Main navigation">
@@ -162,33 +237,91 @@ export function Navigation() {
           </span>
         </a>
 
-        <div className="navigation__theme-toggle">
-          <div
-            className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
-            onClick={toggleTheme}
-          >
-            <div className="navigation__toggle-background">
-              <div className="navigation__scenery navigation__scenery--day">
-                <div className="navigation__cloud navigation__cloud--1"></div>
-                <div className="navigation__cloud navigation__cloud--2"></div>
-                <div className="navigation__cloud navigation__cloud--3"></div>
-                <div className="navigation__cloud navigation__cloud--4"></div>
-                <div className="navigation__cloud navigation__cloud--5"></div>
-              </div>
-              <div className="navigation__scenery navigation__scenery--night">
-                <div className="navigation__star navigation__star--1">✦</div>
-                <div className="navigation__star navigation__star--2">★</div>
-                <div className="navigation__star navigation__star--3">✦</div>
-              </div>
-            </div>
-            <div className="navigation__toggle-knob">
-              <div className="navigation__crater navigation__crater--1"></div>
-              <div className="navigation__crater navigation__crater--2"></div>
-              <div className="navigation__crater navigation__crater--3"></div>
-            </div>
+        {renderThemeToggle('desktop')}
+
+        <button
+          type="button"
+          className="navigation__menu-button"
+          onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+          aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+          aria-expanded={isMobileMenuOpen}
+          aria-controls={MOBILE_MENU_ID}
+        >
+          {isMobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+        </button>
+      </div>
+
+      {isMobileMenuOpen && (
+        <div
+          id={MOBILE_MENU_ID}
+          className="navigation__mobile-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
+        >
+          <div className="navigation__mobile-panel">
+            <ul className="navigation__mobile-links">
+              <li>
+                <a
+                  href={getSectionHref('portfolio')}
+                  onClick={handleMobileSectionLinkClick('portfolio')}
+                  className={`navigation__link navigation__mobile-link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
+                >
+                  PORTFOLIO
+                </a>
+              </li>
+              <li>
+                <a
+                  href={getSectionHref('about')}
+                  onClick={handleMobileSectionLinkClick('about')}
+                  className={`navigation__link navigation__mobile-link ${activeSection === 'about' ? 'is-active' : ''}`}
+                >
+                  ABOUT
+                </a>
+              </li>
+              <li>
+                <a
+                  href={getSectionHref('services')}
+                  onClick={handleMobileSectionLinkClick('services')}
+                  className={`navigation__link navigation__mobile-link ${activeSection === 'services' ? 'is-active' : ''}`}
+                >
+                  SERVICES
+                </a>
+              </li>
+              <li>
+                <Link
+                  to="/process"
+                  onClick={closeMobileMenu}
+                  className={`navigation__link navigation__mobile-link ${isActiveLink('/process') ? 'is-active' : ''}`}
+                >
+                  PROCESS
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/blog"
+                  state={{ preserveScroll: true }}
+                  onClick={closeMobileMenu}
+                  className={`navigation__link navigation__mobile-link ${isActiveLink('/blog') ? 'is-active' : ''}`}
+                >
+                  BLOG
+                </Link>
+              </li>
+            </ul>
+
+            <a
+              href="/get-started.html"
+              className="navigation__cta navigation__mobile-cta"
+              aria-label="Build Your Quote - Configure your project and see pricing"
+              onClick={closeMobileMenu}
+            >
+              <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+            </a>
+
+            {renderThemeToggle('mobile')}
           </div>
         </div>
-      </div>
+      )}
     </nav>
   );
 }
