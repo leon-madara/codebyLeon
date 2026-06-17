@@ -98,6 +98,7 @@ describe('PortfolioCarouselMobile', () => {
     expect(source).toMatch(/gsap\.to\(trackRef\.current,[\s\S]*scrollTrigger:\s*\{[\s\S]*pin:\s*galleryRef\.current/s);
     expect(source).toMatch(/snap:\s*\{/);
     expect(source).toMatch(/x:\s*\(\)\s*=>\s*-getHorizontalDistance\(\)/);
+    expect(css).toMatch(/\.portfolio-mobile__heading\s*{[\s\S]*white-space:\s*nowrap;/);
     expect(css).toMatch(/\.portfolio-mobile__proof-gallery\s*{[\s\S]*overflow:\s*hidden;/);
     expect(css).not.toMatch(/\.portfolio-mobile__proof-track\s*{[\s\S]*overflow-x:\s*auto;/);
   });
