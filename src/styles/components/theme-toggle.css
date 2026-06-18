@@ -62,7 +62,8 @@
 }
 
 .theme-toggle__haze--day {
-  background: linear-gradient(0deg, rgba(255, 195, 90, 0.30) 0%, transparent 55%);
+  /* Reduced intensity on day haze (from 0.30 to 0.10 opacity) */
+  background: linear-gradient(0deg, rgba(255, 195, 90, 0.10) 0%, transparent 60%);
 }
 
 .theme-toggle__haze--night {
@@ -113,8 +114,9 @@
   50%      { opacity: 1; }
 }
 
-/* ── Knob (sun / moon) ── */
-.theme-toggle__knob {
+/* ── Sun & Moon celestial bodies ── */
+.theme-toggle__sun,
+.theme-toggle__moon {
   position: absolute;
   width: 24px;
   height: 24px;
@@ -125,21 +127,14 @@
   pointer-events: none;
 }
 
-/* ── Knob faces ── */
-.theme-toggle__knob-face {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-}
-
-.theme-toggle__knob-face--sun {
+.theme-toggle__sun {
   background: linear-gradient(135deg, #FFD54F 0%, #FF9800 100%);
   box-shadow:
     0 0 6px 1px rgba(255, 152, 0, 0.55),
     0 0 14px 3px rgba(255, 193, 7, 0.25);
 }
 
-.theme-toggle__knob-face--moon {
+.theme-toggle__moon {
   background: linear-gradient(135deg, #E0E0E0 0%, #B0B0B0 100%);
   box-shadow:
     0 0 6px 1px rgba(180, 195, 255, 0.45),

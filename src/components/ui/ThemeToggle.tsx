@@ -3,11 +3,11 @@
  *
  * Architecture:
  *   - Framer Motion handles choreographed state transitions
- *     (knob spring, scene cross-fade, star entrance/exit)
+ *     (sun/moon setting/rising paths, scene cross-fade, star entrance/exit)
  *   - CSS handles ambient loops (cloud drift, star twinkle)
  *   - prefers-reduced-motion disables all animation
- *   - Sky/haze/knob use opacity-based cross-fade between two
- *     static gradient layers (no gradient interpolation needed)
+ *   - Sky/haze use opacity-based cross-fade between static layers
+ *   - Sun/Moon rise and set physically, disappearing below the horizon
  *
  * Owner CSS: src/styles/components/theme-toggle.css
  */
@@ -48,7 +48,15 @@ export function ThemeToggle() {
   const isDark = theme === 'dark';
   const prefersReduced = useReducedMotion();
 
-  const dur = prefersReduced ? 0 : 0.5;
+  // Smooth, gentle transitions for sun and moon movement
+  const visualTransition = prefersReduced
+    ? { duration: 0 }
+    : { type: 'spring' as const, stiffness: 90, damping: 18 };
+
+  // Smooth cross-fade for skies and haze
+  const fadeTransition = prefersReduced
+    ? { duration: 0 }
+    : { duration: 0.75, ease: 'easeInOut' as const };
 
   return (
     <button
@@ -64,7 +72,7 @@ export function ThemeToggle() {
         className="theme-toggle__sky theme-toggle__sky--night"
         aria-hidden="true"
         animate={{ opacity: isDark ? 1 : 0 }}
-        transition={{ duration: dur, ease: 'easeInOut' }}
+        transition={fadeTransition}
       />
 
       {/* ── Atmospheric haze: two layers, cross-fade ── */}
@@ -72,13 +80,13 @@ export function ThemeToggle() {
         className="theme-toggle__haze theme-toggle__haze--day"
         aria-hidden="true"
         animate={{ opacity: isDark ? 0 : 1 }}
-        transition={{ duration: dur * 1.2 }}
+        transition={fadeTransition}
       />
       <motion.span
         className="theme-toggle__haze theme-toggle__haze--night"
         aria-hidden="true"
         animate={{ opacity: isDark ? 1 : 0 }}
-        transition={{ duration: dur * 1.2 }}
+        transition={fadeTransition}
       />
 
       {/* ── Clouds (day only) ── */}
@@ -140,30 +148,23 @@ export function ThemeToggle() {
           ))}
       </AnimatePresence>
 
-      {/* ── Knob (sun → moon) ── */}
+      {/* ── Sun: sets downwards & right when switching to dark mode ── */}
       <motion.span
-        className={`theme-toggle__knob ${isDark ? 'theme-toggle__knob--moon' : 'theme-toggle__knob--sun'}`}
+        className="theme-toggle__sun"
         aria-hidden="true"
-        animate={{ x: isDark ? 38 : 0 }}
-        transition={
-          prefersReduced
-            ? { duration: 0 }
-            : { type: 'spring', stiffness: 300, damping: 25 }
-        }
-      >
-        {/* Sun glow layer — fades out in dark mode */}
-        <motion.span
-          className="theme-toggle__knob-face theme-toggle__knob-face--sun"
-          animate={{ opacity: isDark ? 0 : 1 }}
-          transition={{ duration: dur }}
-        />
-        {/* Moon glow layer — fades in in dark mode */}
-        <motion.span
-          className="theme-toggle__knob-face theme-toggle__knob-face--moon"
-          animate={{ opacity: isDark ? 1 : 0 }}
-          transition={{ duration: dur }}
-        />
+        initial={false}
+        animate={isDark ? { x: 12, y: 30, scale: 0.5, opacity: 0 } : { x: 0, y: 0, scale: 1, opacity: 1 }}
+        transition={visualTransition}
+      />
 
+      {/* ── Moon: rises from bottom-center upwards & right when switching to dark mode ── */}
+      <motion.span
+        className="theme-toggle__moon"
+        aria-hidden="true"
+        initial={false}
+        animate={isDark ? { x: 38, y: 0, scale: 1, opacity: 1 } : { x: 26, y: 30, scale: 0.5, opacity: 0 }}
+        transition={visualTransition}
+      >
         {/* Craters appear on the moon */}
         {craters.map((cr, i) => (
           <motion.span
