@@ -112,17 +112,24 @@ describe('Navigation', () => {
     expect(screen.getByRole('link', { name: 'BLOG' })).toHaveClass('is-active');
   });
 
+  it('marks the portfolio link active on case study routes', () => {
+    renderNavigation('/work/legit-logistics');
+
+    expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveClass('is-active');
+  });
+
   it('toggles theme from the header switch', async () => {
     const user = userEvent.setup();
-    const { container } = renderNavigation('/');
+    renderNavigation('/');
 
-    const toggle = container.querySelector('.navigation__theme-toggle--desktop .navigation__toggle-switch');
-    expect(toggle).not.toBeNull();
-    expect(toggle).not.toHaveClass('is-active');
+    const toggles = screen.getAllByRole('button', { name: /switch to dark theme/i });
+    const toggle = toggles[0];
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
-    await user.click(toggle as HTMLElement);
+    await user.click(toggle);
 
-    expect(toggle).toHaveClass('is-active');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   });
 
@@ -156,7 +163,7 @@ describe('Navigation', () => {
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
 
     const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
-    expect(within(menu).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '#hero');
+    expect(within(menu).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/#hero');
     expect(within(menu).getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '#portfolio');
     expect(within(menu).getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
     expect(within(menu).getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
@@ -201,7 +208,7 @@ describe('Navigation', () => {
 
     await user.click(mobileToggle);
 
-    expect(mobileToggle).toHaveClass('is-active');
+    expect(mobileToggle).toHaveAttribute('aria-pressed', 'true');
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   });
 });

@@ -79,6 +79,7 @@
 @import './styles/components/forms.css';
 @import './styles/components/modals.css';
 @import './styles/components/beat-card.css';
+@import './styles/components/theme-toggle.css';
 
 /* ============================================
    6. SECTIONS

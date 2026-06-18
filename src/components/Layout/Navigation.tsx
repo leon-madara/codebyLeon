@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { Menu, X, Mail, MessageCircle, Linkedin } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 const SECTION_NAV_CLEARANCE = 12;
 const SECTION_SNAP_BUFFER = 4;
 
 export function Navigation() {
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isHomeRoute = location.pathname === '/';
   const [activeSection, setActiveSection] = useState<string>('');
@@ -20,8 +19,20 @@ export function Navigation() {
     } else {
       document.body.style.overflow = '';
     }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false);
+      }
+    };
+
+    if (isMobileMenuOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+
     return () => {
       document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
     };
   }, [isMobileMenuOpen]);
 
@@ -115,35 +126,7 @@ export function Navigation() {
     }
   };
 
-  const renderThemeToggle = () => (
-    <button
-      type="button"
-      className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
-      onClick={toggleTheme}
-      aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-      aria-pressed={theme === 'dark'}
-    >
-      <span className="navigation__toggle-background" aria-hidden="true">
-        <span className="navigation__scenery navigation__scenery--day">
-          <span className="navigation__cloud navigation__cloud--1"></span>
-          <span className="navigation__cloud navigation__cloud--2"></span>
-          <span className="navigation__cloud navigation__cloud--3"></span>
-          <span className="navigation__cloud navigation__cloud--4"></span>
-          <span className="navigation__cloud navigation__cloud--5"></span>
-        </span>
-        <span className="navigation__scenery navigation__scenery--night">
-          <span className="navigation__star navigation__star--1">✦</span>
-          <span className="navigation__star navigation__star--2">★</span>
-          <span className="navigation__star navigation__star--3">✦</span>
-        </span>
-      </span>
-      <span className="navigation__toggle-knob" aria-hidden="true">
-        <span className="navigation__crater navigation__crater--1"></span>
-        <span className="navigation__crater navigation__crater--2"></span>
-        <span className="navigation__crater navigation__crater--3"></span>
-      </span>
-    </button>
-  );
+
 
   return (
     <>
@@ -158,7 +141,7 @@ export function Navigation() {
             <a
               href={getSectionHref('portfolio')}
               onClick={handleSectionLinkClick('portfolio')}
-              className={`navigation__link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
+              className={`navigation__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}
             >
               PORTFOLIO
             </a>
@@ -212,13 +195,14 @@ export function Navigation() {
         </a>
 
         <div className="navigation__theme-toggle desktop-only">
-          {renderThemeToggle()}
+          <ThemeToggle />
         </div>
 
         <button 
           className="navigation__hamburger mobile-only" 
           onClick={() => setIsMobileMenuOpen(true)}
-          aria-label="Open menu"
+          aria-label="Open navigation menu"
+          aria-expanded={isMobileMenuOpen}
         >
           <Menu size={28} />
         </button>
@@ -226,70 +210,76 @@ export function Navigation() {
     </nav>
 
     {/* Mobile Menu Overlay */}
-    <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'is-open' : ''}`}>
-      <div className="mobile-menu-overlay__header">
-        <Link to="/#hero" className="navigation__logo" onClick={() => setIsMobileMenuOpen(false)}>
-          <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
-        </Link>
-        <a href="/get-started.html" className="navigation__cta">
-          <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
-        </a>
-        <button 
-          className="mobile-menu-overlay__close" 
-          onClick={() => setIsMobileMenuOpen(false)}
-          aria-label="Close menu"
-        >
-          <X size={28} />
-        </button>
-      </div>
+    {isMobileMenuOpen && (
+      <div 
+        className={`mobile-menu-overlay ${isMobileMenuOpen ? 'is-open' : ''}`}
+        role="dialog"
+        aria-label="Mobile navigation"
+      >
+        <div className="mobile-menu-overlay__header">
+          <Link to="/#hero" className="navigation__logo" onClick={() => setIsMobileMenuOpen(false)}>
+            <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
+          </Link>
+          <a href="/get-started.html" className="navigation__cta">
+            <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+          </a>
+          <button 
+            className="mobile-menu-overlay__close" 
+            onClick={() => setIsMobileMenuOpen(false)}
+            aria-label="Close navigation menu"
+          >
+            <X size={28} />
+          </button>
+        </div>
 
-      <div className="mobile-menu-overlay__content">
-        <div className="mobile-menu-overlay__top-space">
-          <div className="mobile-menu-overlay__availability">
-            <span className="availability-dot"></span>
-            <span className="availability-text">Available for new projects</span>
+        <div className="mobile-menu-overlay__content">
+          <div className="mobile-menu-overlay__top-space">
+            <div className="mobile-menu-overlay__availability">
+              <span className="availability-dot"></span>
+              <span className="availability-text">Available for new projects</span>
+            </div>
+          </div>
+
+          <ul className="mobile-menu-overlay__links">
+            <li>
+              <Link to="/#hero" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/') && activeSection === '' ? 'is-active' : ''}`}>Home</Link>
+            </li>
+            <li>
+              <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className={`mobile-menu-overlay__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}>Portfolio</a>
+            </li>
+            <li>
+              <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className={`mobile-menu-overlay__link ${activeSection === 'about' ? 'is-active' : ''}`}>About</a>
+            </li>
+            <li>
+              <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className={`mobile-menu-overlay__link ${activeSection === 'services' ? 'is-active' : ''}`}>Services</a>
+            </li>
+            <li>
+              <Link to="/process" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/process') ? 'is-active' : ''}`}>Process</Link>
+            </li>
+            <li>
+              <Link to="/blog" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>Blog</Link>
+            </li>
+          </ul>
+
+          <div className="mobile-menu-overlay__quick-connect">
+            <a href="mailto:hello@codebyleon.com" aria-label="Email" className="quick-connect-link email-link">
+              <Mail size={24} />
+            </a>
+            <a href="https://wa.me/254700000000" aria-label="WhatsApp" className="quick-connect-link whatsapp-link" target="_blank" rel="noopener noreferrer">
+              <MessageCircle size={24} />
+            </a>
+            <a href="https://linkedin.com/company/codebyleon" aria-label="LinkedIn" className="quick-connect-link linkedin-link" target="_blank" rel="noopener noreferrer">
+              <Linkedin size={24} />
+            </a>
+          </div>
+
+          <div className="mobile-menu-overlay__footer">
+            <span className="theme-label">THEME</span>
+            <ThemeToggle />
           </div>
         </div>
-
-        <ul className="mobile-menu-overlay__links">
-          <li>
-            <Link to="/#hero" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Home</Link>
-          </li>
-          <li>
-            <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className="mobile-menu-overlay__link">Portfolio</a>
-          </li>
-          <li>
-            <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className="mobile-menu-overlay__link">About</a>
-          </li>
-          <li>
-            <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className="mobile-menu-overlay__link">Services</a>
-          </li>
-          <li>
-            <Link to="/process" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Process</Link>
-          </li>
-          <li>
-            <Link to="/blog" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Blog</Link>
-          </li>
-        </ul>
-
-        <div className="mobile-menu-overlay__quick-connect">
-          <a href="mailto:hello@codebyleon.com" aria-label="Email" className="quick-connect-link email-link">
-            <Mail size={24} />
-          </a>
-          <a href="https://wa.me/254700000000" aria-label="WhatsApp" className="quick-connect-link whatsapp-link" target="_blank" rel="noopener noreferrer">
-            <MessageCircle size={24} />
-          </a>
-          <a href="https://linkedin.com/company/codebyleon" aria-label="LinkedIn" className="quick-connect-link linkedin-link" target="_blank" rel="noopener noreferrer">
-            <Linkedin size={24} />
-          </a>
-        </div>
-
-        <div className="mobile-menu-overlay__footer">
-          <span className="theme-label">THEME</span>
-          {renderThemeToggle()}
-        </div>
       </div>
-    </div>
+    )}
     </>
   );
 }
