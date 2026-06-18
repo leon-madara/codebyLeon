@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Mail, MessageCircle, Linkedin } from 'lucide-react';
 import { useTheme } from '../../contexts/ThemeContext';
 
 const SECTION_NAV_CLEARANCE = 12;
 const SECTION_SNAP_BUFFER = 4;
-const MOBILE_MENU_ID = 'mobile-navigation-menu';
 
 export function Navigation() {
   const { theme, toggleTheme } = useTheme();
@@ -14,6 +13,22 @@ export function Navigation() {
   const isHomeRoute = location.pathname === '/';
   const [activeSection, setActiveSection] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
+
+  const handleMobileLinkClick = (handler?: (e: React.MouseEvent<HTMLAnchorElement>) => void) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (handler) handler(e);
+    setIsMobileMenuOpen(false);
+  };
 
   useEffect(() => {
     if (!isHomeRoute) {
@@ -60,30 +75,6 @@ export function Navigation() {
     };
   }, [isHomeRoute]);
 
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location.pathname, location.hash]);
-
-  useEffect(() => {
-    if (!isMobileMenuOpen) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsMobileMenuOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [isMobileMenuOpen]);
-
   const isActiveLink = (path: string) => {
     if (path === '/') {
       return location.pathname === '/';
@@ -124,58 +115,41 @@ export function Navigation() {
     }
   };
 
-  const closeMobileMenu = () => {
-    setIsMobileMenuOpen(false);
-  };
-
-  const handleMobileSectionLinkClick = (sectionId: string) => (
-    event: React.MouseEvent<HTMLAnchorElement>
-  ) => {
-    closeMobileMenu();
-    handleSectionLinkClick(sectionId)(event);
-  };
-
-  const renderThemeToggle = (modifier: 'desktop' | 'mobile') => (
-    <div className={`navigation__theme-toggle navigation__theme-toggle--${modifier}`}>
-      {modifier === 'mobile' && (
-        <span className="navigation__theme-label">
-          Theme
+  const renderThemeToggle = () => (
+    <button
+      type="button"
+      className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
+      onClick={toggleTheme}
+      aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+      aria-pressed={theme === 'dark'}
+    >
+      <span className="navigation__toggle-background" aria-hidden="true">
+        <span className="navigation__scenery navigation__scenery--day">
+          <span className="navigation__cloud navigation__cloud--1"></span>
+          <span className="navigation__cloud navigation__cloud--2"></span>
+          <span className="navigation__cloud navigation__cloud--3"></span>
+          <span className="navigation__cloud navigation__cloud--4"></span>
+          <span className="navigation__cloud navigation__cloud--5"></span>
         </span>
-      )}
-      <button
-        type="button"
-        className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
-        onClick={toggleTheme}
-        aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-        aria-pressed={theme === 'dark'}
-      >
-        <span className="navigation__toggle-background" aria-hidden="true">
-          <span className="navigation__scenery navigation__scenery--day">
-            <span className="navigation__cloud navigation__cloud--1"></span>
-            <span className="navigation__cloud navigation__cloud--2"></span>
-            <span className="navigation__cloud navigation__cloud--3"></span>
-            <span className="navigation__cloud navigation__cloud--4"></span>
-            <span className="navigation__cloud navigation__cloud--5"></span>
-          </span>
-          <span className="navigation__scenery navigation__scenery--night">
-            <span className="navigation__star navigation__star--1">✦</span>
-            <span className="navigation__star navigation__star--2">★</span>
-            <span className="navigation__star navigation__star--3">✦</span>
-          </span>
+        <span className="navigation__scenery navigation__scenery--night">
+          <span className="navigation__star navigation__star--1">✦</span>
+          <span className="navigation__star navigation__star--2">★</span>
+          <span className="navigation__star navigation__star--3">✦</span>
         </span>
-        <span className="navigation__toggle-knob" aria-hidden="true">
-          <span className="navigation__crater navigation__crater--1"></span>
-          <span className="navigation__crater navigation__crater--2"></span>
-          <span className="navigation__crater navigation__crater--3"></span>
-        </span>
-      </button>
-    </div>
+      </span>
+      <span className="navigation__toggle-knob" aria-hidden="true">
+        <span className="navigation__crater navigation__crater--1"></span>
+        <span className="navigation__crater navigation__crater--2"></span>
+        <span className="navigation__crater navigation__crater--3"></span>
+      </span>
+    </button>
   );
 
   return (
-    <nav className="navigation" aria-label="Main navigation">
+    <>
+    <nav className={`navigation ${isMobileMenuOpen ? 'is-menu-open' : ''}`} aria-label="Main navigation">
       <div className="navigation__container">
-        <Link to="/#hero" className="navigation__logo" aria-label="Code by Leon home">
+        <Link to="/#hero" className="navigation__logo" aria-label="Code by Leon home" onClick={() => setIsMobileMenuOpen(false)}>
           <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
@@ -237,91 +211,85 @@ export function Navigation() {
           </span>
         </a>
 
-        {renderThemeToggle('desktop')}
+        <div className="navigation__theme-toggle desktop-only">
+          {renderThemeToggle()}
+        </div>
 
-        <button
-          type="button"
-          className="navigation__menu-button"
-          onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
-          aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-          aria-expanded={isMobileMenuOpen}
-          aria-controls={MOBILE_MENU_ID}
+        <button 
+          className="navigation__hamburger mobile-only" 
+          onClick={() => setIsMobileMenuOpen(true)}
+          aria-label="Open menu"
         >
-          {isMobileMenuOpen ? <X aria-hidden="true" /> : <Menu aria-hidden="true" />}
+          <Menu size={28} />
+        </button>
+      </div>
+    </nav>
+
+    {/* Mobile Menu Overlay */}
+    <div className={`mobile-menu-overlay ${isMobileMenuOpen ? 'is-open' : ''}`}>
+      <div className="mobile-menu-overlay__header">
+        <Link to="/#hero" className="navigation__logo" onClick={() => setIsMobileMenuOpen(false)}>
+          <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
+        </Link>
+        <a href="/get-started.html" className="navigation__cta">
+          <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+        </a>
+        <button 
+          className="mobile-menu-overlay__close" 
+          onClick={() => setIsMobileMenuOpen(false)}
+          aria-label="Close menu"
+        >
+          <X size={28} />
         </button>
       </div>
 
-      {isMobileMenuOpen && (
-        <div
-          id={MOBILE_MENU_ID}
-          className="navigation__mobile-menu"
-          role="dialog"
-          aria-modal="true"
-          aria-label="Mobile navigation"
-        >
-          <div className="navigation__mobile-panel">
-            <ul className="navigation__mobile-links">
-              <li>
-                <a
-                  href={getSectionHref('hero')}
-                  onClick={handleMobileSectionLinkClick('hero')}
-                  className={`navigation__link navigation__mobile-link ${isHomeRoute && activeSection === '' ? 'is-active' : ''}`}
-                >
-                  Home
-                </a>
-              </li>
-              <li>
-                <a
-                  href={getSectionHref('portfolio')}
-                  onClick={handleMobileSectionLinkClick('portfolio')}
-                  className={`navigation__link navigation__mobile-link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
-                >
-                  Portfolio
-                </a>
-              </li>
-              <li>
-                <a
-                  href={getSectionHref('about')}
-                  onClick={handleMobileSectionLinkClick('about')}
-                  className={`navigation__link navigation__mobile-link ${activeSection === 'about' ? 'is-active' : ''}`}
-                >
-                  About
-                </a>
-              </li>
-              <li>
-                <a
-                  href={getSectionHref('services')}
-                  onClick={handleMobileSectionLinkClick('services')}
-                  className={`navigation__link navigation__mobile-link ${activeSection === 'services' ? 'is-active' : ''}`}
-                >
-                  Services
-                </a>
-              </li>
-              <li>
-                <Link
-                  to="/process"
-                  onClick={closeMobileMenu}
-                  className={`navigation__link navigation__mobile-link ${isActiveLink('/process') ? 'is-active' : ''}`}
-                >
-                  Process
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/blog"
-                  state={{ preserveScroll: true }}
-                  onClick={closeMobileMenu}
-                  className={`navigation__link navigation__mobile-link ${isActiveLink('/blog') ? 'is-active' : ''}`}
-                >
-                  Blog
-                </Link>
-              </li>
-            </ul>
-
-            {renderThemeToggle('mobile')}
+      <div className="mobile-menu-overlay__content">
+        <div className="mobile-menu-overlay__top-space">
+          <div className="mobile-menu-overlay__availability">
+            <span className="availability-dot"></span>
+            <span className="availability-text">Available for new projects</span>
           </div>
         </div>
-      )}
-    </nav>
+
+        <ul className="mobile-menu-overlay__links">
+          <li>
+            <Link to="/#hero" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Home</Link>
+          </li>
+          <li>
+            <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className="mobile-menu-overlay__link">Portfolio</a>
+          </li>
+          <li>
+            <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className="mobile-menu-overlay__link">About</a>
+          </li>
+          <li>
+            <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className="mobile-menu-overlay__link">Services</a>
+          </li>
+          <li>
+            <Link to="/process" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Process</Link>
+          </li>
+          <li>
+            <Link to="/blog" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Blog</Link>
+          </li>
+        </ul>
+
+        <div className="mobile-menu-overlay__quick-connect">
+          <a href="mailto:hello@codebyleon.com" aria-label="Email" className="quick-connect-link email-link">
+            <Mail size={24} />
+          </a>
+          <a href="https://wa.me/254700000000" aria-label="WhatsApp" className="quick-connect-link whatsapp-link" target="_blank" rel="noopener noreferrer">
+            <MessageCircle size={24} />
+          </a>
+          <a href="https://linkedin.com/company/codebyleon" aria-label="LinkedIn" className="quick-connect-link linkedin-link" target="_blank" rel="noopener noreferrer">
+            <Linkedin size={24} />
+          </a>
+        </div>
+
+        <div className="mobile-menu-overlay__footer">
+          <span className="theme-label">THEME</span>
+          {renderThemeToggle()}
+        </div>
+      </div>
+    </div>
+    </>
   );
 }
