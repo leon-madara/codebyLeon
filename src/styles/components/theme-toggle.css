@@ -1,0 +1,165 @@
+/* =============================================
+   THEME TOGGLE
+   =============================================
+   Epic day/night toggle with ambient animations.
+   Owner component: src/components/ui/ThemeToggle.tsx
+   Class prefix: .theme-toggle
+
+   Ambient loops (cloud drift, star twinkle) live here in CSS.
+   Choreographed transitions (knob spring, scene cross-fade)
+   are handled by Framer Motion in the component.
+   ============================================= */
+
+/* ── Container ── */
+.theme-toggle {
+  position: relative;
+  width: 72px;
+  height: 34px;
+  border-radius: 17px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  background: none;
+  -webkit-tap-highlight-color: transparent;
+  isolation: isolate;           /* stacking-context fence */
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 3px rgba(0, 0, 0, 0.2),
+    inset 0 -1px 1px rgba(255, 255, 255, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 17px;
+}
+
+/* ── Sky layer ── */
+.theme-toggle__sky {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 0;
+}
+
+.theme-toggle__sky--day {
+  background: linear-gradient(180deg, #7EC8E3 0%, #B4DCE7 40%, #EDE0C8 100%);
+}
+
+.theme-toggle__sky--night {
+  background: linear-gradient(180deg, #0B1626 0%, #162038 45%, #1E2D4A 100%);
+}
+
+/* ── Atmospheric haze ── */
+.theme-toggle__haze {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.theme-toggle__haze--day {
+  background: linear-gradient(0deg, rgba(255, 195, 90, 0.30) 0%, transparent 55%);
+}
+
+.theme-toggle__haze--night {
+  background: linear-gradient(0deg, rgba(80, 100, 180, 0.22) 0%, transparent 55%);
+}
+
+/* ── Clouds ──
+   Soft organic shapes with parallax drift.
+   Each cloud gets a unique --cloud-drift-speed via inline style. */
+.theme-toggle__cloud {
+  position: absolute;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: 50%;
+  filter: blur(1.2px);
+  box-shadow:
+    0 0 3px 1px rgba(255, 255, 255, 0.4),
+    3px 0 5px 2px rgba(255, 255, 255, 0.25);
+  animation: cloud-drift var(--cloud-drift-speed, 25s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Drift animation — subtle horizontal sway */
+@keyframes cloud-drift {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(8px); }
+}
+
+/* ── Stars ──
+   Tiny glowing circles with staggered twinkle.
+   Each star gets --twinkle-duration and --twinkle-delay via inline style. */
+.theme-toggle__star {
+  position: absolute;
+  z-index: 2;
+  border-radius: 50%;
+  background: #FFFDE7;
+  box-shadow:
+    0 0 2px 1px rgba(255, 253, 231, 0.7),
+    0 0 4px 2px rgba(255, 253, 231, 0.3);
+  animation:
+    star-twinkle var(--twinkle-duration, 2s) ease-in-out infinite;
+  animation-delay: var(--twinkle-delay, 0s);
+  will-change: opacity;
+}
+
+@keyframes star-twinkle {
+  0%, 100% { opacity: 0.35; }
+  50%      { opacity: 1; }
+}
+
+/* ── Knob (sun / moon) ── */
+.theme-toggle__knob {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  top: 4px;
+  left: 4px;
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ── Knob faces ── */
+.theme-toggle__knob-face {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.theme-toggle__knob-face--sun {
+  background: linear-gradient(135deg, #FFD54F 0%, #FF9800 100%);
+  box-shadow:
+    0 0 6px 1px rgba(255, 152, 0, 0.55),
+    0 0 14px 3px rgba(255, 193, 7, 0.25);
+}
+
+.theme-toggle__knob-face--moon {
+  background: linear-gradient(135deg, #E0E0E0 0%, #B0B0B0 100%);
+  box-shadow:
+    0 0 6px 1px rgba(180, 195, 255, 0.45),
+    0 0 14px 3px rgba(160, 180, 255, 0.18);
+}
+
+/* ── Craters ── */
+.theme-toggle__crater {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(130, 130, 145, 0.35);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+/* =============================================
+   REDUCED MOTION
+   ============================================= */
+@media (prefers-reduced-motion: reduce) {
+  .theme-toggle__cloud,
+  .theme-toggle__star {
+    animation: none;
+  }
+}

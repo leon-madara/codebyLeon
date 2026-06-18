@@ -113,15 +113,16 @@ describe('Navigation', () => {
 
   it('toggles theme from the header switch', async () => {
     const user = userEvent.setup();
-    const { container } = renderNavigation('/');
+    renderNavigation('/');
 
-    const toggle = container.querySelector('.navigation__toggle-switch');
-    expect(toggle).not.toBeNull();
-    expect(toggle).not.toHaveClass('is-active');
+    const toggles = screen.getAllByRole('button', { name: /switch to dark theme/i });
+    const toggle = toggles[0];
+    expect(toggle).toBeInTheDocument();
+    expect(toggle).toHaveAttribute('aria-pressed', 'false');
 
-    await user.click(toggle as HTMLElement);
+    await user.click(toggle);
 
-    expect(toggle).toHaveClass('is-active');
+    expect(toggle).toHaveAttribute('aria-pressed', 'true');
     expect(document.documentElement).toHaveAttribute('data-theme', 'dark');
   });
 });

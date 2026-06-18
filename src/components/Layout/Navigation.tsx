@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { Menu, X, Mail, MessageCircle, Linkedin } from 'lucide-react';
-import { useTheme } from '../../contexts/ThemeContext';
+import { ThemeToggle } from '../ui/ThemeToggle';
 
 const SECTION_NAV_CLEARANCE = 12;
 const SECTION_SNAP_BUFFER = 4;
 
 export function Navigation() {
-  const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const isHomeRoute = location.pathname === '/';
   const [activeSection, setActiveSection] = useState<string>('');
@@ -115,35 +114,7 @@ export function Navigation() {
     }
   };
 
-  const renderThemeToggle = () => (
-    <button
-      type="button"
-      className={`navigation__toggle-switch ${theme === 'dark' ? 'is-active' : ''}`}
-      onClick={toggleTheme}
-      aria-label={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
-      aria-pressed={theme === 'dark'}
-    >
-      <span className="navigation__toggle-background" aria-hidden="true">
-        <span className="navigation__scenery navigation__scenery--day">
-          <span className="navigation__cloud navigation__cloud--1"></span>
-          <span className="navigation__cloud navigation__cloud--2"></span>
-          <span className="navigation__cloud navigation__cloud--3"></span>
-          <span className="navigation__cloud navigation__cloud--4"></span>
-          <span className="navigation__cloud navigation__cloud--5"></span>
-        </span>
-        <span className="navigation__scenery navigation__scenery--night">
-          <span className="navigation__star navigation__star--1">✦</span>
-          <span className="navigation__star navigation__star--2">★</span>
-          <span className="navigation__star navigation__star--3">✦</span>
-        </span>
-      </span>
-      <span className="navigation__toggle-knob" aria-hidden="true">
-        <span className="navigation__crater navigation__crater--1"></span>
-        <span className="navigation__crater navigation__crater--2"></span>
-        <span className="navigation__crater navigation__crater--3"></span>
-      </span>
-    </button>
-  );
+
 
   return (
     <>
@@ -212,7 +183,7 @@ export function Navigation() {
         </a>
 
         <div className="navigation__theme-toggle desktop-only">
-          {renderThemeToggle()}
+          <ThemeToggle />
         </div>
 
         <button 
@@ -286,7 +257,7 @@ export function Navigation() {
 
         <div className="mobile-menu-overlay__footer">
           <span className="theme-label">THEME</span>
-          {renderThemeToggle()}
+          <ThemeToggle />
         </div>
       </div>
     </div>

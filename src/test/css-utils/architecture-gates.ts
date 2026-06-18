@@ -27,9 +27,12 @@ interface SelectorLeakage {
 
 const RUNTIME_TOKEN_ALLOWLIST = new Set<string>([
   '--animation-delay',
+  '--cloud-drift-speed',
   '--hs-tab-bg',
   '--hs-wave-transform',
   '--parallax-translate',
+  '--twinkle-delay',
+  '--twinkle-duration',
   '--x',
   '--y',
 ]);
