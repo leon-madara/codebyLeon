@@ -111,6 +111,12 @@ describe('Navigation', () => {
     expect(screen.getByRole('link', { name: 'BLOG' })).toHaveClass('is-active');
   });
 
+  it('marks the portfolio link active on case study routes', () => {
+    renderNavigation('/work/legit-logistics');
+
+    expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveClass('is-active');
+  });
+
   it('toggles theme from the header switch', async () => {
     const user = userEvent.setup();
     renderNavigation('/');

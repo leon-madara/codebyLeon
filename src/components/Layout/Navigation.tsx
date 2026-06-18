@@ -129,7 +129,7 @@ export function Navigation() {
             <a
               href={getSectionHref('portfolio')}
               onClick={handleSectionLinkClick('portfolio')}
-              className={`navigation__link ${activeSection === 'portfolio' ? 'is-active' : ''}`}
+              className={`navigation__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}
             >
               PORTFOLIO
             </a>
@@ -224,22 +224,22 @@ export function Navigation() {
 
         <ul className="mobile-menu-overlay__links">
           <li>
-            <Link to="/#hero" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Home</Link>
+            <Link to="/#hero" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/') && activeSection === '' ? 'is-active' : ''}`}>Home</Link>
           </li>
           <li>
-            <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className="mobile-menu-overlay__link">Portfolio</a>
+            <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className={`mobile-menu-overlay__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}>Portfolio</a>
           </li>
           <li>
-            <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className="mobile-menu-overlay__link">About</a>
+            <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className={`mobile-menu-overlay__link ${activeSection === 'about' ? 'is-active' : ''}`}>About</a>
           </li>
           <li>
-            <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className="mobile-menu-overlay__link">Services</a>
+            <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className={`mobile-menu-overlay__link ${activeSection === 'services' ? 'is-active' : ''}`}>Services</a>
           </li>
           <li>
-            <Link to="/process" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Process</Link>
+            <Link to="/process" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/process') ? 'is-active' : ''}`}>Process</Link>
           </li>
           <li>
-            <Link to="/blog" onClick={handleMobileLinkClick()} className="mobile-menu-overlay__link">Blog</Link>
+            <Link to="/blog" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/blog') ? 'is-active' : ''}`}>Blog</Link>
           </li>
         </ul>
 

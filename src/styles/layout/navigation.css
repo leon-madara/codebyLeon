@@ -453,7 +453,8 @@
 }
 
 .mobile-menu-overlay__link:hover,
-.mobile-menu-overlay__link:focus {
+.mobile-menu-overlay__link:focus,
+.mobile-menu-overlay__link.is-active {
   color: var(--brand-orange, #fc5b45);
 }
 
