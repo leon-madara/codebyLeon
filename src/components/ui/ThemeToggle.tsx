@@ -25,14 +25,14 @@ const clouds = [
 ] as const;
 
 const stars = [
-  { size: 2.4, top: 5,  left: 42, twinkleDur: 2.0, twinkleDelay: 0    },
-  { size: 1.6, top: 12, left: 52, twinkleDur: 2.8, twinkleDelay: 0.4  },
-  { size: 2.8, top: 20, left: 38, twinkleDur: 1.8, twinkleDelay: 0.8  },
-  { size: 1.2, top: 7,  left: 58, twinkleDur: 3.2, twinkleDelay: 0.2  },
-  { size: 2.0, top: 24, left: 50, twinkleDur: 2.4, twinkleDelay: 1.0  },
-  { size: 1.4, top: 16, left: 62, twinkleDur: 2.6, twinkleDelay: 0.6  },
-  { size: 1.0, top: 22, left: 56, twinkleDur: 3.0, twinkleDelay: 0.3  },
-  { size: 1.8, top: 10, left: 46, twinkleDur: 2.2, twinkleDelay: 0.7  },
+  { size: 2.4, top: 5,  left: 30, twinkleDur: 2.0, twinkleDelay: 0    },
+  { size: 1.6, top: 12, left: 20, twinkleDur: 2.8, twinkleDelay: 0.4  },
+  { size: 2.8, top: 20, left: 34, twinkleDur: 1.8, twinkleDelay: 0.8  },
+  { size: 1.2, top: 7,  left: 14, twinkleDur: 3.2, twinkleDelay: 0.2  },
+  { size: 2.0, top: 24, left: 22, twinkleDur: 2.4, twinkleDelay: 1.0  },
+  { size: 1.4, top: 16, left: 10, twinkleDur: 2.6, twinkleDelay: 0.6  },
+  { size: 1.0, top: 22, left: 16, twinkleDur: 3.0, twinkleDelay: 0.3  },
+  { size: 1.8, top: 10, left: 26, twinkleDur: 2.2, twinkleDelay: 0.7  },
 ] as const;
 
 const craters = [
