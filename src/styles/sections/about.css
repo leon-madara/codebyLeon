@@ -1199,21 +1199,22 @@
   }
 
   .about-3d-stack__mobile-headline {
-    max-width: 10ch;
+    max-width: 30ch;
     margin: 0;
-    font-family: var(--font-heading), serif;
-    font-size: clamp(2.7rem, 15cqi, 4.4rem);
-    font-weight: 900;
-    line-height: 0.96;
-    letter-spacing: 0;
+    font-family: var(--font-handwritten), sans-serif;
+    font-size: clamp(1.8rem, 8.5cqi, 3.2rem);
+    font-weight: var(--font-weight-bold);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
     color: var(--text-primary);
     text-wrap: balance;
   }
 
   .about-3d-stack__mobile-headline em {
     display: block;
-    margin-top: 0.2rem;
+    margin-top: 0.3rem;
     font-style: italic;
+    font-weight: var(--font-weight-normal);
     color: var(--hero-accent);
   }
 
