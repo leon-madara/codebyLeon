@@ -450,51 +450,53 @@ export function KossyLangatCaseStudyPage() {
       </div>
 
       {/* Global Design Switcher (Floating pills) */}
-      <div 
-        className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
-        role="tablist" 
-        aria-label="Design directions"
-        style={{ 
-          '--indicator-pos': activeIndex 
-        } as React.CSSProperties}
-      >
-        <div className="v2-pill-indicator" />
-        <button
-          className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(0);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 0}
+      <div className={`global-v2-switcher-wrapper ${isScrollHidden ? 'is-scroll-hidden' : ''}`}>
+        <div 
+          className="v2-pills global-v2-switcher" 
+          role="tablist" 
+          aria-label="Design directions"
+          style={{ 
+            '--indicator-pos': activeIndex 
+          } as React.CSSProperties}
         >
-          <span className="v2-pill-text-full">Identity & Values</span>
-          <span className="v2-pill-text-short">Identity</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(1);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 1}
-        >
-          <span className="v2-pill-text-full">Structural Portfolio</span>
-          <span className="v2-pill-text-short">Portfolio</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(2);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 2}
-        >
-          <span className="v2-pill-text-full">Mentorship & Voice</span>
-          <span className="v2-pill-text-short">Mentorship</span>
-        </button>
+          <div className="v2-pill-indicator" />
+          <button
+            className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(0);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 0}
+          >
+            <span className="v2-pill-text-full">Identity & Values</span>
+            <span className="v2-pill-text-short">Identity</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(1);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 1}
+          >
+            <span className="v2-pill-text-full">Structural Portfolio</span>
+            <span className="v2-pill-text-short">Portfolio</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(2);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 2}
+          >
+            <span className="v2-pill-text-full">Mentorship & Voice</span>
+            <span className="v2-pill-text-short">Mentorship</span>
+          </button>
+        </div>
       </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
