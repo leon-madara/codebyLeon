@@ -15,6 +15,7 @@ const Card3WorkflowBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Workflow"
       subheading="Ongoing"
       body="Submit requests, get fast turnarounds, and maintain brand consistency across all your marketing materials."
+      actionHint="See the workflow →"
     />
   );
 });

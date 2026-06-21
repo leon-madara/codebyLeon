@@ -15,6 +15,7 @@ const Card1BuildBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="We Build"
       subheading="Crafted with precision"
       body="Watch your vision come to life. Fast iterations, transparent progress, and pixel-perfect execution."
+      actionHint="See our work →"
     />
   );
 });

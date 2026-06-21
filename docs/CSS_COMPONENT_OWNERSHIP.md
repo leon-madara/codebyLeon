@@ -179,8 +179,12 @@ src/styles/
 - `.horizontal-scroll__container` - Inner container
 - `.horizontal-scroll__track` - Scrolling track
 - `.beat-card` - Individual beat card
+- `.beat-card__inner-card` - Elevated inner content panel (card-within-card)
 - `.beat-card__title` - Beat card title
 - `.beat-card__description` - Beat card description
+- `.beat-card__action-area` - Integrated CTA action zone
+- `.beat-card__action-divider` - Gradient divider within action area
+- `.beat-card__action-hint` - Optional micro-copy below CTA
 
 **Mouse Trail Classes:**
 - `.mouse-trail` - Mouse trail container

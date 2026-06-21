@@ -15,6 +15,7 @@ const Card2StrategyBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Strategy"
       subheading="Brand Discovery"
       body="We audit your current brand, analyze your competitors, and craft a strategy that positions you for growth. Your new identity starts here."
+      actionHint="Explore brand strategy →"
     />
   );
 });

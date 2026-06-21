@@ -15,6 +15,7 @@ const Card1PlanBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Plan"
       subheading="Strategy meets execution"
       body="We map out your unique positioning, target audience, and goals. Every decision is intentional, every element serves a purpose."
+      actionHint="Explore our process →"
     />
   );
 });

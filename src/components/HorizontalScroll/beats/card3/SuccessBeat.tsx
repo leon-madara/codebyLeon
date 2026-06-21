@@ -15,6 +15,7 @@ const Card3SuccessBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Success"
       subheading="Scalable Growth"
       body="Launch campaigns on time, maintain professional visuals, and scale your business without design holding you back."
+      actionHint="Get started today →"
     />
   );
 });

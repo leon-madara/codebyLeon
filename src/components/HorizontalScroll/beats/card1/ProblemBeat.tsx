@@ -15,6 +15,7 @@ const Card1ProblemBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Problem"
       subheading="Your expertise deserves better visibility"
       body="You're brilliant at what you do, but potential clients can only find you through word of mouth. Your skills are hidden behind a non-existent or outdated web presence."
+      actionHint="See how we solve this →"
     />
   );
 });

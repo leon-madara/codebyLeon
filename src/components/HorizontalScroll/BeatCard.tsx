@@ -11,6 +11,7 @@ interface BeatCardProps {
   body: string;
   ctaText?: string;
   ctaLink?: string;
+  actionHint?: string;
 }
 
 export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
@@ -23,7 +24,8 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
   subheading,
   body,
   ctaText,
-  ctaLink
+  ctaLink,
+  actionHint
 }, ref) => {
   return (
     <article ref={ref} className="beat-card">
@@ -38,29 +40,33 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
         </div>
       </div>
 
-      {/* Right side: Copy */}
+      {/* Right side: Copy — layered inner card */}
       <div className="beat-card__content">
-        <div className="beat-card__step-indicator hs-beat-reveal">
-          <span className="beat-card__step-text">STEP {step} OF {totalSteps}</span>
-          <span className="beat-card__step-line" />
-        </div>
+        <div className="beat-card__inner-card">
+          <div className="beat-card__step-indicator hs-beat-reveal">
+            <span className="beat-card__step-text">STEP {step} OF {totalSteps}</span>
+            <span className="beat-card__step-line" />
+          </div>
 
-        <div className="beat-card__icon hs-beat-reveal">
-          {icon}
-        </div>
+          <div className="beat-card__icon hs-beat-reveal">
+            {icon}
+          </div>
 
-        <h2 className="beat-card__title hs-beat-reveal">{heading}</h2>
-        <p className="beat-card__subheading hs-beat-reveal">{subheading}</p>
-        
-        <hr className="beat-card__divider hs-beat-reveal" />
-        
-        <p className="beat-card__body hs-beat-reveal">{body}</p>
+          <h2 className="beat-card__title hs-beat-reveal">{heading}</h2>
+          <p className="beat-card__subheading hs-beat-reveal">{subheading}</p>
 
-        {/* CTA Button */}
-        <div className="beat-card__cta hs-beat-reveal">
-          <a href={ctaLink || "/process"} className="beat-card__cta-button">
-            {ctaText || "TELL ME MORE"}
-          </a>
+          <p className="beat-card__body hs-beat-reveal">{body}</p>
+
+          {/* Integrated action area */}
+          <div className="beat-card__action-area hs-beat-reveal">
+            <hr className="beat-card__action-divider" />
+            <a href={ctaLink || "/process"} className="beat-card__cta-button">
+              {ctaText || "TELL ME MORE"}
+            </a>
+            {actionHint && (
+              <span className="beat-card__action-hint">{actionHint}</span>
+            )}
+          </div>
         </div>
       </div>
 
