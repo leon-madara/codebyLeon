@@ -43,6 +43,6 @@ describe('ServicesIntro', () => {
 
     // Since the headline is split into two spans, text content combines them
     expect(screen.getByRole('heading')).toHaveTextContent(/we don't justbuild pages./i);
-    expect(screen.getByText(/we engineer engines for growth, identity, and scale./i)).toBeInTheDocument();
+    expect(screen.getByText(/we engineer custom digital systems for growth, identity, and scale./i)).toBeInTheDocument();
   });
 });

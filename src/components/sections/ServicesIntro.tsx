@@ -18,26 +18,37 @@ export function ServicesIntro() {
   const subTextRef = useRef<HTMLParagraphElement>(null);
 
   useGSAP(() => {
-    if (visualTestMode || !containerRef.current) return;
+    if (!containerRef.current) return;
 
-    // Reset initial states manually in case of fast scroll/refresh
-    gsap.set([text1Ref.current, text2Ref.current], { y: '110%' });
-    gsap.set(subTextRef.current, { opacity: 0, y: 20 });
+    if (visualTestMode) {
+      // Show immediately in visual tests so screenshots capture the text
+      gsap.set([text1Ref.current, text2Ref.current], { y: '0%' });
+      gsap.set(subTextRef.current, { opacity: 0.8, y: 0 });
+      return;
+    }
 
-    const tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: containerRef.current,
-        start: 'top top',
-        end: '+=100%',
-        pin: true,
-        scrub: 1,
-        anticipatePin: 1,
-      }
+    const mm = gsap.matchMedia();
+
+    // Only apply scroll-triggered entry animations on mobile/tablet (max-width: 1023px)
+    mm.add('(max-width: 1023px)', () => {
+      // Reset initial states manually in case of fast scroll/refresh
+      gsap.set([text1Ref.current, text2Ref.current], { y: '110%' });
+      gsap.set(subTextRef.current, { opacity: 0, y: 20 });
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: containerRef.current,
+          start: 'top 80%',
+          toggleActions: 'play none none none',
+        }
+      });
+
+      tl.to(text1Ref.current, { y: '0%', duration: 0.8, ease: 'power3.out' })
+        .to(text2Ref.current, { y: '0%', duration: 0.8, ease: 'power3.out' }, '-=0.5')
+        .to(subTextRef.current, { opacity: 0.8, y: 0, duration: 0.8, ease: 'power2.out' }, '-=0.3');
     });
 
-    tl.to(text1Ref.current, { y: '0%', duration: 1, ease: 'power3.out' })
-      .to(text2Ref.current, { y: '0%', duration: 1, ease: 'power3.out' }, '-=0.6')
-      .to(subTextRef.current, { opacity: 0.8, y: 0, duration: 1, ease: 'power2.out' }, '-=0.4');
+    return () => mm.revert();
 
   }, { scope: containerRef });
 
@@ -54,7 +65,7 @@ export function ServicesIntro() {
           </span>
         </h2>
         <p ref={subTextRef} className="services-intro__subheadline">
-          We engineer engines for growth, identity, and scale.
+          We engineer custom digital systems for growth, identity, and scale.
         </p>
       </div>
     </section>
