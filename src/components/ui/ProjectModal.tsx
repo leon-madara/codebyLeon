@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { X, ExternalLink, Github } from 'lucide-react';
+import SafeImage from '../SafeImage';
 
 export interface ProjectData {
     id: number;
@@ -110,7 +111,7 @@ export function ProjectModal({ project, isOpen, onClose }: ProjectModalProps) {
                 {/* Hero Image */}
                 <div className="relative h-48 md:h-72 w-full overflow-hidden">
                     {/* Use img tag directly for now, assuming public assets */}
-                    <img
+                    <SafeImage
                         src={project.image}
                         alt={project.name}
                         className="w-full h-full object-cover"

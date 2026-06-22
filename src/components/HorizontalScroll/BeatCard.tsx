@@ -1,4 +1,5 @@
 import { ReactNode, forwardRef } from 'react';
+import SafeImage from '../SafeImage';
 
 interface BeatCardProps {
   step: number;
@@ -32,7 +33,7 @@ export const BeatCard = forwardRef<HTMLElement, BeatCardProps>(({
       {/* Left side: Visuals */}
       <div className="beat-card__media">
         <div className="beat-card__accent-line" />
-        <img src={imageSrc} alt={heading} className="beat-card__image" />
+        <SafeImage src={imageSrc} alt={heading} className="beat-card__image" />
         
         <div className="beat-card__badge hs-beat-reveal">
           <span className="beat-card__badge-dot" />

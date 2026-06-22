@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import {
   ArrowRight,
   BookOpen,
@@ -604,10 +605,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.hero.mobile} />
-                        <img src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
-                      </picture>
+                      <SafeImage src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -650,10 +648,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/about</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.values.mobile} />
-                        <img src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -712,10 +707,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/work</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.workIndex.mobile} />
-                        <img src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -737,10 +729,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/work/tassis-residence</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.workDetail.mobile} />
-                        <img src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -800,10 +789,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/mentorship</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.mentorship.mobile} />
-                        <img src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">

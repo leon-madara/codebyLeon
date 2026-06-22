@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -610,10 +611,7 @@ export function LegitLogisticsCaseStudyPage() {
                       <div className="browser-url">localhost:5173/admin/dashboard</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio-legit-dashboard-mobile.png" />
-                        <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -711,7 +709,7 @@ export function LegitLogisticsCaseStudyPage() {
                 <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(16, 185, 129, 0.12)', '--workspace-bg-end': 'rgba(16, 185, 129, 0.02)' } as React.CSSProperties}>
                   <div className="phone-shell">
                     <div className="phone-screen">
-                      <img
+                      <SafeImage
                         src="/portfolio-legit-driver-mobile.png"
                         alt="Legit Logistics driver app screenshot"
                       />
@@ -831,15 +829,9 @@ export function LegitLogisticsCaseStudyPage() {
                     </div>
                     <div className="browser-body">
                       {system3ActiveTab === 'lookup' ? (
-                        <picture>
-                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-lookup-mobile.png" />
-                          <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
-                        </picture>
+                        <SafeImage src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
                       ) : (
-                        <picture>
-                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-tracking-mobile.png" />
-                          <img src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
-                        </picture>
+                        <SafeImage src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
                       )}
                     </div>
                   </div>

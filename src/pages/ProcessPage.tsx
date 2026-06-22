@@ -1,4 +1,5 @@
 import { useRef, type ComponentType } from 'react';
+import SafeImage from '../components/SafeImage';
 import {
   ArrowRight,
   Check,
@@ -286,10 +287,12 @@ export function ProcessPage() {
         </div>
 
         <div className="process-page__hero-media">
-          <img
+          <SafeImage
             className="process-page__hero-image"
             src={heroImage}
             alt="Designer planning a website beside a laptop and notebook"
+            fetchPriority="high"
+            loading="eager"
           />
         </div>
       </section>
@@ -337,7 +340,7 @@ export function ProcessPage() {
         </div>
 
         <ol className="process-page__journey-list" aria-label="Five-step website journey">
-          <img
+          <SafeImage
             ref={pathRef}
             className="process-page__journey-path"
             src={journeyPath}
@@ -349,7 +352,7 @@ export function ProcessPage() {
               className={`process-page__journey-step process-page__journey-step--${stage.side}`}
               key={stage.number}
             >
-              <img
+              <SafeImage
                 className="process-page__journey-image"
                 src={stage.image}
                 alt={stage.imageAlt}

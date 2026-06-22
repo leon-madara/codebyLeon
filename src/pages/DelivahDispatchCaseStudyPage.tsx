@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -554,10 +555,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-home-hero-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -608,10 +606,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000#services</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-services-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -632,10 +627,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/contact</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-contact-form-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -686,10 +678,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/register</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -733,10 +722,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/register/step-4</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -787,10 +773,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/admin/login</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-admin-login-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
