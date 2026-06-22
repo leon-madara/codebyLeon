@@ -13,8 +13,8 @@
 
 @media (min-width: 769px) {
   .hero-scroll-wrapper {
-    /* 100vh hero + 120vh animation + 10vh hold */
-    height: 230vh;
+    /* 100vh hero + 180vh animation + 20vh hold */
+    height: 300vh;
   }
 }
 

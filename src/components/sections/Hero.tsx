@@ -22,9 +22,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   const visualTestMode = isVisualTestMode();
   const { theme } = useTheme();
   const WORD_GROWTH_START_PROGRESS = 0.08;
-  const HERO_ANIMATION_SCROLL_VH = 120;
-  const HERO_POST_ANIMATION_HOLD_VH = 10;
-  const HERO_REVERSE_PEEL_SCROLL_VH = 34;
+  const HERO_ANIMATION_SCROLL_VH = 180;
+  const HERO_POST_ANIMATION_HOLD_VH = 20;
+  const HERO_REVERSE_PEEL_SCROLL_VH = 50;
   const HERO_CUBE_PERSPECTIVE = 1400;
   const HERO_CUBE_PEEL_ROTATION_DEG = 72;
   const HERO_CUBE_PEEL_LIFT_PERCENT = -20;
@@ -80,11 +80,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
     const clearHeroAnimationArtifacts = () => {
       if (timelineRef.current) {
+        gsap.killTweensOf(timelineRef.current);
         timelineRef.current.kill();
         timelineRef.current = null;
       }
 
       if (reversePeelTlRef.current) {
+        gsap.killTweensOf(reversePeelTlRef.current);
         reversePeelTlRef.current.kill();
         reversePeelTlRef.current = null;
       }
@@ -167,17 +169,21 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         onLeave: () => {
           hasReachedWordStageRef.current = true;
           if (timelineRef.current) {
+            gsap.killTweensOf(timelineRef.current);
             timelineRef.current.progress(1);
           }
           if (reversePeelTlRef.current) {
+            gsap.killTweensOf(reversePeelTlRef.current);
             reversePeelTlRef.current.pause(0);
           }
         },
         onEnterBack: () => {
           if (!timelineRef.current) return;
           hasReachedWordStageRef.current = true;
+          gsap.killTweensOf(timelineRef.current);
           timelineRef.current.progress(1);
           if (reversePeelTlRef.current) {
+            gsap.killTweensOf(reversePeelTlRef.current);
             reversePeelTlRef.current.pause(0);
           }
           if (wordContainerRef.current) {
@@ -521,12 +527,25 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             const isReverseScroll = self.direction < 0;
 
             if (!isReverseScroll || !hasReachedWordStageRef.current) {
-              timelineRef.current.progress(animationProgress);
-              hasReachedWordStageRef.current = hasReachedWordStageRef.current || animationProgress >= 1;
+              // Smoothly tween the timeline progress
+              gsap.to(timelineRef.current, {
+                progress: animationProgress,
+                duration: 0.3,
+                ease: "power1.out",
+                overwrite: "auto",
+                onUpdate: () => {
+                  if (timelineRef.current && timelineRef.current.progress() >= 1) {
+                    hasReachedWordStageRef.current = true;
+                  }
+                }
+              });
+
               if (reversePeelTlRef.current) {
+                gsap.killTweensOf(reversePeelTlRef.current);
                 reversePeelTlRef.current.pause(0);
               }
             } else {
+              gsap.killTweensOf(timelineRef.current);
               timelineRef.current.progress(1);
 
               if (reversePeelTlRef.current) {
@@ -543,15 +562,19 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
                     1
                   );
 
-                reversePeelTlRef.current.progress(peelProgress);
-
-                // Once reverse peel is fully completed, restore the base hero experience:
-                // content + typing loop (word iteration) and clear grown-word layer.
-                if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
-                  reverseCompletionAppliedRef.current = true;
-                  showBaseHeroState(true);
-                  return;
-                }
+                // Smoothly tween the reverse peel timeline progress
+                gsap.to(reversePeelTlRef.current, {
+                  progress: peelProgress,
+                  duration: 0.3,
+                  ease: "power1.out",
+                  overwrite: "auto",
+                  onUpdate: () => {
+                    if (reversePeelTlRef.current && reversePeelTlRef.current.progress() >= 0.999 && !reverseCompletionAppliedRef.current) {
+                      reverseCompletionAppliedRef.current = true;
+                      showBaseHeroState(true);
+                    }
+                  }
+                });
               }
             }
           }
