@@ -94,6 +94,11 @@ export const LOCAL_TO_CLOUDFLARE_MAP: Record<string, string> = {
   'article3-concrete-archway.png': 'blog_article3_archway',
   'article3-metallic-shield.png': 'blog_article3_shield',
 
+  // New Blog Post Editorial Illustrations
+  'article-website-mistakes.png': 'blog_article_mistakes',
+  'article-website-transformation.png': 'blog_article_transformation',
+  'article-website-inquiries.png': 'blog_article_inquiries',
+
   // Process Page Journey & Hero Illustration Images
   '07-refresh-process.png': 'process_hero',
   '02-launch-plan.png': 'process_stage1',
