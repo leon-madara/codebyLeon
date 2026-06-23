@@ -18,7 +18,7 @@ export function FinalCTA() {
           Let's discuss how we can help your business look professional and attract better clients.
         </p>
         <div className="final-cta__cta">
-          <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
+          <a href={import.meta.env.VITE_PHONE_NUMBER || "/get-started.html"} className="btn-primary">Book a free 20-minute call</a>
           <a href="#portfolio" className="btn-secondary">View Our Work</a>
         </div>
       </div>

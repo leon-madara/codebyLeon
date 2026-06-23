@@ -5,6 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ThemeProvider } from './contexts/ThemeContext';
+import { AnimationProvider } from './contexts/AnimationContext';
 import { Navigation } from './components/Layout/Navigation';
 import { TorchEffect } from './components/TorchEffect';
 import { ScrollToTop } from './components/ScrollToTop';
@@ -79,9 +80,10 @@ function App() {
 
   return (
     <ThemeProvider>
-      <BrowserRouter>
-        <Navigation />
-        <ScrollToTop />
+      <AnimationProvider>
+        <BrowserRouter>
+          <Navigation />
+          <ScrollToTop />
 
         <SmoothScrollShell visualTestMode={visualTestMode}>
           {!visualTestMode && <TorchEffect />}
@@ -112,6 +114,7 @@ function App() {
           </Suspense>
         </SmoothScrollShell>
       </BrowserRouter>
+     </AnimationProvider>
     </ThemeProvider>
   );
 }

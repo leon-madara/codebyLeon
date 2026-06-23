@@ -77,7 +77,7 @@ export function About() {
 
         <div className="about__cta">
           <p className="about__cta-text">Let's discuss how we can help your business</p>
-          <a href="/get-started.html" className="btn-primary">Book a free 20-minute call</a>
+          <a href={import.meta.env.VITE_PHONE_NUMBER || "/get-started.html"} className="btn-primary">Book a free 20-minute call</a>
         </div>
       </div>
     </section>
