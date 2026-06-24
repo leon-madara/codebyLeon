@@ -544,7 +544,19 @@ export function About3DStack() {
             Helping Kenyan Businesses{" "}
             <em>Look Professional Online</em>
           </h1>
+
+          <div className="about-3d-stack__video-wrapper">
+            <video 
+              src="/videos/codebyleon-intro.mp4" 
+              controls 
+              preload="metadata"
+              className="about-3d-stack__video"
+              aria-label="A message from CodeByLeon founder, Leon Madara"
+            />
+          </div>
+
           <p className="about-3d-stack__subheadline">
+            <strong>A message from CodeByLeon founder – Leon Madara.</strong><br/>
             I design websites and visuals that help Kenyan businesses look
             professional, get more inquiries, and build trust online.
           </p>
