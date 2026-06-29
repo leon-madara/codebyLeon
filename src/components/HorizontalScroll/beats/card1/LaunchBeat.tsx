@@ -15,6 +15,7 @@ const Card1LaunchBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="Launch"
       subheading="Your moment to shine"
       body="Go live with confidence. Your new digital presence is ready to attract, convert, and delight your ideal clients."
+      actionHint="Start your project →"
     />
   );
 });

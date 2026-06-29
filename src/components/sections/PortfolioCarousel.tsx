@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { projects, type Project } from "@/data/projects";
+import SafeImage from "../SafeImage";
 import {
   ArrowUpRight,
   ChevronLeft,
@@ -395,7 +396,7 @@ const PortfolioCarousel = () => {
                           srcSet={project.mobileImage}
                         />
                       ) : null}
-                      <img
+                      <SafeImage
                         src={project.image}
                         alt={project.name}
                         className="h-full w-full object-cover"

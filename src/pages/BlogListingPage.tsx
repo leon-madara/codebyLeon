@@ -4,8 +4,46 @@ import { getAllBlogPosts, getAllCategories } from '../utils/blogUtils';
 import { BlogPost } from '../types/blog';
 import BlogCardSkeleton from '../components/Blog/BlogCardSkeleton';
 import { SITE_NAME, SITE_URL, getAbsoluteUrl, usePageSeo } from '../utils/seo';
+import { Filter, X, LayoutGrid, TrendingUp, Compass, BookOpen, Cpu, Eye, Lightbulb, ChevronRight } from 'lucide-react';
 
 type SortOption = 'date' | 'title';
+
+const categoryDetails: Record<string, {
+  desc: string;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
+  colorClass: string;
+}> = {
+  "Business Growth": {
+    desc: "Actionable ideas on scaling your client base.",
+    icon: TrendingUp,
+    colorClass: "blog__category-icon--growth"
+  },
+  "Business Strategy": {
+    desc: "High-level positioning and planning tips.",
+    icon: Compass,
+    colorClass: "blog__category-icon--strategy"
+  },
+  "Case Studies": {
+    desc: "Deep dives into how we helped businesses grow.",
+    icon: BookOpen,
+    colorClass: "blog__category-icon--cases"
+  },
+  "Technology & Reliability": {
+    desc: "Web tools, speed, hosting, and clean code.",
+    icon: Cpu,
+    colorClass: "blog__category-icon--tech"
+  },
+  "User Experience": {
+    desc: "Designing intuitive interfaces that convert.",
+    icon: Eye,
+    colorClass: "blog__category-icon--ux"
+  },
+  "Website Tips": {
+    desc: "Practical adjustments to improve your site today.",
+    icon: Lightbulb,
+    colorClass: "blog__category-icon--tips"
+  }
+};
 
 const readMoreHighlights = [
   {
@@ -33,10 +71,24 @@ const readMoreHighlights = [
     cta: 'Open the code lab',
   },
 ];
+
 export function BlogListingPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>('date');
   const [loading, setLoading] = useState(true);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+  // Lock body scroll when mobile filter drawer is open
+  useEffect(() => {
+    if (isFilterOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isFilterOpen]);
 
   // Simulate loading state for better UX (in real app, this would be actual async data loading)
   useEffect(() => {
@@ -107,6 +159,7 @@ export function BlogListingPage() {
 
   const handleCategoryFilter = (category: string | null) => {
     setSelectedCategory(category);
+    setIsFilterOpen(false);
   };
 
   const handleSortChange = (sort: SortOption) => {
@@ -135,8 +188,29 @@ export function BlogListingPage() {
           </p>
         </div>
 
-        {/* Filters and Sorting */}
-        <div className="blog__controls">
+        {/* Floating Mobile Trigger Handle */}
+        <button
+          type="button"
+          className={`blog__drawer-trigger ${selectedCategory !== null ? 'is-filtering' : ''}`}
+          onClick={() => setIsFilterOpen(true)}
+          aria-label="Open filters"
+        >
+          <Filter size={16} />
+          <span>Filters</span>
+          {selectedCategory !== null && <span className="blog__drawer-trigger-badge" />}
+        </button>
+
+        {/* Backdrop Overlay for Mobile Drawer */}
+        {isFilterOpen && (
+          <div
+            className="blog__controls-overlay"
+            onClick={() => setIsFilterOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Desktop Controls (Tablet & Up) */}
+        <div className="blog__controls blog__controls--desktop">
           {/* Category Filters */}
           <div className="blog__filters">
             <button
@@ -173,6 +247,89 @@ export function BlogListingPage() {
           </div>
         </div>
 
+        {/* Mobile Drawer (Mobile Only) */}
+        <div className={`blog__controls blog__controls--mobile ${isFilterOpen ? 'is-open' : ''}`}>
+          {/* Drawer Header */}
+          <div className="blog__controls-header">
+            <span className="blog__controls-title">Filter By</span>
+            <button
+              type="button"
+              className="blog__controls-close"
+              onClick={() => setIsFilterOpen(false)}
+              aria-label="Close filters"
+            >
+              <X size={18} />
+            </button>
+          </div>
+
+          {/* Inner rectangle container wrapping scrollable categories */}
+          <div className="blog__drawer-inner-box">
+            <div className="blog__filters-vertical">
+              <button
+                type="button"
+                className={`blog__filter-button-vertical ${selectedCategory === null ? 'is-active' : ''}`}
+                onClick={() => handleCategoryFilter(null)}
+              >
+                <div className="blog__filter-icon-container blog__category-icon--all">
+                  <LayoutGrid className="blog__filter-icon" size={18} />
+                </div>
+                <div className="blog__filter-info">
+                  <span className="blog__filter-name">All Posts</span>
+                  <span className="blog__filter-desc">Show all articles across all topics.</span>
+                </div>
+                <ChevronRight className="blog__filter-chevron" size={14} />
+              </button>
+              {categories.map(category => {
+                const detail = categoryDetails[category] || {
+                  desc: "Explore articles in this category.",
+                  icon: BookOpen,
+                  colorClass: "blog__category-icon--all"
+                };
+                const IconComp = detail.icon;
+                return (
+                  <button
+                    key={category}
+                    type="button"
+                    className={`blog__filter-button-vertical ${selectedCategory === category ? 'is-active' : ''}`}
+                    onClick={() => handleCategoryFilter(category)}
+                  >
+                    <div className={`blog__filter-icon-container ${detail.colorClass}`}>
+                      <IconComp className="blog__filter-icon" size={18} />
+                    </div>
+                    <div className="blog__filter-info">
+                      <span className="blog__filter-name">{category}</span>
+                      <span className="blog__filter-desc">{detail.desc}</span>
+                    </div>
+                    <ChevronRight className="blog__filter-chevron" size={14} />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom active tag capsules row */}
+          <div className="blog__drawer-tags-footer">
+            <button
+              type="button"
+              className={`blog__drawer-footer-tag ${selectedCategory === null ? 'is-active' : ''}`}
+              onClick={() => handleCategoryFilter(null)}
+            >
+              Latest
+            </button>
+            {selectedCategory && (
+              <button
+                type="button"
+                className="blog__drawer-footer-tag blog__drawer-footer-tag--dismissible"
+                onClick={() => handleCategoryFilter(null)}
+                aria-label={`Clear filter: ${selectedCategory}`}
+              >
+                <span>{selectedCategory}</span>
+                <X size={10} className="blog__drawer-footer-tag-close" />
+              </button>
+            )}
+          </div>
+        </div>
+
         {/* Blog Posts Grid */}
         {loading ? (
           <div className="blog__grid">
@@ -205,15 +362,28 @@ export function BlogListingPage() {
           </div>
         )}
 
-        {/* Results Summary */}
+        {/* Results Summary & Active Filters */}
         {!loading && (
           <div className="blog__results">
             <p className="blog__results-text">
               Showing {filteredAndSortedPosts.length} of {allPosts.length} posts
-              {selectedCategory && ` in "${selectedCategory}"`}
             </p>
+            {selectedCategory && (
+              <div className="blog__active-tags">
+                <button
+                  type="button"
+                  className="blog__active-tag"
+                  onClick={() => handleCategoryFilter(null)}
+                  aria-label={`Clear filter: ${selectedCategory}`}
+                >
+                  <span>{selectedCategory}</span>
+                  <X size={12} className="blog__active-tag-icon" />
+                </button>
+              </div>
+            )}
           </div>
         )}
+
         {!loading && (
           <div className="blog__read-more">
             <div className="blog__read-more-heading">

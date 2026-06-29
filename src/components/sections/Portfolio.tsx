@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
 import { useScrollAnimation } from '../../hooks/useScrollAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
 import { ProjectModal, type ProjectData } from '../ui/ProjectModal';
+import SafeImage from '../SafeImage';
 
 type FilterType = 'all' | 'small-business' | 'creative' | 'saas';
 type Direction = 'next' | 'prev';
@@ -543,7 +544,7 @@ export function Portfolio() {
                       }
                     }}
                   >
-                    <img src={activeItem.image} alt={activeItem.name} />
+                    <SafeImage src={activeItem.image} alt={activeItem.name} />
                   </div>
                 </div>
 
@@ -563,7 +564,7 @@ export function Portfolio() {
                         }
                       }}
                     >
-                      <img src={incomingItem.image} alt={incomingItem.name} />
+                      <SafeImage src={incomingItem.image} alt={incomingItem.name} />
                     </div>
                   </div>
                 )}

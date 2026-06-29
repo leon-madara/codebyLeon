@@ -1050,3 +1050,8 @@
 .case-study__hero-copy .v1-back-pill {
   margin-bottom: var(--spacing-lg);
 }
+
+.case-study__article-panel .v1-main {
+  padding-top: var(--article-top-space);
+}
+

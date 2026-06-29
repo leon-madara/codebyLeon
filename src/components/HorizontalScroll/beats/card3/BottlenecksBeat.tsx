@@ -15,6 +15,7 @@ const Card3BottlenecksBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Bottlenecks"
       subheading="Design work piles up, campaigns wait"
       body="You're growing fast, but design work piles up. Campaigns wait, launches get delayed, and you can't afford a full-time designer yet."
+      actionHint="See how we help →"
     />
   );
 });

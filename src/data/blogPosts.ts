@@ -6,9 +6,9 @@
  */
 
 import { BlogPost } from '../types/blog';
-import projectLogistics from '../assets/project-logistics.jpg';
-import projectRestaurant from '../assets/project-restaurant.jpg';
-import projectSaas from '../assets/project-saas.jpg';
+import articleMistakes from '../assets/images/blog/article-website-mistakes.png';
+import articleTransformation from '../assets/images/blog/article-website-transformation.png';
+import articleInquiries from '../assets/images/blog/article-website-inquiries.png';
 
 // Premium Generated Blog Editorial Images (2024 Articles)
 import article1Glass from '../assets/images/blog/article1-architectural-glass.png';
@@ -37,7 +37,7 @@ export const blogPosts: BlogPost[] = [
     description: "Common pitfalls that prevent your website from converting visitors into customers.",
     author: "Leon",
     publishedDate: "2025-01-15",
-    featuredImage: projectSaas,
+    featuredImage: articleMistakes,
     tags: ["web design", "conversion", "business", "user experience"],
     readTime: 5,
     content: `
@@ -195,7 +195,7 @@ Remember: Your website should work for you 24/7, converting visitors into custom
     description: "Real examples of how professional website redesigns transformed struggling businesses into thriving online presences.",
     author: "Leon",
     publishedDate: "2025-01-08",
-    featuredImage: projectRestaurant,
+    featuredImage: articleTransformation,
     tags: ["case studies", "web design", "transformation", "results"],
     readTime: 8,
     content: `
@@ -327,7 +327,7 @@ interface LeadForm {
     description: "The data-driven approach to understanding why professional websites generate more leads and how to implement these strategies.",
     author: "Leon",
     publishedDate: "2025-01-01",
-    featuredImage: projectLogistics,
+    featuredImage: articleInquiries,
     tags: ["business growth", "lead generation", "conversion", "strategy"],
     readTime: 7,
     content: `

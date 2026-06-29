@@ -79,6 +79,7 @@
 @import './styles/components/forms.css';
 @import './styles/components/modals.css';
 @import './styles/components/beat-card.css';
+@import './styles/components/theme-toggle.css';
 
 /* ============================================
    6. SECTIONS
@@ -87,6 +88,7 @@
    Each section has its own file with BEM naming. */
 @import './styles/sections/hero.css';
 @import './styles/sections/services.css';
+@import './styles/sections/services-intro.css';
 @import './styles/sections/portfolio.css';
 @import './styles/sections/portfolio-stacked.css';
 @import './styles/sections/about.css';

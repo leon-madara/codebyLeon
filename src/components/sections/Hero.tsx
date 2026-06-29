@@ -5,6 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTypingAnimation } from '../../hooks/useTypingAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
 import { useTheme } from '../../contexts/ThemeContext';
+import { useAnimation } from '../../contexts/AnimationContext';
 import { MouseTrail } from '../MouseTrail';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -21,10 +22,12 @@ interface HeroProps {
 export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref) => {
   const visualTestMode = isVisualTestMode();
   const { theme } = useTheme();
+  const { torchEffectEnabled } = useAnimation();
+  const torchEffectEnabledRef = useRef(torchEffectEnabled);
   const WORD_GROWTH_START_PROGRESS = 0.08;
-  const HERO_ANIMATION_SCROLL_VH = 120;
-  const HERO_POST_ANIMATION_HOLD_VH = 10;
-  const HERO_REVERSE_PEEL_SCROLL_VH = 34;
+  const HERO_ANIMATION_SCROLL_VH = 180;
+  const HERO_POST_ANIMATION_HOLD_VH = 20;
+  const HERO_REVERSE_PEEL_SCROLL_VH = 50;
   const HERO_CUBE_PERSPECTIVE = 1400;
   const HERO_CUBE_PEEL_ROTATION_DEG = 72;
   const HERO_CUBE_PEEL_LIFT_PERCENT = -20;
@@ -80,11 +83,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
     const clearHeroAnimationArtifacts = () => {
       if (timelineRef.current) {
+        gsap.killTweensOf(timelineRef.current);
         timelineRef.current.kill();
         timelineRef.current = null;
       }
 
       if (reversePeelTlRef.current) {
+        gsap.killTweensOf(reversePeelTlRef.current);
         reversePeelTlRef.current.kill();
         reversePeelTlRef.current = null;
       }
@@ -116,7 +121,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         });
       }
 
-      if (line2Ref.current) {
+      if (line1Ref.current && line2Ref.current && line3Ref.current) {
+        gsap.set([line1Ref.current, line2Ref.current, line3Ref.current], {
+          y: "0%",
+          autoAlpha: 1,
+          pointerEvents: 'auto'
+        });
+      } else if (line2Ref.current) {
         gsap.set(line2Ref.current, {
           autoAlpha: 1,
           pointerEvents: 'auto'
@@ -150,7 +161,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     });
 
     mm.add('(min-width: 769px)', () => {
-      document.body.classList.add('hero-torch-tint-active');
+      if (torchEffectEnabledRef.current) {
+        document.body.classList.add('hero-torch-tint-active');
+      }
 
       // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
       // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
@@ -167,17 +180,21 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         onLeave: () => {
           hasReachedWordStageRef.current = true;
           if (timelineRef.current) {
+            gsap.killTweensOf(timelineRef.current);
             timelineRef.current.progress(1);
           }
           if (reversePeelTlRef.current) {
+            gsap.killTweensOf(reversePeelTlRef.current);
             reversePeelTlRef.current.pause(0);
           }
         },
         onEnterBack: () => {
           if (!timelineRef.current) return;
           hasReachedWordStageRef.current = true;
+          gsap.killTweensOf(timelineRef.current);
           timelineRef.current.progress(1);
           if (reversePeelTlRef.current) {
+            gsap.killTweensOf(reversePeelTlRef.current);
             reversePeelTlRef.current.pause(0);
           }
           if (wordContainerRef.current) {
@@ -215,7 +232,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         onUpdate: (self) => {
           const clampedProgress = Math.min(self.progress, 1);
           const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
-          const shouldShowTorchTint = self.progress < WORD_GROWTH_START_PROGRESS;
+          const shouldShowTorchTint = torchEffectEnabledRef.current && self.progress < WORD_GROWTH_START_PROGRESS;
           document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
 
           // Case 1: Start Scroll Interaction
@@ -521,12 +538,25 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             const isReverseScroll = self.direction < 0;
 
             if (!isReverseScroll || !hasReachedWordStageRef.current) {
-              timelineRef.current.progress(animationProgress);
-              hasReachedWordStageRef.current = hasReachedWordStageRef.current || animationProgress >= 1;
+              // Smoothly tween the timeline progress
+              gsap.to(timelineRef.current, {
+                progress: animationProgress,
+                duration: 0.3,
+                ease: "power1.out",
+                overwrite: "auto",
+                onUpdate: () => {
+                  if (timelineRef.current && timelineRef.current.progress() >= 1) {
+                    hasReachedWordStageRef.current = true;
+                  }
+                }
+              });
+
               if (reversePeelTlRef.current) {
+                gsap.killTweensOf(reversePeelTlRef.current);
                 reversePeelTlRef.current.pause(0);
               }
             } else {
+              gsap.killTweensOf(timelineRef.current);
               timelineRef.current.progress(1);
 
               if (reversePeelTlRef.current) {
@@ -543,15 +573,19 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
                     1
                   );
 
-                reversePeelTlRef.current.progress(peelProgress);
-
-                // Once reverse peel is fully completed, restore the base hero experience:
-                // content + typing loop (word iteration) and clear grown-word layer.
-                if (peelProgress >= 0.999 && !reverseCompletionAppliedRef.current) {
-                  reverseCompletionAppliedRef.current = true;
-                  showBaseHeroState(true);
-                  return;
-                }
+                // Smoothly tween the reverse peel timeline progress
+                gsap.to(reversePeelTlRef.current, {
+                  progress: peelProgress,
+                  duration: 0.3,
+                  ease: "power1.out",
+                  overwrite: "auto",
+                  onUpdate: () => {
+                    if (reversePeelTlRef.current && reversePeelTlRef.current.progress() >= 0.999 && !reverseCompletionAppliedRef.current) {
+                      reverseCompletionAppliedRef.current = true;
+                      showBaseHeroState(true);
+                    }
+                  }
+                });
               }
             }
           }
@@ -570,6 +604,15 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       document.body.classList.remove('hero-torch-tint-active');
     };
   }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, visualTestMode] });
+
+  // Clean up body classes immediately if spotlight is toggled off
+  useEffect(() => {
+    torchEffectEnabledRef.current = torchEffectEnabled;
+    if (!torchEffectEnabled) {
+      document.body.classList.remove('hero-torch-tint-active');
+      document.body.classList.remove('torch-expanding');
+    }
+  }, [torchEffectEnabled]);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 768);
@@ -645,7 +688,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
           {/* CTAs */}
           <div ref={ctasRef} className="hero__ctas hero__anim-item">
-            <a href="/get-started.html" className="hero__cta hero__cta--primary">Book a free 20-minute call</a>
+            <a href={import.meta.env.VITE_PHONE_NUMBER || "/get-started.html"} className="hero__cta hero__cta--primary">Book a free 20-minute call</a>
             <a href="#portfolio" className="hero__cta hero__cta--secondary">VIEW PORTFOLIO</a>
           </div>
         </div>

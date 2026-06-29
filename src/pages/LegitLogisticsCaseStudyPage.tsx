@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -441,51 +442,53 @@ export function LegitLogisticsCaseStudyPage() {
       </div>
 
       {/* Global Design Switcher (Floating pills) */}
-      <div 
-        className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
-        role="tablist" 
-        aria-label="Design directions"
-        style={{ 
-          '--indicator-pos': activeIndex 
-        } as React.CSSProperties}
-      >
-        <div className="v2-pill-indicator" />
-        <button
-          className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(0);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 0}
+      <div className={`global-v2-switcher-wrapper ${isScrollHidden ? 'is-scroll-hidden' : ''}`}>
+        <div 
+          className="v2-pills global-v2-switcher" 
+          role="tablist" 
+          aria-label="Design directions"
+          style={{ 
+            '--indicator-pos': activeIndex 
+          } as React.CSSProperties}
         >
-          <span className="v2-pill-text-full">Dashboard</span>
-          <span className="v2-pill-text-short">Dash</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(1);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 1}
-        >
-          <span className="v2-pill-text-full">Driver App</span>
-          <span className="v2-pill-text-short">Driver</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(2);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 2}
-        >
-          <span className="v2-pill-text-full">Tracking</span>
-          <span className="v2-pill-text-short">Track</span>
-        </button>
+          <div className="v2-pill-indicator" />
+          <button
+            className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(0);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 0}
+          >
+            <span className="v2-pill-text-full">Dashboard</span>
+            <span className="v2-pill-text-short">Dash</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(1);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 1}
+          >
+            <span className="v2-pill-text-full">Driver App</span>
+            <span className="v2-pill-text-short">Driver</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(2);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 2}
+          >
+            <span className="v2-pill-text-full">Tracking</span>
+            <span className="v2-pill-text-short">Track</span>
+          </button>
+        </div>
       </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
@@ -608,10 +611,7 @@ export function LegitLogisticsCaseStudyPage() {
                       <div className="browser-url">localhost:5173/admin/dashboard</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio-legit-dashboard-mobile.png" />
-                        <img src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio-legit-dashboard.png" alt="Legit Logistics admin dashboard screenshot" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -709,7 +709,7 @@ export function LegitLogisticsCaseStudyPage() {
                 <div className="workspace-canvas-inline" style={{ '--workspace-bg-start': 'rgba(16, 185, 129, 0.12)', '--workspace-bg-end': 'rgba(16, 185, 129, 0.02)' } as React.CSSProperties}>
                   <div className="phone-shell">
                     <div className="phone-screen">
-                      <img
+                      <SafeImage
                         src="/portfolio-legit-driver-mobile.png"
                         alt="Legit Logistics driver app screenshot"
                       />
@@ -829,15 +829,9 @@ export function LegitLogisticsCaseStudyPage() {
                     </div>
                     <div className="browser-body">
                       {system3ActiveTab === 'lookup' ? (
-                        <picture>
-                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-lookup-mobile.png" />
-                          <img src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
-                        </picture>
+                        <SafeImage src="/portfolio-legit-lookup.png" alt="Legit Logistics order lookup screenshot" />
                       ) : (
-                        <picture>
-                          <source media="(max-width: 768px)" srcSet="/portfolio-legit-tracking-mobile.png" />
-                          <img src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
-                        </picture>
+                        <SafeImage src="/portfolio-legit-tracking.png" alt="Legit Logistics live order tracking page screenshot" />
                       )}
                     </div>
                   </div>

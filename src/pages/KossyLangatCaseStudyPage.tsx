@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import {
   ArrowRight,
   BookOpen,
@@ -450,51 +451,53 @@ export function KossyLangatCaseStudyPage() {
       </div>
 
       {/* Global Design Switcher (Floating pills) */}
-      <div 
-        className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
-        role="tablist" 
-        aria-label="Design directions"
-        style={{ 
-          '--indicator-pos': activeIndex 
-        } as React.CSSProperties}
-      >
-        <div className="v2-pill-indicator" />
-        <button
-          className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(0);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 0}
+      <div className={`global-v2-switcher-wrapper ${isScrollHidden ? 'is-scroll-hidden' : ''}`}>
+        <div 
+          className="v2-pills global-v2-switcher" 
+          role="tablist" 
+          aria-label="Design directions"
+          style={{ 
+            '--indicator-pos': activeIndex 
+          } as React.CSSProperties}
         >
-          <span className="v2-pill-text-full">Identity & Values</span>
-          <span className="v2-pill-text-short">Identity</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(1);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 1}
-        >
-          <span className="v2-pill-text-full">Structural Portfolio</span>
-          <span className="v2-pill-text-short">Portfolio</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(2);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 2}
-        >
-          <span className="v2-pill-text-full">Mentorship & Voice</span>
-          <span className="v2-pill-text-short">Mentorship</span>
-        </button>
+          <div className="v2-pill-indicator" />
+          <button
+            className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(0);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 0}
+          >
+            <span className="v2-pill-text-full">Identity & Values</span>
+            <span className="v2-pill-text-short">Identity</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(1);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 1}
+          >
+            <span className="v2-pill-text-full">Structural Portfolio</span>
+            <span className="v2-pill-text-short">Portfolio</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(2);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 2}
+          >
+            <span className="v2-pill-text-full">Mentorship & Voice</span>
+            <span className="v2-pill-text-short">Mentorship</span>
+          </button>
+        </div>
       </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
@@ -602,10 +605,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.hero.mobile} />
-                        <img src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" />
-                      </picture>
+                      <SafeImage src={kossyAssets.hero.desktop} alt="Kossy Langat website homepage leading with The Orchestrator positioning" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -648,10 +648,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/about</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.values.mobile} />
-                        <img src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.values.desktop} alt="Kossy Langat about page values and identity section screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -710,10 +707,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/work</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.workIndex.mobile} />
-                        <img src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.workIndex.desktop} alt="Kossy Langat work index page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -735,10 +729,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/work/tassis-residence</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.workDetail.mobile} />
-                        <img src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.workDetail.desktop} alt="Tassis Residential Development work detail page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -798,10 +789,7 @@ export function KossyLangatCaseStudyPage() {
                       <div className="browser-url">localhost:3000/mentorship</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet={kossyAssets.mentorship.mobile} />
-                        <img src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
-                      </picture>
+                      <SafeImage src={kossyAssets.mentorship.desktop} alt="Kossy Langat mentorship page hero screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">

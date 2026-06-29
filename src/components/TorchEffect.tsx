@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useLocation } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useAnimation } from '../contexts/AnimationContext';
+import { X } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
@@ -10,14 +12,23 @@ gsap.registerPlugin(ScrollTrigger);
 export const TorchEffect = () => {
     const location = useLocation();
     const { theme } = useTheme();
+    const { torchEffectEnabled, setTorchEffectEnabled } = useAnimation();
     const isHomeRoute = location.pathname === '/';
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
     const containerRef = useRef<HTMLDivElement>(null);
     const [isMobile, setIsMobile] = useState(false);
+    const userClosedRef = useRef(false);
+
+    // Reset torch effect to enabled when switching back to dark theme
+    useEffect(() => {
+        if (theme === 'dark' && !userClosedRef.current) {
+            setTorchEffectEnabled(true);
+        }
+    }, [theme, setTorchEffectEnabled]);
 
     // Track mouse position
     useEffect(() => {
-        if (theme !== 'dark' || isMobile || !isHomeRoute) return;
+        if (theme !== 'dark' || isMobile || !isHomeRoute || !torchEffectEnabled) return;
 
         const handleMouseMove = (e: MouseEvent) => {
             // Only update position if NOT expanding (scroll is at top)
@@ -38,7 +49,7 @@ export const TorchEffect = () => {
 
         window.addEventListener('mousemove', handleMouseMove);
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, [theme, isMobile, isHomeRoute]);
+    }, [theme, isMobile, isHomeRoute, torchEffectEnabled]);
 
     useEffect(() => {
         const updateIsMobile = () => setIsMobile(window.innerWidth <= 768);
@@ -49,7 +60,11 @@ export const TorchEffect = () => {
 
     // Handle scroll expansion
     useEffect(() => {
-        if (theme !== 'dark' || isMobile || !isHomeRoute || !containerRef.current) return;
+        if (theme !== 'dark' || isMobile || !isHomeRoute || !containerRef.current || !torchEffectEnabled) {
+            // Ensure classes are cleared if conditions change
+            document.body.classList.remove('torch-expanding');
+            return;
+        }
 
         // Initialize radius variable
         containerRef.current.style.setProperty('--radius', '250px');
@@ -88,11 +103,11 @@ export const TorchEffect = () => {
             document.body.classList.remove('torch-expanding');
             document.body.style.cursor = 'auto'; // Safety cleanup
         };
-    }, [theme, isMobile, isHomeRoute]);
+    }, [theme, isMobile, isHomeRoute, torchEffectEnabled]);
 
     // Handle cursor visibility (Initial & Toggle)
     useEffect(() => {
-        if (theme === 'dark' && !isMobile && isHomeRoute) {
+        if (theme === 'dark' && !isMobile && isHomeRoute && torchEffectEnabled) {
             // Default state at mount/theme switch should be hidden if at top
             const isScrolled = window.scrollY > 10;
             document.body.style.cursor = isScrolled ? 'auto' : 'none';
@@ -100,8 +115,8 @@ export const TorchEffect = () => {
             // Also hide cursor on all interactive elements to be safe (only when not expanding)
             const style = document.createElement('style');
             style.id = 'cursor-style';
-            // Only apply 'none' if NOT expanding class
-            style.innerHTML = 'body:not(.torch-expanding) *, body:not(.torch-expanding) { cursor: none !important; } .torch-expanding, .torch-expanding * { cursor: auto !important; } .torch-expanding #portfolio, .torch-expanding #portfolio * { cursor: none !important; }';
+            // Only apply 'none' if NOT expanding class, but allow close button cursor
+            style.innerHTML = 'body:not(.torch-expanding) *:not(.torch-close-button):not(.torch-close-button *), body:not(.torch-expanding) { cursor: none !important; } .torch-close-button, .torch-close-button * { cursor: pointer !important; } .torch-expanding, .torch-expanding * { cursor: auto !important; } .torch-expanding #portfolio, .torch-expanding #portfolio * { cursor: none !important; }';
             document.head.appendChild(style);
 
             return () => {
@@ -111,10 +126,12 @@ export const TorchEffect = () => {
             };
         } else {
             document.body.style.cursor = 'auto';
+            const existingStyle = document.getElementById('cursor-style');
+            if (existingStyle) existingStyle.remove();
         }
-    }, [theme, isMobile, isHomeRoute]);
+    }, [theme, isMobile, isHomeRoute, torchEffectEnabled]);
 
-    if (theme !== 'dark' || isMobile || !isHomeRoute) return null;
+    if (theme !== 'dark' || isMobile || !isHomeRoute || !torchEffectEnabled) return null;
 
     return (
         <>
@@ -123,6 +140,19 @@ export const TorchEffect = () => {
                 ref={containerRef}
                 className="torch-overlay"
             />
+
+            {/* Exit/Close Button for Spotlight Animation */}
+            <button
+                type="button"
+                className="torch-close-button"
+                onClick={() => {
+                    userClosedRef.current = true;
+                    setTorchEffectEnabled(false);
+                }}
+                aria-label="Disable spotlight effect"
+            >
+                <X size={20} />
+            </button>
 
             {/* Lottie Character following cursor */}
             <div

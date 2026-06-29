@@ -15,6 +15,7 @@ const Card2TransformationBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Transformation"
       subheading="New Era"
       body="Emerge with a brand that turns heads, builds trust, and positions you as the leader you've become."
+      actionHint="See transformations →"
     />
   );
 });

@@ -15,6 +15,7 @@ const Card2OutdatedBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Outdated"
       subheading="Your brand no longer reflects who you are"
       body="You've evolved, but your digital presence hasn't. Your website feels dated, your branding is inconsistent, and it's silently losing you credibility."
+      actionHint="See how we fix this →"
     />
   );
 });

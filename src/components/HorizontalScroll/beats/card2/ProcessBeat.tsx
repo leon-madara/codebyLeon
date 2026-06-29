@@ -15,6 +15,7 @@ const Card2ProcessBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Process"
       subheading="3-4 Weeks"
       body="We transform your visual identity from outdated to outstanding. A complete refresh that tells your new story."
+      actionHint="See the timeline →"
     />
   );
 });

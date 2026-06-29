@@ -1,6 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { isCloudflareEnabled, getCloudflareImageId, cloudflareBlurUpUrls } from '../lib/cloudflareImages';
 
-interface SafeImageProps {
+interface SafeImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src?: string;
   alt: string;
   className?: string;
@@ -10,9 +11,11 @@ interface SafeImageProps {
   onLoad?: (event: Event) => void;
   style?: React.CSSProperties;
   loading?: 'lazy' | 'eager';
+  imageId?: string;
+  fetchPriority?: 'high' | 'low' | 'auto';
 }
 
-const SafeImage: React.FC<SafeImageProps> = ({
+const SafeImage = React.forwardRef<HTMLImageElement, SafeImageProps>(({
   src,
   alt,
   className = '',
@@ -22,11 +25,60 @@ const SafeImage: React.FC<SafeImageProps> = ({
   onLoad,
   style,
   loading = 'lazy',
+  imageId,
+  fetchPriority,
   ...props
-}) => {
+}, ref) => {
   const [hasError, setHasError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const [isPreloaded, setIsPreloaded] = useState(false);
+  const [srcToRender, setSrcToRender] = useState<string | undefined>(undefined);
+
+  // Check if Cloudflare is enabled and the image should be delivered via Cloudflare
+  const cfImageId = useMemo(() => {
+    if (!isCloudflareEnabled()) return null;
+    if (imageId) return imageId;
+    if (src) return getCloudflareImageId(src);
+    return null;
+  }, [src, imageId]);
+
+  // Generate Cloudflare URLs if applicable
+  const cfUrls = useMemo(() => {
+    if (!cfImageId) return null;
+    const accountHash = import.meta.env.VITE_CLOUDFLARE_ACCOUNT_HASH || '';
+    return cloudflareBlurUpUrls(
+      accountHash,
+      cfImageId,
+      'public',
+      fetchPriority === 'high' || loading === 'eager'
+    );
+  }, [cfImageId, fetchPriority, loading]);
+
+  // Set initial source and manage preloading transition
+  useEffect(() => {
+    if (cfUrls) {
+      setSrcToRender(cfUrls.preview);
+      setIsPreloaded(false);
+      setIsLoading(true);
+
+      const preloader = new Image();
+      preloader.src = cfUrls.final;
+      preloader.onload = () => {
+        setSrcToRender(cfUrls.final);
+        setIsPreloaded(true);
+        setIsLoading(false);
+      };
+      preloader.onerror = () => {
+        // Fall back to preview or local src if preload fails
+        setSrcToRender(src);
+        setIsLoading(false);
+      };
+    } else {
+      setSrcToRender(src);
+      setIsPreloaded(false);
+      setIsLoading(true);
+    }
+  }, [cfUrls, src]);
 
   const handleError = (event: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setHasError(true);
@@ -38,7 +90,7 @@ const SafeImage: React.FC<SafeImageProps> = ({
     }
 
     // Log error for debugging
-    console.warn(`Failed to load image: ${src}`, {
+    console.warn(`Failed to load image: ${src || imageId}`, {
       alt,
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent
@@ -53,13 +105,13 @@ const SafeImage: React.FC<SafeImageProps> = ({
     }
   };
 
-  // Don't render anything if no src provided and fallbackType is 'hide'
-  if (!src && fallbackType === 'hide') {
+  // Don't render anything if no src/imageId provided and fallbackType is 'hide'
+  if (!srcToRender && fallbackType === 'hide') {
     return null;
   }
 
   // Show error fallback if image failed to load
-  if (hasError || !src) {
+  if (hasError || !srcToRender) {
     if (fallbackType === 'hide') {
       return null;
     }
@@ -96,19 +148,27 @@ const SafeImage: React.FC<SafeImageProps> = ({
     );
   }
 
+  // Determine transition classes for blur-up loading
+  const transitionClass = cfUrls
+    ? `transition-all duration-700 ease-in-out ${isPreloaded ? 'blur-0 scale-100' : 'blur-md scale-[1.02]'}`
+    : '';
+
   return (
     <img
-      ref={imgRef}
-      src={src}
+      ref={ref}
+      src={srcToRender}
       alt={alt}
-      className={`safe-image ${className} ${isLoading ? 'loading' : 'loaded'}`}
+      className={`safe-image ${transitionClass} ${className} ${isLoading ? 'loading' : 'loaded'}`}
       style={style}
       loading={loading}
+      {...({ fetchpriority: fetchPriority } as any)}
       onError={handleError}
       onLoad={handleLoad}
       {...props}
     />
   );
-};
+});
+
+SafeImage.displayName = 'SafeImage';
 
 export default SafeImage;

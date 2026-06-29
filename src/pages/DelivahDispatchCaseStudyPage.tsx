@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import SafeImage from '../components/SafeImage';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
@@ -400,51 +401,53 @@ export function DelivahDispatchCaseStudyPage() {
       </div>
 
       {/* Global Design Switcher (Floating pills) */}
-      <div 
-        className={`v2-pills global-v2-switcher ${isScrollHidden ? 'is-scroll-hidden' : ''}`} 
-        role="tablist" 
-        aria-label="Design directions"
-        style={{ 
-          '--indicator-pos': activeIndex 
-        } as React.CSSProperties}
-      >
-        <div className="v2-pill-indicator" />
-        <button
-          className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(0);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 0}
+      <div className={`global-v2-switcher-wrapper ${isScrollHidden ? 'is-scroll-hidden' : ''}`}>
+        <div 
+          className="v2-pills global-v2-switcher" 
+          role="tablist" 
+          aria-label="Design directions"
+          style={{ 
+            '--indicator-pos': activeIndex 
+          } as React.CSSProperties}
         >
-          <span className="v2-pill-text-full">Service Funnel</span>
-          <span className="v2-pill-text-short">Funnel</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(1);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 1}
-        >
-          <span className="v2-pill-text-full">Onboarding</span>
-          <span className="v2-pill-text-short">Onboard</span>
-        </button>
-        <button
-          className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
-          onClick={() => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setActiveIndex(2);
-          }}
-          role="tab"
-          aria-selected={activeIndex === 2}
-        >
-          <span className="v2-pill-text-full">Operations</span>
-          <span className="v2-pill-text-short">Ops</span>
-        </button>
+          <div className="v2-pill-indicator" />
+          <button
+            className={`v2-pill ${activeIndex === 0 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(0);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 0}
+          >
+            <span className="v2-pill-text-full">Service Funnel</span>
+            <span className="v2-pill-text-short">Funnel</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 1 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(1);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 1}
+          >
+            <span className="v2-pill-text-full">Onboarding</span>
+            <span className="v2-pill-text-short">Onboard</span>
+          </button>
+          <button
+            className={`v2-pill ${activeIndex === 2 ? 'is-active' : ''}`}
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              setActiveIndex(2);
+            }}
+            role="tab"
+            aria-selected={activeIndex === 2}
+          >
+            <span className="v2-pill-text-full">Operations</span>
+            <span className="v2-pill-text-short">Ops</span>
+          </button>
+        </div>
       </div>
 
       <div className="blog-post-page-wrapper case-study-white-bg" ref={pageWrapperRef}>
@@ -552,10 +555,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-home-hero-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-home-hero.png" alt="Delivah Dispatch website homepage screenshot" fetchPriority="high" loading="eager" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -606,10 +606,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000#services</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-services-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-services.png" alt="Delivah Dispatch services list screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -630,10 +627,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/contact</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-contact-form-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-contact-form.png" alt="Delivah Dispatch contact form screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -684,10 +678,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/register</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-register-step-1.png" alt="Delivah Dispatch registration step 1 screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -731,10 +722,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/register/step-4</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-register-document-upload.png" alt="Delivah Dispatch registration step 4 document upload screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">
@@ -785,10 +773,7 @@ export function DelivahDispatchCaseStudyPage() {
                       <div className="browser-url">localhost:3000/admin/login</div>
                     </div>
                     <div className="browser-body">
-                      <picture>
-                        <source media="(max-width: 768px)" srcSet="/portfolio/case-studies/delivah/delivah-admin-login-mobile.png" />
-                        <img src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
-                      </picture>
+                      <SafeImage src="/portfolio/case-studies/delivah/delivah-admin-login.png" alt="Delivah Dispatch admin login page screenshot" />
                     </div>
                   </div>
                   <div className="workspace-canvas-caption">

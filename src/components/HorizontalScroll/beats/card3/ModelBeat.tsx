@@ -15,6 +15,7 @@ const Card3ModelBeat = forwardRef<HTMLElement>((_, ref) => {
       heading="The Model"
       subheading="Monthly Retainer"
       body="Get 10-20 hours of design work each month. Campaign graphics, landing pages, site updates—all handled without the overhead."
+      actionHint="View retainer plans →"
     />
   );
 });

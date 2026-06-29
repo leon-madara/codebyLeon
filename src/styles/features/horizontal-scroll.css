@@ -117,7 +117,7 @@
 }
 
 .hs__story--vertical .hs__viewport {
-  height: clamp(420px, 68vh, 700px);
+  height: auto;
 }
 
 .hs__track {
@@ -161,7 +161,7 @@
 .hs__story--vertical .hs-beat {
   width: 100%;
   min-width: 100%;
-  height: clamp(420px, 68vh, 700px);
+  height: auto;
 }
 
 /* New BeatCard sizing inside the scroll track */
@@ -178,7 +178,7 @@
 .hs__story--vertical .beat-card {
   width: 100%;
   min-width: 100%;
-  height: clamp(420px, 68vh, 700px);
+  height: auto;
   max-width: none;
   border-radius: 0;
   box-shadow: none;
@@ -744,7 +744,7 @@
 
 /* Fallback base height for vertical mobile cards (required by Vitest integration tests) */
 .hs__story--vertical .beat-card {
-  height: clamp(660px, 90vh, 780px);
+  height: auto;
 }
 
 @media (max-width: 1023px) {
@@ -753,22 +753,27 @@
   }
 
   .hs__story--vertical .hs__viewport {
-    height: calc(100vh - var(--hs-top-chrome-height) - var(--hs-nav-height) - var(--hs-nav-clearance));
-    min-height: 480px;
+    height: auto;
+    min-height: auto;
   }
 
   .hs__story--vertical .hs-beat {
-    height: 100%;
+    height: auto;
     padding-inline: 0;
+    margin-bottom: 1.5rem;
+  }
+
+  .hs__story--vertical .hs-beat:last-child {
+    margin-bottom: 0;
   }
 
   .hs__story--vertical .beat-card {
-    height: 100%;
+    height: auto;
   }
 
   .hs-beat__shell {
     grid-template-columns: 1fr;
-    grid-template-rows: minmax(220px, 38vh) 1fr;
+    grid-template-rows: minmax(220px, 38vh) auto;
   }
 
   .hs-beat__media {
@@ -824,7 +829,7 @@
   }
 
   .hs-beat__shell {
-    grid-template-rows: minmax(180px, 30vh) 1fr;
+    grid-template-rows: minmax(180px, 30vh) auto;
   }
 
   .hs-beat__media {

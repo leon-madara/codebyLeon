@@ -1,24 +1,28 @@
 /* =============================================
-   NEW BEAT CARD COMPONENT
+   BEAT CARD COMPONENT — Layered Card Design
    ============================================= */
 
 .beat-card {
   --bc-radius: 1.5rem;
-  --bc-padding: clamp(2rem, 4vw, 3rem);
+  --bc-padding: clamp(1.25rem, 2.5vw, 1.75rem);
   --bc-surface: hsl(var(--card));
+  --bc-inner-surface: hsl(var(--background));
+  --bc-inner-radius: 1rem;
   
   display: grid;
   grid-template-columns: minmax(0, 42%) minmax(0, 58%);
   background: var(--bc-surface);
   border-radius: var(--bc-radius);
   overflow: hidden;
-  position: relative; /* Context for absolute wave accent placement */
+  position: relative;
   width: 100%;
   max-width: 1180px;
   margin: 0 auto;
   box-shadow: 0 24px 48px hsl(var(--foreground) / 0.12);
   border: 1px solid hsl(var(--border));
 }
+
+/* ----- Media Column ----- */
 
 .beat-card__media {
   position: relative;
@@ -71,21 +75,40 @@
   border-radius: 50%;
 }
 
+/* ----- Content Column (outer gutter / frame) ----- */
+
 .beat-card__content {
   padding: var(--bc-padding);
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
   background: var(--bc-surface);
-  position: relative; /* Keep content on top of background wave decoration */
+  position: relative;
   z-index: 1;
 }
+
+/* ----- Inner Card (elevated panel — "paper on desk") ----- */
+
+.beat-card__inner-card {
+  background: var(--bc-inner-surface);
+  border: 1px solid hsl(var(--border));
+  border-radius: var(--bc-inner-radius);
+  box-shadow:
+    0 2px 8px hsl(var(--foreground) / 0.04),
+    0 8px 24px hsl(var(--foreground) / 0.06);
+  padding: clamp(1.5rem, 3vw, 2.5rem);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ----- Meta Group: Step Indicator + Icon ----- */
 
 .beat-card__step-indicator {
   display: flex;
   align-items: center;
   gap: 1rem;
-  margin-bottom: 2rem;
+  margin-bottom: 1.25rem;
 }
 
 .beat-card__step-text {
@@ -113,18 +136,20 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   font-size: 1.4rem;
   box-shadow: inset 0 2px 10px hsl(0 0% 0% / 0.2);
 }
 
+/* ----- Headline Group: Title + Subheading ----- */
+
 .beat-card__title {
   color: hsl(var(--card-foreground));
   font-family: var(--font-display, sans-serif);
-  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 800;
   line-height: 1.05;
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.35rem 0;
   letter-spacing: -0.02em;
 }
 
@@ -133,32 +158,42 @@
   font-family: var(--font-body);
   font-size: clamp(0.9rem, 1.5vw, 1.05rem);
   font-weight: 600;
-  margin: 0 0 2rem 0;
+  margin: 0 0 1.5rem 0;
   letter-spacing: 0.01em;
 }
 
-.beat-card__divider {
-  border: 0;
-  height: 1px;
-  background: hsl(var(--border));
-  margin: 0 0 1.5rem 0;
-  width: 100%;
-}
+/* ----- Body + Action Group ----- */
 
 .beat-card__body {
   color: var(--text-secondary);
   font-family: var(--font-body);
-  font-size: 1rem;
-  line-height: 1.65;
+  font-size: 0.95rem;
+  line-height: 1.7;
   margin: 0;
-  max-width: 48ch;
+  max-width: 42ch;
 }
 
-/* CTA Button Styles */
-.beat-card__cta {
-  margin-top: 1.75rem;
+/* ----- Integrated Action Area ----- */
+
+.beat-card__action-area {
+  margin-top: auto;
+  padding-top: 1.5rem;
   display: flex;
-  z-index: 2;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.beat-card__action-divider {
+  border: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    hsl(var(--border)),
+    hsl(var(--primary) / 0.3),
+    hsl(var(--border))
+  );
+  margin: 0;
+  width: 100%;
 }
 
 .beat-card__cta-button {
@@ -194,7 +229,15 @@
   transform: translateY(0);
 }
 
-/* Decorative Wave at the Bottom */
+.beat-card__action-hint {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: hsl(var(--muted-foreground));
+  letter-spacing: 0.06em;
+}
+
+/* ----- Decorative Wave ----- */
+
 .beat-card__wave-bg {
   position: absolute;
   left: 0;
@@ -205,7 +248,7 @@
   z-index: 0;
   pointer-events: none;
   color: var(--hs-accent, hsl(var(--primary)));
-  opacity: 0.08; /* Light contrast wave background */
+  opacity: 0.08;
 }
 
 .beat-card__wave-bg svg {
@@ -214,10 +257,11 @@
   display: block;
 }
 
-/* Responsive adjustments */
+/* ----- Responsive: Mobile (≤1023px) ----- */
+
 @media (max-width: 1023px) {
   .beat-card {
-    --bc-padding: clamp(1.25rem, 3.5vw, 1.75rem);
+    --bc-padding: clamp(0.75rem, 2vw, 1rem);
     grid-template-columns: 1fr;
     grid-template-rows: minmax(160px, 25vh) 1fr;
     height: 100%;
@@ -229,9 +273,19 @@
   }
 
   .beat-card__content {
+    align-items: stretch;
     justify-content: flex-start;
     overflow-y: auto;
-    padding-bottom: 2.5rem; /* Space for wave decoration at the bottom */
+    padding-bottom: 2.5rem;
+  }
+
+  /* Inner card degrades — no elevation, minimal padding */
+  .beat-card__inner-card {
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: clamp(1rem, 2.5vw, 1.5rem);
+    background: transparent;
   }
 
   .beat-card__step-indicator {
@@ -239,7 +293,7 @@
   }
 
   .beat-card__icon {
-    display: none; /* Hidden on mobile to save vertical space and match guide image */
+    display: none;
   }
 
   .beat-card__title {
@@ -250,11 +304,11 @@
     margin-bottom: 1.25rem;
   }
 
-  .beat-card__divider {
-    margin-bottom: 1rem;
+  .beat-card__action-area {
+    padding-top: 1rem;
   }
 
-  .beat-card__cta {
-    margin-top: 1.25rem;
+  .beat-card__action-hint {
+    display: none;
   }
 }
