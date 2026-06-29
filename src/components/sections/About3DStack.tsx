@@ -85,35 +85,35 @@ const CARDS: AboutStackCard[] = [
       name: "Kossy Langat",
       role: "Founder, Editorial Studio",
     },
-    themeClass: "about-3d-stack__card--orange",
+    themeClass: "about-3d-stack__card--indigo",
     chips: [
       {
-        label: "Strategic Messaging",
-        title: "Value Proposition Framework",
-        detail: "Clarify your core offer so prospects instantly understand why you matter.",
-        metric: "+65% clarity score",
-        toneClass: "about-3d-stack__chip--orange-1",
+        label: "Audit",
+        title: "Revenue Leak Audit",
+        detail: "Find and fix trust gaps that block buyers from requesting a quote.",
+        metric: "More qualified leads",
+        toneClass: "about-3d-stack__chip--green",
       },
       {
-        label: "Visual Systems",
-        title: "Premium Identity Guidelines",
-        detail: "Typography, color tokens, and layout systems built for dark & light canvas.",
-        metric: "100% consistent",
-        toneClass: "about-3d-stack__chip--orange-2",
+        label: "Voice",
+        title: "Offer Messaging",
+        detail: "Sharper value proposition and CTA copy that pushes visitors to act.",
+        metric: "Higher response rate",
+        toneClass: "about-3d-stack__chip--yellow",
       },
       {
-        label: "Trust Signatures",
-        title: "Authority & Social Proof",
-        detail: "Placement of proof, client logos, and guarantees that eliminate buyer hesitation.",
-        metric: "3x trust lift",
-        toneClass: "about-3d-stack__chip--orange-3",
+        label: "Visual",
+        title: "Trust-Building UI",
+        detail: "Premium visual hierarchy that makes your pricing feel worth paying.",
+        metric: "Raise perceived value",
+        toneClass: "about-3d-stack__chip--amber",
       },
       {
-        label: "Market Proof",
-        title: "Positioning Playbook",
-        detail: "Turn raw technical execution into a premium narrative buyers trust.",
-        metric: "Enterprise ready",
-        toneClass: "about-3d-stack__chip--orange-4",
+        label: "Assets",
+        title: "Sales Asset Pack",
+        detail: "Launch-ready campaign visuals and CTA blocks for fast demand capture.",
+        metric: "Campaign-ready in days",
+        toneClass: "about-3d-stack__chip--maroon",
       },
     ],
   },
@@ -128,35 +128,35 @@ const CARDS: AboutStackCard[] = [
       name: "Daniel Njuguna",
       role: "Head of Growth, Delivah",
     },
-    themeClass: "about-3d-stack__card--blue",
+    themeClass: "about-3d-stack__card--orange",
     chips: [
       {
-        label: "Interactive UI",
-        title: "High-Fidelity Feature Previews",
-        detail: "Interactive micro-demos that let visitors feel the power of your product instantly.",
-        metric: "4.2m avg engagement",
-        toneClass: "about-3d-stack__chip--blue-1",
+        label: "Map",
+        title: "Buyer Journey Map",
+        detail: "Engineer the path from first click to booked call and paid project.",
+        metric: "More booked calls",
+        toneClass: "about-3d-stack__chip--cream",
       },
       {
-        label: "User Flow Architecture",
-        title: "Zero-Friction Onboarding",
-        detail: "Streamlined sign-up paths and inquiry flows designed to maximize conversion rates.",
-        metric: "-40% drop-off",
-        toneClass: "about-3d-stack__chip--blue-2",
+        label: "Flow",
+        title: "Conversion Wireframes",
+        detail: "Design forms and flows that remove friction at every decision point.",
+        metric: "Lower drop-off",
+        toneClass: "about-3d-stack__chip--orange-soft",
       },
       {
-        label: "Performance Engine",
-        title: "Sub-Second Load Times",
-        detail: "Clean code architecture ensuring lightning-fast performance across all mobile devices.",
-        metric: "99/100 Lighthouse",
-        toneClass: "about-3d-stack__chip--blue-3",
+        label: "Test",
+        title: "Offer A/B Tests",
+        detail: "Validate headlines, pricing anchors, and CTAs before full rollout.",
+        metric: "Win rate up",
+        toneClass: "about-3d-stack__chip--orange-strong",
       },
       {
-        label: "Conversion Design",
-        title: "High-Intent Action Paths",
-        detail: "Guide prospective clients directly to meaningful contact moments.",
-        metric: "Max conversion",
-        toneClass: "about-3d-stack__chip--blue-4",
+        label: "Ship",
+        title: "Sprint Release",
+        detail: "Ship production-ready screens fast so you can start selling this week.",
+        metric: "Revenue faster",
+        toneClass: "about-3d-stack__chip--brick",
       },
     ],
   },
@@ -171,50 +171,75 @@ const CARDS: AboutStackCard[] = [
       name: "Mercy Wanjiku",
       role: "Operations Lead, Legit Logistics",
     },
-    themeClass: "about-3d-stack__card--emerald",
+    themeClass: "about-3d-stack__card--crimson",
     chips: [
       {
-        label: "Conversion Funnels",
-        title: "High-Intent Lead Capture",
-        detail: "Strategic CTA positioning and custom form logic designed to capture high-value leads.",
-        metric: "+45% lead volume",
-        toneClass: "about-3d-stack__chip--emerald-1",
+        label: "SEO",
+        title: "Local Search Capture",
+        detail: "Rank for high-intent local terms that bring ready-to-buy visitors.",
+        metric: "More inbound leads",
+        toneClass: "about-3d-stack__chip--rose-light",
       },
       {
-        label: "Scalable Architecture",
-        title: "Modular Content Engine",
-        detail: "Empower your marketing team to launch landing pages and case studies in minutes.",
-        metric: "10x launch speed",
-        toneClass: "about-3d-stack__chip--emerald-2",
+        label: "CRO",
+        title: "Lead Conversion UX",
+        detail: "Turn casual visits into serious inquiries with stronger offer pages.",
+        metric: "Inquiry rate up",
+        toneClass: "about-3d-stack__chip--rose-mid",
       },
       {
-        label: "Analytics & Insights",
-        title: "Behavior Tracking Setup",
-        detail: "Full event tracking and heatmaps so you know exactly what drives revenue.",
-        metric: "100% data visibility",
-        toneClass: "about-3d-stack__chip--emerald-3",
+        label: "Perf",
+        title: "Speed for Sales",
+        detail: "Faster load times reduce bounce and keep buyers inside your funnel.",
+        metric: "< 2s helps CVR",
+        toneClass: "about-3d-stack__chip--rose-strong",
       },
       {
-        label: "Scale Systems",
-        title: "Future-Proof Foundation",
-        detail: "Clean TypeScript and modular components engineered for continuous growth.",
-        metric: "Zero tech debt",
-        toneClass: "about-3d-stack__chip--emerald-4",
+        label: "UI",
+        title: "Trust-First Polish",
+        detail: "Premium interactions that justify pricing and reduce buyer hesitation.",
+        metric: "Higher close rate",
+        toneClass: "about-3d-stack__chip--rose-dark",
       },
     ],
   },
 ];
 
 function MockupChip({ chip }: { chip: CardChip }) {
+  const handleToggleFlip = (e: React.MouseEvent | React.KeyboardEvent) => {
+    e.currentTarget.classList.toggle("is-flipped");
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleToggleFlip(e);
+    }
+  };
+
   return (
-    <div className={`about-3d-stack__chip ${chip.toneClass}`.trim()}>
-      <div className="about-3d-stack__chip-inner">
-        <span className="about-3d-stack__chip-label">{chip.label}</span>
-        <span className="about-3d-stack__chip-title">{chip.title}</span>
-        <span className="about-3d-stack__chip-detail">{chip.detail}</span>
-        <span className="about-3d-stack__chip-metric">{chip.metric}</span>
+    <article
+      className={`about-3d-stack__chip ${chip.toneClass}`.trim()}
+      tabIndex={0}
+      onClick={handleToggleFlip}
+      onKeyDown={handleKeyDown}
+      role="button"
+      aria-label={`${chip.title} outcome details`}
+    >
+      <div className="about-3d-stack__chip-inner pointer-events-none">
+        <div className="about-3d-stack__chip-face about-3d-stack__chip-face--front">
+          <p className="about-3d-stack__chip-eyebrow">{chip.label}</p>
+          <h3 className="about-3d-stack__chip-title">{chip.title}</h3>
+          <span className="about-3d-stack__chip-metric">{chip.metric}</span>
+        </div>
+
+        <div className="about-3d-stack__chip-face about-3d-stack__chip-face--back">
+          <p className="about-3d-stack__chip-eyebrow">Outcome</p>
+          <p className="about-3d-stack__chip-detail">{chip.detail}</p>
+          <span className="about-3d-stack__chip-metric">{chip.metric}</span>
+        </div>
       </div>
-    </div>
+    </article>
   );
 }
 

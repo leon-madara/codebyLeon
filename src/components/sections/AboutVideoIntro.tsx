@@ -19,6 +19,7 @@ export function AboutVideoIntro() {
 
   const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
+  const [volume, setVolume] = useState(0.5);
   const [progressPercent, setProgressPercent] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -26,8 +27,7 @@ export function AboutVideoIntro() {
   const togglePlay = () => {
     if (videoRef.current) {
       if (videoRef.current.paused) {
-        videoRef.current.play().catch(() => {});
-        setIsPlaying(true);
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
       } else {
         videoRef.current.pause();
         setIsPlaying(false);
@@ -40,8 +40,25 @@ export function AboutVideoIntro() {
     if (videoRef.current) {
       const nextMuted = !videoRef.current.muted;
       videoRef.current.muted = nextMuted;
-      videoRef.current.volume = 0.5;
       setIsMuted(nextMuted);
+      if (!nextMuted && volume === 0) {
+        videoRef.current.volume = 0.5;
+        setVolume(0.5);
+      }
+    }
+  };
+
+  const handleVolumeChange = (newVol: number) => {
+    if (videoRef.current) {
+      videoRef.current.volume = newVol;
+      setVolume(newVol);
+      if (newVol === 0) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      } else if (videoRef.current.muted) {
+        videoRef.current.muted = false;
+        setIsMuted(false);
+      }
     }
   };
 
@@ -56,8 +73,15 @@ export function AboutVideoIntro() {
 
   const handleLoadedMetadata = () => {
     if (videoRef.current) {
-      videoRef.current.volume = 0.5;
+      videoRef.current.volume = volume;
       setDuration(videoRef.current.duration || 0);
+    }
+  };
+
+  const handleVideoEnded = () => {
+    setIsPlaying(false);
+    if (videoRef.current) {
+      videoRef.current.pause();
     }
   };
 
@@ -91,17 +115,17 @@ export function AboutVideoIntro() {
         },
         invalidateOnRefresh: true,
         onSnapComplete: () => {
-          if (videoRef.current && videoRef.current.paused) {
+          if (videoRef.current && videoRef.current.paused && videoRef.current.currentTime < videoRef.current.duration) {
             videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         },
         onEnter: () => {
-          if (videoRef.current) {
+          if (videoRef.current && videoRef.current.currentTime < videoRef.current.duration) {
             videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         },
         onLeaveBack: () => {
-          if (videoRef.current) {
+          if (videoRef.current && videoRef.current.currentTime < videoRef.current.duration) {
             videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         },
@@ -113,12 +137,12 @@ export function AboutVideoIntro() {
         trigger: section,
         start: "top center",
         onEnter: () => {
-          if (videoRef.current) {
+          if (videoRef.current && videoRef.current.currentTime < videoRef.current.duration) {
             videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         },
         onEnterBack: () => {
-          if (videoRef.current) {
+          if (videoRef.current && videoRef.current.currentTime < videoRef.current.duration) {
             videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
           }
         },
@@ -166,18 +190,19 @@ export function AboutVideoIntro() {
             src="/videos/codebyleon-intro.mp4"
             autoPlay
             muted={isMuted}
-            loop
+            loop={false}
             playsInline
             preload="metadata"
             className="about-video-intro__video"
             aria-label="A message from CodeByLeon founder, Leon Madara"
             onTimeUpdate={handleTimeUpdate}
             onLoadedMetadata={handleLoadedMetadata}
+            onEnded={handleVideoEnded}
             onPlay={() => setIsPlaying(true)}
             onPause={() => setIsPlaying(false)}
           />
 
-          {/* Center Large Play Icon Overlay when Paused */}
+          {/* Center Large Play Icon Overlay when Paused or Ended */}
           {!isPlaying && (
             <div className="about-video-intro__center-play" aria-hidden="true">
               <span>▶</span>
@@ -221,15 +246,29 @@ export function AboutVideoIntro() {
               {formatTime(currentTime)} / {formatTime(duration)}
             </span>
 
-            {/* Audio Volume Mute Button */}
-            <button
-              type="button"
-              onClick={toggleMute}
-              className="about-video-intro__control-btn about-video-intro__control-btn--audio"
-              aria-label={isMuted ? "Unmute video at 50% volume" : "Mute video"}
-            >
-              <span>{isMuted ? "🔇" : "🔊"}</span>
-            </button>
+            {/* Audio Volume & Slider Hover Group */}
+            <div className="about-video-intro__volume-group">
+              <div className="about-video-intro__volume-popover">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.02"
+                  value={isMuted ? 0 : volume}
+                  onChange={(e) => handleVolumeChange(parseFloat(e.target.value))}
+                  className="about-video-intro__volume-slider"
+                  aria-label="Adjust video volume"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={toggleMute}
+                className="about-video-intro__control-btn about-video-intro__control-btn--audio"
+                aria-label={isMuted ? "Unmute video" : "Mute video"}
+              >
+                <span>{isMuted || volume === 0 ? "🔇" : volume < 0.5 ? "🔉" : "🔊"}</span>
+              </button>
+            </div>
           </div>
         </div>
 
