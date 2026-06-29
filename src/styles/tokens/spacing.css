@@ -18,6 +18,8 @@
   --spacing-3xl: 4rem;      /* 64px */
   --spacing-4xl: 6rem;      /* 96px */
   --spacing-5xl: 8rem;      /* 128px */
+  --section-header-pt: clamp(2rem, 5vh, 4rem); /* Reusable section header top padding */
+
 
   /* =============================================
      BREAKPOINTS

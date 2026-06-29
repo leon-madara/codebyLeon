@@ -539,7 +539,7 @@ export function About3DStack() {
         ref={contentRef}
         className="about-3d-stack__desktop about-3d-stack__content-layer relative flex flex-col items-center h-full"
       >
-        <header className="text-center pt-[4vh] px-6 w-full max-w-4xl mx-auto flex-shrink-0">
+        <header className="about-3d-stack__header px-6 w-full max-w-4xl mx-auto flex-shrink-0 text-center">
           <h1 className="about-3d-stack__headline">
             Helping Kenyan Businesses{" "}
             <em>Look Professional Online</em>
@@ -625,7 +625,19 @@ export function About3DStack() {
             <h1 className="about-3d-stack__mobile-headline about-3d-stack__mobile-reveal">
               Helping Kenyan Businesses <em>Look Professional Online</em>
             </h1>
+
+            <div className="about-3d-stack__video-wrapper about-3d-stack__video-wrapper--mobile about-3d-stack__mobile-reveal">
+              <video 
+                src="/videos/codebyleon-intro.mp4" 
+                controls 
+                preload="metadata"
+                className="about-3d-stack__video"
+                aria-label="A message from CodeByLeon founder, Leon Madara"
+              />
+            </div>
+
             <p className="about-3d-stack__mobile-subheadline about-3d-stack__mobile-reveal">
+              <strong>A message from CodeByLeon founder – Leon Madara.</strong><br/>
               A quick walk through the three layers that make a business look credible,
               easier to trust, and ready for better inquiries.
             </p>
