@@ -79,167 +79,142 @@ const CARDS: AboutStackCard[] = [
     badge: "Brand Positioning",
     title: "Branding that drives conversion & funding.",
     description:
-      "We clarify positioning, define tone of voice, and build visual systems that work across acquisition and product. Each sprint ships a robust logo, pragmatic brand guidelines, and a social kit so you can launch fast. The goal is simple: perceived value up.",
+      "Positioning, narrative, messaging, and visual identity that make you look established, trustworthy, and investor-ready from day one.",
     testimonial: {
-      quote: "Best investment we've made for our brand identity.",
-      name: "Jeremy Bendayan",
-      role: "COO @Jaws Group",
+      quote: "Leon turned our rough idea into a brand that investors took seriously instantly.",
+      name: "Kossy Langat",
+      role: "Founder, Editorial Studio",
     },
-    themeClass: "about-3d-stack__card--indigo",
+    themeClass: "about-3d-stack__card--orange",
     chips: [
       {
-        label: "Audit",
-        title: "Revenue Leak Audit",
-        detail: "Find and fix trust gaps that block buyers from requesting a quote.",
-        metric: "More qualified leads",
-        toneClass: "about-3d-stack__chip--green",
+        label: "Strategic Messaging",
+        title: "Value Proposition Framework",
+        detail: "Clarify your core offer so prospects instantly understand why you matter.",
+        metric: "+65% clarity score",
+        toneClass: "about-3d-stack__chip--orange-1",
       },
       {
-        label: "Voice",
-        title: "Offer Messaging",
-        detail: "Sharper value proposition and CTA copy that pushes visitors to act.",
-        metric: "Higher response rate",
-        toneClass: "about-3d-stack__chip--yellow",
+        label: "Visual Systems",
+        title: "Premium Identity Guidelines",
+        detail: "Typography, color tokens, and layout systems built for dark & light canvas.",
+        metric: "100% consistent",
+        toneClass: "about-3d-stack__chip--orange-2",
       },
       {
-        label: "Visual",
-        title: "Trust-Building UI",
-        detail: "Premium visual hierarchy that makes your pricing feel worth paying.",
-        metric: "Raise perceived value",
-        toneClass: "about-3d-stack__chip--amber",
+        label: "Trust Signatures",
+        title: "Authority & Social Proof",
+        detail: "Placement of proof, client logos, and guarantees that eliminate buyer hesitation.",
+        metric: "3x trust lift",
+        toneClass: "about-3d-stack__chip--orange-3",
       },
       {
-        label: "Assets",
-        title: "Sales Asset Pack",
-        detail: "Launch-ready campaign visuals and CTA blocks for fast demand capture.",
-        metric: "Campaign-ready in days",
-        toneClass: "about-3d-stack__chip--maroon",
+        label: "Market Proof",
+        title: "Positioning Playbook",
+        detail: "Turn raw technical execution into a premium narrative buyers trust.",
+        metric: "Enterprise ready",
+        toneClass: "about-3d-stack__chip--orange-4",
       },
     ],
   },
   {
     number: "02",
-    badge: "UX Systems",
-    title: "Product experiences users adopt & keep using.",
+    badge: "Product Showcase",
+    title: "Product design that sells without talking.",
     description:
-      "Map critical journeys and prototype what moves the needle. We validate assumptions fast so your team ships features that stick, reduce churn, and convert free users to paying customers. Shipping is a feature.",
+      "We design interactive product walkthroughs, feature showcases, and dashboard UI that turn curious visitors into paying clients.",
     testimonial: {
-      quote: "Transformed our onboarding - activation up 40%.",
-      name: "Theo Cesarini",
-      role: "CEO @Incard",
+      quote: "The product preview alone closed three enterprise retainers before our full launch.",
+      name: "Daniel Njuguna",
+      role: "Head of Growth, Delivah",
     },
-    themeClass: "about-3d-stack__card--orange",
+    themeClass: "about-3d-stack__card--blue",
     chips: [
       {
-        label: "Map",
-        title: "Buyer Journey Map",
-        detail: "Engineer the path from first click to booked call and paid project.",
-        metric: "More booked calls",
-        toneClass: "about-3d-stack__chip--cream",
+        label: "Interactive UI",
+        title: "High-Fidelity Feature Previews",
+        detail: "Interactive micro-demos that let visitors feel the power of your product instantly.",
+        metric: "4.2m avg engagement",
+        toneClass: "about-3d-stack__chip--blue-1",
       },
       {
-        label: "Flow",
-        title: "Conversion Wireframes",
-        detail: "Design forms and flows that remove friction at every decision point.",
-        metric: "Lower drop-off",
-        toneClass: "about-3d-stack__chip--orange-soft",
+        label: "User Flow Architecture",
+        title: "Zero-Friction Onboarding",
+        detail: "Streamlined sign-up paths and inquiry flows designed to maximize conversion rates.",
+        metric: "-40% drop-off",
+        toneClass: "about-3d-stack__chip--blue-2",
       },
       {
-        label: "Test",
-        title: "Offer A/B Tests",
-        detail: "Validate headlines, pricing anchors, and CTAs before full rollout.",
-        metric: "Win rate up",
-        toneClass: "about-3d-stack__chip--orange-strong",
+        label: "Performance Engine",
+        title: "Sub-Second Load Times",
+        detail: "Clean code architecture ensuring lightning-fast performance across all mobile devices.",
+        metric: "99/100 Lighthouse",
+        toneClass: "about-3d-stack__chip--blue-3",
       },
       {
-        label: "Ship",
-        title: "Sprint Release",
-        detail: "Ship production-ready screens fast so you can start selling this week.",
-        metric: "Revenue faster",
-        toneClass: "about-3d-stack__chip--brick",
+        label: "Conversion Design",
+        title: "High-Intent Action Paths",
+        detail: "Guide prospective clients directly to meaningful contact moments.",
+        metric: "Max conversion",
+        toneClass: "about-3d-stack__chip--blue-4",
       },
     ],
   },
   {
     number: "03",
-    badge: "Growth Websites",
-    title: "Web Design for growing teams & business.",
+    badge: "Growth Engine",
+    title: "Websites built for recurring revenue.",
     description:
-      "Align messaging, page architecture, and UI for clear structure. We build sites that load fast, convert visitors, and scale as your business grows - no bloat, no technical debt. Launch in weeks, not months.",
+      "Data-driven landing pages, scalable CMS structures, and automated lead capture pipelines engineered for long-term business scale.",
     testimonial: {
-      quote: "Our conversion rate doubled in the first month.",
-      name: "Alexis Botaya",
-      role: "MD @Sound Experience",
+      quote: "CodeByLeon delivered an engine that consistently generates qualified inbound leads every week.",
+      name: "Mercy Wanjiku",
+      role: "Operations Lead, Legit Logistics",
     },
-    themeClass: "about-3d-stack__card--crimson",
+    themeClass: "about-3d-stack__card--emerald",
     chips: [
       {
-        label: "SEO",
-        title: "Local Search Capture",
-        detail: "Rank for high-intent local terms that bring ready-to-buy visitors.",
-        metric: "More inbound leads",
-        toneClass: "about-3d-stack__chip--rose-light",
+        label: "Conversion Funnels",
+        title: "High-Intent Lead Capture",
+        detail: "Strategic CTA positioning and custom form logic designed to capture high-value leads.",
+        metric: "+45% lead volume",
+        toneClass: "about-3d-stack__chip--emerald-1",
       },
       {
-        label: "CRO",
-        title: "Lead Conversion UX",
-        detail: "Turn casual visits into serious inquiries with stronger offer pages.",
-        metric: "Inquiry rate up",
-        toneClass: "about-3d-stack__chip--rose-mid",
+        label: "Scalable Architecture",
+        title: "Modular Content Engine",
+        detail: "Empower your marketing team to launch landing pages and case studies in minutes.",
+        metric: "10x launch speed",
+        toneClass: "about-3d-stack__chip--emerald-2",
       },
       {
-        label: "Perf",
-        title: "Speed for Sales",
-        detail: "Faster load times reduce bounce and keep buyers inside your funnel.",
-        metric: "< 2s helps CVR",
-        toneClass: "about-3d-stack__chip--rose-strong",
+        label: "Analytics & Insights",
+        title: "Behavior Tracking Setup",
+        detail: "Full event tracking and heatmaps so you know exactly what drives revenue.",
+        metric: "100% data visibility",
+        toneClass: "about-3d-stack__chip--emerald-3",
       },
       {
-        label: "UI",
-        title: "Trust-First Polish",
-        detail: "Premium interactions that justify pricing and reduce buyer hesitation.",
-        metric: "Higher close rate",
-        toneClass: "about-3d-stack__chip--rose-dark",
+        label: "Scale Systems",
+        title: "Future-Proof Foundation",
+        detail: "Clean TypeScript and modular components engineered for continuous growth.",
+        metric: "Zero tech debt",
+        toneClass: "about-3d-stack__chip--emerald-4",
       },
     ],
   },
 ];
 
 function MockupChip({ chip }: { chip: CardChip }) {
-  const handleToggleFlip = (e: React.MouseEvent | React.KeyboardEvent) => {
-    e.currentTarget.classList.toggle("is-flipped");
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleToggleFlip(e);
-    }
-  };
-
   return (
-    <article
-      className={`about-3d-stack__chip ${chip.toneClass}`.trim()}
-      tabIndex={0}
-      onClick={handleToggleFlip}
-      onKeyDown={handleKeyDown}
-      role="button"
-      aria-label={`${chip.title} outcome details`}
-    >
-      <div className="about-3d-stack__chip-inner pointer-events-none">
-        <div className="about-3d-stack__chip-face about-3d-stack__chip-face--front">
-          <p className="about-3d-stack__chip-eyebrow">{chip.label}</p>
-          <h3 className="about-3d-stack__chip-title">{chip.title}</h3>
-          <span className="about-3d-stack__chip-metric">{chip.metric}</span>
-        </div>
-
-        <div className="about-3d-stack__chip-face about-3d-stack__chip-face--back">
-          <p className="about-3d-stack__chip-eyebrow">Outcome</p>
-          <p className="about-3d-stack__chip-detail">{chip.detail}</p>
-          <span className="about-3d-stack__chip-metric">{chip.metric}</span>
-        </div>
+    <div className={`about-3d-stack__chip ${chip.toneClass}`.trim()}>
+      <div className="about-3d-stack__chip-inner">
+        <span className="about-3d-stack__chip-label">{chip.label}</span>
+        <span className="about-3d-stack__chip-title">{chip.title}</span>
+        <span className="about-3d-stack__chip-detail">{chip.detail}</span>
+        <span className="about-3d-stack__chip-metric">{chip.metric}</span>
       </div>
-    </article>
+    </div>
   );
 }
 
@@ -448,17 +423,18 @@ export function About3DStack() {
       mobileTl.to({}, { duration: 0.35 }, 0.82);
 
       for (let i = 0; i < mobilePanels.length - 1; i++) {
-        const current = mobilePanels[i] as HTMLElement;
-        const next = mobilePanels[i + 1] as HTMLElement;
-        const following = mobilePanels[i + 2] as HTMLElement | undefined;
+        const current = mobilePanels[i];
+        const next = mobilePanels[i + 1];
+        const following = mobilePanels[i + 2];
         const beatStart = 1.17 + i * 1.17;
+
+        if (!current || !next) continue;
 
         mobileTl.to(
           current,
           {
-            y: "-112svh",
-            rotationX: 10,
-            scale: 1.05,
+            y: "-105svh",
+            rotationX: 9,
             autoAlpha: 0,
             duration: 0.78,
             ease: "none",
@@ -539,24 +515,12 @@ export function About3DStack() {
         ref={contentRef}
         className="about-3d-stack__desktop about-3d-stack__content-layer relative flex flex-col items-center h-full"
       >
-        <header className="about-3d-stack__header px-6 w-full max-w-4xl mx-auto flex-shrink-0 text-center">
+        <header className="text-center pt-[4vh] px-6 w-full max-w-4xl mx-auto flex-shrink-0">
           <h1 className="about-3d-stack__headline">
             Helping Kenyan Businesses{" "}
             <em>Look Professional Online</em>
           </h1>
-
-          <div className="about-3d-stack__video-wrapper">
-            <video 
-              src="/videos/codebyleon-intro.mp4" 
-              controls 
-              preload="metadata"
-              className="about-3d-stack__video"
-              aria-label="A message from CodeByLeon founder, Leon Madara"
-            />
-          </div>
-
           <p className="about-3d-stack__subheadline">
-            <strong>A message from CodeByLeon founder – Leon Madara.</strong><br/>
             I design websites and visuals that help Kenyan businesses look
             professional, get more inquiries, and build trust online.
           </p>
@@ -625,19 +589,7 @@ export function About3DStack() {
             <h1 className="about-3d-stack__mobile-headline about-3d-stack__mobile-reveal">
               Helping Kenyan Businesses <em>Look Professional Online</em>
             </h1>
-
-            <div className="about-3d-stack__video-wrapper about-3d-stack__video-wrapper--mobile about-3d-stack__mobile-reveal">
-              <video 
-                src="/videos/codebyleon-intro.mp4" 
-                controls 
-                preload="metadata"
-                className="about-3d-stack__video"
-                aria-label="A message from CodeByLeon founder, Leon Madara"
-              />
-            </div>
-
             <p className="about-3d-stack__mobile-subheadline about-3d-stack__mobile-reveal">
-              <strong>A message from CodeByLeon founder – Leon Madara.</strong><br/>
               A quick walk through the three layers that make a business look credible,
               easier to trust, and ready for better inquiries.
             </p>
@@ -683,7 +635,7 @@ export function About3DStack() {
                 <div className="about-3d-stack__mobile-lines">
                   {card.chips.map((chip, chipIndex) => (
                     <MobileOutcomeLine
-                      key={`${card.number}-${chip.label}`}
+                      key={chip.label}
                       chip={chip}
                       index={chipIndex}
                     />

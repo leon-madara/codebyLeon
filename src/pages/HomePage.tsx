@@ -9,6 +9,7 @@ import PortfolioCarouselMobile from '../components/sections/PortfolioCarouselMob
 import { useIsMobile } from '../hooks/use-mobile';
 // import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
 // import { About } from '../components/sections/About'; // OLD
+import { AboutVideoIntro } from '../components/sections/AboutVideoIntro';
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
 import { ServicesIntro } from '../components/sections/ServicesIntro';
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
@@ -115,6 +116,7 @@ export function HomePage() {
       {/* OLD: Original Portfolio (commented for rollback)
       <Portfolio />
       */}
+      <AboutVideoIntro />
       <About3DStack />
       <ServicesIntro />
       <MultiCardScrollSection />
