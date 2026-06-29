@@ -168,8 +168,8 @@ export function AboutVideoIntro() {
     >
       <div className="about-video-intro__container px-6 w-full max-w-4xl mx-auto flex flex-col items-center text-center">
         <h1 className="about-video-intro__headline">
-          Helping Kenyan Businesses{" "}
-          <em>Look Professional Online</em>
+          First impressions happen in seconds.{" "}
+          <em>Let’s make yours stick.</em>
         </h1>
 
         <div 
@@ -274,8 +274,7 @@ export function AboutVideoIntro() {
 
         <p className="about-video-intro__subheadline">
           <strong>A message from CodeByLeon founder – Leon Madara.</strong><br />
-          I design websites and visuals that help Kenyan businesses look
-          professional, get more inquiries, and build trust online.
+          I build websites that make your business look established, credible, and ready to close.
         </p>
       </div>
     </section>
