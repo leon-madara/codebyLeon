@@ -409,7 +409,10 @@
    ============================================= */
 .mobile-menu-overlay {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100svh;
   background: #13100E;
   z-index: 500;
   display: flex;
@@ -417,7 +420,7 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity var(--duration-normal) var(--easing-standard);
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 [data-theme="light"] .mobile-menu-overlay {
@@ -458,7 +461,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: var(--spacing-xl) var(--spacing-md);
+  padding: clamp(var(--spacing-md), 4vh, var(--spacing-xl)) var(--spacing-md);
+  overflow: hidden;
 }
 
 /* Top Space Elements */
@@ -467,7 +471,7 @@
   flex-direction: column;
   align-items: flex-start;
   gap: var(--spacing-md);
-  margin-bottom: var(--spacing-2xl);
+  margin-bottom: clamp(1rem, 3.5vh, var(--spacing-2xl));
 }
 
 .mobile-menu-overlay__availability {
@@ -513,7 +517,7 @@
   display: flex;
   justify-content: flex-start;
   gap: var(--spacing-md);
-  margin-top: var(--spacing-2xl);
+  margin-top: clamp(1rem, 3.5vh, var(--spacing-2xl));
 }
 
 .quick-connect-link {
@@ -569,7 +573,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: clamp(0.5rem, 2.5vh, var(--spacing-lg));
   padding: 0;
   margin: 0;
 }
@@ -577,7 +581,7 @@
 .mobile-menu-overlay__link {
   text-decoration: none;
   font-family: var(--font-handwritten);
-  font-size: 2.5rem;
+  font-size: clamp(1.8rem, 6vh, 2.5rem);
   font-weight: normal;
   color: #ffffff;
   display: block;
@@ -599,7 +603,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-top: var(--spacing-xl);
+  padding-top: clamp(var(--spacing-md), 3vh, var(--spacing-xl));
   border-top: 1px solid var(--glass-border);
 }
 
