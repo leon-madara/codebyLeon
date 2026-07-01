@@ -447,7 +447,7 @@
 
   .blog__grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-2xl);
+    gap: var(--spacing-md);
   }
 
   .blog__controls {
@@ -458,7 +458,7 @@
   @media (min-width: 1024px) {
     .blog__grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--spacing-2xl);
+      gap: var(--spacing-md);
     }
 
     .blog__content {
