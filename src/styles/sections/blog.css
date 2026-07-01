@@ -460,6 +460,20 @@
       grid-template-columns: repeat(3, 1fr);
       gap: var(--spacing-2xl);
     }
+
+    .blog__content {
+      text-align: left;
+    }
+
+    .blog__listing-header {
+      text-align: left;
+    }
+
+    .blog__subheadline,
+    .blog__listing-subtitle {
+      margin-left: 0;
+      margin-right: auto;
+    }
   }
 
 /* Large desktop */

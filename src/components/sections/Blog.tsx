@@ -19,9 +19,9 @@ export function Blog() {
 
       {/* LAYER 4: Content */}
       <div className="blog__content">
-        <h2 className="blog__headline">Insights for Growing Your Business Online</h2>
+        <h2 className="blog__headline">Recent Articles</h2>
         <p className="blog__subheadline">
-          Practical tips, case studies, and design insights for Kenyan businesses.
+          Explore our latest insights and stories
         </p>
 
         <div className="blog__grid">
@@ -31,7 +31,7 @@ export function Blog() {
         </div>
 
         <div className="blog__cta">
-          <a href="/blog" className="btn-secondary">Read More Articles</a>
+          <a href="/blog" className="btn-secondary">View All Posts</a>
         </div>
       </div>
     </section>
