@@ -2,11 +2,45 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BlogPost } from '../../types/blog';
 import SafeImage from '../SafeImage';
+import { Clock } from 'lucide-react';
 
 interface BlogCardProps {
   post: BlogPost;
   variant?: 'preview' | 'full';
 }
+
+const getCategoryClass = (name: string) => {
+  const lowerName = name.toLowerCase();
+  if (
+    lowerName.includes('web development') ||
+    lowerName.includes('technology') ||
+    lowerName.includes('tech') ||
+    lowerName.includes('code')
+  ) {
+    return 'card__category-pill--indigo';
+  }
+  if (lowerName.includes('design') || lowerName.includes('tips')) {
+    return 'card__category-pill--orange';
+  }
+  if (lowerName.includes('growth') || lowerName.includes('strategy') || lowerName.includes('business')) {
+    return 'card__category-pill--blue';
+  }
+  if (
+    lowerName.includes('accessibility') ||
+    lowerName.includes('ux') ||
+    lowerName.includes('experience')
+  ) {
+    return 'card__category-pill--pink';
+  }
+  return '';
+};
+
+const formatTag = (tag: string) => {
+  return tag
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
   const navigate = useNavigate();
@@ -21,15 +55,6 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
       event.preventDefault();
       handleCardClick();
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   };
 
   return (
@@ -62,16 +87,33 @@ export function BlogCard({ post, variant = 'full' }: BlogCardProps) {
       )}
       
       <div className="card__content">
-        <span className="card__category">{post.category}</span>
+        <div className="card__categories">
+          <span className={`card__category-pill ${getCategoryClass(post.category)}`}>
+            {post.category}
+          </span>
+          {post.tags && post.tags.length > 0 && (
+            <span className={`card__category-pill ${getCategoryClass(post.tags[0])}`}>
+              {formatTag(post.tags[0])}
+            </span>
+          )}
+        </div>
+        
         <h3 className="card__title">{combinedTitle}</h3>
         <p className="card__description">{post.description}</p>
         
         <div className="card__meta">
-          <span className="card__date">{formatDate(post.publishedDate)}</span>
-          <span className="card__read-time">{post.readTime} min read</span>
+          <div className="card__author-info">
+            <div className="card__author-avatar">
+              {post.author.charAt(0).toUpperCase()}
+            </div>
+            <span className="card__author-name">{post.author}</span>
+          </div>
+          
+          <div className="card__read-time-row">
+            <Clock size={14} className="card__clock-icon" />
+            <span className="card__read-time">{post.readTime} min read</span>
+          </div>
         </div>
-        
-        <div className="card__link">Read More →</div>
       </div>
     </article>
   );

@@ -455,6 +455,13 @@
   }
 }
 
+  @media (min-width: 1024px) {
+    .blog__grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--spacing-2xl);
+    }
+  }
+
 /* Large desktop */
 @media (min-width: 900px) {
   .blog__listing-title {
