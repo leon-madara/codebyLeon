@@ -457,6 +457,10 @@
   color: #13100E;
 }
 
+.navigation__hamburger {
+  justify-self: end;
+}
+
 .mobile-menu-overlay__content {
   flex: 1;
   display: flex;
