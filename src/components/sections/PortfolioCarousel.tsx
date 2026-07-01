@@ -321,9 +321,9 @@ const PortfolioCarousel = () => {
           </p>
         </div>
 
-        <div className="portfolio-carousel__content relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:flex-row md:items-center md:justify-between md:gap-12 md:px-16 lg:gap-16">
-          <div className="relative z-20 flex w-full max-w-xl flex-1 flex-col justify-center md:max-w-[34rem] md:flex-[0_1_34rem]">
-            <p className="mb-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase">
+        <div className="portfolio-carousel__content relative z-10 mx-auto flex w-full max-w-[1280px] flex-col items-center gap-5 px-8 md:px-16 lg:flex-row lg:items-center lg:justify-between lg:gap-16">
+          <div className="portfolio-carousel__info-col relative z-20 flex w-full max-w-xl flex-1 flex-col justify-center lg:max-w-[34rem] lg:flex-[0_1_34rem]">
+            <p className="portfolio-carousel__project-type mb-4 text-sm font-semibold tracking-[0.2em] text-accent uppercase">
               {currentProject.type}
             </p>
 
@@ -351,11 +351,11 @@ const PortfolioCarousel = () => {
               </a>
             )}
 
-            <p className="mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
+            <p className="portfolio-carousel__project-description mb-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
               {currentProject.description}
             </p>
 
-            <div className="mb-6 flex flex-wrap gap-1.5 md:gap-2">
+            <div className="portfolio-carousel__tech-stack mb-6 flex flex-wrap gap-1.5 md:gap-2">
               {currentProject.techStack.map((tech) => (
                 <span key={tech} className="tag-pill">
                   {tech}
@@ -376,7 +376,7 @@ const PortfolioCarousel = () => {
             )}
           </div>
 
-          <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center md:justify-end md:translate-x-8 lg:translate-x-12">
+          <div className="portfolio-carousel__cards-wrap relative z-0 flex w-full flex-1 items-center justify-center lg:justify-end lg:translate-x-12">
             <div
               ref={cardsContainerRef}
               className="relative w-[280px] h-[186px] sm:w-[450px] sm:h-[300px] md:w-[480px] md:h-[320px] lg:w-[540px] lg:h-[360px]"
