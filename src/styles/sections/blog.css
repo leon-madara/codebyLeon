@@ -431,6 +431,12 @@
 
 /* Desktop and up */
 @media (min-width: 768px) {
+  .blog__content {
+    max-width: 1400px;
+    padding-left: var(--spacing-md);
+    padding-right: var(--spacing-md);
+  }
+
   .blog__controls {
     flex-direction: row;
     justify-content: space-between;
@@ -447,7 +453,10 @@
 
   .blog__grid {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: var(--spacing-md);
+    gap: 12px;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
   }
 
   .blog__controls {
@@ -458,7 +467,7 @@
   @media (min-width: 1024px) {
     .blog__grid {
       grid-template-columns: repeat(3, 1fr);
-      gap: var(--spacing-md);
+      gap: 12px;
     }
 
     .blog__content {
