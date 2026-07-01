@@ -149,6 +149,42 @@
   object-fit: cover;
 }
 
+@media (min-width: 1024px) {
+  .card--blog {
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    padding: 0;
+  }
+
+  .card--blog .card__media {
+    height: auto;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    margin-bottom: var(--spacing-md);
+  }
+
+  .card--blog .card__title {
+    font-size: 1.35rem;
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .card--blog .card__description {
+    font-size: 0.9rem;
+    margin-bottom: var(--spacing-md);
+    line-height: 1.5;
+  }
+
+  .card--blog .card__meta {
+    border-top: none;
+    padding-top: 0;
+    margin-top: var(--spacing-sm);
+  }
+}
+
+
 /* Beat Card - Used in horizontal scroll feature (story beats) */
 .card--beat {
   min-width: 100%;
