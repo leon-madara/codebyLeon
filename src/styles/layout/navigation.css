@@ -434,9 +434,10 @@
 
 .mobile-menu-overlay__header {
   padding: var(--spacing-md);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
-  justify-content: space-between;
+  gap: var(--spacing-md);
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -450,15 +451,12 @@
   justify-content: center;
   padding: 0;
   margin-left: var(--spacing-sm);
+  justify-self: end;
 }
 
 [data-theme="light"] .mobile-menu-overlay__close,
 [data-theme="light"] .navigation__hamburger {
   color: #13100E;
-}
-
-.navigation__hamburger {
-  justify-self: end;
 }
 
 .mobile-menu-overlay__content {
