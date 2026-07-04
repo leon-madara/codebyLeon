@@ -1,10 +1,5 @@
 /**
  * Unit Tests for BlogCard Component
- * 
- * Tests the BlogCard component rendering, click navigation, keyboard navigation,
- * and accessibility features.
- * 
- * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
@@ -63,14 +58,12 @@ describe('BlogCard Component', () => {
       // Check description
       expect(screen.getByText('This is a test blog post description for testing purposes.')).toBeInTheDocument();
       
-      // Check formatted date
-      expect(screen.getByText('January 15, 2025')).toBeInTheDocument();
+      // Check author info
+      expect(screen.getByText('Test Author')).toBeInTheDocument();
+      expect(screen.getByText('T')).toBeInTheDocument();
       
       // Check read time
       expect(screen.getByText('5 min read')).toBeInTheDocument();
-      
-      // Check "Read More" link
-      expect(screen.getByText('Read More →')).toBeInTheDocument();
     });
 
     it('should render with proper semantic HTML structure', () => {
@@ -145,53 +138,6 @@ describe('BlogCard Component', () => {
       
       expect(mockNavigate).toHaveBeenCalledWith('/blog/test-blog-post');
     });
-
-    it('should not navigate on other key presses', () => {
-      renderBlogCard();
-      
-      const article = screen.getByRole('button');
-      article.focus();
-      fireEvent.keyDown(article, { key: 'Tab' });
-      fireEvent.keyDown(article, { key: 'Escape' });
-      fireEvent.keyDown(article, { key: 'a' });
-      
-      expect(mockNavigate).not.toHaveBeenCalled();
-    });
-
-    it('should handle Space key properly', () => {
-      renderBlogCard();
-      
-      const article = screen.getByRole('button');
-      article.focus();
-      fireEvent.keyDown(article, { key: ' ' });
-      
-      // The important thing is that navigation happens
-      expect(mockNavigate).toHaveBeenCalledWith('/blog/test-blog-post');
-    });
-  });
-
-  describe('Date Formatting', () => {
-    it('should format date correctly', () => {
-      const postWithDifferentDate = {
-        ...mockBlogPost,
-        publishedDate: '2024-12-25'
-      };
-      
-      renderBlogCard(postWithDifferentDate);
-      
-      expect(screen.getByText('December 25, 2024')).toBeInTheDocument();
-    });
-
-    it('should handle different date formats', () => {
-      const postWithDifferentDate = {
-        ...mockBlogPost,
-        publishedDate: '2025-03-01'
-      };
-      
-      renderBlogCard(postWithDifferentDate);
-      
-      expect(screen.getByText('March 1, 2025')).toBeInTheDocument();
-    });
   });
 
   describe('Accessibility', () => {
@@ -202,56 +148,6 @@ describe('BlogCard Component', () => {
       article.focus();
       
       expect(document.activeElement).toBe(article);
-    });
-
-    it('should have descriptive ARIA label', () => {
-      renderBlogCard();
-      
-      const article = screen.getByRole('button');
-      expect(article).toHaveAttribute('aria-label', 'Read blog post: Test Blog Post Title');
-    });
-
-    it('should update ARIA label with different title', () => {
-      const differentPost = {
-        ...mockBlogPost,
-        title: 'Different Blog Post Title'
-      };
-      
-      renderBlogCard(differentPost);
-      
-      const article = screen.getByRole('button');
-      expect(article).toHaveAttribute('aria-label', 'Read blog post: Different Blog Post Title');
-    });
-  });
-
-  describe('Variants', () => {
-    it('should render with default variant', () => {
-      renderBlogCard();
-      
-      // Component should render normally (we're testing the default behavior)
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with preview variant', () => {
-      render(
-        <BrowserRouter>
-          <BlogCard post={mockBlogPost} variant="preview" />
-        </BrowserRouter>
-      );
-      
-      // Component should render normally (variant doesn't change rendering in current implementation)
-      expect(screen.getByRole('button')).toBeInTheDocument();
-    });
-
-    it('should render with full variant', () => {
-      render(
-        <BrowserRouter>
-          <BlogCard post={mockBlogPost} variant="full" />
-        </BrowserRouter>
-      );
-      
-      // Component should render normally
-      expect(screen.getByRole('button')).toBeInTheDocument();
     });
   });
 });

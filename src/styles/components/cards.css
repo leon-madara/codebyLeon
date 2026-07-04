@@ -37,6 +37,7 @@
   box-shadow: var(--glass-shadow);
   transition: transform var(--duration-normal) var(--easing-standard),
               box-shadow var(--duration-normal) var(--easing-standard);
+  text-align: left;
 }
 
 .card:hover {
@@ -229,6 +230,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  text-align: center;
   min-height: 320px;
   padding: var(--spacing-2xl);
   background: transparent;

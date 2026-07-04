@@ -589,7 +589,10 @@
 
   .process-page__hero {
     grid-template-columns: 1fr;
-    min-height: auto;
+    min-height: calc(100dvh - 6rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .process-page__hero-copy {
@@ -682,6 +685,10 @@
 @media (max-width: 640px) {
   .process-page {
     padding: 5.5rem var(--spacing-md) var(--spacing-3xl);
+  }
+
+  .process-page__hero {
+    min-height: calc(100dvh - 5.5rem);
   }
 
   .process-page__hero-copy {

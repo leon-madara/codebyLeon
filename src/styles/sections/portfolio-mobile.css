@@ -32,7 +32,7 @@
 .portfolio-mobile__proof-gallery {
   position: relative;
   min-height: 100vh;
-  min-height: 100svh;
+  min-height: 100dvh;
 }
 
 .portfolio-mobile__intro-chapter {
@@ -196,7 +196,7 @@
 .portfolio-mobile__proof-panel {
   position: relative;
   flex: 0 0 min(86vw, 27rem);
-  min-height: calc(100svh - var(--nav-height, 56px) - var(--spacing-xl) - var(--spacing-md));
+  min-height: calc(100dvh - var(--nav-height, 56px) - var(--spacing-xl) - var(--spacing-md));
   display: grid;
   align-content: end;
   overflow: hidden;
