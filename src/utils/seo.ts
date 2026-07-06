@@ -5,8 +5,8 @@ export const SITE_NAME = 'Code by Leon';
 export const DEFAULT_TITLE = 'Code by Leon | Nairobi Web Design Studio for Kenyan Businesses';
 export const DEFAULT_DESCRIPTION =
   'Code by Leon builds fast, polished websites and brand experiences for Kenyan businesses that want more trust, inquiries, and growth online.';
-export const DEFAULT_IMAGE = '/portfolio-legit.png';
-export const DEFAULT_IMAGE_ALT = 'Code by Leon portfolio website preview';
+export const DEFAULT_IMAGE = '/apple-touch-icon.png';
+export const DEFAULT_IMAGE_ALT = 'Code by Leon Logo';
 
 export type SeoType = 'website' | 'article';
 
