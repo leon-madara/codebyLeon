@@ -529,14 +529,14 @@
 }
 
 .about-3d-stack__headline em {
-  font-family: "UnifrakturMaguntia", cursive;
+  font-family: "Protest Revolution", sans-serif;
   font-weight: 400;
   font-style: normal;
   color: var(--hero-accent);
 }
 
 .about-3d-stack__subheadline {
-  font-family: var(--font-body), sans-serif;
+  font-family: "Protest Revolution", sans-serif;
   font-size: clamp(0.88rem, 1.4vw, 1.05rem);
   color: var(--text-secondary);
   font-weight: 400;
@@ -1228,7 +1228,7 @@
   .about-3d-stack__mobile-headline em {
     display: block;
     margin-top: 0.3rem;
-    font-family: "UnifrakturMaguntia", cursive;
+    font-family: "Protest Revolution", sans-serif;
     font-style: normal;
     font-weight: 400;
     color: var(--hero-accent);
@@ -1237,7 +1237,8 @@
   .about-3d-stack__mobile-subheadline {
     max-width: 36ch;
     margin: 1.1rem 0 0;
-    font-family: var(--font-body);
+    font-family: "Protest Revolution", sans-serif;
+    font-weight: 400;
     font-size: 1rem;
     line-height: 1.65;
     color: var(--text-secondary);
