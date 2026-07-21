@@ -183,7 +183,8 @@ class ServiceConfigurator {
                 name: document.getElementById('userName')?.value.trim(),
                 email: document.getElementById('userEmail')?.value.trim(),
                 phone: document.getElementById('userPhone')?.value.trim(),
-                business: document.getElementById('businessName')?.value.trim()
+                business: document.getElementById('businessName')?.value.trim(),
+                website: document.getElementById('website')?.value.trim()
             };
             this.saveProgress();
         }
@@ -436,9 +437,10 @@ class ServiceConfigurator {
             } else {
                 // All done, show recommendation
                 setTimeout(() => {
-                    this.generateRecommendation();
+                    const recommendation = this.generateRecommendation();
                     this.currentIndex++;
                     this.updateUI();
+                    this.sendRecommendationEmail(recommendation);
                 }, 600);
             }
         };
@@ -505,6 +507,44 @@ class ServiceConfigurator {
 
         const includedList = document.getElementById('includedList');
         includedList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+
+        return { packageName, priceRange, whyReasons, features };
+    }
+
+    setEmailStatus(message, state) {
+        const status = document.getElementById('emailStatus');
+        if (!status) return;
+
+        status.textContent = message;
+        status.dataset.state = state;
+    }
+
+    async sendRecommendationEmail(recommendation) {
+        if (!this.answers.contact || this.answers.contact.website) return;
+
+        this.setEmailStatus('Sending your recommendation…', 'pending');
+
+        try {
+            const response = await fetch('/api/quote', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contact: this.answers.contact,
+                    answers: this.answers,
+                    additionalNeeds: this.additionalNeeds,
+                    recommendation
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Quote email request failed');
+            }
+
+            this.setEmailStatus('Your recommendation is in your inbox.', 'success');
+        } catch (error) {
+            console.error('Unable to send quote recommendation email:', error);
+            this.setEmailStatus('We could not email this right now. Please contact hello@codebyleon.com.', 'error');
+        }
     }
 
     saveProgress() {

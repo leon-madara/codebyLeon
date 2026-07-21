@@ -917,6 +917,20 @@
     margin-bottom: 2rem;
 }
 
+.result-email-status {
+    min-height: 1.5rem;
+    color: var(--text-secondary);
+    margin: -1rem 0 1.5rem;
+}
+
+.result-email-status[data-state="success"] {
+    color: var(--highlight-green);
+}
+
+.result-email-status[data-state="error"] {
+    color: var(--brand-orange);
+}
+
 .result-section {
     text-align: left;
     margin-bottom: 1.5rem;
