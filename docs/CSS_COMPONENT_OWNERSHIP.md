@@ -173,6 +173,7 @@ src/styles/
 | Mouse Trail | `features/mouse-trail.css` | `.mouse-trail` | Mouse trail effect |
 | Configurator | `features/configurator.css` | `.configurator` | Configurator page styles |
 | Torch Effect | `features/torch-effect.css` | `.torch-effect` | Torch effect (if implemented) |
+| Storybook Services | `features/storybook-services.css` | `.sb` | Interactive flipbook services component |
 
 **Horizontal Scroll Classes:**
 - `.horizontal-scroll` - Container
