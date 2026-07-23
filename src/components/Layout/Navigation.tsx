@@ -186,9 +186,9 @@ export function Navigation() {
         <a
           href="/get-started.html"
           className="navigation__cta"
-          aria-label="Build Your Quote - Configure your project and see pricing"
+          aria-label="Start your project - Configure your project and see pricing"
         >
-          <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+          <span className="navigation__cta-text">START YOUR PROJECT</span>
           <span className="navigation__cta-tooltip" role="tooltip" aria-hidden="true">
             Configure your project & see pricing
           </span>
@@ -221,7 +221,7 @@ export function Navigation() {
             <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
           </Link>
           <a href="/get-started.html" className="navigation__cta">
-            <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+            <span className="navigation__cta-text">START YOUR PROJECT</span>
           </a>
           <button 
             className="mobile-menu-overlay__close" 

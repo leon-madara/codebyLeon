@@ -153,11 +153,11 @@ describe('Navigation', () => {
     expect(document.body.style.overflow).toBe('');
   });
 
-  it('renders mobile menu links, quote CTA, and theme toggle inside the menu', async () => {
+  it('renders mobile menu links, project CTA, and theme toggle inside the menu', async () => {
     const user = userEvent.setup();
     renderNavigation('/');
 
-    expect(screen.getByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+    expect(screen.getByRole('link', { name: 'Start your project - Configure your project and see pricing' }))
       .toHaveAttribute('href', '/get-started.html');
 
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
@@ -169,7 +169,7 @@ describe('Navigation', () => {
     expect(within(menu).getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
     expect(within(menu).getByRole('link', { name: 'Process' })).toHaveAttribute('href', '/process');
     expect(within(menu).getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
-    expect(within(menu).queryByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+    expect(within(menu).queryByRole('link', { name: 'Start your project - Configure your project and see pricing' }))
       .not.toBeInTheDocument();
     expect(within(menu).getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument();
   });

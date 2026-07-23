@@ -16,12 +16,12 @@ const Sidebar = forwardRef<HTMLDivElement, SidebarProps>(({ currentStep, totalSt
         </div>
 
         <a 
-          href={import.meta.env.VITE_PHONE_NUMBER || "/get-started.html"} 
+          href="/get-started.html"
           className="hs-sidebar__cta"
           style={{ textDecoration: 'none' }}
         >
           <Phone className="hs-sidebar__cta-icon" />
-          Book a Free Call
+          Start your project
         </a>
       </div>
     </div>

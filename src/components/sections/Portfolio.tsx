@@ -598,7 +598,7 @@ export function Portfolio() {
         )}
 
         <div className="portfolio__cta">
-          <a href="/get-started.html" className="btn-primary">Ready to Start Your Project?</a>
+          <a href="/get-started.html" className="btn-primary">Start your project</a>
         </div>
       </div>
     </section>

@@ -13,6 +13,7 @@ import { AboutVideoIntro } from '../components/sections/AboutVideoIntro';
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
 import { ServicesIntro } from '../components/sections/ServicesIntro';
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
+import { StoryBookServices } from '../components/StoryScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 import { isVisualTestMode } from '../utils/runtimeFlags';
@@ -119,7 +120,10 @@ export function HomePage() {
       <AboutVideoIntro />
       <About3DStack />
       <ServicesIntro />
+      <StoryBookServices />
+      {/* OLD: Original horizontal-scroll services (kept for rollback)
       <MultiCardScrollSection />
+      */}
       <Blog />
       <FinalCTA />
     </div>

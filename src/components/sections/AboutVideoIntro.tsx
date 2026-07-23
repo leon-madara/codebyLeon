@@ -168,7 +168,9 @@ export function AboutVideoIntro() {
     >
       <div className="about-video-intro__container px-6 w-full max-w-4xl mx-auto flex flex-col items-center text-center">
         <h1 className="about-video-intro__headline">
-          First impressions happen in seconds.{" "}
+          <span className="about-video-intro__headline-line">
+            First impressions happen in seconds.
+          </span>
           <em>Let’s make yours stick.</em>
         </h1>
 

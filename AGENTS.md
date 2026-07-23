@@ -117,3 +117,7 @@ npm run build
 7. **Agent workflow** → `ENG WORKFLOW/01_WORKFLOW.md`
 8. **Global change protocol** → `GLOBAL_CHANGE_EXECUTION_PLAYBOOK.md`
 9. **Project change protocol** → `docs/CODEBYLEON_CHANGE_EXECUTION_PLAYBOOK.md`
+
+## Canonical Agent Instructions
+
+This file is the canonical `codebyLeon` agent guide. Linked worktrees may carry an older copy because they represent different branches. Do not overwrite a worktree's guide automatically. Run `npm run agents:check` from this checkout to identify files that need a deliberate comparison; add `-- --strict` when a non-zero result is needed for an automation gate.

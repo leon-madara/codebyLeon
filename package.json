@@ -15,6 +15,7 @@
     "css:baseline": "tsx src/test/css-utils/collect-baseline.ts",
     "css:compare": "tsx src/test/css-utils/compare-metrics.ts",
     "css:gates": "tsx src/test/css-utils/run-architecture-gates.ts",
+    "agents:check": "node scripts/check-agent-instructions.mjs",
     "antigravity:install-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\install-antigravity-watchdog-global.ps1",
     "antigravity:uninstall-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\uninstall-antigravity-watchdog-global.ps1"
   },

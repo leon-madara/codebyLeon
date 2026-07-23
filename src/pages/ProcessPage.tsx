@@ -277,10 +277,10 @@ export function ProcessPage() {
           </p>
           <div className="process-page__hero-actions" aria-label="Process page actions">
             <a className="button button--primary process-page__action" href="/get-started.html">
-              Build Your Quote
+              Start your project
             </a>
             <a className="button button--secondary process-page__action" href="#process-journey">
-              Meet the Process
+              See how it works
               <ArrowRight className="process-page__action-icon" aria-hidden="true" />
             </a>
           </div>
@@ -447,7 +447,7 @@ export function ProcessPage() {
           </p>
           <div className="process-page__closing-actions">
             <a className="button button--primary process-page__action" href="/get-started.html">
-              Build Your Quote
+              Start your project
             </a>
             <a className="button button--secondary process-page__action" href="/#final-cta">
               Let&apos;s Talk

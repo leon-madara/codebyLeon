@@ -688,7 +688,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
           {/* CTAs */}
           <div ref={ctasRef} className="hero__ctas hero__anim-item">
-            <a href={import.meta.env.VITE_PHONE_NUMBER || "/get-started.html"} className="hero__cta hero__cta--primary">Book a free 20-minute call</a>
+            <a href="/get-started.html" className="hero__cta hero__cta--primary">Start your project</a>
             <a href="#portfolio" className="hero__cta hero__cta--secondary">VIEW PORTFOLIO</a>
           </div>
         </div>
