@@ -136,6 +136,7 @@ export function Navigation() {
           <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
+        <div className="navigation__pill">
         <ul className="navigation__links">
           <li>
             <a
@@ -193,6 +194,7 @@ export function Navigation() {
             Configure your project & see pricing
           </span>
         </a>
+        </div>
 
         <div className="navigation__theme-toggle desktop-only">
           <ThemeToggle />

@@ -1,17 +1,13 @@
-import { useRef, useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useRef, forwardRef, useImperativeHandle } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTypingAnimation } from '../../hooks/useTypingAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
-import { useTheme } from '../../contexts/ThemeContext';
-import { useAnimation } from '../../contexts/AnimationContext';
-import { MouseTrail } from '../MouseTrail';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export interface HeroHandle {
-  bgRef: HTMLDivElement | null;
   textRefs: (HTMLDivElement | null)[];
 }
 
@@ -21,10 +17,6 @@ interface HeroProps {
 
 export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref) => {
   const visualTestMode = isVisualTestMode();
-  const { theme } = useTheme();
-  const { torchEffectEnabled } = useAnimation();
-  const torchEffectEnabledRef = useRef(torchEffectEnabled);
-  const WORD_GROWTH_START_PROGRESS = 0.08;
   const HERO_ANIMATION_SCROLL_VH = 180;
   const HERO_POST_ANIMATION_HOLD_VH = 20;
   const HERO_REVERSE_PEEL_SCROLL_VH = 50;
@@ -41,7 +33,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const bgRef = useRef<HTMLDivElement>(null);
 
   // Refs for staggered text lines
   const badgeRef = useRef<HTMLSpanElement>(null);
@@ -58,11 +49,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
   const reverseCompletionAppliedRef = useRef(false);
   const isInitializedRef = useRef(false);
   const wordContainerRef = useRef<HTMLDivElement | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
 
   // Expose refs to parent for orchestration
   useImperativeHandle(ref, () => ({
-    bgRef: bgRef.current,
     textRefs: [line1Ref.current, line2Ref.current, line3Ref.current]
   }));
 
@@ -152,19 +141,10 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     const mm = gsap.matchMedia();
 
     mm.add('(max-width: 768px)', () => {
-      document.body.classList.remove('hero-torch-tint-active');
       showBaseHeroState(true);
-
-      return () => {
-        document.body.classList.remove('hero-torch-tint-active');
-      };
     });
 
     mm.add('(min-width: 769px)', () => {
-      if (torchEffectEnabledRef.current) {
-        document.body.classList.add('hero-torch-tint-active');
-      }
-
       // With smooth scrolling enabled, CSS position: sticky can desync from scroll transforms.
       // Keep the wrapper as trigger for scroll distance, but use GSAP pinning for reliable hold.
       const triggerEl = scrollWrapperRef?.current || sectionRef.current;
@@ -232,9 +212,6 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
         onUpdate: (self) => {
           const clampedProgress = Math.min(self.progress, 1);
           const animationProgress = Math.min(clampedProgress / HERO_ANIMATION_PROGRESS_CAP, 1);
-          const shouldShowTorchTint = torchEffectEnabledRef.current && self.progress < WORD_GROWTH_START_PROGRESS;
-          document.body.classList.toggle('hero-torch-tint-active', shouldShowTorchTint);
-
           // Case 1: Start Scroll Interaction
           if (!isInitializedRef.current && self.direction >= 0 && self.progress > 0.01 && typingRef.current) {
             isInitializedRef.current = true;
@@ -595,52 +572,18 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
       return () => {
         heroPinTrigger.kill();
         showBaseHeroState(false);
-        document.body.classList.remove('hero-torch-tint-active');
       };
     });
 
     return () => {
       mm.revert();
-      document.body.classList.remove('hero-torch-tint-active');
     };
   }, { scope: sectionRef, dependencies: [stopTyping, startTyping, typingRef, visualTestMode] });
 
-  // Clean up body classes immediately if spotlight is toggled off
-  useEffect(() => {
-    torchEffectEnabledRef.current = torchEffectEnabled;
-    if (!torchEffectEnabled) {
-      document.body.classList.remove('hero-torch-tint-active');
-      document.body.classList.remove('torch-expanding');
-    }
-  }, [torchEffectEnabled]);
-
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 768);
-    check();
-    window.addEventListener('resize', check);
-    return () => window.removeEventListener('resize', check);
-  }, []);
-
   return (
     <section ref={sectionRef} id="hero" className="hero">
-      <MouseTrail
-        scopeRef={sectionRef}
-        disabled={theme !== 'light' || visualTestMode || isMobile}
-      />
 
-      {/* LAYER 2: Abstract Orbs (Grouped for Scaling) */}
-      <div ref={bgRef} className="hero__bg-wrapper absolute inset-0 z-0 origin-center will-change-transform">
-        <div className="hero__orbs-container">
-          <div className="hero__orb hero__orb--purple"></div>
-          <div className="hero__orb hero__orb--orange"></div>
-          <div className="hero__orb hero__orb--blue"></div>
-        </div>
-
-        {/* LAYER 3: Full-Screen Frosted Overlay with Dot Grid */}
-        <div className="hero__frosted-overlay"></div>
-      </div>
-
-      {/* LAYER 4: Content (Bold Typography) */}
+      {/* Static ambient canvas is supplied by the hero surface. */}
       <div ref={contentRef} className="hero__content relative z-10">
         <div className="hero__text-wrapper">
           {/* Badge */}

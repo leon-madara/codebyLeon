@@ -118,6 +118,16 @@
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
   --surface-highlight: rgba(255, 255, 255, 0.4);
 
+  /* Static homepage canvas and floating navigation */
+  --hero-static-background:
+    radial-gradient(ellipse 58% 58% at 8% 100%, rgba(220, 184, 255, 0.56) 0%, transparent 72%),
+    radial-gradient(ellipse 56% 56% at 94% 100%, rgba(183, 216, 247, 0.62) 0%, transparent 74%),
+    radial-gradient(ellipse 45% 42% at 88% 10%, rgba(255, 211, 171, 0.3) 0%, transparent 72%),
+    #fbf5ec;
+  --navigation-pill-background: rgba(255, 250, 244, 0.78);
+  --navigation-pill-border: rgba(26, 26, 46, 0.16);
+  --navigation-pill-shadow: 0 12px 32px rgba(57, 42, 31, 0.08);
+
   /* Dot Grid Pattern */
   --dot-color: rgba(150, 150, 150, 0.15);
 

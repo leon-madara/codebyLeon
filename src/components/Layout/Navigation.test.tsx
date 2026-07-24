@@ -44,13 +44,14 @@ describe('Navigation', () => {
     });
   });
 
-  it('renders as a full-width attached header', () => {
+  it('groups the desktop links and project action inside the navigation pill', () => {
     renderNavigation('/');
 
     const nav = screen.getByRole('navigation', { name: 'Main navigation' });
+    const projectLink = screen.getByRole('link', { name: 'Start your project - Configure your project and see pricing' });
     expect(nav).toHaveClass('navigation');
-    expect(nav).not.toHaveClass('navigation--floating');
     expect(nav).not.toHaveClass('is-hidden');
+    expect(projectLink.parentElement).toHaveClass('navigation__pill');
     expect(screen.getByRole('link', { name: 'Code by Leon home' })).toHaveAttribute('href', '/#hero');
   });
 

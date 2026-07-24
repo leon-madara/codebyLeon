@@ -78,14 +78,6 @@ export function HomePage() {
     const tl = gsap.timeline({ delay: 0.15 });
 
     if (heroRef.current) {
-      if (heroRef.current.bgRef) {
-        tl.fromTo(heroRef.current.bgRef,
-          { scale: 1.2 },
-          { scale: 1, duration: 1.8, ease: "power2.out" },
-          0
-        );
-      }
-
       if (heroRef.current.textRefs) {
         tl.to(heroRef.current.textRefs, {
           y: "0%",
