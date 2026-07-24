@@ -14,7 +14,7 @@ Replace the placeholder storybook presentation on `feature/storybook-services` w
 ## Source Visuals
 
 - Closed cover: `src/assets/services-storybook/research/closed-cover-straight-v1.png`
-- Open book: `src/assets/services-storybook/research/open-book-blank-base-v1.png`
+- Open book: `src/assets/services-storybook/research/open-book-blank-base-v2-no-moon.png`
 - Layout reference: the supplied Viberole open-book screenshot
 
 Viberole is a composition and interaction reference only. CodeByLeon keeps its own leather, copper, slate-blue, type, copy, and service architecture.
@@ -47,21 +47,71 @@ Viberole is a composition and interaction reference only. CodeByLeon keeps its o
 
 1. Enter the pinned section with the closed book visible.
 2. Scroll through the opening range to rotate/fade the cover away and reveal the open spread.
-3. Continue scrolling to advance through the three service chapters.
-4. Select any chapter tab to open it directly; the selected chapter remains in place until scrolling resumes.
-5. Use `react-pageflip`/StPageFlip for the page surface, corner preview, shadow, and click-driven turn.
-6. Hovering the bottom-right or bottom-left page corner previews the available turn; clicking completes it from that corner.
-7. Keep GSAP responsible only for the pinned section, cover opening, and scroll-to-chapter synchronization.
-8. Keep the StPageFlip spine centered inside the open-book image so the page sheet never drifts away from the book midpoint.
-9. With reduced motion, skip 3D transforms and expose the open book and chapter controls directly.
+3. Use the prologue to select a known service or begin the complete guided journey.
+4. Continue scrolling to advance through twelve story spreads across the three service chapters.
+5. Select any chapter tab or nested story marker to open it directly; the selection remains in place until scrolling resumes.
+6. Use `react-pageflip`/StPageFlip for the page surface, corner preview, shadow, and click-driven turn.
+7. Hovering the bottom-right or bottom-left page corner previews the available turn; clicking completes it from that corner.
+8. Keep GSAP responsible only for the pinned section, cover opening, and scroll-to-story synchronization.
+9. Keep the StPageFlip spine centered inside the open-book image so the page sheet never drifts away from the book midpoint.
+10. With reduced motion, skip 3D transforms and expose the open book and chapter controls directly.
 
-## Chapter Architecture
+## Approved 12-Page Chapter Architecture
 
-1. Websites & Systems
-2. Brand Identity
-3. Ongoing Design
+The chooser supports two equally visible paths:
 
-Each spread keeps four scannable beats and one action. Text and controls remain live HTML rather than being embedded in the generated book image.
+1. Visitors who know what they need select one clearly named service chapter.
+2. Visitors who are still deciding select **Explore the full journey** and read all
+   12 story spreads in order.
+
+The cover and prologue chooser are not part of the 12-page story count.
+
+### Chapter 01 — Website Design & Digital Systems
+
+1. Hidden in Plain Sight
+2. Draw the Map
+3. Build the World
+4. Turn the Key
+
+### Chapter 02 — Brand Identity & Digital Refresh
+
+5. Outgrow the Old Story
+6. Find the Thread
+7. Redraw the Character
+8. Begin the Next Chapter
+
+### Chapter 03 — Ongoing Design Support
+
+9. Keep Hold of the Thread
+10. Plan the Pages Ahead
+11. Write as You Grow
+12. Keep the Story Whole
+
+Each reader-facing story page is one complete open-book spread backed by two
+StPageFlip leaf elements. The StPageFlip book therefore contains 26 leaves:
+two prologue leaves plus 24 story leaves. Text and controls remain live HTML.
+
+## Approved Navigation Hierarchy
+
+- Three persistent chapter bookmarks use explicit service names.
+- Selecting a chapter opens its first subchapter.
+- The active chapter reveals four smaller numbered sub-markers.
+- A sub-marker jumps directly to its matching story spread.
+- Page turns, scroll progress, chapter bookmarks, and sub-markers share one
+  active-story-page state.
+- Direct non-adjacent jumps use an immediate StPageFlip page change; adjacent
+  turns retain the animated corner flip.
+
+## Approved Visual Hierarchy
+
+- Prologue title: **Choose the service you need**.
+- Prologue supporting copy explains direct selection and the guided journey.
+- Story spread order: logo, page/chapter marker, story title, story subtitle,
+  chapter context, then the next step or chapter CTA.
+- Chapter paper tones remain deliberately subtle:
+  warm parchment for websites, cool mist for brand identity, and soft
+  terracotta parchment for ongoing support.
+- Paper texture and corrected 1.50:1 page geometry remain unchanged.
 
 ## Responsive Rules
 

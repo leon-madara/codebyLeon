@@ -2,7 +2,9 @@
 
 ## Final result
 
-passed
+blocked
+
+The previously approved book geometry and StPageFlip interaction remain documented below. The new twelve-spread chooser and nested-navigation architecture has passed automated validation, but its fresh visual comparison is blocked until the selected in-app browser can reload the localhost preview.
 
 ## Source and Implementation Evidence
 
@@ -118,3 +120,45 @@ passed
 - The production site header remains visible in the implementation capture; this is an accepted site-level constraint rather than page-plane drift.
 
 final result: passed
+
+## Twelve-spread service architecture — 2026-07-24
+
+### Source truth
+
+- Annotated layout reference: `output/design-qa/source-services-storybook-12-page-layout.png`
+- Intended state: open light-mode book with the logo in the upper-left, a direct story title and supporting copy on the left page, optional story imagery below, and chapter navigation attached to the right edge.
+- Required flow: a prologue that supports direct service selection or a complete journey, followed by three clearly named chapters with four story spreads each.
+
+### Implementation evidence
+
+- Automated DOM coverage: `src/components/StoryScroll/StoryBookServices.test.tsx`
+- Implementation: `src/components/StoryScroll/StoryBookServices.tsx`
+- Layout and chapter tint rules: `src/styles/features/storybook-services.css`
+- Fresh implementation screenshot: not captured.
+- Fresh combined source/implementation comparison: not produced.
+- Target desktop viewport: 1485 x 819 CSS pixels at device pixel ratio 1.
+- Target mobile viewport: 390 x 844 CSS pixels at device pixel ratio 1.
+
+### Verified without visual inference
+
+- The reader-facing model contains exactly twelve story spreads: four for each of the three service chapters.
+- StPageFlip receives 26 leaves: two prologue leaves plus two leaves for each story spread.
+- The prologue exposes three clearly named service choices and an **Explore the full journey** action.
+- Each active chapter exposes four nested story markers.
+- Direct non-adjacent selections and adjacent page turns use separate navigation paths to keep marker state aligned with the visible spread.
+- Each chapter applies a distinct low-opacity paper wash.
+- Production build, full unit suite, and CSS architecture gates pass.
+
+### Blocking visual checks
+
+- Confirm the three chooser cards and journey CTA fit inside the prologue right page at the target desktop and mobile viewports.
+- Confirm all four nested markers remain legible and do not overflow the right rail.
+- Confirm the twelve-spread page turns keep the content and active marker synchronized in the real StPageFlip canvas.
+- Compare the reference and implementation in one combined image at the same viewport and state.
+- Check all three chapter tints in light mode before generating the corresponding dark-mode artwork.
+
+### Blocker
+
+The selected Codex in-app browser rejected the localhost reload under its browser URL security policy. Per the browser and Product Design safety requirements, no alternate browser, raw CDP call, or local Playwright workaround was used.
+
+final result: blocked

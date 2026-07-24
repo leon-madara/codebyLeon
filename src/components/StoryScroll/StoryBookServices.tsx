@@ -5,7 +5,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HTMLFlipBook from 'react-pageflip';
 import closedCoverImage from '../../assets/services-storybook/research/closed-cover-straight-v1.png';
-import openBookImage from '../../assets/services-storybook/research/open-book-blank-base-v1.png';
+import openBookImage from '../../assets/services-storybook/research/open-book-blank-base-v2-no-moon.png';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -26,6 +26,7 @@ export interface StoryChapter {
   number: string;
   navigationLabel: string;
   title: string;
+  chooserDescription: string;
   descriptor: string;
   beats: StoryBeat[];
   ctaLabel: string;
@@ -39,92 +40,118 @@ const CHAPTERS: StoryChapter[] = [
     number: '01',
     navigationLabel: 'Websites & Systems',
     title: 'Website Design & Digital Systems',
-    descriptor: 'Websites, landing pages, client portals, and custom web workflows.',
+    chooserDescription:
+      'Websites, landing pages, client portals, and custom digital workflows.',
+    descriptor:
+      'Every good business has a story worth discovering. Together, we give yours a digital home and a clear path through the door.',
     beats: [
       {
-        title: 'Visibility & Credibility',
-        description: 'Make the value of your work easier for potential clients to see and trust.',
+        title: 'Hidden in Plain Sight',
+        description:
+          'Your best work may already exist, but the right clients cannot always see its value.',
       },
       {
-        title: 'Strategy & Structure',
-        description: 'Organise the message, user path, content, and technical requirements.',
+        title: 'Draw the Map',
+        description:
+          'We decide what visitors should discover, where they should go, and what should happen next.',
       },
       {
-        title: 'Design & Development',
-        description: 'Turn the approved direction into a responsive website or digital system.',
+        title: 'Build the World',
+        description:
+          'Words, visuals, pages, and technology come together as one connected experience.',
       },
       {
-        title: 'Launch & Next Steps',
-        description: 'Prepare the finished experience for launch, handover, and what comes next.',
+        title: 'Turn the Key',
+        description:
+          'Your new digital home opens with everything prepared for launch and ownership.',
       },
     ],
-    ctaLabel: 'Build your digital presence',
+    ctaLabel: 'Open your digital doors',
     ctaHref: '/get-started.html',
     theme: 'websites',
   },
   {
     id: 'brand-identity',
     number: '02',
-    navigationLabel: 'Brand Identity',
+    navigationLabel: 'Brand Identity & Refresh',
     title: 'Brand Identity & Digital Refresh',
-    descriptor: 'Visual identity, messaging direction, and website or brand renewal.',
+    chooserDescription:
+      'Brand direction, visual identity, messaging, and digital renewal.',
+    descriptor:
+      'Sometimes a business grows beyond the story its brand is telling. We help you keep what still feels true, rewrite what no longer fits, and step forward as the business you have become.',
     beats: [
       {
-        title: 'What No Longer Fits',
-        description: 'Identify where the current identity no longer reflects the business.',
+        title: 'Outgrow the Old Story',
+        description:
+          'Your business has moved forward, but its identity may still speak from an earlier chapter.',
       },
       {
-        title: 'Brand Direction',
-        description: 'Decide what should remain, what needs to change, and what must be clearer.',
+        title: 'Find the Thread',
+        description:
+          'We uncover what should remain, what needs to change, and what your audience should understand more clearly.',
       },
       {
-        title: 'Identity System',
-        description: 'Create a coherent visual and verbal system for everyday brand use.',
+        title: 'Redraw the Character',
+        description:
+          'Voice, colour, typography, and visual details become one identity that feels recognisably yours.',
       },
       {
-        title: 'Digital Refresh',
-        description: 'Carry the refreshed direction into the website and key customer touchpoints.',
+        title: 'Begin the Next Chapter',
+        description:
+          'The renewed direction is carried into your website and the places where customers meet your brand.',
       },
     ],
-    ctaLabel: 'Refresh your brand',
+    ctaLabel: 'Begin your brand’s next chapter',
     ctaHref: '/get-started.html',
     theme: 'brand',
   },
   {
     id: 'ongoing-design',
     number: '03',
-    navigationLabel: 'Ongoing Design',
+    navigationLabel: 'Ongoing Design Support',
     title: 'Ongoing Design Support',
-    descriptor: 'Recurring campaign, website, and everyday creative support.',
+    chooserDescription:
+      'Recurring support for campaigns, website updates, and everyday creative work.',
+    descriptor:
+      'A growing business keeps writing new pages. We stay close to the story, helping every campaign, update, and new idea feel like it belongs to the same book.',
     beats: [
       {
-        title: 'A Shared Direction',
-        description: 'Keep recurring work aligned to one established visual and messaging system.',
+        title: 'Keep Hold of the Thread',
+        description:
+          'We work from one shared understanding of your brand, its voice, and where it is going.',
       },
       {
-        title: 'Planned Priorities',
-        description: 'Shape upcoming campaigns, site updates, and creative needs into a clear queue.',
+        title: 'Plan the Pages Ahead',
+        description:
+          'Campaigns, website updates, and creative requests become a clear and manageable queue.',
       },
       {
-        title: 'Consistent Production',
-        description: 'Produce connected assets without re-explaining the brand from the beginning.',
+        title: 'Write as You Grow',
+        description:
+          'New assets are created without having to explain your business again with every request.',
       },
       {
-        title: 'Continuity',
-        description: 'Keep the public experience coherent as the business and its needs evolve.',
+        title: 'Keep the Story Whole',
+        description:
+          'As the business changes, its public experience remains connected, familiar, and intentional.',
       },
     ],
-    ctaLabel: 'Plan ongoing support',
+    ctaLabel: 'Keep your story moving',
     ctaHref: '/get-started.html',
     theme: 'ongoing',
   },
 ];
 
 const TOTAL_CHAPTERS = CHAPTERS.length;
+const SUBCHAPTERS_PER_CHAPTER = 4;
+export const TOTAL_STORY_PAGES = CHAPTERS.reduce(
+  (total, chapter) => total + chapter.beats.length,
+  0,
+);
 const OPENING_PROGRESS = 0.34;
 const PROLOGUE_PROGRESS = 0.43;
 
-type ChapterIndex = number | null;
+type StoryPageIndex = number | null;
 type PageTurnDirection = -1 | 1;
 
 interface PageFlipController {
@@ -146,13 +173,14 @@ interface ServiceBookPageProps {
   children: React.ReactNode;
   hidden: boolean;
   side: 'left' | 'right';
+  theme?: StoryChapter['theme'];
 }
 
 const ServiceBookPage = forwardRef<HTMLDivElement, ServiceBookPageProps>(
-  ({ children, hidden, side }, ref) => (
+  ({ children, hidden, side, theme }, ref) => (
     <div
       ref={ref}
-      className={`sb__flip-page sb__flip-page--${side}`}
+      className={`sb__flip-page sb__flip-page--${side}${theme ? ` sb__flip-page--${theme}` : ''}`}
       data-density="soft"
       aria-hidden={hidden}
     >
@@ -168,52 +196,88 @@ const ServiceBookPage = forwardRef<HTMLDivElement, ServiceBookPageProps>(
 );
 ServiceBookPage.displayName = 'ServiceBookPage';
 
-function ChapterIntro({ chapter }: { chapter: StoryChapter }) {
+function BookPageLogo() {
+  return (
+    <img
+      src="/icons/main-logo.svg"
+      alt=""
+      className="sb__book-page-logo"
+      aria-hidden="true"
+    />
+  );
+}
+
+function StorySpreadIntro({
+  chapter,
+  beat,
+  storyPageIndex,
+  subchapterIndex,
+}: {
+  chapter: StoryChapter;
+  beat: StoryBeat;
+  storyPageIndex: number;
+  subchapterIndex: number;
+}) {
   return (
     <article className="sb__page-copy sb__page-copy--intro">
+      <BookPageLogo />
       <p className="sb__chapter-kicker">
-        Chapter {chapter.number} / {TOTAL_CHAPTERS.toString().padStart(2, '0')}
+        Chapter {chapter.number} · Story {(subchapterIndex + 1).toString().padStart(2, '0')} / 04
       </p>
-      <h3 className="sb__chapter-title">{chapter.title}</h3>
-      <p className="sb__chapter-descriptor">{chapter.descriptor}</p>
+      <h3 className="sb__chapter-title">{beat.title}</h3>
+      <p className="sb__chapter-descriptor">{beat.description}</p>
       <p className="sb__chapter-note">
-        A clear path from what is holding the business back to what we can build next.
+        <span>{chapter.title}</span>
+        Story page {(storyPageIndex + 1).toString().padStart(2, '0')} / {TOTAL_STORY_PAGES}
       </p>
     </article>
   );
 }
 
-function ChapterDetails({
+function StorySpreadDetails({
   chapter,
+  subchapterIndex,
   interactive,
 }: {
   chapter: StoryChapter;
+  subchapterIndex: number;
   interactive: boolean;
 }) {
+  const isChapterEnding = subchapterIndex === chapter.beats.length - 1;
+  const nextBeat = chapter.beats[subchapterIndex + 1];
+
   return (
-    <article className="sb__page-copy sb__page-copy--details">
-      <p className="sb__page-heading">Inside this chapter</p>
-      <ol className="sb__beats">
+    <article className="sb__page-copy sb__page-copy--details sb__story-details">
+      <p className="sb__page-heading">{chapter.title}</p>
+      <p className="sb__story-context">{chapter.descriptor}</p>
+      <ol className="sb__story-route" aria-label={`${chapter.title} story pages`}>
         {chapter.beats.map((beat, index) => (
-          <li key={beat.title} className="sb__beat">
-            <span className="sb__beat-number">
+          <li
+            key={beat.title}
+            className={`sb__story-route-item${index === subchapterIndex ? ' sb__story-route-item--active' : ''}`}
+            aria-current={index === subchapterIndex ? 'step' : undefined}
+          >
+            <span className="sb__story-route-number">
               {(index + 1).toString().padStart(2, '0')}
             </span>
-            <span>
-              <strong>{beat.title}</strong>
-              <span>{beat.description}</span>
-            </span>
+            <span>{beat.title}</span>
           </li>
         ))}
       </ol>
-      <a
-        href={chapter.ctaHref}
-        className="sb__chapter-cta"
-        tabIndex={interactive ? 0 : -1}
-      >
-        {chapter.ctaLabel}
-        <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.8} />
-      </a>
+      {isChapterEnding ? (
+        <a
+          href={chapter.ctaHref}
+          className="sb__chapter-cta"
+          tabIndex={interactive ? 0 : -1}
+        >
+          {chapter.ctaLabel}
+          <ArrowUpRight aria-hidden="true" size={17} strokeWidth={1.8} />
+        </a>
+      ) : (
+        <p className="sb__story-next">
+          Next: <strong>{nextBeat.title}</strong>
+        </p>
+      )}
     </article>
   );
 }
@@ -221,11 +285,12 @@ function ChapterDetails({
 function PrologueIntro() {
   return (
     <article className="sb__page-copy sb__page-copy--intro">
+      <BookPageLogo />
       <p className="sb__chapter-kicker">Our Services</p>
-      <h3 className="sb__chapter-title">What does your business need next?</h3>
+      <h3 className="sb__chapter-title">Choose the service you need</h3>
       <p className="sb__chapter-descriptor">
-        Build a stronger online presence, refresh a brand that no longer fits,
-        or keep everyday creative work moving.
+        Know what you need? Open the relevant chapter. Still deciding?
+        Follow the complete journey and discover which service fits your business.
       </p>
     </article>
   );
@@ -234,49 +299,80 @@ function PrologueIntro() {
 function PrologueDetails({
   interactive,
   onSelect,
+  onExplore,
 }: {
   interactive: boolean;
-  onSelect: () => void;
+  onSelect: (chapterIndex: number) => void;
+  onExplore: () => void;
 }) {
   return (
     <article className="sb__page-copy sb__page-copy--details sb__prologue">
-      <p className="sb__page-heading">Choose a chapter</p>
-      <p className="sb__prologue-copy">
-        Select a bookmark now, or continue scrolling to read the full book in order.
-      </p>
+      <p className="sb__page-heading">Services at a glance</p>
+      <div className="sb__service-choices">
+        {CHAPTERS.map((chapter, index) => (
+          <button
+            key={chapter.id}
+            type="button"
+            className={`sb__service-choice sb__service-choice--${chapter.theme}`}
+            onClick={() => onSelect(index)}
+            tabIndex={interactive ? 0 : -1}
+          >
+            <span className="sb__service-choice-number">{chapter.number}</span>
+            <span className="sb__service-choice-copy">
+              <strong>{chapter.title}</strong>
+              <span>{chapter.chooserDescription}</span>
+            </span>
+          </button>
+        ))}
+      </div>
       <button
         type="button"
         className="sb__read-button"
-        onClick={onSelect}
+        onClick={onExplore}
         tabIndex={interactive ? 0 : -1}
       >
-        Read the first chapter
+        Explore the full journey
       </button>
     </article>
   );
 }
 
-function getSpreadOrder(index: ChapterIndex) {
+function getStoryOrder(index: StoryPageIndex) {
   return index === null ? -1 : index;
 }
 
-export function getPageIndexForChapter(index: ChapterIndex) {
+export function getStoryPageIndex(chapterIndex: number, subchapterIndex: number) {
+  return chapterIndex * SUBCHAPTERS_PER_CHAPTER + subchapterIndex;
+}
+
+export function getChapterIndexForStoryPage(index: number) {
+  return Math.min(
+    TOTAL_CHAPTERS - 1,
+    Math.floor(index / SUBCHAPTERS_PER_CHAPTER),
+  );
+}
+
+export function getSubchapterIndexForStoryPage(index: number) {
+  return index % SUBCHAPTERS_PER_CHAPTER;
+}
+
+export function getPageIndexForStoryPage(index: StoryPageIndex) {
   return index === null ? 0 : (index + 1) * 2;
 }
 
-export function getChapterForPageIndex(pageIndex: number): ChapterIndex {
+export function getStoryPageForPageIndex(pageIndex: number): StoryPageIndex {
   if (pageIndex < 2) return null;
 
-  return Math.min(TOTAL_CHAPTERS - 1, Math.floor(pageIndex / 2) - 1);
+  return Math.min(TOTAL_STORY_PAGES - 1, Math.floor((pageIndex - 2) / 2));
 }
 
-export function getAdjacentChapter(
-  index: ChapterIndex,
+export function getAdjacentStoryPage(
+  index: StoryPageIndex,
   direction: PageTurnDirection,
-): ChapterIndex {
+): StoryPageIndex {
   const nextOrder = Math.min(
-    TOTAL_CHAPTERS - 1,
-    Math.max(-1, getSpreadOrder(index) + direction),
+    TOTAL_STORY_PAGES - 1,
+    Math.max(-1, getStoryOrder(index) + direction),
   );
 
   return nextOrder === -1 ? null : nextOrder;
@@ -304,28 +400,28 @@ export function StoryBookServices() {
   const storyTriggerRef = useRef<ScrollTrigger | null>(null);
   const manualSelectionRef = useRef(false);
   const isTurningRef = useRef(false);
-  const pendingChapterRef = useRef<ChapterIndex | undefined>(undefined);
-  const activeChapterRef = useRef<ChapterIndex>(null);
+  const pendingStoryPageRef = useRef<StoryPageIndex | undefined>(undefined);
+  const activeStoryPageRef = useRef<StoryPageIndex>(null);
   const isBookOpenRef = useRef(visualTestMode);
-  const transitionToChapterRef = useRef<(
-    index: ChapterIndex,
+  const transitionToStoryPageRef = useRef<(
+    index: StoryPageIndex,
     animate?: boolean,
   ) => void>(() => {});
-  const [activeChapter, setActiveChapter] = useState<ChapterIndex>(null);
+  const [activeStoryPage, setActiveStoryPage] = useState<StoryPageIndex>(null);
   const [isBookOpen, setIsBookOpen] = useState(visualTestMode);
 
-  const setChapter = useCallback((index: ChapterIndex) => {
-    activeChapterRef.current = index;
-    setActiveChapter(index);
+  const setStoryPage = useCallback((index: StoryPageIndex) => {
+    activeStoryPageRef.current = index;
+    setActiveStoryPage(index);
   }, []);
 
-  const transitionToChapter = useCallback((
-    index: ChapterIndex,
+  const transitionToStoryPage = useCallback((
+    index: StoryPageIndex,
     animate = true,
   ) => {
     if (
-      index === activeChapterRef.current
-      || index === pendingChapterRef.current
+      index === activeStoryPageRef.current
+      || index === pendingStoryPageRef.current
     ) return;
 
     const pageFlip = flipBookRef.current?.pageFlip();
@@ -337,63 +433,77 @@ export function StoryBookServices() {
       || window.innerWidth <= 768
       || !pageFlip
     ) {
-      pendingChapterRef.current = undefined;
-      setChapter(index);
+      pendingStoryPageRef.current = undefined;
+      setStoryPage(index);
       return;
     }
 
-    const targetPage = getPageIndexForChapter(index);
-    pendingChapterRef.current = index;
+    const targetPage = getPageIndexForStoryPage(index);
+    const isAdjacent = Math.abs(
+      getStoryOrder(index) - getStoryOrder(activeStoryPageRef.current),
+    ) === 1;
+    pendingStoryPageRef.current = index;
 
-    if (animate) {
+    if (animate && isAdjacent) {
       isTurningRef.current = true;
       pageFlip.flip(targetPage, 'bottom');
       return;
     }
 
     pageFlip.turnToPage(targetPage);
-    pendingChapterRef.current = undefined;
-    setChapter(index);
-  }, [setChapter, visualTestMode]);
+    pendingStoryPageRef.current = undefined;
+    setStoryPage(index);
+  }, [setStoryPage, visualTestMode]);
 
-  transitionToChapterRef.current = transitionToChapter;
+  transitionToStoryPageRef.current = transitionToStoryPage;
 
-  const handleChapterSelect = useCallback((index: number) => {
+  const handleStoryPageSelect = useCallback((index: number) => {
     manualSelectionRef.current = !visualTestMode;
     if (visualTestMode) {
-      setChapter(index);
+      setStoryPage(index);
       return;
     }
 
-    transitionToChapterRef.current(index);
-  }, [setChapter, visualTestMode]);
+    transitionToStoryPageRef.current(index);
+  }, [setStoryPage, visualTestMode]);
+
+  const handleChapterSelect = useCallback((chapterIndex: number) => {
+    handleStoryPageSelect(getStoryPageIndex(chapterIndex, 0));
+  }, [handleStoryPageSelect]);
+
+  const handleSubchapterSelect = useCallback((
+    chapterIndex: number,
+    subchapterIndex: number,
+  ) => {
+    handleStoryPageSelect(getStoryPageIndex(chapterIndex, subchapterIndex));
+  }, [handleStoryPageSelect]);
 
   const handlePageStep = (direction: PageTurnDirection) => {
     if (isTurningRef.current) return;
 
-    const target = getAdjacentChapter(activeChapterRef.current, direction);
-    if (target === activeChapterRef.current) return;
+    const target = getAdjacentStoryPage(activeStoryPageRef.current, direction);
+    if (target === activeStoryPageRef.current) return;
 
     manualSelectionRef.current = !visualTestMode;
 
     if (visualTestMode) {
-      setChapter(target);
+      setStoryPage(target);
       return;
     }
 
-    transitionToChapterRef.current(target);
+    transitionToStoryPageRef.current(target);
   };
 
   const handlePageFlip = useCallback((event: PageFlipEvent<number>) => {
-    const chapter = getChapterForPageIndex(event.data);
-    pendingChapterRef.current = undefined;
+    const storyPage = getStoryPageForPageIndex(event.data);
+    pendingStoryPageRef.current = undefined;
     isTurningRef.current = false;
-    setChapter(chapter);
-  }, [setChapter]);
+    setStoryPage(storyPage);
+  }, [setStoryPage]);
 
   const handlePageFlipState = useCallback((event: PageFlipEvent<string>) => {
     const isFlipping = event.data === 'flipping';
-    if (isFlipping && pendingChapterRef.current === undefined) {
+    if (isFlipping && pendingStoryPageRef.current === undefined) {
       manualSelectionRef.current = true;
     }
     isTurningRef.current = isFlipping;
@@ -441,7 +551,7 @@ export function StoryBookServices() {
             scrollTrigger: {
               trigger: section,
               start: 'top top+=80',
-              end: () => `+=${window.innerHeight * (desktop ? 5 : 4)}`,
+              end: () => `+=${window.innerHeight * (desktop ? 9 : 7)}`,
               pin: true,
               pinSpacing: true,
               scrub: desktop ? 0.5 : 0.25,
@@ -457,16 +567,16 @@ export function StoryBookServices() {
                 }
 
                 if (self.progress < PROLOGUE_PROGRESS) {
-                  transitionToChapterRef.current(null, false);
+                  transitionToStoryPageRef.current(null, false);
                   return;
                 }
 
-                const chapterProgress = (self.progress - PROLOGUE_PROGRESS) / (1 - PROLOGUE_PROGRESS);
-                const nextChapter = Math.min(
-                  TOTAL_CHAPTERS - 1,
-                  Math.floor(chapterProgress * TOTAL_CHAPTERS),
+                const storyProgress = (self.progress - PROLOGUE_PROGRESS) / (1 - PROLOGUE_PROGRESS);
+                const nextStoryPage = Math.min(
+                  TOTAL_STORY_PAGES - 1,
+                  Math.floor(storyProgress * TOTAL_STORY_PAGES),
                 );
-                transitionToChapterRef.current(nextChapter);
+                transitionToStoryPageRef.current(nextStoryPage);
               },
             },
           });
@@ -503,8 +613,35 @@ export function StoryBookServices() {
     };
   }, { scope: sectionRef, dependencies: [visualTestMode] });
 
-  const currentChapter = activeChapter === null ? null : CHAPTERS[activeChapter];
+  const activeChapterIndex = activeStoryPage === null
+    ? null
+    : getChapterIndexForStoryPage(activeStoryPage);
+  const activeSubchapterIndex = activeStoryPage === null
+    ? null
+    : getSubchapterIndexForStoryPage(activeStoryPage);
+  const currentChapter = activeChapterIndex === null
+    ? null
+    : CHAPTERS[activeChapterIndex];
+  const currentBeat = currentChapter && activeSubchapterIndex !== null
+    ? currentChapter.beats[activeSubchapterIndex]
+    : null;
   const spreadTheme = currentChapter?.theme ?? 'prologue';
+  const previousStoryPage = activeStoryPage !== null && activeStoryPage > 0
+    ? activeStoryPage - 1
+    : null;
+  const nextStoryPage = activeStoryPage === null
+    ? 0
+    : activeStoryPage < TOTAL_STORY_PAGES - 1
+      ? activeStoryPage + 1
+      : null;
+  const previousStory = previousStoryPage === null
+    ? null
+    : CHAPTERS[getChapterIndexForStoryPage(previousStoryPage)]
+      .beats[getSubchapterIndexForStoryPage(previousStoryPage)];
+  const nextStory = nextStoryPage === null
+    ? null
+    : CHAPTERS[getChapterIndexForStoryPage(nextStoryPage)]
+      .beats[getSubchapterIndexForStoryPage(nextStoryPage)];
 
   return (
     <section
@@ -572,44 +709,68 @@ export function StoryBookServices() {
                   onFlip={handlePageFlip}
                   onChangeState={handlePageFlipState}
                 >
-                  <ServiceBookPage side="left" hidden={activeChapter !== null}>
+                  <ServiceBookPage side="left" hidden={activeStoryPage !== null}>
                     <PrologueIntro />
                   </ServiceBookPage>
-                  <ServiceBookPage side="right" hidden={activeChapter !== null}>
+                  <ServiceBookPage side="right" hidden={activeStoryPage !== null}>
                     <PrologueDetails
-                      interactive={isBookOpen && activeChapter === null}
-                      onSelect={() => handleChapterSelect(0)}
+                      interactive={isBookOpen && activeStoryPage === null}
+                      onSelect={handleChapterSelect}
+                      onExplore={() => handleStoryPageSelect(0)}
                     />
                   </ServiceBookPage>
-                  {CHAPTERS.flatMap((chapter, index) => [
-                    <ServiceBookPage
-                      key={`${chapter.id}-intro`}
-                      side="left"
-                      hidden={activeChapter !== index}
-                    >
-                      <ChapterIntro chapter={chapter} />
-                    </ServiceBookPage>,
-                    <ServiceBookPage
-                      key={`${chapter.id}-details`}
-                      side="right"
-                      hidden={activeChapter !== index}
-                    >
-                      <ChapterDetails
-                        chapter={chapter}
-                        interactive={isBookOpen && activeChapter === index}
-                      />
-                    </ServiceBookPage>,
-                  ])}
+                  {CHAPTERS.flatMap((chapter, chapterIndex) =>
+                    chapter.beats.flatMap((beat, subchapterIndex) => {
+                      const storyPageIndex = getStoryPageIndex(
+                        chapterIndex,
+                        subchapterIndex,
+                      );
+
+                      return [
+                        <ServiceBookPage
+                          key={`${chapter.id}-${subchapterIndex}-intro`}
+                          side="left"
+                          theme={chapter.theme}
+                          hidden={activeStoryPage !== storyPageIndex}
+                        >
+                          <StorySpreadIntro
+                            chapter={chapter}
+                            beat={beat}
+                            storyPageIndex={storyPageIndex}
+                            subchapterIndex={subchapterIndex}
+                          />
+                        </ServiceBookPage>,
+                        <ServiceBookPage
+                          key={`${chapter.id}-${subchapterIndex}-details`}
+                          side="right"
+                          theme={chapter.theme}
+                          hidden={activeStoryPage !== storyPageIndex}
+                        >
+                          <StorySpreadDetails
+                            chapter={chapter}
+                            subchapterIndex={subchapterIndex}
+                            interactive={isBookOpen && activeStoryPage === storyPageIndex}
+                          />
+                        </ServiceBookPage>,
+                      ];
+                    }),
+                  )}
                 </ResponsiveFlipBook>
               </div>
             )}
 
             <div className="sb__static-spread" aria-live="polite">
-              {currentChapter ? (
+              {currentChapter && currentBeat && activeSubchapterIndex !== null && activeStoryPage !== null ? (
                 <>
-                  <ChapterIntro chapter={currentChapter} />
-                  <ChapterDetails
+                  <StorySpreadIntro
                     chapter={currentChapter}
+                    beat={currentBeat}
+                    storyPageIndex={activeStoryPage}
+                    subchapterIndex={activeSubchapterIndex}
+                  />
+                  <StorySpreadDetails
+                    chapter={currentChapter}
+                    subchapterIndex={activeSubchapterIndex}
                     interactive={isBookOpen || visualTestMode}
                   />
                 </>
@@ -618,7 +779,8 @@ export function StoryBookServices() {
                   <PrologueIntro />
                   <PrologueDetails
                     interactive={isBookOpen || visualTestMode}
-                    onSelect={() => handleChapterSelect(0)}
+                    onSelect={handleChapterSelect}
+                    onExplore={() => handleStoryPageSelect(0)}
                   />
                 </>
               )}
@@ -628,12 +790,12 @@ export function StoryBookServices() {
               <button
                 type="button"
                 className="sb__page-step sb__page-step--backward"
-                aria-label={activeChapter === null
+                aria-label={activeStoryPage === null
                   ? 'You are at the services prologue'
-                  : activeChapter === 0
+                  : activeStoryPage === 0
                     ? 'Turn back to the services prologue'
-                    : `Turn back to chapter ${CHAPTERS[activeChapter - 1].number}: ${CHAPTERS[activeChapter - 1].navigationLabel}`}
-                disabled={activeChapter === null}
+                    : `Turn back to story page ${activeStoryPage.toString().padStart(2, '0')}: ${previousStory?.title ?? ''}`}
+                disabled={activeStoryPage === null}
                 tabIndex={isBookOpen || visualTestMode ? 0 : -1}
                 onClick={() => handlePageStep(-1)}
               >
@@ -643,10 +805,10 @@ export function StoryBookServices() {
               <button
                 type="button"
                 className="sb__page-step sb__page-step--forward"
-                aria-label={activeChapter === TOTAL_CHAPTERS - 1
-                  ? 'You are on the final service chapter'
-                  : `Turn forward to chapter ${CHAPTERS[getSpreadOrder(activeChapter) + 1].number}: ${CHAPTERS[getSpreadOrder(activeChapter) + 1].navigationLabel}`}
-                disabled={activeChapter === TOTAL_CHAPTERS - 1}
+                aria-label={activeStoryPage === TOTAL_STORY_PAGES - 1
+                  ? 'You are on the final service story page'
+                  : `Turn forward to story page ${((nextStoryPage ?? 0) + 1).toString().padStart(2, '0')}: ${nextStory?.title ?? ''}`}
+                disabled={activeStoryPage === TOTAL_STORY_PAGES - 1}
                 tabIndex={isBookOpen || visualTestMode ? 0 : -1}
                 onClick={() => handlePageStep(1)}
               >
@@ -661,20 +823,63 @@ export function StoryBookServices() {
           aria-label="Service chapter navigation"
           aria-hidden={!isBookOpen && !visualTestMode}
         >
-          {CHAPTERS.map((chapter, index) => (
-            <button
-              key={chapter.id}
-              type="button"
-              className={`sb__tab sb__tab--${chapter.theme} ${activeChapter === index ? 'sb__tab--active' : ''}`}
-              onClick={() => handleChapterSelect(index)}
-              aria-current={activeChapter === index ? 'page' : undefined}
-              aria-label={`Open chapter ${chapter.number}: ${chapter.navigationLabel}`}
-              tabIndex={isBookOpen || visualTestMode ? 0 : -1}
-            >
-              <span className="sb__tab-number">{chapter.number}</span>
-              <span className="sb__tab-label">{chapter.navigationLabel}</span>
-            </button>
-          ))}
+          {CHAPTERS.map((chapter, chapterIndex) => {
+            const isActiveChapter = activeChapterIndex === chapterIndex;
+
+            return (
+              <div
+                key={chapter.id}
+                className={`sb__chapter-nav sb__chapter-nav--${chapter.theme}`}
+              >
+                <button
+                  type="button"
+                  className={`sb__tab sb__tab--${chapter.theme} ${isActiveChapter ? 'sb__tab--active' : ''}`}
+                  onClick={() => handleChapterSelect(chapterIndex)}
+                  aria-current={isActiveChapter ? 'page' : undefined}
+                  aria-label={`Open chapter ${chapter.number}: ${chapter.navigationLabel}`}
+                  tabIndex={isBookOpen || visualTestMode ? 0 : -1}
+                >
+                  <span className="sb__tab-number">{chapter.number}</span>
+                  <span className="sb__tab-label">{chapter.navigationLabel}</span>
+                </button>
+
+                {isActiveChapter && (
+                  <div
+                    className="sb__subtabs"
+                    aria-label={`${chapter.title} subchapters`}
+                  >
+                    {chapter.beats.map((beat, subchapterIndex) => {
+                      const storyPageIndex = getStoryPageIndex(
+                        chapterIndex,
+                        subchapterIndex,
+                      );
+                      const isActiveSubchapter = activeStoryPage === storyPageIndex;
+
+                      return (
+                        <button
+                          key={beat.title}
+                          type="button"
+                          className={`sb__subtab${isActiveSubchapter ? ' sb__subtab--active' : ''}`}
+                          onClick={() => handleSubchapterSelect(
+                            chapterIndex,
+                            subchapterIndex,
+                          )}
+                          aria-current={isActiveSubchapter ? 'page' : undefined}
+                          aria-label={`Open story ${(subchapterIndex + 1).toString().padStart(2, '0')}: ${beat.title}`}
+                          tabIndex={isBookOpen || visualTestMode ? 0 : -1}
+                        >
+                          <span className="sb__subtab-number">
+                            {(subchapterIndex + 1).toString().padStart(2, '0')}
+                          </span>
+                          <span className="sb__subtab-label">{beat.title}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </nav>
       </div>
     </section>
