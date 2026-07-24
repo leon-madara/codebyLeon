@@ -5,7 +5,9 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HTMLFlipBook from 'react-pageflip';
 import closedCoverImage from '../../assets/services-storybook/research/closed-cover-straight-v1.png';
+import closedCoverDarkImage from '../../assets/services-storybook/research/closed-cover-straight-dark-v1.png';
 import openBookImage from '../../assets/services-storybook/research/open-book-blank-base-v2-no-moon.png';
+import openBookDarkImage from '../../assets/services-storybook/research/open-book-blank-dark-v1.png';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -156,7 +158,8 @@ type PageTurnDirection = -1 | 1;
 
 interface PageFlipController {
   destroy: () => void;
-  flip: (page: number, corner?: 'top' | 'bottom') => void;
+  flipNext: (corner?: 'top' | 'bottom') => void;
+  flipPrev: (corner?: 'top' | 'bottom') => void;
   getCurrentPageIndex: () => number;
   turnToPage: (page: number) => void;
 }
@@ -187,7 +190,15 @@ const ServiceBookPage = forwardRef<HTMLDivElement, ServiceBookPageProps>(
       <img
         src={openBookImage}
         alt=""
-        className={`sb__flip-page-paper sb__flip-page-paper--${side}`}
+        className={`sb__flip-page-paper sb__flip-page-paper--${side} sb__theme-image sb__theme-image--light`}
+        data-theme-asset="light"
+        aria-hidden="true"
+      />
+      <img
+        src={openBookDarkImage}
+        alt=""
+        className={`sb__flip-page-paper sb__flip-page-paper--${side} sb__theme-image sb__theme-image--dark`}
+        data-theme-asset="dark"
         aria-hidden="true"
       />
       <div className="sb__flip-page-content">{children}</div>
@@ -439,14 +450,18 @@ export function StoryBookServices() {
     }
 
     const targetPage = getPageIndexForStoryPage(index);
-    const isAdjacent = Math.abs(
-      getStoryOrder(index) - getStoryOrder(activeStoryPageRef.current),
-    ) === 1;
+    const currentOrder = getStoryOrder(activeStoryPageRef.current);
+    const targetOrder = getStoryOrder(index);
+    const isAdjacent = Math.abs(targetOrder - currentOrder) === 1;
     pendingStoryPageRef.current = index;
 
     if (animate && isAdjacent) {
       isTurningRef.current = true;
-      pageFlip.flip(targetPage, 'bottom');
+      if (targetOrder > currentOrder) {
+        pageFlip.flipNext('bottom');
+      } else {
+        pageFlip.flipPrev('bottom');
+      }
       return;
     }
 
@@ -662,7 +677,15 @@ export function StoryBookServices() {
             <img
               src={closedCoverImage}
               alt="Closed black leather CodeByLeon services storybook"
-              className="sb__cover-image"
+              className="sb__cover-image sb__theme-image sb__theme-image--light"
+              data-theme-asset="light"
+            />
+            <img
+              src={closedCoverDarkImage}
+              alt=""
+              className="sb__cover-image sb__theme-image sb__theme-image--dark"
+              data-theme-asset="dark"
+              aria-hidden="true"
             />
             <p className="sb__cover-prompt">Scroll to open</p>
           </div>
@@ -675,7 +698,15 @@ export function StoryBookServices() {
             <img
               src={openBookImage}
               alt=""
-              className="sb__open-book-image"
+              className="sb__open-book-image sb__theme-image sb__theme-image--light"
+              data-theme-asset="light"
+              aria-hidden="true"
+            />
+            <img
+              src={openBookDarkImage}
+              alt=""
+              className="sb__open-book-image sb__theme-image sb__theme-image--dark"
+              data-theme-asset="dark"
               aria-hidden="true"
             />
 

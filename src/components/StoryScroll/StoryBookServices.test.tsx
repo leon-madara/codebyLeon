@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   getAdjacentStoryPage,
   getChapterIndexForStoryPage,
@@ -56,13 +56,23 @@ describe('StoryBookServices', () => {
     });
   });
 
+  afterEach(() => {
+    document.documentElement.setAttribute('data-theme', 'light');
+  });
+
   it('preserves the services navigation target and renders the selected book assets', () => {
-    render(<StoryBookServices />);
+    const { container } = render(<StoryBookServices />);
 
     const section = screen.getByRole('region', { name: /codebyleon services storybook/i });
     expect(section).toHaveAttribute('id', 'services');
     expect(screen.getByAltText(/closed black leather codebyleon services storybook/i))
       .toHaveAttribute('src', expect.stringContaining('closed-cover-straight-v1'));
+    expect(container.querySelector('.sb__cover-image[data-theme-asset="dark"]'))
+      .toHaveAttribute('src', expect.stringContaining('closed-cover-straight-dark-v1'));
+    expect(container.querySelector('.sb__open-book-image[data-theme-asset="light"]'))
+      .toHaveAttribute('src', expect.stringContaining('open-book-blank-base-v2-no-moon'));
+    expect(container.querySelector('.sb__open-book-image[data-theme-asset="dark"]'))
+      .toHaveAttribute('src', expect.stringContaining('open-book-blank-dark-v1'));
   });
 
   it('keeps the desktop cover pivot locked to the open-book midpoint', () => {
@@ -118,6 +128,25 @@ describe('StoryBookServices', () => {
       .toBeInTheDocument();
     expect(screen.getByRole('button', { name: /open chapter 03: ongoing design support/i }))
       .toBeInTheDocument();
+  });
+
+  it('keeps the active story mounted when the root theme changes', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<StoryBookServices />);
+
+    await user.click(screen.getByRole('button', {
+      name: /open chapter 02: brand identity & refresh/i,
+    }));
+    expect(screen.getByRole('heading', { name: /outgrow the old story/i }))
+      .toBeInTheDocument();
+
+    document.documentElement.setAttribute('data-theme', 'dark');
+
+    expect(screen.getByRole('heading', { name: /outgrow the old story/i }))
+      .toBeInTheDocument();
+    expect(container.querySelectorAll('.sb__open-book-image[data-theme-asset]'))
+      .toHaveLength(2);
+
   });
 
   it('uses chapter and subchapter markers to navigate the twelve-page story', async () => {

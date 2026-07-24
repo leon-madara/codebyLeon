@@ -148,5 +148,20 @@ two prologue leaves plus 24 story leaves. Text and controls remain live HTML.
 ## Ordered Follow-up
 
 1. Preserve the corrected light-mode page plane and its 1.50:1 geometry.
-2. Produce geometry-locked light and dark chassis/page-texture assets on the same canvas.
-3. Switch the complete surface and foreground token set together without remounting StPageFlip or resetting the active chapter.
+2. Produce geometry-locked light and dark chassis/page-texture assets on the same canvas. Completed with `closed-cover-straight-dark-v1.png` and `open-book-blank-dark-v1.png`.
+3. Switch the complete surface and foreground token set together without remounting StPageFlip or resetting the active chapter. Completed through persistent light/dark image layers and component-scoped semantic tokens.
+4. Continue refining the shared opening and page-turn motion without introducing theme-specific animation branches.
+
+## Dark-mode implementation checkpoint
+
+- The light and dark closed-cover assets share a 1672 x 941 canvas.
+- The light and dark open-book assets share a 1658 x 949 canvas.
+- Both theme layers stay mounted; the root `data-theme` attribute changes their opacity.
+- StPageFlip is not remounted and the active story page is not reset when the theme changes.
+- Dark page roles use stable semantic names for surface, primary text, secondary text, muted text, accent, border, control, CTA, and focus colors.
+- Representative contrast checks:
+  - primary text on dark paper: 12.84:1
+  - secondary text on dark paper: 8.58:1
+  - muted text on dark paper: 6.01:1
+  - CTA text on normal dark copper: 4.61:1
+  - active slate marker text: 4.72:1

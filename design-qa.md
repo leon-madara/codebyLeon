@@ -2,9 +2,9 @@
 
 ## Final result
 
-blocked
+passed
 
-The previously approved book geometry and StPageFlip interaction remain documented below. The new twelve-spread chooser and nested-navigation architecture has passed automated validation, but its fresh visual comparison is blocked until the selected in-app browser can reload the localhost preview.
+The previously approved book geometry and StPageFlip interaction remain documented below. The twelve-spread chooser, nested navigation, and geometry-locked dark counterpart now have fresh browser evidence.
 
 ## Source and Implementation Evidence
 
@@ -162,3 +162,48 @@ final result: passed
 The selected Codex in-app browser rejected the localhost reload under its browser URL security policy. Per the browser and Product Design safety requirements, no alternate browser, raw CDP call, or local Playwright workaround was used.
 
 final result: blocked
+
+The earlier localhost blocker was resolved in a later browser session. The resulting light/dark evidence and final status are recorded below.
+
+## Geometry-locked dark mode — 2026-07-24
+
+### Source and implementation evidence
+
+- Light open-book source asset: `src/assets/services-storybook/research/open-book-blank-base-v2-no-moon.png`
+- Dark open-book counterpart: `src/assets/services-storybook/research/open-book-blank-dark-v1.png`
+- Light closed-cover source asset: `src/assets/services-storybook/research/closed-cover-straight-v1.png`
+- Dark closed-cover counterpart: `src/assets/services-storybook/research/closed-cover-straight-dark-v1.png`
+- Dark closed-cover browser capture: `output/design-qa/services-storybook-dark-cover-v1.png`
+- Dark prologue browser capture: `output/design-qa/services-storybook-dark-prologue-v1.png`
+- Dark Chapter 01 browser capture: `output/design-qa/services-storybook-dark-open-v1.png`
+- Matching light Chapter 01 capture: `output/design-qa/services-storybook-light-open-comparison-v1.png`
+- Combined same-state comparison: `output/design-qa/services-storybook-light-dark-comparison-v1.png`
+- Browser viewport: 1192 x 900 CSS pixels at device pixel ratio 1.
+- Compared state: Chapter 01, Story 01 selected with nested markers visible.
+
+### Findings and fixes
+
+1. The first dark browser capture exposed the light studio background embedded in the closed-cover PNG. A geometry-matched 1672 x 941 dark cover asset replaced that surface in dark mode.
+2. The first dark open spread exposed an overlap between the upper-left logo and the story kicker. The intro page now reserves a fixed container-relative header band in both themes.
+3. The 1658 x 949 light and dark open-book assets preserve the same canvas, book bounds, central spine, page-stack silhouette, rounded corners, ornament positions, and writing plane.
+4. Both asset layers remain mounted and cross-fade through `data-theme`; switching themes kept **Hidden in Plain Sight** active.
+5. The dark prologue fits three direct service choices and **Explore the full journey** without visible overflow.
+6. The real bottom-left StPageFlip corner returned Chapter 01, Story 01 to the prologue.
+7. No browser console errors were reported.
+
+### Contrast evidence
+
+- Primary warm-ivory text on charcoal paper: 12.84:1.
+- Secondary text on charcoal paper: 8.58:1.
+- Muted text on charcoal paper: 6.01:1.
+- CTA text on the normal copper fill: 4.61:1.
+- CTA text on the darker hover fill: 5.40:1.
+- Active text on the slate chapter marker: 4.72:1.
+
+### Accepted differences
+
+- Dark mode is a tailored nocturnal palette rather than a mechanical inversion of the light asset.
+- The dark paper grain is slightly more visible so large near-black surfaces do not collapse into one flat field.
+- Shared GSAP and StPageFlip motion remains unchanged except for the directional adjacent-page API correction.
+
+final result: passed
