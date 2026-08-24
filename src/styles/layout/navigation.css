@@ -244,6 +244,35 @@
   box-shadow: var(--shadow-soft);
 }
 
+/* Smart navigation: hide chrome while keeping fixed overlay shell */
+.navigation__logo,
+.navigation__pill,
+.navigation__theme-toggle {
+  will-change: transform, opacity;
+}
+
+.navigation.is-hidden {
+  pointer-events: none;
+}
+
+.navigation.is-hidden .navigation__logo,
+.navigation.is-hidden .navigation__pill,
+.navigation.is-hidden .navigation__theme-toggle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navigation.is-hidden,
+  .navigation.is-hidden .navigation__logo,
+  .navigation.is-hidden .navigation__pill,
+  .navigation.is-hidden .navigation__theme-toggle {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+  }
+}
+
 /* =============================================
    THEME TOGGLE (Part of Navigation)
    ============================================= */
