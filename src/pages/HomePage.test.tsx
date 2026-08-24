@@ -4,7 +4,9 @@ import { describe, expect, it, vi } from 'vitest';
 import { HomePage } from './HomePage';
 
 vi.mock('@gsap/react', () => ({
-  useGSAP: vi.fn(),
+  useGSAP: vi.fn(() => ({
+    contextSafe: <T extends (...args: never[]) => unknown>(callback: T) => callback,
+  })),
 }));
 
 vi.mock('gsap', () => ({

@@ -468,7 +468,7 @@ const PortfolioCarousel = () => {
 
         <div className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2">
           <a href="/get-started.html" className="rounded-full bg-accent px-8 py-3 text-sm font-semibold tracking-wide text-accent-foreground transition-opacity hover:opacity-90 cursor-pointer">
-            Ready to Start Your Project?
+            Start your project
           </a>
         </div>
         </section>

@@ -5,9 +5,7 @@ import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { ThemeProvider } from './contexts/ThemeContext';
-import { AnimationProvider } from './contexts/AnimationContext';
 import { Navigation } from './components/Layout/Navigation';
-import { TorchEffect } from './components/TorchEffect';
 import { ScrollToTop } from './components/ScrollToTop';
 import { HomePage } from './pages/HomePage';
 import { ProcessPage } from './pages/ProcessPage';
@@ -80,13 +78,11 @@ function App() {
 
   return (
     <ThemeProvider>
-      <AnimationProvider>
-        <BrowserRouter>
+      <BrowserRouter>
           <Navigation />
           <ScrollToTop />
 
         <SmoothScrollShell visualTestMode={visualTestMode}>
-          {!visualTestMode && <TorchEffect />}
           <BurningReveal />
 
           <Suspense fallback={<RouteLoadingFallback message="Loading page..." />}>
@@ -114,7 +110,6 @@ function App() {
           </Suspense>
         </SmoothScrollShell>
       </BrowserRouter>
-     </AnimationProvider>
     </ThemeProvider>
   );
 }

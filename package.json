@@ -15,6 +15,7 @@
     "css:baseline": "tsx src/test/css-utils/collect-baseline.ts",
     "css:compare": "tsx src/test/css-utils/compare-metrics.ts",
     "css:gates": "tsx src/test/css-utils/run-architecture-gates.ts",
+    "agents:check": "node scripts/check-agent-instructions.mjs",
     "antigravity:install-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\install-antigravity-watchdog-global.ps1",
     "antigravity:uninstall-global": "powershell -ExecutionPolicy Bypass -File .\\scripts\\uninstall-antigravity-watchdog-global.ps1"
   },
@@ -33,6 +34,7 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-markdown": "^10.1.0",
+    "react-pageflip": "^2.0.3",
     "react-router-dom": "^7.11.0",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",

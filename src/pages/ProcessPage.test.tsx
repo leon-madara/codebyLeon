@@ -82,13 +82,13 @@ describe('ProcessPage', () => {
       name: /website code being developed beside a design preview/i,
     })).toBeInTheDocument();
 
-    const quoteLinks = screen.getAllByRole('link', { name: /build your quote/i });
-    expect(quoteLinks.length).toBeGreaterThanOrEqual(2);
-    quoteLinks.forEach((link) => {
+    const projectLinks = screen.getAllByRole('link', { name: /start your project/i });
+    expect(projectLinks.length).toBeGreaterThanOrEqual(2);
+    projectLinks.forEach((link) => {
       expect(link).toHaveAttribute('href', '/get-started.html');
     });
 
-    expect(screen.getByRole('link', { name: /meet the process/i })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /see how it works/i })).toHaveAttribute(
       'href',
       '#process-journey',
     );

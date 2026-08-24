@@ -894,7 +894,7 @@ export function PortfolioStacked() {
                 {/* Bottom Center CTA (replaces bottom nav row) */}
                 <div className="portfolio-stacked__bottom">
                     <div className="portfolio__cta">
-                        <a href="/get-started.html" className="btn-primary">Ready to Start Your Project?</a>
+                        <a href="/get-started.html" className="btn-primary">Start your project</a>
                     </div>
                 </div>
             </div>

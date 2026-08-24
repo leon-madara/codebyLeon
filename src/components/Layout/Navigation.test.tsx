@@ -44,13 +44,14 @@ describe('Navigation', () => {
     });
   });
 
-  it('renders as a full-width attached header', () => {
+  it('groups the desktop links and project action inside the navigation pill', () => {
     renderNavigation('/');
 
     const nav = screen.getByRole('navigation', { name: 'Main navigation' });
+    const projectLink = screen.getByRole('link', { name: 'Start your project - Configure your project and see pricing' });
     expect(nav).toHaveClass('navigation');
-    expect(nav).not.toHaveClass('navigation--floating');
     expect(nav).not.toHaveClass('is-hidden');
+    expect(projectLink.parentElement).toHaveClass('navigation__pill');
     expect(screen.getByRole('link', { name: 'Code by Leon home' })).toHaveAttribute('href', '/#hero');
   });
 
@@ -153,11 +154,11 @@ describe('Navigation', () => {
     expect(document.body.style.overflow).toBe('');
   });
 
-  it('renders mobile menu links, quote CTA, and theme toggle inside the menu', async () => {
+  it('renders mobile menu links, project CTA, and theme toggle inside the menu', async () => {
     const user = userEvent.setup();
     renderNavigation('/');
 
-    expect(screen.getByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+    expect(screen.getByRole('link', { name: 'Start your project - Configure your project and see pricing' }))
       .toHaveAttribute('href', '/get-started.html');
 
     await user.click(screen.getByRole('button', { name: 'Open navigation menu' }));
@@ -169,7 +170,7 @@ describe('Navigation', () => {
     expect(within(menu).getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
     expect(within(menu).getByRole('link', { name: 'Process' })).toHaveAttribute('href', '/process');
     expect(within(menu).getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog');
-    expect(within(menu).queryByRole('link', { name: 'Build Your Quote - Configure your project and see pricing' }))
+    expect(within(menu).queryByRole('link', { name: 'Start your project - Configure your project and see pricing' }))
       .not.toBeInTheDocument();
     expect(within(menu).getByRole('button', { name: 'Switch to dark theme' })).toBeInTheDocument();
   });

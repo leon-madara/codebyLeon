@@ -13,6 +13,7 @@ import { AboutVideoIntro } from '../components/sections/AboutVideoIntro';
 import { About3DStack } from '../components/sections/About3DStack'; // NEW
 import { ServicesIntro } from '../components/sections/ServicesIntro';
 import { MultiCardScrollSection } from '../components/HorizontalScroll';
+import { StoryBookServices } from '../components/StoryScroll';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 import { isVisualTestMode } from '../utils/runtimeFlags';
@@ -77,14 +78,6 @@ export function HomePage() {
     const tl = gsap.timeline({ delay: 0.15 });
 
     if (heroRef.current) {
-      if (heroRef.current.bgRef) {
-        tl.fromTo(heroRef.current.bgRef,
-          { scale: 1.2 },
-          { scale: 1, duration: 1.8, ease: "power2.out" },
-          0
-        );
-      }
-
       if (heroRef.current.textRefs) {
         tl.to(heroRef.current.textRefs, {
           y: "0%",
@@ -119,7 +112,10 @@ export function HomePage() {
       <AboutVideoIntro />
       <About3DStack />
       <ServicesIntro />
+      <StoryBookServices />
+      {/* OLD: Original horizontal-scroll services (kept for rollback)
       <MultiCardScrollSection />
+      */}
       <Blog />
       <FinalCTA />
     </div>

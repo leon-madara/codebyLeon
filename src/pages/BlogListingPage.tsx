@@ -45,33 +45,6 @@ const categoryDetails: Record<string, {
   }
 };
 
-const readMoreHighlights = [
-  {
-    id: 'image',
-    title: 'Visual stories that stick',
-    description:
-      'Each post is paired with the photography, mood boards, or UI mockups that inspired the experience so you can borrow the same visual language.',
-    bullets: [
-      'Curated imagery that explains decision-making',
-      'Photo + layout notes aligned to conversion goals',
-      'Tips for compressing and serving hero visuals fast',
-    ],
-    cta: 'Explore the visual playbook',
-  },
-  {
-    id: 'code',
-    title: 'Code snippets you can ship',
-    description:
-      'Every strategy is backed by real markup, CSS, or React patterns so you can adopt the same guardrails in your next site overhaul.',
-    bullets: [
-      'Copy-ready component patterns (accessibility first)',
-      'CSS/JS performance tricks that cut load time',
-      'Mini-systems for gradients, typography, and CTA polish',
-    ],
-    cta: 'Open the code lab',
-  },
-];
-
 export function BlogListingPage() {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<SortOption>('date');
@@ -384,39 +357,6 @@ export function BlogListingPage() {
           </div>
         )}
 
-        {!loading && (
-          <div className="blog__read-more">
-            <div className="blog__read-more-heading">
-              <h3>Read more everywhere you want to grow</h3>
-              <p>
-                Dive deeper into the visuals and code that power every story. These
-                micro-features give you ready-to-apply tactics alongside the posts you just read.
-              </p>
-            </div>
-            <div className="blog__feature-grid">
-              {readMoreHighlights.map(feature => (
-                <article
-                  key={feature.id}
-                  className={`blog__feature-card blog__feature-card--${feature.id}`}
-                >
-                  <span className="blog__feature-icon" aria-hidden="true">
-                    {feature.id === 'image' ? '🖼️' : '💻'}
-                  </span>
-                  <div className="blog__feature-body">
-                    <h4>{feature.title}</h4>
-                    <p>{feature.description}</p>
-                    <ul className="blog__feature-list">
-                      {feature.bullets.map((bullet) => (
-                        <li key={bullet}>{bullet}</li>
-                      ))}
-                    </ul>
-                    <span className="blog__feature-cta">{feature.cta}</span>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </section>
   );

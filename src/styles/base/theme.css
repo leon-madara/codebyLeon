@@ -97,6 +97,16 @@
   --color-glass-bg-dark: rgba(2, 17, 39, 0.55);
   --color-glass-border-dark: rgba(255, 255, 255, 0.08);
 
+  /* Static homepage canvas and floating navigation */
+  --hero-static-background:
+    radial-gradient(ellipse 60% 58% at 6% 100%, rgba(103, 74, 150, 0.42) 0%, transparent 72%),
+    radial-gradient(ellipse 56% 56% at 94% 100%, rgba(38, 89, 129, 0.42) 0%, transparent 74%),
+    radial-gradient(ellipse 44% 42% at 88% 10%, rgba(181, 91, 50, 0.22) 0%, transparent 72%),
+    #0c101a;
+  --navigation-pill-background: rgba(18, 22, 31, 0.8);
+  --navigation-pill-border: rgba(240, 240, 245, 0.16);
+  --navigation-pill-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+
   /* Dot Grid Pattern - Override for dark mode */
   --dot-color: rgba(255, 255, 255, 0.06);
 

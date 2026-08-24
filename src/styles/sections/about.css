@@ -536,7 +536,7 @@
 }
 
 .about-3d-stack__subheadline {
-  font-family: "Protest Revolution", sans-serif;
+  font-family: var(--font-body);
   font-size: clamp(0.88rem, 1.4vw, 1.05rem);
   color: var(--text-secondary);
   font-weight: 400;
@@ -673,9 +673,10 @@
 
 .about-3d-stack__card-title {
   margin-top: clamp(0.55rem, 1.1vw, 0.9rem);
-  font-family: 'Gladolia DEMO', serif;
+  font-family: var(--font-body);
   font-size: clamp(1.25rem, 2.6vw, 2.25rem);
-  font-style: italic;
+  font-style: normal;
+  font-weight: var(--font-weight-normal);
   line-height: 1.08;
   letter-spacing: -0.02em;
   color: #fff;
@@ -1700,17 +1701,24 @@
 }
 
 .about-video-intro__headline {
-  font-family: var(--font-heading), serif;
+  font-family: "Protest Revolution", sans-serif;
   font-size: clamp(2rem, 5.5vw, 3.5rem);
-  font-weight: 900;
+  font-weight: 400;
   line-height: 1.08;
   letter-spacing: -0.025em;
   color: var(--text-primary);
   margin-bottom: 1rem;
 }
 
+.about-video-intro__headline-line,
 .about-video-intro__headline em {
-  font-style: italic;
+  display: block;
+}
+
+.about-video-intro__headline em {
+  font-family: "Protest Revolution", sans-serif;
+  font-weight: 400;
+  font-style: normal;
   color: var(--hero-accent);
 }
 

@@ -107,6 +107,7 @@
 
 @import './styles/features/mouse-trail.css';
 @import './styles/features/horizontal-scroll.css';
+@import './styles/features/storybook-services.css';
 @import './styles/features/configurator.css';
 @import './styles/features/torch-effect.css';
 @import './styles/features/glass-ball-cursor.css';

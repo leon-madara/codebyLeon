@@ -1,17 +1,44 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { ScrollSmoother } from 'gsap/ScrollSmoother';
 import { Menu, X, Mail, MessageCircle, Linkedin } from 'lucide-react';
 import { ThemeToggle } from '../ui/ThemeToggle';
+import { useIsMobile } from '../../hooks/use-mobile';
+import { useSmartNavigation } from '../../hooks/useSmartNavigation';
+import { isMultiSectionRoute } from '../../utils/smartNavigationRoutes';
 
 const SECTION_NAV_CLEARANCE = 12;
 const SECTION_SNAP_BUFFER = 4;
 
 export function Navigation() {
   const location = useLocation();
+  const navRef = useRef<HTMLElement>(null);
   const isHomeRoute = location.pathname === '/';
+  const isMobile = useIsMobile();
   const [activeSection, setActiveSection] = useState<string>('');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+  const smartNavigationEnabled =
+    isMultiSectionRoute(location.pathname) &&
+    !isMobile &&
+    !prefersReducedMotion &&
+    !isMobileMenuOpen;
+
+  const { isHidden: isSmartNavHidden } = useSmartNavigation({
+    navRef,
+    enabled: smartNavigationEnabled,
+    pathname: location.pathname,
+  });
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+    mediaQuery.addEventListener('change', updatePreference);
+    return () => mediaQuery.removeEventListener('change', updatePreference);
+  }, []);
 
   useEffect(() => {
     if (isMobileMenuOpen) {
@@ -130,12 +157,18 @@ export function Navigation() {
 
   return (
     <>
-    <nav className={`navigation ${isMobileMenuOpen ? 'is-menu-open' : ''}`} aria-label="Main navigation">
+    <nav
+      ref={navRef}
+      className={`navigation ${isMobileMenuOpen ? 'is-menu-open' : ''} ${isSmartNavHidden ? 'is-hidden' : ''}`}
+      aria-label="Main navigation"
+      aria-hidden={isSmartNavHidden || undefined}
+    >
       <div className="navigation__container">
         <Link to="/#hero" className="navigation__logo" aria-label="Code by Leon home" onClick={() => setIsMobileMenuOpen(false)}>
           <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
+        <div className="navigation__pill">
         <ul className="navigation__links">
           <li>
             <a
@@ -186,13 +219,14 @@ export function Navigation() {
         <a
           href="/get-started.html"
           className="navigation__cta"
-          aria-label="Build Your Quote - Configure your project and see pricing"
+          aria-label="Start your project - Configure your project and see pricing"
         >
-          <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+          <span className="navigation__cta-text">START YOUR PROJECT</span>
           <span className="navigation__cta-tooltip" role="tooltip" aria-hidden="true">
             Configure your project & see pricing
           </span>
         </a>
+        </div>
 
         <div className="navigation__theme-toggle desktop-only">
           <ThemeToggle />
@@ -221,7 +255,7 @@ export function Navigation() {
             <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
           </Link>
           <a href="/get-started.html" className="navigation__cta">
-            <span className="navigation__cta-text">BUILD YOUR QUOTE</span>
+            <span className="navigation__cta-text">START YOUR PROJECT</span>
           </a>
           <button 
             className="mobile-menu-overlay__close" 
