@@ -9,23 +9,19 @@
   top: 0;
   left: 0;
   right: 0;
-  /* Keep navigation above non-interactive visual overlays (e.g. torch effect). */
-  z-index: 300;
+  /* Keep the header above page effects and the global mouse trail. */
+  z-index: 10000;
   padding: var(--spacing-md);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid var(--glass-border);
+  background: var(--navigation-background);
+  border-bottom: none;
+  box-shadow: var(--navigation-shadow);
   transition:
     background var(--duration-normal) var(--easing-standard),
     border-color var(--duration-normal) var(--easing-standard),
     -webkit-backdrop-filter var(--duration-normal) var(--easing-standard),
     backdrop-filter var(--duration-normal) var(--easing-standard);
-}
-
-/* Theme override for navigation */
-[data-theme="dark"] .navigation {
-  background: rgba(2, 17, 39, 0.3);
 }
 
 /* Navigation Container */
@@ -45,6 +41,7 @@
   display: flex;
   align-items: center;
   justify-self: start;
+  flex-shrink: 0;
   text-decoration: none;
 }
 
@@ -239,34 +236,18 @@
   }
 }
 
-/* Scrolled state modifier (for future use) */
-.navigation.is-scrolled {
-  box-shadow: var(--shadow-soft);
-}
-
-/* Smart navigation: hide chrome while keeping fixed overlay shell */
-.navigation__logo,
-.navigation__pill,
-.navigation__theme-toggle {
+/* Smart navigation hides the complete bar, including its surface and shadow. */
+.navigation {
   will-change: transform, opacity;
 }
 
 .navigation.is-hidden {
-  pointer-events: none;
-}
-
-.navigation.is-hidden .navigation__logo,
-.navigation.is-hidden .navigation__pill,
-.navigation.is-hidden .navigation__theme-toggle {
   opacity: 0;
   pointer-events: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .navigation.is-hidden,
-  .navigation.is-hidden .navigation__logo,
-  .navigation.is-hidden .navigation__pill,
-  .navigation.is-hidden .navigation__theme-toggle {
+  .navigation.is-hidden {
     opacity: 1;
     transform: none;
     pointer-events: auto;
@@ -279,10 +260,6 @@
 .navigation__theme-toggle {
   display: flex;
   align-items: center;
-}
-
-.navigation__pill {
-  display: contents;
 }
 
 .navigation__theme-toggle--desktop {
@@ -418,6 +395,7 @@
 
   .navigation__links {
     display: flex;
+    gap: clamp(1rem, 2vw, var(--spacing-2xl));
   }
 
   .navigation__cta {
@@ -437,79 +415,6 @@
   }
 }
 
-/* Floating desktop composition: logo and theme remain independent while the
-   navigation links and project action share one bordered pill. */
-@media (min-width: 1100px) {
-  .navigation {
-    padding: var(--spacing-lg) var(--spacing-xl);
-    background: transparent;
-    border-bottom-color: transparent;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-
-  [data-theme="dark"] .navigation {
-    background: transparent;
-  }
-
-  .navigation__container {
-    display: flex;
-    max-width: 1280px;
-    min-height: 3.5rem;
-    justify-content: space-between;
-  }
-
-  .navigation__pill {
-    position: absolute;
-    left: 50%;
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-xl);
-    padding: 0.35rem 0.42rem 0.35rem var(--spacing-xl);
-    transform: translateX(-50%);
-    border: 1px solid var(--navigation-pill-border);
-    border-radius: var(--radius-full);
-    background: var(--navigation-pill-background);
-    box-shadow: var(--navigation-pill-shadow);
-  }
-
-  .navigation__links {
-    gap: clamp(1.25rem, 2.2vw, var(--spacing-2xl));
-    margin: 0;
-    padding: 0;
-  }
-
-  .navigation__link {
-    color: var(--color-text-primary);
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.06em;
-  }
-
-  [data-theme="dark"] .navigation__link {
-    color: var(--color-text-primary);
-  }
-
-  .navigation__cta {
-    padding: 0.78rem 1.25rem;
-    color: var(--color-button-primary-text);
-    background: var(--color-nav-cta-bg);
-    font-size: var(--font-size-xs);
-    letter-spacing: 0.08em;
-  }
-
-  .navigation__cta-text {
-    color: inherit;
-  }
-
-  .navigation__cta:hover {
-    background: var(--hero-accent-hover);
-  }
-
-  .navigation__theme-toggle {
-    justify-self: end;
-  }
-}
-
 /* =============================================
    MOBILE MENU OVERLAY
    ============================================= */
@@ -520,7 +425,7 @@
   right: 0;
   height: 100svh;
   background: #13100E;
-  z-index: 500;
+  z-index: 10001;
   display: flex;
   flex-direction: column;
   opacity: 0;
@@ -544,7 +449,8 @@
   grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
   align-items: center;
   gap: var(--spacing-md);
-  border-bottom: 1px solid var(--glass-border);
+  border-bottom: none;
+  box-shadow: var(--navigation-shadow);
 }
 
 .mobile-menu-overlay__close, .navigation__hamburger {

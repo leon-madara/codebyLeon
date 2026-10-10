@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState, type RefObject } from 'react';
+import { useCallback, useRef, useState, type RefObject } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Observer } from 'gsap/Observer';
@@ -13,7 +13,6 @@ gsap.registerPlugin(Observer, ScrollTrigger);
 
 const SCROLL_UP_TOLERANCE = 5;
 const OBSERVER_TOLERANCE = 10;
-const CHROME_SELECTOR = '.navigation__logo, .navigation__pill, .navigation__theme-toggle';
 
 type UseSmartNavigationOptions = {
   navRef: RefObject<HTMLElement | null>;
@@ -27,8 +26,11 @@ function isPinnedSectionActive(): boolean {
 
 function getScrollObserverTarget(): Window | HTMLElement {
   const smoother = ScrollSmoother.get();
-  if (smoother?.wrapper) {
-    return smoother.wrapper;
+  if (smoother && typeof smoother.wrapper === 'function') {
+    const el = smoother.wrapper();
+    if (el instanceof HTMLElement) {
+      return el;
+    }
   }
   return window;
 }
@@ -66,7 +68,10 @@ export function useSmartNavigation({
   const syncHiddenState = useCallback((hidden: boolean) => {
     isHiddenRef.current = hidden;
     setIsHidden(hidden);
-  }, []);
+    if (hidden && navRef.current && document.activeElement && navRef.current.contains(document.activeElement)) {
+      (document.activeElement as HTMLElement).blur();
+    }
+  }, [navRef]);
 
   const scheduleHideAfterIdle = useCallback(() => {
     clearHideAfterIdleTimer();
@@ -108,11 +113,11 @@ export function useSmartNavigation({
     }
   }, [showNavigation]);
 
-  useEffect(() => {
+  useGSAP(() => {
     clearAllTimers();
     pinActiveRef.current = false;
     syncHiddenState(false);
-  }, [clearAllTimers, pathname, syncHiddenState]);
+  }, { scope: navRef, dependencies: [enabled, pathname] });
 
   useGSAP(
     () => {
@@ -181,12 +186,13 @@ export function useSmartNavigation({
 
   useGSAP(
     () => {
-      if (!navRef.current || !enabled) return;
+      if (!navRef.current) return;
+      if (!enabled) {
+        gsap.set(navRef.current, { clearProps: "opacity,visibility,transform,pointerEvents" });
+        return;
+      }
 
-      const chrome = navRef.current.querySelectorAll(CHROME_SELECTOR);
-      if (!chrome.length) return;
-
-      gsap.to(chrome, {
+      gsap.to(navRef.current, {
         autoAlpha: isHidden ? 0 : 1,
         y: isHidden ? -16 : 0,
         duration: 0.3,

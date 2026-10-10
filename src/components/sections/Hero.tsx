@@ -1,9 +1,11 @@
 import { useRef, forwardRef, useImperativeHandle } from 'react';
+import { Link } from 'react-router-dom';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTypingAnimation } from '../../hooks/useTypingAnimation';
 import { isVisualTestMode } from '../../utils/runtimeFlags';
+import { MouseTrail } from '../MouseTrail';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -30,6 +32,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
     HERO_REVERSE_PEEL_SCROLL_VH / HERO_TOTAL_SCROLL_VH,
     HERO_ANIMATION_PROGRESS_CAP
   );
+  const WORD_GROWTH_START_PROGRESS = 0.08;
   const { elementRef: typingRef, stop: stopTyping, start: startTyping, currentWordRef, currentWordIndexRef, setStartingWordIndex } = useTypingAnimation({ disabled: visualTestMode });
   const sectionRef = useRef<HTMLElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -225,7 +228,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             const numExisting = existingSpans.length;
 
             // 3. Get the FULL target word
-            const wordToAnimate = currentWordRef.current || "AMBITIOUS";
+            const wordToAnimate = currentWordRef.current || "DRIVEN";
 
             // 4. Create separate lists for "preserved" and "new" letters to animate
             const lettersToAnimate: HTMLSpanElement[] = [];
@@ -582,6 +585,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
   return (
     <section ref={sectionRef} id="hero" className="hero">
+      <MouseTrail scopeRef={sectionRef} />
 
       {/* Static ambient canvas is supplied by the hero surface. */}
       <div ref={contentRef} className="hero__content relative z-10">
@@ -593,7 +597,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
           <h1 className="hero__headline">
             <div className="headline-line-wrapper overflow-hidden pb-2">
               <div ref={line1Ref} className="headline-line-1 translate-y-full">
-                <span className="hero__highlight--bold">Bold</span> websites for
+                <span className="hero__highlight--bold">Bold</span> Websites for
               </div>
             </div>
             <div className="headline-line-wrapper overflow-hidden pb-2">
@@ -603,14 +607,14 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
             </div>
             <div className="headline-line-wrapper overflow-hidden pb-2">
               <div ref={line3Ref} className="headline-line-3 translate-y-full">
-                brands<span className="hero__highlight--dot">.</span>
+                Brands<span className="hero__highlight--dot">.</span>
               </div>
             </div>
           </h1>
 
           {/* Subheadline */}
           <p ref={subheadlineRef} className="hero__subheadline hero__anim-item">
-            Websites and design that make your business<br />look as professional as it is.
+            We build websites and designs to make your business<br />look as professional as it is.
           </p>
 
           {/* Tag with Gradient + SVG Underline */}
@@ -631,8 +635,8 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ scrollWrapperRef }, ref
 
           {/* CTAs */}
           <div ref={ctasRef} className="hero__ctas hero__anim-item">
-            <a href="/get-started.html" className="hero__cta hero__cta--primary">Start your project</a>
-            <a href="#portfolio" className="hero__cta hero__cta--secondary">VIEW PORTFOLIO</a>
+            <a href="/get-started.html" className="hero__cta hero__cta--primary">Configure Your Project</a>
+            <Link to="/work" className="hero__cta hero__cta--secondary">View Previous Work</Link>
           </div>
         </div>
       </div>

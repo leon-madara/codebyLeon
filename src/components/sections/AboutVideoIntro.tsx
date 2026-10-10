@@ -26,11 +26,14 @@ export function AboutVideoIntro() {
 
   const togglePlay = () => {
     if (videoRef.current) {
-      if (videoRef.current.paused) {
-        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
-      } else {
+      if (isPlaying) {
         videoRef.current.pause();
         setIsPlaying(false);
+      } else {
+        setIsPlaying(true);
+        videoRef.current.play().catch(() => {
+          setIsPlaying(false);
+        });
       }
     }
   };
@@ -276,7 +279,7 @@ export function AboutVideoIntro() {
 
         <p className="about-video-intro__subheadline">
           <strong>A message from CodeByLeon founder – Leon Madara.</strong><br />
-          I build websites that make your business look established, credible, and ready to close.
+          Work directly 1-on-1 with Leon—no account managers, no middlemen, and zero junior developer handoffs.
         </p>
       </div>
     </section>

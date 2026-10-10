@@ -579,3 +579,274 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+
+/* =============================================
+   WORK GATEWAY STRIP
+   Code by Leon - CSS Architecture
+   ============================================= */
+
+.work-gateway {
+  position: relative;
+  width: 100%;
+  padding: var(--spacing-4xl) var(--spacing-md) var(--spacing-5xl);
+  background: var(--canvas-base);
+  color: var(--text-primary);
+  transition: background var(--duration-normal) ease, color var(--duration-normal) ease;
+  overflow: hidden;
+}
+
+.work-gateway__container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.work-gateway__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3xl);
+}
+
+@media (min-width: 768px) {
+  .work-gateway__header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.work-gateway__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: hsla(152, 45%, 25%, 0.1);
+  color: hsl(152, 45%, 25%);
+  margin-bottom: var(--spacing-sm);
+  border: 1px solid hsla(152, 45%, 25%, 0.2);
+}
+
+[data-theme="dark"] .work-gateway__eyebrow {
+  background: hsla(140, 40%, 65%, 0.12);
+  color: hsl(140, 40%, 65%);
+  border-color: hsla(140, 40%, 65%, 0.25);
+}
+
+.work-gateway__eyebrow-icon {
+  width: 14px;
+  height: 14px;
+}
+
+.work-gateway__headline {
+  font-family: var(--font-heading);
+  font-size: clamp(2.25rem, 5vw, 3.5rem);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+}
+
+.work-gateway__lead {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.8vw, 1.125rem);
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+.work-gateway__all-work-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  background: var(--text-primary);
+  color: var(--canvas-base);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: transform var(--duration-fast) ease, opacity var(--duration-fast) ease;
+}
+
+.work-gateway__all-work-btn:hover {
+  transform: translateX(3px);
+  opacity: 0.92;
+}
+
+.work-gateway__btn-arrow {
+  width: 16px;
+  height: 16px;
+  transition: transform var(--duration-fast) ease;
+}
+
+.work-gateway__all-work-btn:hover .work-gateway__btn-arrow {
+  transform: translateX(4px);
+}
+
+.work-gateway__cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--spacing-xl);
+}
+
+@media (min-width: 1024px) {
+  .work-gateway__cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.work-gateway__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-xl);
+  border-radius: 1.25rem;
+  background: hsla(0, 0%, 100%, 0.6);
+  border: 1px solid hsla(0, 0%, 0%, 0.08);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+  transition: transform var(--duration-normal) ease, box-shadow var(--duration-normal) ease, border-color var(--duration-normal) ease;
+}
+
+[data-theme="dark"] .work-gateway__card {
+  background: hsla(0, 0%, 10%, 0.65);
+  border-color: hsla(0, 0%, 100%, 0.08);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+.work-gateway__card:hover {
+  transform: translateY(-4px);
+  border-color: hsla(152, 45%, 25%, 0.35);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] .work-gateway__card:hover {
+  border-color: hsla(140, 40%, 65%, 0.35);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+}
+
+.work-gateway__card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-md);
+}
+
+.work-gateway__card-num {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.work-gateway__card-badge {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.25rem 0.625rem;
+  border-radius: 9999px;
+  background: hsla(152, 45%, 25%, 0.08);
+  color: hsl(152, 45%, 25%);
+  border: 1px solid hsla(152, 45%, 25%, 0.2);
+}
+
+[data-theme="dark"] .work-gateway__card-badge {
+  background: hsla(140, 40%, 65%, 0.12);
+  color: hsl(140, 40%, 65%);
+  border-color: hsla(140, 40%, 65%, 0.25);
+}
+
+.work-gateway__client-name {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  margin-bottom: 0.375rem;
+}
+
+.work-gateway__card-title {
+  font-family: var(--font-heading);
+  font-size: 1.375rem;
+  line-height: 1.25;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.work-gateway__card-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--duration-fast) ease;
+}
+
+.work-gateway__card-link:hover {
+  color: hsl(152, 45%, 25%);
+}
+
+[data-theme="dark"] .work-gateway__card-link:hover {
+  color: hsl(140, 40%, 65%);
+}
+
+.work-gateway__card-desc {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xl);
+}
+
+.work-gateway__card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  padding-top: var(--spacing-md);
+  border-top: 1px solid hsla(0, 0%, 50%, 0.12);
+}
+
+.work-gateway__metric-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: hsl(152, 45%, 25%);
+}
+
+[data-theme="dark"] .work-gateway__metric-pill {
+  color: hsl(140, 40%, 65%);
+}
+
+.work-gateway__view-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: gap var(--duration-fast) ease, color var(--duration-fast) ease;
+}
+
+.work-gateway__view-link:hover {
+  gap: 0.4rem;
+  color: hsl(152, 45%, 25%);
+}
+
+[data-theme="dark"] .work-gateway__view-link:hover {
+  color: hsl(140, 40%, 65%);
+}
+
+.work-gateway__view-arrow {
+  width: 14px;
+  height: 14px;
+}

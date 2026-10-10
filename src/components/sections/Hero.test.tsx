@@ -44,3 +44,17 @@ describe('Hero growing-word label', () => {
     );
   });
 });
+
+describe('Hero narrative and CTAs', () => {
+  it('renders bold websites for driven brands narrative and updated CTAs', () => {
+    expect(heroSource).toContain('Bold</span> Websites for');
+    expect(heroSource).toContain('Brands<span className="hero__highlight--dot">.</span>');
+    expect(heroSource).toContain(
+      'We build websites and designs to make your business<br />look as professional as it is.'
+    );
+    expect(heroSource).toContain('Configure Your Project');
+    expect(heroSource).toContain('href="/get-started.html"');
+    expect(heroSource).toContain('View Previous Work');
+    expect(heroSource).toContain('to="/work"');
+  });
+});

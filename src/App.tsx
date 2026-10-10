@@ -69,6 +69,7 @@ function SmoothScrollShell({ visualTestMode, children }: SmoothScrollShellProps)
 // Lazy load blog pages for code splitting
 const BlogListingPage = lazy(() => import('./pages/BlogListingPage').then(module => ({ default: module.BlogListingPage })));
 const BlogPostPage = lazy(() => import('./pages/BlogPostPage'));
+const OurWorkPage = lazy(() => import('./pages/OurWorkPage'));
 const LegitLogisticsCaseStudyPage = lazy(() => import('./pages/LegitLogisticsCaseStudyPage'));
 const KossyLangatCaseStudyPage = lazy(() => import('./pages/KossyLangatCaseStudyPage'));
 const DelivahDispatchCaseStudyPage = lazy(() => import('./pages/DelivahDispatchCaseStudyPage'));
@@ -89,6 +90,7 @@ function App() {
             <Routes>
               {/* Home page route */}
               <Route path="/" element={<HomePage />} />
+              <Route path="/work" element={<OurWorkPage />} />
 
               {/* Blog listing page route */}
               <Route path="/blog" element={<BlogListingPage />} />

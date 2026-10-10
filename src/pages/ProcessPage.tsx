@@ -209,7 +209,7 @@ export function ProcessPage() {
         ease: 'power3.out',
         stagger: 0.08,
         scrollTrigger: {
-          trigger: '.process-page',
+          trigger: pageRef.current ?? '.process-page',
           start: 'top 78%',
         },
       },

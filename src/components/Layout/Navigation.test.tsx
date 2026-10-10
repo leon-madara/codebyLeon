@@ -44,21 +44,21 @@ describe('Navigation', () => {
     });
   });
 
-  it('groups the desktop links and project action inside the navigation pill', () => {
+  it('keeps the project action in the continuous navigation container', () => {
     renderNavigation('/');
 
     const nav = screen.getByRole('navigation', { name: 'Main navigation' });
     const projectLink = screen.getByRole('link', { name: 'Start your project - Configure your project and see pricing' });
     expect(nav).toHaveClass('navigation');
     expect(nav).not.toHaveClass('is-hidden');
-    expect(projectLink.parentElement).toHaveClass('navigation__pill');
+    expect(projectLink.parentElement).toHaveClass('navigation__container');
     expect(screen.getByRole('link', { name: 'Code by Leon home' })).toHaveAttribute('href', '/#hero');
   });
 
   it('uses in-page section anchors on the home route', () => {
     renderNavigation('/');
 
-    expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveAttribute('href', '#portfolio');
+    expect(screen.getByRole('link', { name: 'OUR WORK' })).toHaveAttribute('href', '/work');
     expect(screen.getByRole('link', { name: 'ABOUT' })).toHaveAttribute('href', '#about');
     expect(screen.getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '#services');
   });
@@ -66,7 +66,7 @@ describe('Navigation', () => {
   it('uses cross-route section anchors off the home route', () => {
     renderNavigation('/blog');
 
-    expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveAttribute('href', '/#portfolio');
+    expect(screen.getByRole('link', { name: 'OUR WORK' })).toHaveAttribute('href', '/work');
     expect(screen.getByRole('link', { name: 'ABOUT' })).toHaveAttribute('href', '/#about');
     expect(screen.getByRole('link', { name: 'SERVICES' })).toHaveAttribute('href', '/#services');
   });
@@ -116,7 +116,7 @@ describe('Navigation', () => {
   it('marks the portfolio link active on case study routes', () => {
     renderNavigation('/work/legit-logistics');
 
-    expect(screen.getByRole('link', { name: 'PORTFOLIO' })).toHaveClass('is-active');
+    expect(screen.getByRole('link', { name: 'OUR WORK' })).toHaveClass('is-active');
   });
 
   it('toggles theme from the header switch', async () => {
@@ -165,7 +165,7 @@ describe('Navigation', () => {
 
     const menu = screen.getByRole('dialog', { name: 'Mobile navigation' });
     expect(within(menu).getByRole('link', { name: 'Home' })).toHaveAttribute('href', '/#hero');
-    expect(within(menu).getByRole('link', { name: 'Portfolio' })).toHaveAttribute('href', '#portfolio');
+    expect(within(menu).getByRole('link', { name: 'Our Work' })).toHaveAttribute('href', '/work');
     expect(within(menu).getByRole('link', { name: 'About' })).toHaveAttribute('href', '#about');
     expect(within(menu).getByRole('link', { name: 'Services' })).toHaveAttribute('href', '#services');
     expect(within(menu).getByRole('link', { name: 'Process' })).toHaveAttribute('href', '/process');

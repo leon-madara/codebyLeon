@@ -16,6 +16,9 @@ class ServiceConfigurator {
         this.totalDataSteps = 8; // For progress calculation
         this.answers = {};
         this.additionalNeeds = [];
+        this.isDiscoveryCall = false;
+        this.selectedTier = null;
+        this.selectedTierConfig = null;
         this.orbTrackingEnabled = false;
         this.orbLoopId = null;
         this.orbLerpFactor = 0.12;
@@ -38,6 +41,7 @@ class ServiceConfigurator {
         this.setupEventListeners();
         this.setupOrbTracking();
         this.loadSavedProgress();
+        this.handleQueryParams();
         this.updateUI();
     }
 
@@ -67,6 +71,11 @@ class ServiceConfigurator {
 
                 // Navigate after animation
                 setTimeout(() => {
+                    if (this.isDiscoveryCall && this.currentIndex === this.stepFlow.indexOf('7')) {
+                        this.handleClose();
+                        btnBack.classList.remove('is-clicked');
+                        return;
+                    }
                     if (this.currentIndex > 0) {
                         this.previousStep();
                         btnBack.classList.remove('is-clicked');
@@ -230,12 +239,21 @@ class ServiceConfigurator {
         if (btnBack) {
             const backText = btnBack.querySelector('.back-text');
             if (backText) {
-                backText.textContent = this.currentIndex === 0 ? 'Exit' : 'Back';
+                const isExit = this.currentIndex === 0 || (this.isDiscoveryCall && this.currentIndex === this.stepFlow.indexOf('7'));
+                backText.textContent = isExit ? 'Exit' : 'Back';
             }
         }
 
         // Update continue button state
         this.updateContinueState(currentStepId);
+
+        // Ensure multi-select cards reflect selections if on Step 6
+        if (currentStepId === '6' && this.additionalNeeds.length > 0) {
+            this.additionalNeeds.forEach(val => {
+                const card = document.querySelector(`.step[data-step="6"] .option-card[data-value="${val}"]`);
+                if (card) card.classList.add('selected');
+            });
+        }
 
         // Hide nav controls on certain steps
         const navControls = document.querySelector('.nav-controls');
@@ -449,6 +467,24 @@ class ServiceConfigurator {
     }
 
     generateRecommendation() {
+        if (this.isDiscoveryCall) {
+            this.adaptStep8ForDiscoveryCall();
+            return {
+                packageName: '20-Minute Discovery Call with Leon Madara',
+                priceRange: 'Free • Zero Obligation',
+                whyReasons: [
+                    'Direct 1-on-1 consultation with Leon Madara',
+                    'Zero junior developer or sales rep handoffs',
+                    'Fast-response guarantee within hours, if not minutes'
+                ],
+                features: [
+                    'Tailored Website & Architecture Diagnosis',
+                    'Actionable Modernization Plan & Roadmap',
+                    'Transparent Pricing & Deliverables Overview'
+                ]
+            };
+        }
+
         // Package recommendation logic
         const presence = this.answers['2'];
         const goal = this.answers['3'];
@@ -459,7 +495,11 @@ class ServiceConfigurator {
         let priceRange = '';
         let features = [];
 
-        if (budget === 'budget-low' || (presence === 'no-website' && budget === 'budget-unsure')) {
+        if (this.selectedTierConfig) {
+            packageName = this.selectedTierConfig.packageName;
+            priceRange = this.selectedTierConfig.priceRange;
+            features = this.selectedTierConfig.features;
+        } else if (budget === 'budget-low' || (presence === 'no-website' && budget === 'budget-unsure')) {
             packageName = 'Launch Starter';
             priceRange = 'KES 30,000 - 50,000';
             features = ['3-5 Page Custom Site', 'Mobile-Responsive', 'Contact/WA Integration', 'Google Maps', '1 Month Support'];
@@ -474,6 +514,9 @@ class ServiceConfigurator {
         }
 
         const whyReasons = [];
+        if (this.selectedTierConfig) {
+            whyReasons.push(`Tailored specifically for ${this.selectedTierConfig.name}`);
+        }
         if (presence === 'no-website') {
             whyReasons.push('Starting fresh—no old code to fix');
         } else if (presence === 'outdated') {
@@ -507,6 +550,18 @@ class ServiceConfigurator {
 
         const includedList = document.getElementById('includedList');
         includedList.innerHTML = features.map(f => `<li>${f}</li>`).join('');
+
+        // Ensure active URLs on Step 8 CTAs
+        const primaryCta = document.querySelector('.step[data-step="8"] .cta-primary');
+        if (primaryCta) {
+            primaryCta.href = 'https://calendly.com/codebyleon/discovery-call';
+            primaryCta.textContent = '📞 Book Free Strategy Call';
+        }
+        const secondaryCta = document.querySelector('.step[data-step="8"] .cta-secondary');
+        if (secondaryCta) {
+            secondaryCta.href = 'https://wa.me/254700000000?text=' + encodeURIComponent(`Hi Leon, I'd like to discuss the ${packageName} package`);
+            secondaryCta.textContent = '💬 WhatsApp Leon Directly';
+        }
 
         return { packageName, priceRange, whyReasons, features };
     }
@@ -592,12 +647,179 @@ class ServiceConfigurator {
         }
     }
 
+    handleQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const tier = params.get('tier');
+        const intent = params.get('intent');
+
+        if (tier) {
+            this.handleTierParam(tier);
+        }
+
+        if (intent === 'discovery-call') {
+            this.handleDiscoveryCallIntent();
+        }
+    }
+
+    handleTierParam(tier) {
+        const tierMap = {
+            'custom-website': {
+                name: 'A Brand-New Custom Website',
+                step2: 'no-website',
+                step3: 'credibility',
+                needs: ['mobile-first', 'seo'],
+                packageName: 'A Brand-New Custom Website',
+                priceRange: 'KES 50,000 - 100,000',
+                features: [
+                    'Bespoke Handcrafted Code (Zero Page-Builders)',
+                    'Mobile-First Responsive Layout',
+                    'SEO Foundation & Fast Load Times',
+                    'Contact Form & WhatsApp Integration',
+                    'Direct 1-on-1 Collaboration with Leon'
+                ]
+            },
+            'redesign-modernization': {
+                name: 'Complete Website Redesign & Modernization',
+                step2: 'outdated',
+                step3: 'leads',
+                needs: ['mobile-first', 'seo', 'analytics'],
+                packageName: 'Complete Website Redesign & Modernization',
+                priceRange: 'KES 75,000 - 120,000',
+                features: [
+                    'Full UI/UX Redesign & Modernization',
+                    'Clean Code Rewrite (Eliminate Bloat)',
+                    'Conversion Funnel & Mobile Optimization',
+                    'High-Speed Core Web Vitals Performance',
+                    'Direct 1-on-1 Collaboration with Leon'
+                ]
+            },
+            'portals-workflows': {
+                name: 'Custom Portals & Automated Workflows',
+                step2: 'modern',
+                step3: 'leads',
+                needs: ['analytics', 'whatsapp'],
+                packageName: 'Custom Portals & Automated Workflows',
+                priceRange: 'KES 100,000+',
+                features: [
+                    'Custom Client & Internal Portals',
+                    'Automated Lead Routing & Workflows',
+                    'Database & API Integration',
+                    'Secure Role-Based Access Control',
+                    'Direct 1-on-1 Collaboration with Leon'
+                ]
+            }
+        };
+
+        const config = tierMap[tier];
+        if (config) {
+            this.selectedTier = tier;
+            this.selectedTierConfig = config;
+
+            if (config.step2) this.answers['2'] = config.step2;
+            if (config.step3) this.answers['3'] = config.step3;
+            if (config.needs) {
+                config.needs.forEach(n => {
+                    if (!this.additionalNeeds.includes(n)) {
+                        this.additionalNeeds.push(n);
+                    }
+                });
+            }
+
+            const badge = document.getElementById('tierBadge');
+            const badgeText = document.getElementById('tierBadgeText');
+            if (badge && badgeText) {
+                badgeText.textContent = config.name;
+                badge.style.display = 'inline-flex';
+            }
+        }
+    }
+
+    handleDiscoveryCallIntent() {
+        this.isDiscoveryCall = true;
+
+        const step7Index = this.stepFlow.indexOf('7');
+        if (step7Index !== -1) {
+            this.currentIndex = step7Index;
+        }
+
+        const step7 = document.querySelector('.step[data-step="7"]');
+        if (step7) {
+            const label = step7.querySelector('.step-label');
+            if (label) label.textContent = 'Direct Founder Collaboration (Zero Junior Dev Handoff)';
+            const title = step7.querySelector('.step-title');
+            if (title) title.textContent = 'Book Your 20-Minute Discovery Call with Leon';
+        }
+
+        const progressLabel = document.querySelector('.progress-label');
+        if (progressLabel) {
+            progressLabel.textContent = '20-Minute Discovery Call';
+        }
+
+        this.adaptStep8ForDiscoveryCall();
+    }
+
+    adaptStep8ForDiscoveryCall() {
+        const step8 = document.querySelector('.step[data-step="8"]');
+        if (!step8) return;
+
+        const resultLabel = step8.querySelector('.result-label');
+        if (resultLabel) resultLabel.textContent = 'Discovery Call Request Received!';
+
+        const resultTitle = step8.querySelector('.result-title');
+        if (resultTitle) {
+            resultTitle.innerHTML = 'Your 20-Minute Discovery Call with <span class="highlight">Leon Madara</span>';
+        }
+
+        const resultPrice = step8.querySelector('.result-price');
+        if (resultPrice) resultPrice.textContent = 'Free • Direct 1-on-1 • Zero Obligation';
+
+        const sections = step8.querySelectorAll('.result-section');
+        if (sections[0]) {
+            const h3 = sections[0].querySelector('h3');
+            if (h3) h3.textContent = 'What happens next:';
+            const whyList = document.getElementById('whyList');
+            if (whyList) {
+                whyList.innerHTML = `
+                    <li>We will contact you within hours, if not minutes (Fast-Response Guarantee)</li>
+                    <li>Direct 1-on-1 strategy discussion with Leon Madara—no account managers or junior devs</li>
+                    <li>Tailored website diagnosis and concrete scope recommendations</li>
+                `;
+            }
+        }
+
+        if (sections[1]) {
+            const h3 = sections[1].querySelector('h3');
+            if (h3) h3.textContent = 'What we cover on the call:';
+            const includedList = document.getElementById('includedList');
+            if (includedList) {
+                includedList.innerHTML = `
+                    <li>✓ Your current website challenges & business goals</li>
+                    <li>✓ High-impact design and custom code modernization strategy</li>
+                    <li>✓ Realistic timeline, milestone plan, and transparent quote</li>
+                    <li>✓ Live Nairobi studio availability and scheduling</li>
+                `;
+            }
+        }
+
+        const primaryCta = step8.querySelector('.cta-primary');
+        if (primaryCta) {
+            primaryCta.href = 'https://calendly.com/codebyleon/discovery-call';
+            primaryCta.textContent = "📞 Pick a Time on Leon's Calendar";
+        }
+
+        const secondaryCta = step8.querySelector('.cta-secondary');
+        if (secondaryCta) {
+            secondaryCta.href = 'https://wa.me/254700000000?text=' + encodeURIComponent("Hi Leon, I'd like to book a 20-minute discovery call");
+            secondaryCta.textContent = '💬 WhatsApp Leon Directly';
+        }
+    }
+
     getReturnUrl() {
         // If the user came from a specific page (case study, blog post, etc.),
         // return them there. Otherwise fall back to the homepage.
         const params = new URLSearchParams(window.location.search);
         const from = params.get('from');
-        if (from && from.startsWith('/')) {
+        if (from && from.startsWith('/') && !from.startsWith('//') && !from.includes('\\')) {
             return from;
         }
         return '/?no-burn=true';
@@ -658,3 +880,5 @@ class ServiceConfigurator {
 document.addEventListener('DOMContentLoaded', () => {
     window.configurator = new ServiceConfigurator();
 });
+
+export { ServiceConfigurator };

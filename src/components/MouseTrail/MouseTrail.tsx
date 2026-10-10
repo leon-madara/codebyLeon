@@ -1,246 +1,317 @@
 import { useEffect, useRef } from 'react';
 
-interface Vec2 {
+interface Point {
   x: number;
   y: number;
+  time: number;
+  speed: number;
 }
 
-const TRAIL_DOTS = [
-  { size: 18, follow: 0.19 },
-  { size: 14, follow: 0.14 },
-  { size: 10, follow: 0.1 }
-] as const;
-
-const CURSOR_SIZE = 12;
-
-const clamp = (value: number, min: number, max: number) => Math.min(max, Math.max(min, value));
-const lerp = (start: number, end: number, factor: number) => start + (end - start) * factor;
+interface Spark {
+  x: number;
+  y: number;
+  vx: number;
+  vy: number;
+  size: number;
+  alpha: number;
+  time: number;
+  maxAge: number;
+}
 
 export interface MouseTrailConfig {
   scopeRef: React.RefObject<HTMLElement | null>;
   disabled?: boolean;
   className?: string;
-  stationaryThreshold?: number;
+  stationaryThreshold?: number; // ms before stationary decay kicks in
+  decayMs?: number; // trail duration before disappearing shortly
+  baseWidth?: number; // width at cursor head
 }
 
 const INTERACTIVE_TARGET_SELECTOR = 'a, button, [role="button"], input, textarea, select, label';
+const MIN_DISTANCE_PX = 2.5;
 
 export default function MouseTrail({
   scopeRef,
   disabled = false,
   className = '',
-  stationaryThreshold = 140
+  stationaryThreshold = 80,
+  decayMs = 700,
+  baseWidth = 3.2
 }: MouseTrailConfig) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const trailRefs = useRef<Array<HTMLDivElement | null>>([]);
-  
-  // Physics tracking refs
-  const pointerRef = useRef<Vec2>({ x: 0, y: 0 });
-  const cursorPosRef = useRef<Vec2>({ x: 0, y: 0 });
-  const trailPosRef = useRef<Vec2[]>(TRAIL_DOTS.map(() => ({ x: 0, y: 0 })));
-  const pointerInsideRef = useRef(false);
-  const interactiveHoverRef = useRef(false);
-  const idleRef = useRef(false);
-  const lastMoveTsRef = useRef(0);
-  const rafRef = useRef<number | null>(null);
-
-  // Screen coordinate and speed tracking refs
-  const lastClientX = useRef(0);
-  const lastClientY = useRef(0);
-  const smoothedSpeed = useRef(0);
-  const lastPointerPos = useRef<Vec2>({ x: 0, y: 0 });
-  const lastFrameTime = useRef<number>(0);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    const cursor = cursorRef.current;
     const scopeElement = scopeRef.current;
-
-    if (!container || !cursor || !scopeElement || disabled) return;
+    const canvas = canvasRef.current;
+    const container = containerRef.current;
+    if (!scopeElement || !canvas || !container || disabled) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
     if (prefersReducedMotion || coarsePointer) return;
 
-    scopeElement.classList.add('has-section-mouse-trail');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
 
-    const setVisible = (isVisible: boolean) => {
-      container.classList.toggle('is-visible', isVisible);
+    let animationFrameId: number | null = null;
+    let points: Point[] = [];
+    let sparks: Spark[] = [];
+    let isInside = false;
+    let isOverInteractive = false;
+    let lastMoveTime = 0;
+    let lastX = 0;
+    let lastY = 0;
+    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    // Setup canvas resolution and bounds
+    const resizeCanvas = () => {
+      const rect = scopeElement.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas.width = Math.max(1, Math.round(rect.width * dpr));
+      canvas.height = Math.max(1, Math.round(rect.height * dpr));
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
-    const setIdle = (isIdle: boolean) => {
-      if (idleRef.current === isIdle) return;
-      idleRef.current = isIdle;
-      container.classList.toggle('is-idle', isIdle);
-    };
+    resizeCanvas();
 
-    const toLocalPoint = (clientX: number, clientY: number): Vec2 => {
+    const resizeObserver = new ResizeObserver(() => {
+      resizeCanvas();
+    });
+    resizeObserver.observe(scopeElement);
+
+    const getLocalPoint = (e: PointerEvent | MouseEvent) => {
       const rect = scopeElement.getBoundingClientRect();
       return {
-        x: clamp(clientX - rect.left, 0, rect.width),
-        y: clamp(clientY - rect.top, 0, rect.height)
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
       };
     };
 
-    const positionElementsImmediately = (point: Vec2) => {
-      pointerRef.current = point;
-      cursorPosRef.current = point;
-      trailPosRef.current = TRAIL_DOTS.map(() => ({ ...point }));
-      lastPointerPos.current = { ...point };
-
-      cursor.style.transform = `translate3d(${point.x - CURSOR_SIZE / 2}px, ${point.y - CURSOR_SIZE / 2}px, 0)`;
-
-      trailRefs.current.forEach((trailElement, index) => {
-        if (!trailElement) return;
-        const size = TRAIL_DOTS[index].size;
-        trailElement.style.transform = `translate3d(${point.x - size / 2}px, ${point.y - size / 2}px, 0)`;
-      });
+    const isInteractive = (clientX: number, clientY: number) => {
+      if (typeof document.elementFromPoint !== 'function') return false;
+      const target = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+      return Boolean(target?.closest(INTERACTIVE_TARGET_SELECTOR));
     };
 
-    const isOverInteractiveTarget = (clientX: number, clientY: number) => {
-      const hoveredElement = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
-      return Boolean(hoveredElement?.closest(INTERACTIVE_TARGET_SELECTOR));
+    const startAnimationLoop = () => {
+      if (animationFrameId === null) {
+        animationFrameId = requestAnimationFrame(render);
+      }
     };
 
-    const handleMouseEnter = (event: MouseEvent) => {
-      lastClientX.current = event.clientX;
-      lastClientY.current = event.clientY;
-      const point = toLocalPoint(event.clientX, event.clientY);
-      positionElementsImmediately(point);
+    const addPoint = (x: number, y: number, now: number) => {
+      const dx = x - lastX;
+      const dy = y - lastY;
+      const dist = Math.hypot(dx, dy);
+      const dt = Math.max(1, now - lastMoveTime);
+      const speed = dist / dt;
 
-      pointerInsideRef.current = true;
-      interactiveHoverRef.current = isOverInteractiveTarget(event.clientX, event.clientY);
-      lastMoveTsRef.current = performance.now();
-      lastFrameTime.current = performance.now();
-      smoothedSpeed.current = 0;
+      // Add point
+      points.push({ x, y, time: now, speed });
 
-      setIdle(false);
-      setVisible(!interactiveHoverRef.current);
-    };
-
-    const handleMouseMove = (event: MouseEvent) => {
-      if (!pointerInsideRef.current) return;
-
-      lastClientX.current = event.clientX;
-      lastClientY.current = event.clientY;
-      pointerRef.current = toLocalPoint(event.clientX, event.clientY);
-      interactiveHoverRef.current = isOverInteractiveTarget(event.clientX, event.clientY);
-      lastMoveTsRef.current = performance.now();
-
-      setVisible(!interactiveHoverRef.current);
-    };
-
-    const handleScroll = () => {
-      if (!pointerInsideRef.current) return;
-
-      pointerRef.current = toLocalPoint(lastClientX.current, lastClientY.current);
-      lastMoveTsRef.current = performance.now();
-    };
-
-    const handleMouseLeave = () => {
-      pointerInsideRef.current = false;
-      interactiveHoverRef.current = false;
-      setVisible(false);
-      setIdle(false);
-    };
-
-    const tick = () => {
-      if (pointerInsideRef.current && !interactiveHoverRef.current) {
-        const now = performance.now();
-        
-        // Frame rate independence calculation
-        const elapsedMs = now - (lastFrameTime.current || now);
-        lastFrameTime.current = now;
-        const dt = clamp(elapsedMs / 16.666, 0.1, 10);
-
-        // Speed calculation (pixels per nominal 60fps frame)
-        const dx = pointerRef.current.x - lastPointerPos.current.x;
-        const dy = pointerRef.current.y - lastPointerPos.current.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        
-        const rawSpeed = dist / dt;
-        const smoothingFactor = clamp(0.12 * dt, 0.01, 1);
-        smoothedSpeed.current = lerp(smoothedSpeed.current, rawSpeed, smoothingFactor);
-        
-        lastPointerPos.current = { ...pointerRef.current };
-
-        // Normalize speed to [0, 1] range based on MAX_SPEED
-        const MAX_SPEED = 25;
-        const speedFactor = clamp(smoothedSpeed.current / MAX_SPEED, 0, 1);
-
-        const isStationary = now - lastMoveTsRef.current > stationaryThreshold;
-        setIdle(isStationary);
-
-        const cursorTarget = pointerRef.current;
-        // Smoother cursor movement using dynamic follow rate (dt adjusted)
-        const leadFollow = isStationary ? 0.22 : 0.32;
-        const cursorLerpFactor = clamp(leadFollow * dt, 0.01, 1);
-        
-        cursorPosRef.current.x = lerp(cursorPosRef.current.x, cursorTarget.x, cursorLerpFactor);
-        cursorPosRef.current.y = lerp(cursorPosRef.current.y, cursorTarget.y, cursorLerpFactor);
-
-        cursor.style.transform = `translate3d(${cursorPosRef.current.x - CURSOR_SIZE / 2}px, ${cursorPosRef.current.y - CURSOR_SIZE / 2}px, 0)`;
-
-        let previousPoint = cursorPosRef.current;
-        trailPosRef.current.forEach((trailPos, index) => {
-          // Dynamic target: Interpolate target between center-stacking (speedFactor=0) and chain-following (speedFactor=1)
-          const target = {
-            x: lerp(cursorPosRef.current.x, previousPoint.x, speedFactor),
-            y: lerp(cursorPosRef.current.y, previousPoint.y, speedFactor)
-          };
-
-          // Define follow bounds: Lower follow speed when moving (gentle lag) and higher when stopped (gentle resting)
-          const followBounds = [
-            { min: 0.08, max: 0.19 }, // Dot 0
-            { min: 0.06, max: 0.14 }, // Dot 1
-            { min: 0.04, max: 0.10 }  // Dot 2
-          ][index];
-
-          const baseFollow = lerp(followBounds.max, followBounds.min, speedFactor);
-          const follow = clamp(baseFollow * dt, 0.01, 1);
-
-          trailPos.x = lerp(trailPos.x, target.x, follow);
-          trailPos.y = lerp(trailPos.y, target.y, follow);
-
-          const trailElement = trailRefs.current[index];
-          if (trailElement) {
-            const size = TRAIL_DOTS[index].size;
-            trailElement.style.transform = `translate3d(${trailPos.x - size / 2}px, ${trailPos.y - size / 2}px, 0)`;
-          }
-
-          previousPoint = trailPos;
+      // Spawn subtle obsidian glitter sparks on energetic movements
+      if (speed > 0.4 && sparks.length < 40 && !isOverInteractive) {
+        const angle = Math.atan2(dy, dx) + (Math.random() - 0.5) * 1.5;
+        const sparkSpeed = Math.random() * 0.8 + 0.2;
+        sparks.push({
+          x: x + (Math.random() - 0.5) * 4,
+          y: y + (Math.random() - 0.5) * 4,
+          vx: Math.cos(angle) * sparkSpeed * 0.5,
+          vy: Math.sin(angle) * sparkSpeed * 0.5,
+          size: Math.random() * 1.5 + 0.8,
+          alpha: 1,
+          time: now,
+          maxAge: Math.random() * 300 + 350
         });
-      } else {
-        lastFrameTime.current = performance.now();
       }
 
-      rafRef.current = requestAnimationFrame(tick);
+      lastX = x;
+      lastY = y;
+      lastMoveTime = now;
+      startAnimationLoop();
     };
 
-    scopeElement.addEventListener('mouseenter', handleMouseEnter);
-    scopeElement.addEventListener('mousemove', handleMouseMove, { passive: true });
-    scopeElement.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    rafRef.current = requestAnimationFrame(tick);
+    const handlePointerEnter = (e: PointerEvent) => {
+      isInside = true;
+      isOverInteractive = isInteractive(e.clientX, e.clientY);
+      const pt = getLocalPoint(e);
+      lastX = pt.x;
+      lastY = pt.y;
+      lastMoveTime = performance.now();
+      container.classList.add('is-active');
+    };
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const now = performance.now();
+      const pt = getLocalPoint(e);
+      isInside = true;
+      isOverInteractive = isInteractive(e.clientX, e.clientY);
+
+      if (points.length === 0) {
+        lastX = pt.x;
+        lastY = pt.y;
+        lastMoveTime = now;
+        points.push({ x: pt.x, y: pt.y, time: now, speed: 0 });
+        startAnimationLoop();
+        return;
+      }
+
+      const dx = pt.x - lastX;
+      const dy = pt.y - lastY;
+      const dist = Math.hypot(dx, dy);
+
+      if (dist >= MIN_DISTANCE_PX) {
+        // Linear interpolation for smooth sampling during fast gestures
+        if (dist > 18) {
+          const steps = Math.min(5, Math.floor(dist / 10));
+          for (let i = 1; i < steps; i++) {
+            const frac = i / steps;
+            addPoint(lastX + dx * frac, lastY + dy * frac, now - (1 - frac) * 8);
+          }
+        }
+        addPoint(pt.x, pt.y, now);
+      }
+    };
+
+    const handlePointerLeave = () => {
+      isInside = false;
+      isOverInteractive = false;
+      container.classList.remove('is-active');
+    };
+
+    const render = (now: number) => {
+      const rect = scopeElement.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // Filter decayed trail points (trail that disappears shortly)
+      points = points.filter((p) => now - p.time < decayMs);
+      sparks = sparks.filter((s) => now - s.time < s.maxAge);
+
+      const isDarkMode = document.documentElement.getAttribute('data-theme') === 'dark';
+
+      // Draw the smooth decaying ribbon trail
+      if (points.length > 1) {
+        // Theme-tuned obsidian trail colors
+        // Dark mode: radiant champagne / golden amber with luminous bloom
+        // Light mode: elegant deep bronze / warm amber with refined presence
+        const coreHue = isDarkMode ? 43 : 32;
+        const coreSat = isDarkMode ? 96 : 88;
+        const coreLight = isDarkMode ? 78 : 46;
+
+        const glowHue = isDarkMode ? 40 : 28;
+        const glowSat = isDarkMode ? 100 : 85;
+        const glowLight = isDarkMode ? 60 : 40;
+
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Draw seamless segments with progressive tapering & alpha fade
+        for (let i = 1; i < points.length; i++) {
+          const p0 = points[i - 1];
+          const p1 = points[i];
+
+          const age = now - p1.time;
+          const life = Math.max(0, 1 - age / decayMs);
+          const alpha = Math.pow(life, 1.25) * (isOverInteractive ? 0.35 : 1);
+
+          if (alpha <= 0.005) continue;
+
+          const width = Math.max(0.6, baseWidth * Math.pow(life, 1.05));
+
+          // 1. Glow stroke (diffuse aura)
+          ctx.beginPath();
+          ctx.moveTo(p0.x, p0.y);
+          ctx.lineTo(p1.x, p1.y);
+          ctx.strokeStyle = `hsla(${glowHue}, ${glowSat}%, ${glowLight}%, ${alpha * 0.28})`;
+          ctx.lineWidth = width * 3.5;
+          ctx.stroke();
+
+          // 2. Core radiant stroke (sharp, continuous trail)
+          ctx.beginPath();
+          ctx.moveTo(p0.x, p0.y);
+          ctx.lineTo(p1.x, p1.y);
+          ctx.strokeStyle = `hsla(${coreHue}, ${coreSat}%, ${coreLight}%, ${alpha * 0.95})`;
+          ctx.lineWidth = width;
+          ctx.stroke();
+        }
+      }
+
+      // Draw subtle glitter sparks
+      if (sparks.length > 0) {
+        for (const spark of sparks) {
+          const age = now - spark.time;
+          const life = Math.max(0, 1 - age / spark.maxAge);
+          spark.x += spark.vx;
+          spark.y += spark.vy;
+
+          const sparkAlpha = Math.pow(life, 1.5) * (isDarkMode ? 0.8 : 0.65);
+          ctx.fillStyle = isDarkMode
+            ? `hsla(45, 100%, 82%, ${sparkAlpha})`
+            : `hsla(30, 92%, 46%, ${sparkAlpha})`;
+
+          ctx.beginPath();
+          ctx.arc(spark.x, spark.y, spark.size * life, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Leading luminous dot when actively moving
+      if (isInside && points.length > 0) {
+        const head = points[points.length - 1];
+        const timeSinceMove = now - lastMoveTime;
+        const isStationary = timeSinceMove > stationaryThreshold;
+        const headLife = isStationary ? Math.max(0, 1 - (timeSinceMove - stationaryThreshold) / 250) : 1;
+
+        if (headLife > 0.01 && !isOverInteractive) {
+          const dotRadius = (isDarkMode ? 2.6 : 2.2) * headLife;
+          // Outer subtle aura
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, dotRadius * 2.8, 0, Math.PI * 2);
+          ctx.fillStyle = isDarkMode
+            ? `hsla(42, 95%, 65%, ${0.25 * headLife})`
+            : `hsla(32, 90%, 46%, ${0.2 * headLife})`;
+          ctx.fill();
+
+          // Core point
+          ctx.beginPath();
+          ctx.arc(head.x, head.y, dotRadius, 0, Math.PI * 2);
+          ctx.fillStyle = isDarkMode
+            ? `hsla(48, 100%, 90%, ${0.95 * headLife})`
+            : `hsla(28, 95%, 44%, ${0.9 * headLife})`;
+          ctx.fill();
+        }
+      }
+
+      // Loop continues if there are active trail points or sparks
+      if (points.length > 0 || sparks.length > 0 || isInside) {
+        animationFrameId = requestAnimationFrame(render);
+      } else {
+        animationFrameId = null;
+        ctx.clearRect(0, 0, rect.width, rect.height);
+      }
+    };
+
+    scopeElement.addEventListener('pointerenter', handlePointerEnter);
+    scopeElement.addEventListener('pointermove', handlePointerMove, { passive: true });
+    scopeElement.addEventListener('pointerleave', handlePointerLeave);
 
     return () => {
-      scopeElement.removeEventListener('mouseenter', handleMouseEnter);
-      scopeElement.removeEventListener('mousemove', handleMouseMove);
-      scopeElement.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('scroll', handleScroll);
+      scopeElement.removeEventListener('pointerenter', handlePointerEnter);
+      scopeElement.removeEventListener('pointermove', handlePointerMove);
+      scopeElement.removeEventListener('pointerleave', handlePointerLeave);
+      resizeObserver.disconnect();
 
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current);
+      if (animationFrameId !== null) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
       }
-
-      pointerInsideRef.current = false;
-      interactiveHoverRef.current = false;
-      setVisible(false);
-      setIdle(false);
-      scopeElement.classList.remove('has-section-mouse-trail');
+      points = [];
+      sparks = [];
     };
-  }, [scopeRef, disabled, stationaryThreshold]);
+  }, [scopeRef, disabled, stationaryThreshold, decayMs, baseWidth]);
 
   return (
     <div
@@ -248,17 +319,7 @@ export default function MouseTrail({
       className={`mouse-trail-container mouse-trail-container--hero ${className}`.trim()}
       aria-hidden="true"
     >
-      <div ref={cursorRef} className="mouse-cursor" />
-      {TRAIL_DOTS.map((_, index) => (
-        <div
-          key={index}
-          ref={(node) => {
-            trailRefs.current[index] = node;
-          }}
-          className="trail-element"
-          data-index={index}
-        />
-      ))}
+      <canvas ref={canvasRef} className="mouse-trail-canvas" />
     </div>
   );
 }

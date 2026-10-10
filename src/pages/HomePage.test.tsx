@@ -1,12 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { forwardRef } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it, vi } from 'vitest';
 import { HomePage } from './HomePage';
 
 vi.mock('@gsap/react', () => ({
-  useGSAP: vi.fn(() => ({
-    contextSafe: <T extends (...args: never[]) => unknown>(callback: T) => callback,
-  })),
+  useGSAP: vi.fn(),
 }));
 
 vi.mock('gsap', () => ({
@@ -17,10 +16,6 @@ vi.mock('gsap', () => ({
       to: vi.fn().mockReturnThis(),
     })),
   },
-}));
-
-vi.mock('gsap/ScrollTrigger', () => ({
-  ScrollTrigger: {},
 }));
 
 vi.mock('../utils/runtimeFlags', () => ({
@@ -35,24 +30,32 @@ vi.mock('../utils/seo', () => ({
   usePageSeo: vi.fn(),
 }));
 
-vi.mock('../contexts/ThemeContext', () => ({
-  useTheme: () => ({ theme: 'light' }),
-}));
-
 vi.mock('../components/sections/Hero', () => ({
   Hero: forwardRef(() => <section aria-label="Hero" />),
 }));
 
-vi.mock('../components/sections/PortfolioCarousel', () => ({
-  default: () => <section aria-label="Portfolio carousel" />,
+vi.mock('../components/sections/RealityCheck', () => ({
+  RealityCheck: () => <section id="reality-check" aria-label="The Reality Check and Our Approach" />,
 }));
 
-vi.mock('../components/sections/About3DStack', () => ({
-  About3DStack: () => <section aria-label="About" />,
+vi.mock('../components/sections/ServicesIntro', () => ({
+  ServicesIntro: () => <section aria-label="Services Intro" />,
 }));
 
-vi.mock('../components/HorizontalScroll', () => ({
-  MultiCardScrollSection: () => <section aria-label="Services" />,
+vi.mock('../components/sections/ServicesMatrix', () => ({
+  ServicesMatrix: () => <section aria-label="Services Matrix" />,
+}));
+
+vi.mock('../components/sections/AboutVideoIntro', () => ({
+  AboutVideoIntro: () => <section aria-label="About Video Intro" />,
+}));
+
+vi.mock('../components/sections/AboutManifesto', () => ({
+  AboutManifesto: () => <section aria-label="About Manifesto" />,
+}));
+
+vi.mock('../components/sections/WorkGatewayStrip', () => ({
+  WorkGatewayStrip: () => <section aria-label="Work Gateway" />,
 }));
 
 vi.mock('../components/sections/Blog', () => ({
@@ -65,9 +68,23 @@ vi.mock('../components/sections/FinalCTA', () => ({
 
 describe('HomePage', () => {
   it('does not render the BuildBrands section', () => {
-    render(<HomePage />);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
 
     expect(document.querySelector('#build-brands')).not.toBeInTheDocument();
     expect(screen.queryByRole('heading', { name: /we build brands/i })).not.toBeInTheDocument();
+  });
+
+  it('renders the RealityCheck section in narrative flow', () => {
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
+
+    expect(document.querySelector('#reality-check')).toBeInTheDocument();
   });
 });

@@ -78,7 +78,7 @@ export function Navigation() {
       return;
     }
 
-    const sections = ['portfolio', 'about', 'services'];
+    const sections = ['services', 'about', 'work-gateway', 'portfolio'];
     const observerOptions = {
       root: null,
       rootMargin: '-30% 0px -40% 0px',
@@ -161,22 +161,21 @@ export function Navigation() {
       ref={navRef}
       className={`navigation ${isMobileMenuOpen ? 'is-menu-open' : ''} ${isSmartNavHidden ? 'is-hidden' : ''}`}
       aria-label="Main navigation"
-      aria-hidden={isSmartNavHidden || undefined}
+      inert={isSmartNavHidden ? true : undefined}
     >
       <div className="navigation__container">
         <Link to="/#hero" className="navigation__logo" aria-label="Code by Leon home" onClick={() => setIsMobileMenuOpen(false)}>
           <img src="/icons/main-logo.svg" alt="Code by Leon" className="navigation__logo-svg" />
         </Link>
 
-        <div className="navigation__pill">
         <ul className="navigation__links">
           <li>
             <a
-              href={getSectionHref('portfolio')}
-              onClick={handleSectionLinkClick('portfolio')}
-              className={`navigation__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}
+              href={getSectionHref('services')}
+              onClick={handleSectionLinkClick('services')}
+              className={`navigation__link ${activeSection === 'services' ? 'is-active' : ''}`}
             >
-              PORTFOLIO
+              SERVICES
             </a>
           </li>
           <li>
@@ -189,13 +188,12 @@ export function Navigation() {
             </a>
           </li>
           <li>
-            <a
-              href={getSectionHref('services')}
-              onClick={handleSectionLinkClick('services')}
-              className={`navigation__link ${activeSection === 'services' ? 'is-active' : ''}`}
+            <Link
+              to="/work"
+              className={`navigation__link ${location.pathname.startsWith('/work') ? 'is-active' : ''}`}
             >
-              SERVICES
-            </a>
+              OUR WORK
+            </Link>
           </li>
           <li>
             <Link
@@ -226,7 +224,6 @@ export function Navigation() {
             Configure your project & see pricing
           </span>
         </a>
-        </div>
 
         <div className="navigation__theme-toggle desktop-only">
           <ThemeToggle />
@@ -279,13 +276,13 @@ export function Navigation() {
               <Link to="/#hero" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/') && activeSection === '' ? 'is-active' : ''}`}>Home</Link>
             </li>
             <li>
-              <a href={getSectionHref('portfolio')} onClick={handleMobileLinkClick(handleSectionLinkClick('portfolio'))} className={`mobile-menu-overlay__link ${activeSection === 'portfolio' || location.pathname.startsWith('/work') ? 'is-active' : ''}`}>Portfolio</a>
+              <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className={`mobile-menu-overlay__link ${activeSection === 'services' ? 'is-active' : ''}`}>Services</a>
             </li>
             <li>
               <a href={getSectionHref('about')} onClick={handleMobileLinkClick(handleSectionLinkClick('about'))} className={`mobile-menu-overlay__link ${activeSection === 'about' ? 'is-active' : ''}`}>About</a>
             </li>
             <li>
-              <a href={getSectionHref('services')} onClick={handleMobileLinkClick(handleSectionLinkClick('services'))} className={`mobile-menu-overlay__link ${activeSection === 'services' ? 'is-active' : ''}`}>Services</a>
+              <Link to="/work" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${location.pathname.startsWith('/work') ? 'is-active' : ''}`}>Our Work</Link>
             </li>
             <li>
               <Link to="/process" onClick={handleMobileLinkClick()} className={`mobile-menu-overlay__link ${isActiveLink('/process') ? 'is-active' : ''}`}>Process</Link>

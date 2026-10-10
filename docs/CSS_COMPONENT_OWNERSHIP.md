@@ -123,10 +123,12 @@ src/styles/
 | Section | Owner File | Class Prefix | Description |
 |---------|-----------|--------------|-------------|
 | Hero | `sections/hero.css` | `.hero` | Hero section with title, subtitle, CTAs |
+| Reality Check | `sections/reality-check.css` | `.reality-check` | Reality Check diagnosing professional gap & bespoke code approach |
 | Services | `sections/services.css` | `.services` | Services section with grid |
 | Portfolio | `sections/portfolio.css` | `.portfolio` | Portfolio section with project grid |
 | About | `sections/about.css` | `.about` | About section with content |
 | Blog | `sections/blog.css` | `.blog` | Blog section with post grid |
+| Final CTA | `sections/final-cta.css` | `.final-cta` | Fast response guarantee & conversion paths |
 
 **Hero Classes:**
 - `.hero` - Hero section container
@@ -136,12 +138,40 @@ src/styles/
 - `.hero__ctas` - CTA buttons container
 - `.hero__cta` - Individual CTA button
 
+**Reality Check Classes:**
+- `.reality-check` - Reality Check section container
+- `.reality-check__container` - Inner layout container
+- `.reality-check__header` - Section header block
+- `.reality-check__eyebrow` - Category badge with icon
+- `.reality-check__headline` - Section headline
+- `.reality-check__lead` - Lead subheadline text
+- `.reality-check__grid` - Side-by-side comparison grid
+- `.reality-check__card` - Individual comparison card
+- `.reality-check__card--problem` - The Problem card
+- `.reality-check__card--approach` - Our Approach card
+- `.reality-check__card-tag` - Card subcategory tag
+- `.reality-check__card-title` - Card title
+- `.reality-check__card-description` - Narrative card description
+- `.reality-check__list` - Comparison points list
+- `.reality-check__list-item` - Individual point item
+- `.reality-check__item-icon` - Point indicator icon
+- `.reality-check__card-footer` - Card footer highlight
+- `.reality-check__metric` - Outcome summary metric
+
 **Services Classes:**
 - `.services` - Services section container
 - `.services__container` - Inner container
 - `.services__title` - Section title
 - `.services__grid` - Services grid
 - `.services__item` - Individual service item
+- `.services-matrix__bridge-card` - Configurator bridge card container
+- `.services-matrix__bridge-content` - Bridge card descriptive content
+- `.services-matrix__bridge-tag` - Bridge card interactive feature badge
+- `.services-matrix__bridge-title` - Bridge card heading
+- `.services-matrix__bridge-description` - Bridge card narrative
+- `.services-matrix__bridge-meta` - Bridge card meta badges (time, scope)
+- `.services-matrix__bridge-action` - Bridge card CTA button area
+- `.services-matrix__bridge-btn` - Bridge card primary CTA button
 
 **Portfolio Classes:**
 - `.portfolio` - Portfolio section container
@@ -162,6 +192,19 @@ src/styles/
 - `.blog__title` - Section title
 - `.blog__grid` - Blog post grid
 - `.blog__post` - Individual blog post
+
+**Final CTA Classes:**
+- `.final-cta` - Final CTA section container
+- `.final-cta__orbs` - Background ambient orbs container
+- `.final-cta__orb` - Individual ambient glow orb
+- `.final-cta__overlay` - Frosted glass overlay
+- `.final-cta__content` - Central content container
+- `.final-cta__response-guarantee` - Fast response guarantee badge
+- `.final-cta__headline` - Section headline
+- `.final-cta__subheadline` - Supporting reassurance text
+- `.final-cta__cta` - Two-path conversion buttons container
+- `.final-cta__discovery-btn` - 20-minute discovery call button
+- `.final-cta__config-btn` - Online project configurator button
 
 ---
 

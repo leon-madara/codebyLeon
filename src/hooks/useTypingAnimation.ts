@@ -13,7 +13,7 @@ interface TypingConfig {
 }
 
 const DEFAULT_CONFIG: TypingConfig = {
-  words: ['VISIONARY', 'PIONEERING', 'ASPIRING', 'DRIVEN', 'AMBITIOUS'],
+  words: ['DRIVEN', 'AMBITIOUS', 'VISIONARY', 'PIONEERING', 'ASPIRING'],
   colorIndices: [1, 2, 3, 4, 5],
   typingSpeedMin: 0.05,
   typingSpeedMax: 0.15,
@@ -44,8 +44,14 @@ export function useTypingAnimation(config: Partial<TypingConfig> = EMPTY_CONFIG)
     };
   }, [wordCount]);
   const setStartingWordIndex = useCallback((index: number) => {
-    startWordIndexRef.current = normalizeIndex(index);
-  }, [normalizeIndex]);
+    const safeIndex = normalizeIndex(index);
+    startWordIndexRef.current = safeIndex;
+    currentWordIndexRef.current = safeIndex;
+    if (finalConfig.words[safeIndex]) {
+      currentWordRef.current = finalConfig.words[safeIndex];
+      setCurrentWord(finalConfig.words[safeIndex]);
+    }
+  }, [normalizeIndex, finalConfig.words]);
 
   useEffect(() => {
     if (!isActive || wordCount === 0) return;

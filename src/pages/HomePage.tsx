@@ -2,18 +2,12 @@ import { useRef } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import { Hero, HeroHandle } from '../components/sections/Hero';
-import { Portfolio } from '../components/sections/Portfolio'; // OLD - kept for rollback
-// import { PortfolioStacked } from '../components/sections/PortfolioStacked'; // OLD
-import PortfolioCarousel from '../components/sections/PortfolioCarousel'; // NEW
-import PortfolioCarouselMobile from '../components/sections/PortfolioCarouselMobile';
-import { useIsMobile } from '../hooks/use-mobile';
-// import { Portfolio3DStack } from '../components/sections/Portfolio3DStack'; // OLD
-// import { About } from '../components/sections/About'; // OLD
-import { AboutVideoIntro } from '../components/sections/AboutVideoIntro';
-import { About3DStack } from '../components/sections/About3DStack'; // NEW
+import { RealityCheck } from '../components/sections/RealityCheck';
 import { ServicesIntro } from '../components/sections/ServicesIntro';
-import { MultiCardScrollSection } from '../components/HorizontalScroll';
-import { StoryBookServices } from '../components/StoryScroll';
+import { ServicesMatrix } from '../components/sections/ServicesMatrix';
+import { AboutVideoIntro } from '../components/sections/AboutVideoIntro';
+import { AboutManifesto } from '../components/sections/AboutManifesto';
+import { WorkGatewayStrip } from '../components/sections/WorkGatewayStrip';
 import { Blog } from '../components/sections/Blog';
 import { FinalCTA } from '../components/sections/FinalCTA';
 import { isVisualTestMode } from '../utils/runtimeFlags';
@@ -21,12 +15,17 @@ import { DEFAULT_DESCRIPTION, DEFAULT_TITLE, SITE_NAME, SITE_URL, usePageSeo } f
 import { GlassBallCursor } from '../components/cursor/GlassBallCursor';
 
 /**
- * HomePage component that renders all sections of the home page
- * This component is used for the "/" route
+ * HomePage component that renders all sections of the home page.
+ * Hierarchy:
+ * 1. Hero (Cinematic Hook & Peel)
+ * 2. Services Intro & Services Matrix (Commercial Offer & Scope Estimator)
+ * 3. About Video Intro & Founder's Manifesto Bento (Leon Madara & Standards)
+ * 4. Selected Works Gateway Strip (Proof bridge to /work)
+ * 5. Blog (Thought Leadership)
+ * 6. Final CTA (Start Your Project)
  */
 export function HomePage() {
   const isVisualTest = isVisualTestMode();
-  const isMobile = useIsMobile();
   const heroRef = useRef<HeroHandle>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const heroWrapperRef = useRef<HTMLDivElement>(null);
@@ -92,30 +91,29 @@ export function HomePage() {
 
   return (
     <div ref={containerRef}>
-      {/* 
-         We pass the ref to Hero to control its internal elements.
-         Note: The Hero's text elements are initially styled with `translate-y-full` 
-         via Tailwind classes we added in the previous step, so they are hidden by default.
-         The hero-scroll-wrapper provides scroll distance for the Hero ScrollTrigger sequence.
-      */}
+      {/* 1. Hero with 3D scroll distance */}
       <div ref={heroWrapperRef} className="hero-scroll-wrapper">
         <Hero ref={heroRef} scrollWrapperRef={heroWrapperRef} />
       </div>
 
-      {/* NEW: Stacked Portfolio with Carousel */}
-      {isMobile ? <PortfolioCarouselMobile /> : <PortfolioCarousel />}
+      {/* Interactive cursor */}
       <GlassBallCursor />
 
-      {/* OLD: Original Portfolio (commented for rollback)
-      <Portfolio />
-      */}
-      <AboutVideoIntro />
-      <About3DStack />
+      {/* 2. The Reality Check & Our Approach */}
+      <RealityCheck />
+
+      {/* 3. Services: Promoted to prime position */}
       <ServicesIntro />
-      <StoryBookServices />
-      {/* OLD: Original horizontal-scroll services (kept for rollback)
-      <MultiCardScrollSection />
-      */}
+      <ServicesMatrix />
+
+      {/* 3. About: Founder Video + Systems Bento */}
+      <AboutVideoIntro />
+      <AboutManifesto />
+
+      {/* 4. Selected Works Gateway: Proof bridge to dedicated /work route */}
+      <WorkGatewayStrip />
+
+      {/* 5. Blog & Final CTA */}
       <Blog />
       <FinalCTA />
     </div>

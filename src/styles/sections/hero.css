@@ -49,6 +49,17 @@
   }
 }
 
+/* Hero-only dot texture stays below content and never extends into the header. */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background-image: radial-gradient(circle, var(--hero-dot-color) 1.2px, transparent 1.2px);
+  background-size: 16px 16px;
+  pointer-events: none;
+}
+
 /* =============================================
    LAYER 4: CONTENT (BOLD TYPOGRAPHY) - Mobile First
    ============================================= */
@@ -417,18 +428,20 @@
   font-size: 0.9rem;
   letter-spacing: 0.05em;
   text-decoration: none;
-  transition: all var(--duration-normal) var(--easing-standard);
+  transition: border-radius var(--duration-slower) var(--easing-ease-in-out);
   text-align: center;
   width: 100%;
 }
 
-.hero__cta--primary {
+.hero__cta--primary,
+.hero__cta--primary:hover {
   background: #cd340f;
   color: white;
   border: 2px solid #cd340f;
 }
 
-.hero__cta--secondary {
+.hero__cta--secondary,
+.hero__cta--secondary:hover {
   background: transparent;
   color: var(--text-primary);
   border: 2px solid var(--text-primary);
@@ -443,20 +456,18 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .hero__cta--primary:hover {
-    background: var(--hero-accent-hover);
-    border-color: var(--hero-accent-hover);
-    transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(205, 52, 15, 0.3);
-    color: white;
-    font-weight: 800;
+  .hero__cta:hover {
+    border-radius: 0;
   }
+}
 
-  .hero__cta--secondary:hover {
-    background: var(--text-primary);
-    color: var(--canvas-base);
-    opacity: 1;
-    transform: translateY(-3px);
+.hero__cta:focus-visible {
+  border-radius: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__cta {
+    transition: none;
   }
 }
 
