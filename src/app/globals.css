@@ -1,0 +1,470 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------
+   CodeByLeon — "Ink & Signal" design system
+   Warm paper / warm ink base, one vermilion signal accent, jade + gold
+   supporting marks. Hairline rules instead of pills; restrained
+   translucent colour washes + subtle dot grid. Light & dark themes.
+------------------------------------------------------------------- */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-space-grotesk), var(--font-geist-sans), sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, "Times New Roman", serif;
+
+  /* brand accents (theme-aware) */
+  --color-signal: var(--signal);
+  --color-signal-foreground: var(--signal-foreground);
+  --color-signal-inv: var(--signal-inv);
+  --color-jade: var(--jade);
+  --color-jade-inv: var(--jade-inv);
+  --color-jade-inv-contrast: var(--jade-inv-contrast);
+  --color-gold: var(--gold);
+  --color-gold-inv: var(--gold-inv);
+
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.375rem;
+
+  /* paper */
+  --background: #f5f2ea;
+  --foreground: #1d1913;
+  --card: #fbf9f2;
+  --card-foreground: #1d1913;
+  --popover: #fbf9f2;
+  --popover-foreground: #1d1913;
+  --primary: #bc390b;
+  --primary-foreground: #fdf8f0;
+  --secondary: #e9e3d5;
+  --secondary-foreground: #1d1913;
+  --muted: #e9e3d5;
+  --muted-foreground: #635b4b;
+  --accent: #e9e3d5;
+  --accent-foreground: #1d1913;
+  --destructive: #a2331f;
+  --border: rgba(29, 25, 19, 0.16);
+  --input: rgba(29, 25, 19, 0.22);
+  --ring: rgba(188, 57, 11, 0.55);
+  --chart-1: #bc390b;
+  --chart-2: #0e6b49;
+  --chart-3: #8f6a0e;
+  --chart-4: #a2331f;
+  --chart-5: #6e6555;
+  --sidebar: #fbf9f2;
+  --sidebar-foreground: #1d1913;
+  --sidebar-primary: #bc390b;
+  --sidebar-primary-foreground: #fdf8f0;
+  --sidebar-accent: #e9e3d5;
+  --sidebar-accent-foreground: #1d1913;
+  --sidebar-border: rgba(29, 25, 19, 0.16);
+  --sidebar-ring: rgba(188, 57, 11, 0.55);
+
+  /* accents — signal (vermilion), jade, gold */
+  --signal: #bc390b;
+  --signal-foreground: #fdf8f0;
+  --signal-inv: #ff6a33; /* signal on ink surfaces */
+  --jade: #0e6b49;
+  --jade-inv: #3ecf8c;
+  --jade-inv-contrast: #0c1a13;
+  --gold: #8f6a0e;
+  --gold-inv: #e0b23e;
+
+  /* backdrop details */
+  --dot-color: rgba(29, 25, 19, 0.16);
+  --dot-color-fine: rgba(29, 25, 19, 0.1);
+  --hairline-strong: rgba(29, 25, 19, 0.3);
+  --ghost-stroke: rgba(29, 25, 19, 0.26);
+  --blob-blend: multiply;
+  --signal-wash-a: rgba(188, 57, 11, 0.16);
+  --signal-wash-b: rgba(35, 128, 217, 0.24); /* logo blue #2380D9 */
+  --signal-wash-c: rgba(86, 175, 240, 0.12); /* supporting blue #56AFF0 */
+  --scrollbar-track: #efeade;
+  --scrollbar-thumb: #c4bca8;
+  --range-track: rgba(29, 25, 19, 0.18);
+}
+
+.dark {
+  /* warm ink */
+  --background: #151310;
+  --foreground: #ece7db;
+  --card: #1d1a15;
+  --card-foreground: #ece7db;
+  --popover: #1d1a15;
+  --popover-foreground: #ece7db;
+  --primary: #ff6226;
+  --primary-foreground: #1a120c;
+  --secondary: #262219;
+  --secondary-foreground: #ece7db;
+  --muted: #262219;
+  --muted-foreground: #9c947f;
+  --accent: #262219;
+  --accent-foreground: #ece7db;
+  --destructive: #d96b4a;
+  --border: rgba(236, 231, 219, 0.14);
+  --input: rgba(236, 231, 219, 0.22);
+  --ring: rgba(255, 98, 38, 0.5);
+  --chart-1: #ff6226;
+  --chart-2: #3ecf8c;
+  --chart-3: #e0b23e;
+  --chart-4: #d96b4a;
+  --chart-5: #9c947f;
+  --sidebar: #1d1a15;
+  --sidebar-foreground: #ece7db;
+  --sidebar-primary: #ff6226;
+  --sidebar-primary-foreground: #1a120c;
+  --sidebar-accent: #262219;
+  --sidebar-accent-foreground: #ece7db;
+  --sidebar-border: rgba(236, 231, 219, 0.14);
+  --sidebar-ring: rgba(255, 98, 38, 0.5);
+
+  --signal: #ff6226;
+  --signal-foreground: #1a120c;
+  --signal-inv: #bc390b; /* signal on paper surfaces */
+  --jade: #3ecf8c;
+  --jade-inv: #0e6b49;
+  --jade-inv-contrast: #eefaf2;
+  --gold: #e0b23e;
+  --gold-inv: #8f6a0e;
+
+  --dot-color: rgba(236, 231, 219, 0.13);
+  --dot-color-fine: rgba(236, 231, 219, 0.08);
+  --hairline-strong: rgba(236, 231, 219, 0.32);
+  --ghost-stroke: rgba(236, 231, 219, 0.22);
+  --blob-blend: screen;
+  --signal-wash-a: rgba(255, 98, 38, 0.14);
+  --signal-wash-b: rgba(35, 128, 217, 0.22); /* logo blue #2380D9 */
+  --signal-wash-c: rgba(86, 175, 240, 0.12); /* supporting blue #56AFF0 */
+  --scrollbar-track: #151310;
+  --scrollbar-thumb: #35302a;
+  --range-track: rgba(236, 231, 219, 0.18);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  ::selection {
+    background: var(--signal);
+    color: var(--signal-foreground);
+  }
+}
+
+/* ---------- Custom scrollbar ---------- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 0;
+  border: 2px solid var(--scrollbar-track);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--signal);
+}
+.scroll-slim::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-slim::-webkit-scrollbar-thumb {
+  border: none;
+}
+
+/* ---------- Dot grid backdrop (restrained) ---------- */
+.dot-grid {
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color) 1px, transparent 0);
+  background-size: 24px 24px;
+}
+.dot-grid-fine {
+  background-image: radial-gradient(circle at 1px 1px, var(--dot-color-fine) 1px, transparent 0);
+  background-size: 14px 14px;
+}
+
+/* ---------- Translucent colour washes (restrained) ---------- */
+.blob {
+  position: absolute;
+  border-radius: 9999px;
+  mix-blend-mode: var(--blob-blend);
+  pointer-events: none;
+  will-change: transform;
+}
+@keyframes drift-a {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(4vw, -3vh, 0) scale(1.1);
+  }
+}
+@keyframes drift-b {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1.05);
+  }
+  50% {
+    transform: translate3d(-4vw, 3vh, 0) scale(0.95);
+  }
+}
+@keyframes drift-c {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(0.95);
+  }
+  50% {
+    transform: translate3d(3vw, 4vh, 0) scale(1.08);
+  }
+}
+.animate-drift-a {
+  animation: drift-a 44s ease-in-out infinite alternate;
+}
+.animate-drift-b {
+  animation: drift-b 52s ease-in-out infinite alternate;
+}
+.animate-drift-c {
+  animation: drift-c 60s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-drift-a,
+  .animate-drift-b,
+  .animate-drift-c {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* ---------- Blueprint corner registration marks ---------- */
+.mark-tl,
+.mark-tr,
+.mark-bl,
+.mark-br {
+  position: absolute;
+  size: 12px;
+  width: 12px;
+  height: 12px;
+  pointer-events: none;
+}
+.mark-tl {
+  top: -1px;
+  left: -1px;
+  border-top: 1.5px solid var(--signal);
+  border-left: 1.5px solid var(--signal);
+}
+.mark-tr {
+  top: -1px;
+  right: -1px;
+  border-top: 1.5px solid var(--signal);
+  border-right: 1.5px solid var(--signal);
+}
+.mark-bl {
+  bottom: -1px;
+  left: -1px;
+  border-bottom: 1.5px solid var(--signal);
+  border-left: 1.5px solid var(--signal);
+}
+.mark-br {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1.5px solid var(--signal);
+  border-right: 1.5px solid var(--signal);
+}
+
+/* ---------- Range inputs (video player / volume) ---------- */
+input[type="range"].cbl-range {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--range-track);
+  outline: none;
+  cursor: pointer;
+}
+input[type="range"].cbl-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--signal);
+  border: 2px solid #0f0e0c;
+  transition: transform 0.15s ease;
+}
+input[type="range"].cbl-range::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+input[type="range"].cbl-range::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: var(--signal);
+  border: 2px solid #0f0e0c;
+}
+
+/* ---------- Ghost index numbers ---------- */
+.ghost-number {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--ghost-stroke);
+  transition: -webkit-text-stroke-color 0.4s ease, color 0.4s ease;
+}
+.group:hover .ghost-number {
+  -webkit-text-stroke-color: var(--signal);
+}
+
+/* ---------- Typographic helpers ---------- */
+.text-balance {
+  text-wrap: balance;
+}
+.text-link {
+  position: relative;
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.text-link:hover,
+.text-link:focus-visible {
+  background-size: 100% 1px;
+}
+/* scrollspy — persistent underline for the active nav section */
+.text-link.nav-link-active {
+  background-size: 100% 1px;
+}
+
+/* ---------- Film grain (subtle, both themes) ---------- */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0.045;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.7'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+.dark .grain-overlay {
+  opacity: 0.06;
+}
+
+/* ---------- Refined keyboard focus ---------- */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+summary:focus-visible,
+[tabindex]:focus-visible {
+  outline: 1.5px solid var(--signal);
+  outline-offset: 3px;
+}
+
+/* ---------- Capability marquee ---------- */
+@keyframes marquee-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 38s linear infinite;
+  will-change: transform;
+}
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+}
+
+/* ---------- Fullscreen video shell ---------- */
+.video-shell:fullscreen {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #000;
+}
+.video-shell:fullscreen .video-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+.video-shell:fullscreen video {
+  aspect-ratio: auto;
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ---------- Command palette kbd hint ---------- */
+.kbd-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border-radius: 3px;
+  border: 1px solid var(--hairline-strong);
+  background: var(--muted);
+  padding: 2px 7px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  color: var(--muted-foreground);
+  line-height: 1.4;
+}

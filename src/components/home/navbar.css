@@ -1,0 +1,4 @@
+/* Use layout offsets, not an ancestor transform: ScrollTrigger pins stay fixed. */
+[data-nav-push] { position: relative; top: var(--nav-menu-push, 0px); }
+.nav-push-menu { height: 0; opacity: 0; visibility: hidden; overflow-y: auto; overscroll-behavior: contain; }
+html[data-nav-menu-open="true"] { overflow: hidden; scrollbar-gutter: stable; overflow-anchor: none; }

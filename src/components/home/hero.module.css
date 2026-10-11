@@ -1,0 +1,47 @@
+@font-face {
+  font-family: 'OriginalHandwritten';
+  src: url('/fonts/original-hero/handwritten.otf') format('opentype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OriginalQuikhand';
+  src: url('/fonts/original-hero/quikhand.ttf') format('truetype');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OriginalCandy';
+  src: url('/fonts/original-hero/candy.ttf') format('truetype');
+  font-display: swap;
+}
+.headline { font-family: 'OriginalHandwritten', sans-serif; font-weight: 400; color: #09054d; }
+.bold { font-family: 'OriginalQuikhand', sans-serif; text-transform: uppercase; color: #fc5b45; position: relative; z-index: 1; display: inline-block; }
+.bold::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: -5%;
+  width: 110%;
+  height: 0.35em;
+  background: #372ce9;
+  z-index: -1;
+  transform: rotate(-2deg);
+  clip-path: polygon(0% 10%, 5% 0%, 15% 12%, 25% 0%, 35% 10%, 45% 0%, 55% 12%, 65% 0%, 75% 10%, 85% 0%, 95% 12%, 100% 0%, 100% 90%, 95% 100%, 85% 92%, 75% 100%, 65% 90%, 55% 100%, 45% 92%, 35% 100%, 25% 85%, 15% 100%, 5% 90%, 0% 100%);
+  opacity: 0.9;
+}
+.word { font-family: 'OriginalCandy', sans-serif; font-style: normal; font-weight: 400; color: #902207; }
+.dot { color: #372ce9; }
+.letters > span:nth-child(5n + 1) { color: #372ce9; }
+.letters > span:nth-child(5n + 2) { color: #902207; }
+.letters > span:nth-child(5n + 3) { color: #15447f; }
+.letters > span:nth-child(5n + 4) { color: #250a54; }
+.letters > span:nth-child(5n + 5) { color: #313137; }
+:global(.dark) .headline { color: #fff; }
+:global(.dark) .bold { color: #ff8a75; }
+:global(.dark) .word { color: #ff6b4a; }
+:global(.dark) .letters > span { color: inherit; }
+.cursor { display: inline-block; margin-left: 0.05em; font-family: sans-serif; font-weight: 100; }
+.cta { border-radius: 14px; transition: border-radius 300ms ease, background-color 300ms ease, color 300ms ease, border-color 300ms ease; }
+.cta:hover, .cta:focus-visible { border-radius: 3px; }
+.secondary:hover, .secondary:focus-visible { background: #000; border-color: #000; color: #f5f2ea; }
+:global(.dark) .secondary:hover, :global(.dark) .secondary:focus-visible { background: var(--foreground); border-color: var(--foreground); color: var(--background); }
+@media (prefers-reduced-motion: reduce) { .cta { transition: none; } .cursor { display: none; } }
