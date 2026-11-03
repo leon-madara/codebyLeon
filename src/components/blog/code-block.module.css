@@ -1,0 +1,13 @@
+.panel { margin: 28px 0; border: 1px solid var(--border); border-left: 3px solid var(--signal); background: var(--card); min-width: 0; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 14px; border-bottom: 1px solid var(--border); background: color-mix(in srgb, var(--foreground) 4%, var(--card)); }
+.label, .copy, .footer { font-family: var(--font-geist-mono), monospace; font-size: 10px; text-transform: uppercase; letter-spacing: .08em; line-height: 1.5; }
+.label { color: var(--signal); }
+.label span { color: var(--muted-foreground); }
+.copy { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 6px 9px; border: 1px solid var(--border); border-radius: 3px; background: var(--background); cursor: pointer; flex-shrink: 0; }
+.copy:hover { color: var(--signal); border-color: var(--signal); }
+.panel .pre { margin: 0; padding: 14px 12px; border: 0; background-color: transparent; background-image: radial-gradient(circle, color-mix(in srgb, var(--foreground) 9%, transparent) .7px, transparent .8px); background-size: 16px 16px; font-size: 12px; line-height: 1.45; overflow-x: auto; white-space: normal; }
+.pre code { display: block; font-size: inherit; line-height: inherit; }
+.line { display: flex; gap: 16px; min-height: 1.45em; padding: 0 3px; white-space: pre; }
+.number { width: 24px; flex-shrink: 0; text-align: right; user-select: none; color: var(--muted-foreground); opacity: .65; }
+.footer { display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--border); padding: 7px 14px; color: var(--muted-foreground); font-size: 9px; }
+@media (max-width: 600px) { .label { font-size: 9px; } .label span { display: block; } .panel .pre { padding: 12px 8px; font-size: 11px; } .line { gap: 12px; } }

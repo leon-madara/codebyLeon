@@ -1,0 +1,71 @@
+.root {
+  width: 100%;
+}
+
+.list {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: min(100%, 760px);
+  border: 1px solid var(--border);
+  background: var(--background);
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 16px;
+  min-height: 76px;
+  padding: 20px 24px;
+  text-align: left;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+  cursor: pointer;
+}
+
+.trigger + .trigger {
+  border-left: 1px solid var(--border);
+}
+
+.trigger:hover,
+.trigger[data-state="active"] {
+  color: var(--signal);
+  background: color-mix(in srgb, var(--signal) 5%, transparent);
+}
+
+.index {
+  font-size: 10px;
+  font-weight: 400;
+  opacity: .6;
+}
+
+.indicator {
+  position: absolute;
+  left: 0;
+  bottom: -1px;
+  width: 50%;
+  height: 2px;
+  background: var(--signal);
+  pointer-events: none;
+}
+
+.panel {
+  margin-top: 40px;
+  outline: none;
+}
+
+@media (max-width: 639px) {
+  .trigger {
+    gap: 8px;
+    min-height: 88px;
+    padding: 16px 12px;
+    font-size: 10px;
+    letter-spacing: .1em;
+  }
+}

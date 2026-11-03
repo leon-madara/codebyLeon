@@ -1,0 +1,27 @@
+.selector { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 10px 20px 14px; }
+.label { width: 118px; font-family: var(--font-geist-mono), monospace; font-size: 10px; line-height: 1.6; text-transform: uppercase; letter-spacing: .08em; }
+.label span { display: block; font-size: 9px; color: var(--muted-foreground); letter-spacing: 0; text-transform: none; }
+.controls { display: flex; align-items: center; gap: 4px; }
+@media (min-width: 1024px) {
+  .caseStudy { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .caseStudy .label { width: auto; justify-self: end; white-space: nowrap; }
+  .caseStudy .count { justify-self: start; }
+}
+.arrow { display: grid; place-items: center; width: 44px; height: 44px; cursor: pointer; color: var(--foreground); transition: color .2s; }
+.arrow:hover:not(:disabled) { color: var(--signal); }
+.arrow:disabled { opacity: .25; cursor: default; }
+.number { display: grid; place-items: center; width: 52px; height: 52px; border: 1px solid var(--signal); background: var(--card); color: var(--foreground); font-family: var(--font-space-grotesk), sans-serif; font-weight: 600; font-size: 28px; line-height: 1; cursor: pointer; touch-action: pan-y; user-select: none; }
+.number:hover:not(:disabled) { background: color-mix(in srgb, var(--signal) 7%, var(--card)); }
+.number:disabled { cursor: wait; }
+.count { min-width: 48px; font-family: var(--font-geist-mono), monospace; font-size: 11px; color: var(--muted-foreground); white-space: nowrap; }
+.selector button:focus-visible, .list a:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+.dialog { max-height: min(80dvh, 700px); overflow-y: auto; border-radius: 3px; }
+.list { list-style: none; margin: 8px 0 0; padding: 0; border-top: 1px solid var(--border); }
+.list a { display: flex; align-items: center; gap: 14px; padding: 16px 8px; border-bottom: 1px solid var(--border); font-size: 14px; line-height: 1.5; }
+.list a:hover, .list a[aria-current] { background: color-mix(in srgb, var(--signal) 7%, transparent); }
+.list small { display: block; color: var(--muted-foreground); font-family: var(--font-geist-mono), monospace; font-size: 9px; text-transform: uppercase; letter-spacing: .08em; margin-bottom: 4px; }
+.listNumber { font-family: var(--font-geist-mono), monospace; font-size: 11px; color: var(--signal); }
+.list a > :nth-child(2) { flex: 1; }
+.list svg { flex-shrink: 0; color: var(--signal); }
+@media (max-width: 600px) { .selector { gap: 12px; padding: 8px 12px 12px; } .label { width: 84px; } }
+@media (max-width: 380px) { .label { width: 68px; font-size: 9px; } .label span { display: none; } .count { font-size: 10px; min-width: 42px; } }

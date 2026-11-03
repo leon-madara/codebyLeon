@@ -1,0 +1,5 @@
+Nexa Rust Slab - Black Shadow 01
+Source: user-supplied font library, nexa-rust.slab-black-shadow-01.otf
+SHA256: 01657b43fc88a2731436344faeee9f4ccdfadaebeeb8b926ddee6ec3369e6a4a
+Selected in finalized Reality Check tuner snapshot 2026-10-19T20:31:58.070Z.
+No accompanying license file was present in the supplied library.
