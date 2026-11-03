@@ -1,0 +1,417 @@
+{
+  "sourceCommit": "ad9998a1cad2b89f42438bc5dd98cad5bbc56bbf",
+  "sourceFile": "src/data/blogPosts.ts",
+  "sourceSha256": "8d9dc6ad6f60417d32992792d092e68d8fdc893238657515fb56268bd74c3ca5",
+  "conversion": {
+    "format": "webp",
+    "quality": 78,
+    "effort": 6,
+    "widths": [
+      480,
+      800,
+      1200
+    ],
+    "withoutEnlargement": true,
+    "sharpVersion": "0.34.5",
+    "webpVersion": "1.6.0"
+  },
+  "contentPolicy": "All six posts and metadata retained verbatim; imported image references replaced with local WebP URLs. Original image bytes are extracted from the pinned Git commit and retained in the operating-system temporary directory when generating.",
+  "assets": [
+    {
+      "sourcePath": "src/assets/images/blog/article-website-mistakes.png",
+      "original": {
+        "format": "png",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 852458,
+        "sha256": "9b63cdc40d064fbcefa464ea1b819612b5092075af855b7c4fe19a2309f85bab"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article-website-mistakes-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 34966,
+          "sha256": "5bd9fea217e9175e1edc23072584a7248485e55b952671cc8a16e8f68c53b3db"
+        },
+        {
+          "src": "/images/articles/article-website-mistakes-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 72892,
+          "sha256": "c2b91b7d6f54a5ffe87b9a21cb8ef107bee1c8376ed665bd00b6d2c93f21a5db"
+        },
+        {
+          "src": "/images/articles/article-website-mistakes-1200.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 130924,
+          "sha256": "a8351b7f4c19b8f09e2459275d522bbfe73ddfd08a2e6855dc03757c863e4cb0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article-website-transformation.png",
+      "original": {
+        "format": "png",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 912855,
+        "sha256": "b9c089d234ff1c5b88c08a7f7dfb50358763aa2dab37812f281b8371cbd6615b"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article-website-transformation-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 25530,
+          "sha256": "c84ea3c2bed48f7f70c399e8259e7d2abc8e84b67c3295dd575af0acbb67ba9a"
+        },
+        {
+          "src": "/images/articles/article-website-transformation-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 62622,
+          "sha256": "55ab26817ba722a9098222dc5857305ab975e26bbf24599c07d1191526bd1fc5"
+        },
+        {
+          "src": "/images/articles/article-website-transformation-1200.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 120432,
+          "sha256": "c9da9363b1b006e610c87ed2b40b71919ecc146f9929edbc097f53c4a491c511"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article-website-inquiries.png",
+      "original": {
+        "format": "png",
+        "width": 1200,
+        "height": 1200,
+        "bytes": 792222,
+        "sha256": "d8e06d17b0488772c3454bccad737f639d6711f1f0e1e7fb155855a679475454"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article-website-inquiries-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 17744,
+          "sha256": "3fb75585321d3c4514eb0da73221d371dcacef3501e8c4f80da1fcd3a6e36e92"
+        },
+        {
+          "src": "/images/articles/article-website-inquiries-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 39808,
+          "sha256": "37e677668abd187a2bb6c41959ee564ef980213b5d643b63c5440159b0cffe2b"
+        },
+        {
+          "src": "/images/articles/article-website-inquiries-1200.webp",
+          "width": 1200,
+          "height": 1200,
+          "bytes": 74624,
+          "sha256": "cd6993f1a7ed8bd807df0c29221fca61da96f79d8f0bee86a213aa4caf88861c"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article1-architectural-glass.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 694995,
+        "sha256": "909b45e200ed726779a9563c9418931efdee42723c9f81dcc604f4edd202eaf4"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article1-architectural-glass-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 17068,
+          "sha256": "ce2de29169517ba9b8a82cb9bc19dfa3bf38824f781bb544779cb47af0759592"
+        },
+        {
+          "src": "/images/articles/article1-architectural-glass-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 35276,
+          "sha256": "6cca2593c9977c5fa369bd008f917d62996e016b4d9db720ff8e7c07c77fea17"
+        },
+        {
+          "src": "/images/articles/article1-architectural-glass-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 50668,
+          "sha256": "8c13620cdf037469ba85684b204fac8f8eaed41c5342cfed6c28f33bbfd224c0"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article1-mechanical-joints.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 669496,
+        "sha256": "c7f31a275bf41d84daa57a8e7f360302855d729d54e3897524215a72e8cb008e"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article1-mechanical-joints-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 13702,
+          "sha256": "32c1fd79f0879f27f07083d23dbd490694d92ee1099f8e17c814081bc5885706"
+        },
+        {
+          "src": "/images/articles/article1-mechanical-joints-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 31532,
+          "sha256": "b49c61804d4d4e57c96c41f774c98babcc1cd4638ba83a29044b80098f43dc6b"
+        },
+        {
+          "src": "/images/articles/article1-mechanical-joints-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 47474,
+          "sha256": "ed02315b397c389ec5f7d19fb24951a665eca9e06c341b2aa6f09a124fb6abfa"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article1-abstract-titanium.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 727969,
+        "sha256": "a3fe1262f1755da96226c20fa4711559e70a65e0b32c3ffd3965e44ef691fc76"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article1-abstract-titanium-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 21058,
+          "sha256": "e652684149ca7a668ff6ccb1027ff104ff7ac2f8ae72b7c7f24d1147c6dc2aae"
+        },
+        {
+          "src": "/images/articles/article1-abstract-titanium-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 44324,
+          "sha256": "172166769eab42a0d528b7759c6eb488dbbdc0c7e25025ae9c68640cc02be325"
+        },
+        {
+          "src": "/images/articles/article1-abstract-titanium-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 62896,
+          "sha256": "ad0e958ad71fa5bb80d210da4aaaed52f0000d4c5198c237bae93d8f012c4d63"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article2-brutalist-desert.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 681438,
+        "sha256": "fcf8a886860c754dd8433124d1cfc9d1708690d65bae289de97073ebc638b614"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article2-brutalist-desert-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 10404,
+          "sha256": "3b8408ea20944b37b16365048c9bd39fba1c45e3d88fe48ff111676b6ede94cc"
+        },
+        {
+          "src": "/images/articles/article2-brutalist-desert-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 24340,
+          "sha256": "dba583b0ab5f479ab31f583dfc399cc3ca71490a77135f4745d73a542de1b004"
+        },
+        {
+          "src": "/images/articles/article2-brutalist-desert-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 36250,
+          "sha256": "933ec3b40ad346f1beeec23ed9c82657dfdcc4ece708315a2c05f457538acd52"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article2-analog-compass.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 710309,
+        "sha256": "053d386ab29a9c34867521e8c3933c2b701d804525043f30abd31952d355a608"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article2-analog-compass-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 19190,
+          "sha256": "fc96add4c62b05585c65ce137e1790370309f055f2ee80988900ff3c58aad948"
+        },
+        {
+          "src": "/images/articles/article2-analog-compass-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 42266,
+          "sha256": "5945225dc4249afaa583797bb360ae33ffd80faff0252a81f1f1d94761b7d619"
+        },
+        {
+          "src": "/images/articles/article2-analog-compass-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 59570,
+          "sha256": "bac5a7e139af27610afc3b96681a4707d369398ab60f658ff3428a00b8f48045"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article2-obsidian-crystal.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 774932,
+        "sha256": "95b06942d0ca067109ef01318187d570205ce29a892f43bff2d842ca995b197f"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article2-obsidian-crystal-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 31922,
+          "sha256": "c53fbc1a63e31e8866e4b9070d212ebb17ac58d992958c1a544b3167fbe528e2"
+        },
+        {
+          "src": "/images/articles/article2-obsidian-crystal-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 67310,
+          "sha256": "b4f79161a16e4dd960d9deaa207bb9a308014e8978b854714519ee41494005da"
+        },
+        {
+          "src": "/images/articles/article2-obsidian-crystal-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 95754,
+          "sha256": "57de63e599aa6281b62834f7351beb16e06df54dde185268ef34ba19a7711b98"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article3-polished-stone.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 611748,
+        "sha256": "c06d789b2c815a39ac728697b69509bb2bfd9a2f11387b1e20b56c5bd7525745"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article3-polished-stone-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 10206,
+          "sha256": "af5584ccd4692beb45bc2a0d9904da66a61e8e1c4432b87642a4f167593048a5"
+        },
+        {
+          "src": "/images/articles/article3-polished-stone-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 22208,
+          "sha256": "bb6fd11a8d41ce7fd9ebe37b76c9f028499c3331aae8966131fddbd96b245a7f"
+        },
+        {
+          "src": "/images/articles/article3-polished-stone-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 33316,
+          "sha256": "313549f31341f102205e4ebcaa0173d63297636f1af7c2717e867cf1862d3156"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article3-concrete-archway.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 702639,
+        "sha256": "f9861ce1f5529dfeeeb63eb294f16c5a2d80e535e19f88297fc82f48d2fc802a"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article3-concrete-archway-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 12658,
+          "sha256": "b14fc05db66de2d614b189125b9e7869f28d22c0ac45eee02f68041ef0305897"
+        },
+        {
+          "src": "/images/articles/article3-concrete-archway-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 28648,
+          "sha256": "171bb86ab1fb3b693efdbc830b800375a8a025d7aa055ad6a0b0768edb42cc62"
+        },
+        {
+          "src": "/images/articles/article3-concrete-archway-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 41474,
+          "sha256": "194a879facb47db6a24ef2e4375a40fa358ffd8248cc3c81571855a3e6846e41"
+        }
+      ]
+    },
+    {
+      "sourcePath": "src/assets/images/blog/article3-metallic-shield.png",
+      "original": {
+        "format": "jpeg",
+        "width": 1024,
+        "height": 1024,
+        "bytes": 632321,
+        "sha256": "acc63ba7d3c2d484eb81fb92e677b24bb9b7d25e7df176634af57fb22b0d7895"
+      },
+      "derivatives": [
+        {
+          "src": "/images/articles/article3-metallic-shield-480.webp",
+          "width": 480,
+          "height": 480,
+          "bytes": 6934,
+          "sha256": "0d91a41f09d4bb7f58a01e9f6a81a7bcfee51c47db4640c275bf58e7bfba9119"
+        },
+        {
+          "src": "/images/articles/article3-metallic-shield-800.webp",
+          "width": 800,
+          "height": 800,
+          "bytes": 13690,
+          "sha256": "f30e2d30ef31f5a94c4b1f3cd93fe4ae4cc810306a475ad0d6bf6c9f47b54a0f"
+        },
+        {
+          "src": "/images/articles/article3-metallic-shield-1200.webp",
+          "width": 1024,
+          "height": 1024,
+          "bytes": 19268,
+          "sha256": "f341c431eefb6d20dc1554ee0b41a474fc74be7276e5229acc6e2da1ffe0a884"
+        }
+      ]
+    }
+  ]
+}

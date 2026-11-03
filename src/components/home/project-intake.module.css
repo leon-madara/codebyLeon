@@ -1,0 +1,157 @@
+.heading:focus-visible { outline: none; }
+
+.page {
+  --intake-footer-space: 7rem;
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  overflow-x: clip;
+  padding-bottom: calc(var(--intake-footer-space) + env(safe-area-inset-bottom));
+  background: var(--background);
+}
+.page[data-contact-step="true"] { --intake-footer-space: 9rem; }
+.contactHelp { min-height: 1.25rem; margin-bottom: 0.5rem; text-align: center; color: var(--muted-foreground); font-size: 12px; line-height: 1.25rem; }
+
+.main {
+  position: relative;
+  display: grid;
+  align-items: center;
+  min-height: calc(100svh - 5rem - 5.25rem - var(--intake-footer-space) - env(safe-area-inset-bottom));
+  padding: clamp(2rem, 5vh, 4rem) 1.5rem;
+}
+
+.content { width: min(100%, 46rem); margin-inline: auto; }
+
+.footer {
+  position: fixed;
+  z-index: 20;
+  inset: auto 0 0;
+  border-top: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 78%, transparent);
+  backdrop-filter: blur(24px);
+  padding: 1rem 1.5rem calc(0.75rem + env(safe-area-inset-bottom));
+}
+
+.footerInner { width: min(100%, 46rem); margin-inline: auto; }
+
+.continueButton {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  width: min(100%, 20rem);
+  min-height: 48px;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid color-mix(in srgb, var(--signal) 70%, transparent);
+  border-radius: 3px;
+  background: color-mix(in srgb, var(--signal) 94%, transparent);
+  color: var(--signal-foreground);
+  backdrop-filter: blur(5px);
+  transition: background-color 180ms ease, box-shadow 180ms ease;
+}
+.continueButton:not(:disabled):hover { box-shadow: 0 3px 14px color-mix(in srgb, var(--signal) 20%, transparent); }
+.continueButton:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+.continueLabel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.continueCircles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  /* Clear the label's reading area while colour drifts at the edges. */
+  mask-image: linear-gradient(90deg, black, transparent 30%, transparent 70%, black);
+}
+.continueCircles > span {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  filter: blur(4px);
+  opacity: 0.32;
+  animation: circleFloat 6s ease-in-out infinite alternate;
+}
+/* Colours sampled from the original-logo.svg; orange remains the button base. */
+.continueCircles > span:nth-child(1) { left: -18px; top: -28px; background: #2380d9; animation-duration: 5.2s; }
+.continueCircles > span:nth-child(2) { left: 18%; bottom: -44px; background: #fec536; animation-duration: 6.5s; animation-delay: -2s; }
+.continueCircles > span:nth-child(3) { right: 17%; top: -46px; background: #fd743e; animation-duration: 4.8s; animation-delay: -3s; }
+.continueCircles > span:nth-child(4) { right: -22px; bottom: -30px; background: #2380d9; animation-duration: 7s; animation-delay: -4s; }
+.continueCircles > span:nth-child(5) { left: 48%; bottom: -56px; background: #fec536; animation-duration: 5.8s; animation-delay: -1s; }
+.continueButton:disabled { cursor: not-allowed; background: color-mix(in srgb, var(--signal) 45%, transparent); }
+.continueButton:disabled .continueLabel { opacity: 0.65; }
+.continueButton:disabled .continueCircles { opacity: 0.45; }
+.continueButton:disabled .continueCircles > span { animation-play-state: paused; }
+@keyframes circleFloat {
+  from { transform: translate3d(-14px, -7px, 0) scale(0.85); }
+  to { transform: translate3d(22px, 17px, 0) scale(1.12); }
+}
+.about { margin-top: 0.75rem; text-align: center; }
+.about summary { cursor: pointer; width: fit-content; margin-inline: auto; }
+.aboutPanel {
+  position: absolute;
+  inset: auto 1.5rem calc(100% + 0.75rem);
+  width: min(calc(100% - 3rem), 28rem);
+  max-height: calc(100svh - 12rem);
+  overflow-y: auto;
+  margin-inline: auto;
+  padding: 1.5rem;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--background) 95%, transparent);
+  backdrop-filter: blur(24px);
+}
+
+.atmosphere { position: fixed; z-index: -1; inset: 0; overflow: hidden; pointer-events: none; }
+.atmosphere > span { position: absolute; border-radius: 50%; filter: blur(60px); }
+.orangeWash {
+  width: max(38rem, 58vw); height: max(38rem, 58vw);
+  top: -30%; left: -18%;
+  background: color-mix(in srgb, var(--signal) 18%, transparent);
+  animation: floatOrange 24s ease-in-out infinite alternate;
+}
+.blueWash {
+  width: max(30rem, 42vw); height: max(30rem, 42vw);
+  right: -20%; bottom: -25%;
+  background: color-mix(in srgb, #2380d9 17%, transparent);
+  animation: floatBlue 30s ease-in-out infinite alternate;
+}
+.softWash {
+  width: 32vw; height: 32vw; left: 40%; top: 35%;
+  background: color-mix(in srgb, var(--signal) 7%, transparent);
+  animation: floatOrange 34s ease-in-out -12s infinite alternate-reverse;
+}
+.frost { position: absolute; inset: 0; background: color-mix(in srgb, var(--background) 30%, transparent); backdrop-filter: blur(28px); }
+.grid { position: absolute; inset: 0; opacity: 0.3; mask-image: linear-gradient(black, transparent 85%); }
+
+.cursor {
+  position: fixed; z-index: 100; top: 0; left: 0;
+  width: 14px; height: 14px; border-radius: 50%;
+  pointer-events: none; opacity: 0;
+  background: var(--signal);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--background) 30%, transparent);
+  transition: background-color 300ms ease, opacity 180ms ease;
+}
+
+@keyframes floatOrange { to { transform: translate3d(20vw, 13vh, 0) scale(1.12); } }
+@keyframes floatBlue { to { transform: translate3d(-18vw, -20vh, 0) scale(0.9); } }
+
+@media (max-width: 639px) {
+  .main { padding: 2rem 1rem; }
+  .footer { padding-inline: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .continueCircles > span { animation: none; }
+  .continueButton { transition: none; }
+  .atmosphere > span { animation: none; }
+  .cursor { display: none; }
+}
+@media (hover: none), (pointer: coarse) { .cursor { display: none; } }

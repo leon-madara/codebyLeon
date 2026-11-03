@@ -1,0 +1,187 @@
+{
+  "revision": "ad9998a1cad2b89f42438bc5dd98cad5bbc56bbf",
+  "records": [
+    {
+      "source": "public/portfolio-legit-driver.png",
+      "dest": "public/images/work/screenshots/legit-driver.png",
+      "sha256": "3ca9aba3e9ac3719769012ab0d1a0a00307da292309340abc6ba3264487f5561"
+    },
+    {
+      "source": "public/portfolio-legit-driver-mobile.png",
+      "dest": "public/images/work/screenshots/legit-driver-mobile.png",
+      "sha256": "50b8f3235379589c10c46d020ece3c8763df44dbdd7f3e17502f46e7af52f714"
+    },
+    {
+      "source": "public/portfolio-legit-tracking.png",
+      "dest": "public/images/work/screenshots/legit-tracking.png",
+      "sha256": "eba46b43f005b56056234b4c3b7bb8e18f2d2cd38a8171866b870833451afe44"
+    },
+    {
+      "source": "public/portfolio-legit-tracking-mobile.png",
+      "dest": "public/images/work/screenshots/legit-tracking-mobile.png",
+      "sha256": "e7b5e2b96054161d2194bda55020fea16e34203581de4a338a435480f85337c8"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-home-hero.png",
+      "dest": "public/images/work/screenshots/delivah-home-hero.png",
+      "sha256": "ba9479bee0eda65f3ba7838200e1cfc0fe7f19229da56847d49ebd7941b47e3a"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-home-hero-mobile.png",
+      "dest": "public/images/work/screenshots/delivah-home-hero-mobile.png",
+      "sha256": "7d1f7f31588361b8442e59f8a915f30d7ba32b0b10efa8026f50e4db6fdca291"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-register-step-1.png",
+      "dest": "public/images/work/screenshots/delivah-register-step-1.png",
+      "sha256": "b0736f5e698e8cd423d381db6aaac80c991b78ecaebf10660388548171d47cbb"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-register-step-1-mobile.png",
+      "dest": "public/images/work/screenshots/delivah-register-step-1-mobile.png",
+      "sha256": "da63d8b6cc179f8439a4bf7722d1c275aeac397532115928ab5a875c290b085e"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-register-document-upload.png",
+      "dest": "public/images/work/screenshots/delivah-register-document-upload.png",
+      "sha256": "99cf65f79682ebd4727efb00d7d4e2114625f348243ca64f6e90800298e142af"
+    },
+    {
+      "source": "public/portfolio/case-studies/delivah/delivah-register-document-upload-mobile.png",
+      "dest": "public/images/work/screenshots/delivah-register-document-upload-mobile.png",
+      "sha256": "609ce82a55710d6b596220f8b786aa16487854f584d50127d91bdd7c8fe02c4a"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-home-hero.png",
+      "dest": "public/images/work/screenshots/kossy-home-hero.png",
+      "sha256": "8556729d78e34339cc8d761fa1b171d55a9d64947307757021e6968eb5362f3f"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-home-hero-mobile.png",
+      "dest": "public/images/work/screenshots/kossy-home-hero-mobile.png",
+      "sha256": "1c5afdf68a1f64bb92a5a33203f42e489c3428e2dd15b5979d76a77105343ba7"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-about-values.png",
+      "dest": "public/images/work/screenshots/kossy-about-values.png",
+      "sha256": "94f6397b85709672bbd138001d596f74d31cb98ab3c6649bcd022cc357c08ed1"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-about-values-mobile.png",
+      "dest": "public/images/work/screenshots/kossy-about-values-mobile.png",
+      "sha256": "014377720fd7a0d8d4f120e19e5a8107e7553a0b2a41c798dcb5f12d74cc7489"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-work-index.png",
+      "dest": "public/images/work/screenshots/kossy-work-index.png",
+      "sha256": "ab5512886a6112aa831ede71ae5ab447d7f4c9834c9fe06edd46cb908f7e14b4"
+    },
+    {
+      "source": "public/portfolio/case-studies/kossy/kossy-work-index-mobile.png",
+      "dest": "public/images/work/screenshots/kossy-work-index-mobile.png",
+      "sha256": "21fb2baa57202708cc9dbc78f5dc5fea66bdeac8c4896e6db7f7cc887c31047c"
+    },
+    {
+      "source": "public/portfolio-legit-lookup.png",
+      "dest": "public/images/work/screenshots/legit-lookup.png",
+      "sha256": "5148e6e69402c5e5ad74aa9b53df924732d483cef9a789dd7e89d79d25c7a53c"
+    },
+    {
+      "source": "public/portfolio-legit-lookup-mobile.png",
+      "dest": "public/images/work/screenshots/legit-lookup-mobile.png",
+      "sha256": "b938be034e13aae57a3fa652aa834ddc01c82fdea5a8b714a94bcc5fd33ea6dc"
+    }
+  ],
+  "placements": [
+    {
+      "template": "tpl-proj-0",
+      "panel": "story",
+      "desktop": "/images/work/screenshots/legit-lookup.png",
+      "mobile": "/images/work/screenshots/legit-lookup-mobile.png",
+      "title": "Customer order lookup",
+      "caption": "Original project screenshot of the customer delivery lookup form.",
+      "afterSection": "THE WHITEBOARD IS GONE",
+      "chapterIntro": "The project connects the dispatch team, drivers and customers through a dashboard, driver interface and delivery-tracking pages."
+    },
+    {
+      "template": "tpl-proj-0",
+      "panel": "tech",
+      "desktop": "/images/work/screenshots/legit-driver.png",
+      "mobile": "/images/work/screenshots/legit-driver-mobile.png",
+      "title": "Driver workflow demo",
+      "caption": "Original project screenshot showing a sample delivery and driver status controls.",
+      "afterSection": "INSTANT QUOTE-TO-MANIFEST BROADCAST",
+      "chapterIntro": "This chapter looks at assignment and driver updates. The screenshot shows the driver interface using sample delivery data."
+    },
+    {
+      "template": "tpl-proj-0",
+      "panel": "ops",
+      "desktop": "/images/work/screenshots/legit-tracking.png",
+      "mobile": "/images/work/screenshots/legit-tracking-mobile.png",
+      "title": "Delivery tracking demo",
+      "caption": "Original project screenshot of the tracking demo, with a delivery status card and history timeline.",
+      "afterSection": "CUSTOMER DELIVERY STATUS AND TRACKING",
+      "chapterIntro": "Customers can look up a delivery and follow its status. The screenshot shows the project’s tracking demo."
+    },
+    {
+      "template": "tpl-proj-1",
+      "panel": "story",
+      "desktop": "/images/work/screenshots/delivah-home-hero.png",
+      "mobile": "/images/work/screenshots/delivah-home-hero-mobile.png",
+      "title": "Freight website homepage",
+      "caption": "Original project screenshot of the Delivah Dispatch homepage.",
+      "afterSection": "A HIGH-TRUST FUNNEL &amp; GUIDED CARRIER VAULT",
+      "chapterIntro": "A freight website leads carriers into a registration flow for company details and supporting documents."
+    },
+    {
+      "template": "tpl-proj-1",
+      "panel": "tech",
+      "desktop": "/images/work/screenshots/delivah-register-step-1.png",
+      "mobile": "/images/work/screenshots/delivah-register-step-1-mobile.png",
+      "title": "Carrier registration — company information",
+      "caption": "Original project screenshot of the first registration step and its company-information fields.",
+      "afterSection": "PRE-QUALIFYING CARRIERS &amp; ENFORCING COMPLETE PACKETS",
+      "chapterIntro": "The intake starts with company information and continues through the required registration steps."
+    },
+    {
+      "template": "tpl-proj-1",
+      "panel": "ops",
+      "desktop": "/images/work/screenshots/delivah-register-document-upload.png",
+      "mobile": "/images/work/screenshots/delivah-register-document-upload-mobile.png",
+      "title": "Carrier registration — document upload",
+      "caption": "Original project screenshot of the document requirements and upload step.",
+      "afterSection": "RELATIONAL CARRIER + VAULT BINDING WITH INSTANT ALERT",
+      "chapterIntro": "Document uploads form part of the carrier registration record before staff review."
+    },
+    {
+      "template": "tpl-proj-2",
+      "panel": "story",
+      "desktop": "/images/work/screenshots/kossy-home-hero.png",
+      "mobile": "/images/work/screenshots/kossy-home-hero-mobile.png",
+      "title": "Personal website homepage",
+      "caption": "Original project screenshot of Kossy Langat’s homepage and introduction.",
+      "afterSection": "DISCOVERING &#x27;01.0 // THE ORCHESTRATOR&#x27;",
+      "chapterIntro": "The website brings a personal introduction, professional experience and project portfolio into one place."
+    },
+    {
+      "template": "tpl-proj-2",
+      "panel": "tech",
+      "desktop": "/images/work/screenshots/kossy-about-values.png",
+      "mobile": "/images/work/screenshots/kossy-about-values-mobile.png",
+      "title": "About page — identity and values",
+      "caption": "Original project screenshot of the About page, combining a portrait with introductory copy.",
+      "afterSection": "TYPING A MULTIDISCIPLINARY EXECUTIVE IDENTITY",
+      "chapterIntro": "This chapter explores how the website presents a consistent personal identity across its pages."
+    },
+    {
+      "template": "tpl-proj-2",
+      "panel": "ops",
+      "desktop": "/images/work/screenshots/kossy-work-index.png",
+      "mobile": "/images/work/screenshots/kossy-work-index-mobile.png",
+      "title": "Project portfolio index",
+      "caption": "Original project screenshot of the Work page introducing the project portfolio.",
+      "afterSection": "FILTERABLE STRUCTURAL &amp; TURNAROUND RECORD",
+      "chapterIntro": "The project index gives visitors a place to browse the work presented on the website."
+    }
+  ]
+}

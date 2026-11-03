@@ -1,0 +1,254 @@
+@font-face {
+  font-family: 'OriginalGladolia';
+  src: url('/fonts/original-hero/gladolia.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+.titleLine {
+  font-family: 'OriginalGladolia', serif;
+  font-weight: 400;
+}
+
+.titleWord { display: inline-block; }
+
+.section {
+  position: relative;
+  scroll-margin-top: 72px;
+}
+
+.frame {
+  overflow: clip;
+}
+
+.servicesPanel {
+  position: relative;
+  background: var(--secondary);
+}
+
+.panel {
+  width: 100%;
+  padding: 104px 24px 56px;
+}
+
+.intro {
+  position: relative;
+  isolation: isolate;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  min-height: 100svh;
+}
+
+.particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+}
+
+.introContent,
+.comparisonContent {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 768px;
+}
+
+.row {
+  position: relative;
+}
+
+.number {
+  display: inline-block;
+}
+
+.steps { list-style: none; }
+.stepRow { position: relative; }
+.stepRow:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 19px;
+  top: 46px;
+  bottom: 4px;
+  width: 1px;
+  background: color-mix(in srgb, var(--background) 22%, transparent);
+  pointer-events: none;
+}
+.stepButton {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+  padding-block: 8px 20px;
+  text-align: left;
+  cursor: pointer;
+}
+.stepButton:focus-visible { outline: 2px solid #3ecf8c; outline-offset: 4px; }
+.stepBadge {
+  display: grid;
+  place-items: center;
+  flex: 0 0 40px;
+  height: 40px;
+  border: 1px solid color-mix(in srgb, var(--background) 30%, transparent);
+  border-radius: 50%;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: color-mix(in srgb, var(--background) 65%, transparent);
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease;
+}
+.stepText {
+  flex: 1;
+  padding: 8px 0 12px 12px;
+  border-left: 1px solid transparent;
+  font-size: 14px;
+  line-height: 1.625;
+  color: color-mix(in srgb, var(--background) 65%, transparent);
+  transition: color .25s ease, border-color .25s ease;
+}
+.stepRow[data-active='true'] .stepBadge { background: #3ecf8c; color: #000; border-color: #3ecf8c; }
+.stepRow[data-active='true'] .stepText { color: var(--background); border-color: #3ecf8c; }
+@media (prefers-reduced-motion: reduce) {
+  .stepBadge, .stepText { transition: none; }
+}
+
+.continuation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 40px;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.continuation svg {
+  color: var(--signal);
+  transform: rotate(90deg);
+}
+
+.exit {
+  margin-top: 32px;
+}
+
+@media (min-width: 1024px) {
+  .problemColumn { padding-top: 72px; }
+  .intro { padding-block: 72px 0; }
+  .introContent { max-width: 900px; text-align: center; }
+  .heading { max-width: none; align-items: center; }
+  .continuation { justify-content: center; }
+}
+
+@media (min-width: 1440px) {
+  .comparisonContent { max-width: 1600px; }
+  .comparisonGrid { grid-template-columns: 42% 58%; }
+  .divider { left: 42%; }
+}
+
+@media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+  .continuation svg {
+    transform: none;
+  }
+
+  .section {
+    scroll-margin-top: 0;
+  }
+
+  .frame {
+    height: 100svh;
+    overflow: visible;
+  }
+
+  .servicesPanel {
+    position: absolute;
+    inset: 0 0 auto;
+    z-index: 2;
+    min-height: calc(100svh - 72px);
+    will-change: transform, clip-path;
+  }
+
+  .track {
+    display: flex;
+    width: 200%;
+    height: 100%;
+    overflow: clip;
+  }
+
+  .panel {
+    flex: 0 0 50%;
+    width: 50%;
+    height: 100%;
+  }
+
+  .intro {
+    min-height: 0;
+  }
+
+  .comparison {
+    padding-top: 104px;
+    padding-bottom: 40px;
+  }
+}
+
+@media (max-width: 639px) {
+  .panel {
+    padding-inline: 16px;
+  }
+
+  .intro {
+    padding-block: 112px 72px;
+  }
+
+  .comparison {
+    padding-top: 64px;
+  }
+}
+
+/* Finalized Reality Check intro tuner, 2026-10-19. Keep comparison type unchanged. */
+@font-face {
+  font-family: 'Nexa Rust Slab Black Shadow 01';
+  src: url('/fonts/nexa-rust-slab-black-shadow-01.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Exact static intro heading; full face above covers future characters.
+   Regenerate with scripts/optimize-fonts.py when this heading changes. */
+@font-face {
+  font-family: 'Nexa Rust Slab Black Shadow 01';
+  src: url('/fonts/nexa-rust-slab-black-shadow-01-heading.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020, U+002E, U+0042, U+0045, U+0049, U+0059, U+0061, U+0062, U+0064, U+0065, U+0068, U+0069, U+006C, U+006E, U+006F, U+0072, U+0073, U+0074, U+0075;
+}
+
+.introTitle {
+  font-family: 'Nexa Rust Slab Black Shadow 01', serif;
+  font-weight: 400;
+  font-synthesis: none;
+  font-size: clamp(1.875rem, 5vw, 2.8125rem);
+  line-height: 1.2333333333;
+}
+
+.introQuestion {
+  font-size: clamp(1.875rem, 5vw, 2.875rem);
+  line-height: 1.1269565217;
+  color: #ad3519;
+}
+
+:global(.dark) .introQuestion { color: #ff6226; }
+
+.continuation > span { color: #2380d9; }

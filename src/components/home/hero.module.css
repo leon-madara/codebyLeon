@@ -1,0 +1,74 @@
+@font-face {
+  font-family: 'OriginalQuikhand';
+  src: url('/fonts/original-hero/quikhand.woff2') format('woff2');
+  font-display: swap;
+}
+@font-face {
+  font-family: 'OriginalCandy';
+  src: url('/fonts/original-hero/candy.woff2') format('woff2');
+  font-display: swap;
+}
+.headline { font-family: 'OriginalHandwritten', sans-serif; font-weight: 400; color: #09054d; }
+.bold { font-family: 'OriginalQuikhand', sans-serif; text-transform: uppercase; color: #fc5b45; position: relative; z-index: 1; display: inline-block; }
+.bold::before {
+  content: '';
+  position: absolute;
+  bottom: 5px;
+  left: -5%;
+  width: 110%;
+  height: 0.35em;
+  background: #372ce9;
+  z-index: -1;
+  transform: rotate(-2deg);
+  clip-path: polygon(0% 10%, 5% 0%, 15% 12%, 25% 0%, 35% 10%, 45% 0%, 55% 12%, 65% 0%, 75% 10%, 85% 0%, 95% 12%, 100% 0%, 100% 90%, 95% 100%, 85% 92%, 75% 100%, 65% 90%, 55% 100%, 45% 92%, 35% 100%, 25% 85%, 15% 100%, 5% 90%, 0% 100%);
+  opacity: 0.9;
+}
+.word { font-family: 'OriginalCandy', sans-serif; font-style: normal; font-weight: 400; color: #902207; }
+.dot { color: #372ce9; }
+.letters > span:nth-child(5n + 1) { color: #372ce9; }
+.letters > span:nth-child(5n + 2) { color: #902207; }
+.letters > span:nth-child(5n + 3) { color: #15447f; }
+.letters > span:nth-child(5n + 4) { color: #250a54; }
+.letters > span:nth-child(5n + 5) { color: #313137; }
+:global(.dark) .headline { color: #fff; }
+:global(.dark) .bold { color: #ff8a75; }
+:global(.dark) .word { color: #ff6b4a; }
+:global(.dark) .letters > span { color: inherit; }
+.cursor { display: inline-block; margin-left: 0.05em; font-family: sans-serif; font-weight: 100; animation: blink 1s step-start infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+.cta { border-radius: 14px; transition: border-radius 300ms ease, background-color 300ms ease, color 300ms ease, border-color 300ms ease; }
+.cta:hover, .cta:focus-visible { border-radius: 3px; }
+.secondary:hover, .secondary:focus-visible { background: #000; border-color: #000; color: #f5f2ea; }
+:global(.dark) .secondary:hover, :global(.dark) .secondary:focus-visible { background: var(--foreground); border-color: var(--foreground); color: var(--background); }
+.heroCard {
+  will-change: transform;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 30px 65px -15px rgba(29, 25, 19, 0.22), 0 14px 28px -10px rgba(29, 25, 19, 0.14), 0 0 0 1px var(--border);
+}
+:global(.dark) .heroCard {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 40px 85px -12px rgba(0, 0, 0, 0.85), 0 18px 36px -10px rgba(0, 0, 0, 0.65), 0 0 1px 1px rgba(255, 255, 255, 0.08);
+}
+@media (prefers-reduced-motion: reduce) { .cta { transition: none; } .cursor { display: none; } .heroCard { will-change: auto; border-bottom: none; box-shadow: none; } }
+
+/* Fit the complete card between the fixed navigation and ticker on short screens. */
+@media (min-width: 640px) and (max-height: 850px) {
+  .curtainContent .headline { font-size: clamp(3.5rem, 10svh, 6.5rem); }
+  .curtainContent > div:first-child { margin-bottom: 1rem; }
+  .curtainContent > p { margin-top: 1rem; }
+  .curtainContent > div:last-child { margin-top: 1.25rem; }
+}
+
+/* Keep server-rendered content visible even before client hydration. */
+.enter { animation: hero-enter 0.8s cubic-bezier(0.16, 1, 0.3, 1) both; }
+.enterHeading { animation-delay: 0.1s; }
+.enterCopy { animation-delay: 0.35s; }
+.enterTagline { animation-delay: 0.5s; }
+.enterActions { animation-delay: 0.65s; }
+@keyframes hero-enter {
+  from { opacity: 0; translate: 0 22px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .enter { animation: none; }
+}

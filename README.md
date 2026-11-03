@@ -1,37 +1,18 @@
-# Code by Leon - Website Project
+# Code by Leon
 
-Modern website and design studio serving Nairobi small businesses and creatives.
+The Next.js website deployed at https://codebyleon.com, built for Cloudflare Workers with OpenNext. The previous Vite site remains in Git history before this production-source integration.
 
-## Project Structure
+Use npm and the committed package-lock.json; .npmrc records the existing peer-dependency installation option.
 
-```
-codebyLeon/
-├── Research/           # Design research, mockups, and planning documents
-│   ├── *.png           # Generated hero mockups and reference images
-│   ├── walkthrough.md  # Visual concept exploration
-│   └── implementation_plan.md  # Theme strategy (Light/Dark mode)
-│
-├── src/
-│   ├── assets/
-│   │   └── images/     # Production-ready images
-│   ├── components/     # Reusable UI components
-│   ├── pages/          # Page templates
-│   └── styles/         # CSS/SCSS files
-│
-├── docs/               # Project documentation
-└── tailwind.config.ts  # Tailwind configuration
+```sh
+npm ci
+npm run typecheck
+npm run build:cloudflare
+npm run preview:cloudflare
 ```
 
-## Brand Colors
+Development: `npm run dev`. Deployment is an intentional operation: `npm run deploy:cloudflare`. Pushing Git does not automatically deploy the active Worker. The legacy Pages integration is retained for rollback; it is not the current application build path.
 
-| Role | Light Mode | Dark Mode | Hex |
-|------|------------|-----------|-----|
-| Primary | Orange | Orange (glow) | `#D9751A` |
-| Accent | Deep Orange | Peach | `#A45711` / `#FD9F68` |
-| Background | Off-white | Deep Black | `#F3F1F9` / `#111110` |
+Read docs/DEPLOYMENT.md for bindings, routes, migrations, release evidence and rollback. Read docs/SEO_AUDIT_2026-11-03.md for the branded social previews, favicon, indexing and performance checks and their limits.
 
-## Quick Links
-
-- [Visual Concepts](./Research/walkthrough.md)
-- [Theme Strategy](./Research/implementation_plan.md)
-# codebyLeon
+The current release was verified on both public hostnames as Worker version b4b3098b-866b-4657-87b5-91b812eb1ec7. This main integration records that working-tree implementation as reproducible source; it does not alter customer data or hosting settings.

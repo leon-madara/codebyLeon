@@ -1,209 +1,119 @@
-# Services Storybook Design QA
-
-## Final result
-
-passed
-
-The previously approved book geometry and StPageFlip interaction remain documented below. The twelve-spread chooser, nested navigation, and geometry-locked dark counterpart now have fresh browser evidence.
-
-## Source and Implementation Evidence
-
-- Source reference: `output/design-qa/source-open-book-reference.png`
-- Final desktop capture: `output/design-qa/services-storybook-desktop-final.png`
-- Final mobile capture: `output/design-qa/services-storybook-mobile-v1.png`
-- Same-state comparison: `output/design-qa/services-storybook-comparison-final.png`
-- Reported hinge-drift source: `output/design-qa/source-hinge-drift-reference.png`
-- Corrected midpoint capture: `output/design-qa/services-storybook-hinge-after.png`
-- Full hinge comparison: `output/design-qa/services-storybook-hinge-comparison-final.png`
-- Focused hinge comparison: `output/design-qa/services-storybook-hinge-focus-final.png`
-- Viberole forward-curl reference: `output/design-qa/viberole-forward-curl-reference.png`
-- Viberole reverse-curl reference: `output/design-qa/viberole-reverse-curl-reference.png`
-- CodeByLeon forward-curl capture: `output/design-qa/services-storybook-forward-curl.png`
-- CodeByLeon reverse-curl capture: `output/design-qa/services-storybook-reverse-curl.png`
-- Continuous forward curl capture: `output/design-qa/services-storybook-forward-curl-continuous.png`
-- Continuous reverse curl capture: `output/design-qa/services-storybook-reverse-curl-continuous.png`
-- StPageFlip proportional-layout capture: `output/design-qa/services-storybook-stpageflip-859.png`
-- StPageFlip in-motion capture: `output/design-qa/services-storybook-stpageflip-curl.png`
-- Desktop viewport: 1235 x 709 at device pixel ratio 1
-- Mobile viewport: 390 x 844 at device pixel ratio 1
-- Compared state: open book, chapter 01 selected, right-edge navigation visible
-- Hinge QA viewport: 1610 x 870 CSS pixels at device pixel ratio 1
-- Hinge source pixels: 1610 x 865
-- Hinge implementation pixels: 1598 x 864, normalized to 1610 x 865 for the combined comparison
-- Hinge state: cover approximately halfway through the scrubbed opening transition
-- Focused comparison was required because the defect concerned the cover axis and open-book spine rather than the completed spread.
-
-## Comparison Findings
-
-### Resolved
-
-- P1 layout: the first implementation reserved a separate grid column for the tabs, making the book materially smaller than the reference. The tabs now overlay the book edge and the spread occupies the available width.
-- P1 responsiveness: the first mobile crop showed only the chapter details and hid the chapter title. Mobile now uses a deliberate single-page crop with the title, descriptor, four beats, CTA, and labeled chapter controls visible.
-- P1 behavior: the header anchor reaches `#services`, the section remains pinned while scrolling, and the old reset-to-top behavior did not recur.
-- P1 behavior: a directly selected chapter persists; normal ordered chapter progression resumes when the visitor scrolls again.
-- P1 motion geometry: the rotating cover previously used a `33% center` origin plus `xPercent: -18`, placing its measured pivot near x=411 while the open-book spine was x=799. The translation was removed and both the cover and spread now use the shared center axis. In the corrected capture, the measured cover pivot and stage/spine center are both x=799.
-- P1 interaction: desktop page edges now expose bounded forward and reverse controls. Pointer depth increases the bottom-corner peel, clicking completes a 3D page turn, and no turn is offered before the prologue or after the final chapter.
-- P1 motion implementation: the temporary custom GSAP leaf layers were replaced with the selected StPageFlip engine. Its `stf__` DOM contains eight live pages, owns the curl geometry and page shadows, and reports page/state events back to React.
-- P1 motion continuity: forward and backward turns now use StPageFlip's page surfaces while the generated book artwork and central spine remain fixed.
-- P2 content: right-page copy previously collided with the tab rail. The live content inset was narrowed and all four beat descriptions remain inside the paper area.
-- P2 hierarchy: book typography now scales against the book container instead of the viewport. At 859 x 791, the chapter title remains two lines and every live page reports no content overflow.
-- P1 contrast: the active desktop label now uses `#2f241e` on the pale page (`13.10:1`), and active tab numbers remain at or above `4.52:1`; the previous white active label was removed.
-
-### Accepted Differences
-
-- The reference has seven product-oriented bookmarks; CodeByLeon uses the approved three service chapters.
-- The fixed CodeByLeon header remains visible above the section because this is an implementation inside the existing homepage rather than a standalone full-screen reference.
-- The generated book uses CodeByLeon black leather, copper, slate-blue, and botanical/celestial details instead of reproducing the reference artwork.
-
-### Follow-up, Non-blocking
-
-- P3 performance: the two generated PNG assets are about 1.95 MB each and should be compressed or moved into the planned image-delivery pipeline before production release.
-
-## Functional Checks
-
-- Header `SERVICES` link: passed.
-- Scroll stability and pinning: passed.
-- Closed-cover to open-spread transition: passed.
-- Direct chapter 01/02/03 controls: passed.
-- Forward bottom-right corner peel and edge click: passed.
-- Reverse bottom-left corner peel and edge click: passed.
-- Hover curl to click-turn continuity in both directions: passed.
-- Edge clicks preserve the pinned scroll position: passed.
-- First/last page bounds: passed.
-- Scroll-driven chapter progression after direct selection: passed.
-- Mobile chapter labels and CTA: passed.
-- Keyboard focus indicators and hidden-state tab order: passed.
-- Reduced-motion fallback: covered by implementation and unit checks.
-- Browser console warnings/errors in a clean run: none.
-
-## Hinge Comparison History
-
-1. The supplied screenshot showed the dark cover turning around an axis substantially left of the open-book spine.
-2. Browser measurement reproduced the defect at 1610 x 870: cover pivot approximately x=411; open-book midpoint x=799.
-3. The desktop cover translation was removed, the cover origin was changed to `center center`, and the spread scale origin was explicitly centered.
-4. Post-fix measurement at the same scroll state: cover pivot x=799; open-book midpoint x=799.
-5. Full-view and focused combined comparisons show the rotating cover remaining registered to the central spine.
-
-## Page-plane Correction — 2026-07-24
-
-### Evidence
-
-- Source visual truth: `output/design-qa/source-page-plane-annotated.png`
-- Pre-fix implementation: `output/design-qa/services-storybook-page-plane-before-open.png`
-- Corrected settled spread: `output/design-qa/services-storybook-page-plane-after-final.png`
-- Corrected forward turn: `output/design-qa/services-storybook-page-plane-turn-after.png`
-- Corrected reverse turn: `output/design-qa/services-storybook-page-plane-reverse-after.png`
-- Corrected 859 px spread: `output/design-qa/services-storybook-page-plane-after-859.png`
-- Mobile regression: `output/design-qa/services-storybook-page-plane-mobile-regression.png`
-- Combined source/implementation comparison: `output/design-qa/services-storybook-page-plane-comparison.png`
-- Desktop comparison viewport and pixels: 1485 x 819 CSS pixels at device pixel ratio 1; both source and implementation are 1485 x 819 pixels.
-- Compared state: light open book with chapter 01 selected and right-edge navigation visible.
-
-### Comparison History
-
-1. P1 geometry: the StPageFlip plane used a 1.73:1 spread ratio and followed the wider page-stack rectangle, making the animated sheet too wide and too shallow.
-2. Fix: the plane moved from `inset: 11% 12%` to `inset: 8.5% 15%`, while the StPageFlip base page changed from 520 x 600 to 520 x 694.
-3. Fix: the composite-paper crop was recalibrated to the same source region and the two outer page corners received responsive clipping.
-4. Post-fix evidence: the settled plane sits inside the visible top leaf; both directional curls remain inside the leather/page-stack boundary; the spine stays fixed; and all eight live pages report zero content overflow.
-
-### Required Fidelity Surfaces
-
-- Fonts and typography: existing live type hierarchy and two-line chapter title are preserved; no truncation or overflow was introduced.
-- Spacing and layout rhythm: the page plane is narrower and taller, while the reduced content inset preserves the original copy positions inside the corrected leaf.
-- Colors and tokens: the light-mode palette is unchanged in this geometry-only pass.
-- Image quality and asset fidelity: the existing book artwork remains the source; its paper crop is now registered to the corrected plane without stretching the chassis.
-- Copy and content: no service copy, CTA, beat, or navigation label changed.
-
-### Residual Difference
-
-- The source annotation follows a curved outer contour, while StPageFlip uses a rectangular interaction plane. The approved implementation inscribes that rectangle within the green boundary and uses rounded outer corners and native page shadows to preserve the physical-book illusion.
-- The production site header remains visible in the implementation capture; this is an accepted site-level constraint rather than page-plane drift.
+# Article layout and reader QA
 
 final result: passed
 
-## Twelve-spread service architecture — 2026-07-24
+Checked locally in C:\Users\Leon Madara\Dev Mode\codebyLeon on codex/codebyleon-alternate, HEAD 25e1242 plus existing uncommitted work and this scoped change. This is an agent review, not independent review.
 
-### Source truth
+## Visual truth and evidence
 
-- Annotated layout reference: `output/design-qa/source-services-storybook-12-page-layout.png`
-- Intended state: open light-mode book with the logo in the upper-left, a direct story title and supporting copy on the left page, optional story imagery below, and chapter navigation attached to the right edge.
-- Required flow: a prologue that supports direct service selection or a complete journey, followed by three clearly named chapters with four story spreads each.
+- Source: C:\Users\LEONMA~1\AppData\Local\Temp\codex-clipboard-e36481b7-259f-466e-979a-0027886484cc.png (1981 x 1066).
+- Source: C:\Users\LEONMA~1\AppData\Local\Temp\codex-clipboard-6b57b9f7-3494-45f9-a11a-dec9a1eb7522.png (1567 x 870).
+- HTML: codebyleon_article_designs_code_lab_studio GOOD.html.
+- Evidence folder: C:\Users\Leon Madara\.codex\visualizations\2026\10\20\01a15992-3e60-78b0-8132-d362be6d82bc.
+- Full composition comparison: design-comparison.png contains both references and the rendered desktop cards/ledger. Reference two-column widths are intentionally replaced with the user's approved three-area arrangement. Screenshots normalized proportionally for the comparison board; no pixel-for-pixel claim across these different compositions.
+- Desktop browser: 1440 x 1000 CSS pixels; viewport capture 1430 x 1000 raster pixels excluding the 10px scrollbar, scale 1. articles-desktop.png and articles-dark.png.
+- Mobile browser: 390 x 844 CSS pixels; reader-mobile.png (380px content width excluding scrollbar) and articles-mobile.png (section capture). Source has no mobile reference; stacking follows featured, spotlight, ledger.
+- Focused reader evidence: reader-code.png shows sticky rail plus dotted compact code panel. title-checks.json records all six reader title checks at both widths.
 
-### Implementation evidence
+## Fidelity review
 
-- Automated DOM coverage: `src/components/StoryScroll/StoryBookServices.test.tsx`
-- Implementation: `src/components/StoryScroll/StoryBookServices.tsx`
-- Layout and chapter tint rules: `src/styles/features/storybook-services.css`
-- Fresh implementation screenshot: not captured.
-- Fresh combined source/implementation comparison: not produced.
-- Target desktop viewport: 1485 x 819 CSS pixels at device pixel ratio 1.
-- Target mobile viewport: 390 x 844 CSS pixels at device pixel ratio 1.
+- Fonts: retained Space Grotesk primary lines and Fraunces italic accent lines. Scoped Inter body text and IBM Plex Mono metadata match the guide. Existing shared handwritten section label retained to fit the surrounding site.
+- Layout: featured card left, black spotlight centre and six numbered rows right on desktop. Tablet places both cards above the ledger; mobile stacks all three areas. Both cards intentionally show the first article as specified by the user.
+- Colours: existing warm paper, ink and orange tokens match guide; spotlight remains black in both themes as requested. Light/dark checked visually.
+- Images: existing real article WebP assets replace placeholder diagrams. Native responsive srcSet selects the 480px mobile derivative; both images loaded. No new illustrative assets or claims introduced.
+- Content: titles, descriptions and article bodies preserved from articles.json. No new code examples added to articles that do not have them. Both title colours remain single untruncated lines after font/layout settlement; all 12 reader checks passed with no page overflow. Homepage all eight article headings also fit at 390px and desktop.
 
-### Verified without visual inference
+## Behaviour and validation
 
-- The reader-facing model contains exactly twelve story spreads: four for each of the three service chapters.
-- StPageFlip receives 26 leaves: two prologue leaves plus two leaves for each story spread.
-- The prologue exposes three clearly named service choices and an **Explore the full journey** action.
-- Each active chapter exposes four nested story markers.
-- Direct non-adjacent selections and adjacent page turns use separate navigation paths to keep marker state aligned with the visible spread.
-- Each chapter applies a distinct low-opacity paper wash.
-- Production build, full unit suite, and CSS architecture gates pass.
+- Featured link opens its matching reader; all six article URLs loaded with matching headings. Spotlight points to the same first article and ledger points to the six existing routes.
+- Rail measured at 175px below a 151px header after scrolling; it stays 24px beneath header. Existing mobile bottom sharing bar preserved.
+- Dotted code panel: 12px monospace with 17.4px line height, no added line padding. Raw clipboard payload matched 138 characters of source code, excluding visual line numbers. Simulated clipboard denial showed actionable failure feedback. Temporary browser instrumentation was cleared by reload.
+- Focused ESLint passed for five changed TSX files. Next Webpack production build passed with approved network access for reference fonts. Build skips TypeScript checks per existing config.
+- Separate TypeScript run still reports existing socket.io-client/socket.io missing in websocket examples and configurator.tsx:384 unreachable nullish fallback. None in changed article files.
+- git diff --check passed.
 
-### Blocking visual checks
+## Comparison history and limits
 
-- Confirm the three chooser cards and journey CTA fit inside the prologue right page at the target desktop and mobile viewports.
-- Confirm all four nested markers remain legible and do not overflow the right rail.
-- Confirm the twelve-spread page turns keep the content and active marker synchronized in the real StPageFlip canvas.
-- Compare the reference and implementation in one combined image at the same viewport and state.
-- Check all three chapter tints in light mode before generating the corresponding dark-mode artwork.
+Initial automated samples ran before font hydration; settled checks passed for every reader. Title fitting was hardened to ignore zero-width/detached measurements and run before client paint. A captureBeyondViewport screenshot omitted ledger glyphs; replaced with an ordinary viewport capture and verified the actual visible ledger. Archive hover now underlines the primary line without recolouring it, preserving two colours.
 
-### Blocker
+No actionable P0/P1/P2 visual findings remain. No deployment, commit or push performed. Real-device touch, every browser, and assistive technology testing were not performed.
 
-The selected Codex in-app browser rejected the localhost reload under its browser URL security policy. Per the browser and Product Design safety requirements, no alternate browser, raw CDP call, or local Playwright workaround was used.
-
-final result: blocked
-
-The earlier localhost blocker was resolved in a later browser session. The resulting light/dark evidence and final status are recorded below.
-
-## Geometry-locked dark mode — 2026-07-24
-
-### Source and implementation evidence
-
-- Light open-book source asset: `src/assets/services-storybook/research/open-book-blank-base-v2-no-moon.png`
-- Dark open-book counterpart: `src/assets/services-storybook/research/open-book-blank-dark-v1.png`
-- Light closed-cover source asset: `src/assets/services-storybook/research/closed-cover-straight-v1.png`
-- Dark closed-cover counterpart: `src/assets/services-storybook/research/closed-cover-straight-dark-v1.png`
-- Dark closed-cover browser capture: `output/design-qa/services-storybook-dark-cover-v1.png`
-- Dark prologue browser capture: `output/design-qa/services-storybook-dark-prologue-v1.png`
-- Dark Chapter 01 browser capture: `output/design-qa/services-storybook-dark-open-v1.png`
-- Matching light Chapter 01 capture: `output/design-qa/services-storybook-light-open-comparison-v1.png`
-- Combined same-state comparison: `output/design-qa/services-storybook-light-dark-comparison-v1.png`
-- Browser viewport: 1192 x 900 CSS pixels at device pixel ratio 1.
-- Compared state: Chapter 01, Story 01 selected with nested markers visible.
-
-### Findings and fixes
-
-1. The first dark browser capture exposed the light studio background embedded in the closed-cover PNG. A geometry-matched 1672 x 941 dark cover asset replaced that surface in dark mode.
-2. The first dark open spread exposed an overlap between the upper-left logo and the story kicker. The intro page now reserves a fixed container-relative header band in both themes.
-3. The 1658 x 949 light and dark open-book assets preserve the same canvas, book bounds, central spine, page-stack silhouette, rounded corners, ornament positions, and writing plane.
-4. Both asset layers remain mounted and cross-fade through `data-theme`; switching themes kept **Hidden in Plain Sight** active.
-5. The dark prologue fits three direct service choices and **Explore the full journey** without visible overflow.
-6. The real bottom-left StPageFlip corner returned Chapter 01, Story 01 to the prologue.
-7. No browser console errors were reported.
-
-### Contrast evidence
-
-- Primary warm-ivory text on charcoal paper: 12.84:1.
-- Secondary text on charcoal paper: 8.58:1.
-- Muted text on charcoal paper: 6.01:1.
-- CTA text on the normal copper fill: 4.61:1.
-- CTA text on the darker hover fill: 5.40:1.
-- Active text on the slate chapter marker: 4.72:1.
-
-### Accepted differences
-
-- Dark mode is a tailored nocturnal palette rather than a mechanical inversion of the light asset.
-- The dark paper grain is slightly more visible so large near-black surfaces do not collapse into one flat field.
-- Shared GSAP and StPageFlip motion remains unchanged except for the directional adjacent-page API correction.
+## Added chapter panel (2026-10-20)
 
 final result: passed
+
+Reference: C:\Users\LEONMA~1\AppData\Local\Temp\codex-clipboard-4ef40364-20e6-4612-ba38-c2927358d0e5.png, 1686 x 1002 pixels. Browser comparison: chapter-comparison.png in the evidence folder; source and implementation are proportionally scaled, with intentional preservation of the current reader title/header/real imagery. Focus is the right-hand chapter panel rather than a reader redesign.
+
+- Compact paper card, thin border, small orange mono label/numbers and muted 12px chapter links match the reference. Current reader fonts and colour tokens retained. No image assets changed.
+- Desktop evidence chapters-desktop.png captured at 1440 x 1000 CSS pixels. Panel appears beside the current article header and remains visible while scrolling; chapters-sticky.png shows the scrolled state. Article retains its maximum 760px width.
+- Below 1200px the same panel appears after the cover and before the article body. Mobile evidence chapters-mobile.png captured at 390 x 844 CSS pixels; no horizontal overflow.
+- All six articles checked: 4 headings in the first article, 3 in each remaining article. Every chapter link resolves to an H2 with exactly matching text; repeated heading labels would have distinct source-line IDs. Article content was not changed.
+- Desktop jump settled at 174.8px beneath a 151px sticky header; both sidebars measured at 175px. Mobile jump settled at 151.7px beneath a 127px header. Keyboard-accessible native fragment links and focusable target headings used.
+- Focused ESLint and final Next Webpack build passed. Build continues to skip TypeScript checking by existing configuration. Whitespace diff check passed; no new browser console errors observed.
+- No actionable visual findings; no new dependencies, commit, push or deployment.
+
+## Restored original Studio strip (2026-10-20)
+
+Source identified directly in main:src/pages/BlogPostPage.tsx, Subnav Strip, and main:src/styles/sections/blog-post.css. Original includes THE STUDIO. centre badge with pulsing dot, category/issue left, Archive 2026 right, height 58px. Restored beneath the current article switcher using current theme tokens. Issue/category now reflect the selected article rather than the old hardcoded Strategy / Issue 04. Original centre-only mobile arrangement preserved. Pulsing dot respects reduced motion.
+
+Visually checked studio-desktop.png at 1440 x 1000 and studio-mobile.png at 390 x 844, in the existing evidence folder. Titles still fit one line per colour once the page fonts/layout settle. Desktop header now measures 209px, with sidebars at 233px and chapter target at 234.8px. Mobile header measures 185px and target 209.7px. Both clear the header by about 24px. Existing header measurement drives offsets automatically; no new fixed scroll offsets introduced.
+
+Scoped ESLint and Next Webpack production build passed; git diff --check passed. No commit, push or deployment. Live website fetch was unavailable, so provenance was verified in the original repository branch rather than claimed as live inspection.
+
+final result: passed
+
+## Share-control brand colours (2026-10-20)
+
+Guide source: codebyleon_article_designs_code_lab_studio GOOD.html, rail-icon-x/linkedin/github/copy hover and focus rules. Added matching classes to existing share controls without changing destinations or copy behaviour.
+
+Verified all four hover states in both themes: X #000 light / #fff dark with inverse icon; LinkedIn #0a66c2; GitHub #24292f light / #6e5494 dark with #8957e5 border; Copy Link uses signal foreground/background. Real Tab navigation verified focus-visible on all four controls in both themes with the correct colour token. Copy success retained its check icon/message and green background. Existing focus outline retained, and hover lift is disabled with reduced motion.
+
+Evidence: share-brand-checks.json (16 hover/focus checks), share-brand-hover.png in the session evidence folder. Focused ESLint for article-controls.tsx and git diff --check passed. This cosmetic change was checked in the running Next dev server; a production build was not repeated for this scoped styling change.
+
+final result: passed
+
+## Article three blue-heading trial (2026-10-20)
+
+Only how-professional-website-increases-inquiries receives the blueChapters body class. Three H2 chapter headings use #176bb6 on light paper and #56aff0 on dark ink. H3/H4, body text, main title, chapter navigation and other articles retain existing colours. Scope is deliberately a one-article trial.
+
+Browser verified all three computed heading colours in both themes; neighbouring article one remained neutral. Screenshots article-three-blue-light.png and article-three-blue-dark.png saved in session evidence folder. Contrast ratios calculated with sRGB relative luminance; both exceed 4.5:1, including the stricter normal-text threshold, while headings are 30px desktop / 26px mobile. Focused page ESLint and diff whitespace check passed. No production build repeated for this two-rule styling trial.
+
+final result: passed
+
+## Cube selector, routed article turns and all-article blue headings (2026-10-20)
+
+final result: passed
+
+Approved direction: the user's numbered-square sketch and discussion: Article selector, previous/next arrows, square current number, X of 6 count, swipe left/right for sequential movement, tap for a title list, synchronized article and number cube faces. Existing navbar cube motion is the local style reference. This is functional UI motion, not a new image asset.
+
+### Implementation and constraints
+
+- Blog-only layout keeps ArticleTurnProvider mounted across existing Next routes. Server-rendered article content, metadata, canonical URLs and direct links remain routed normally. No dependency or lockfile changes.
+- ArticleSelector replaces three repeated numbered pills with a square number and bounded arrows. A shared Radix dialog lists all six real article titles, marks the current one and supports Escape/focus restoration. First/last arrows disable; the last article no longer wraps its Keep reading link to the first.
+- For a turn, the provider makes inert, aria-hidden visual copies of the outgoing/incoming article and number faces; copied IDs are removed. Real article nodes remain the canonical content. One GSAP timeline turns both rotors through the same 90-degree angle in 0.7s; previous reverses direction. Only the visible article area turns; header, share rail and chapter rail stay steady. The mobile bottom share bar stays outside the article overlay.
+- Route readiness waits for fonts and cover decoding, bounded to 1.5s. A 10s pending-navigation timeout and 4s committed-render timeout remove overlays and unlock controls. Rapid inputs are ignored while pending. Route cancellation, resize and unmount clear the overlays; GSAP contexts revert on route changes. Keyboard focus returns to the number after a completed change.
+- Native pointer capture handles horizontal swipes on the number only, preserving touch-action: pan-y. Minimum horizontal movement 40px and horizontal/vertical ratio 1.3 prevent ordinary vertical movement being treated as a chapter change. Cancelled gestures suppress accidental picker clicks. A subsequent keyboard action clears swipe suppression.
+- Reduced motion changes routes without creating cube overlays. Title selection uses the same turn after the dialog closes. Keep reading uses the same handler; modified-click links retain native browser behaviour.
+- Latest user correction supersedes the one-article colour trial above: all six article bodies now use #176bb6 H2 headings in light mode and #56aff0 in dark mode. Existing measured contrast is 4.92:1 and 7.76:1. H3/H4, paragraphs, main two-colour titles and share colours are unchanged.
+
+### Current verification
+
+- article-selector-checks.json records selector/motion/recovery checks; all-article-blue-checks.json records six articles in both themes.
+- Forward rotation sampled over 55 frames: article and number angles matched within 0.1 degree; reverse mid-turn both measured -27.50 degrees. Final URL, number, article content and counter matched; overlays were removed and real content was interactive.
+- Rapid triple previous clicks advanced exactly one article. Direct title choice to six, last next-disabled and first previous-disabled checked. Enter opens the title list; Escape closes it and restores focus. Keyboard-after-swipe also passed.
+- Swipe recognition exercised with actual browser pen-pointer input in both directions. Synthetic pointer cancellation did not navigate or open the picker. Reduced-motion next and direct selection passed. The in-app browser cannot dispatch native touch events, so physical finger scrolling/swiping remains unverified.
+- A separate tab stalled only the article-five Fetch request. After the timeout the selector unlocked and overlays cleared; choosing article three recovered successfully. The isolated tab was then closed, removing its request interception.
+- Viewports 320, 390, 768 and 1440px showed no page/selector overflow. All six main titles fit in both themes. All H2 colours matched expected values in twelve article/theme combinations.
+- Keep reading navigated through the turn. Chapter navigation after switching landed at 237.4px beneath a 211px header; share rail stayed at 235px. No browser console errors in the final main preview.
+- Focused ESLint across five changed TSX files passed; final Next Webpack production build passed; whitespace diff check passed. The build still skips TypeScript checks by existing configuration. Separate full TypeScript checks report the existing websocket socket.io/socket.io-client dependencies and configurator.tsx:384 error, outside these files. A transient generated-route-type mismatch after adding the layout cleared after Next regenerated route types.
+
+### Evidence and review boundaries
+
+Evidence folder: C:\Users\Leon Madara\.codex\visualizations\2026\10\20\01a15992-3e60-78b0-8132-d362be6d82bc.
+
+- article-selector-desktop.png: stable selector and reader, 1440 x 1000 CSS viewport.
+- article-selector-mobile.png: mobile selector and reader, 390 x 844 CSS viewport.
+- article-title-picker.png: title-list dialog and current marker.
+- article-cube-midturn.png: synchronized article/number faces during a reverse turn.
+
+Agent review of layout, typography, existing colours, real imagery, content, keyboard focus and motion found no remaining actionable P0/P1/P2 findings. The portrait/mobile arrangement is intentionally responsive rather than a literal desktop sketch copy. This is self-review plus browser evidence, not independent review. No commit, push, merge or deployment performed.

@@ -1,0 +1,53 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "codebyleon-next",
+  "account_id": "7d64b25d15301858b14679a666334278",
+  "main": ".open-next/worker.js",
+  "compatibility_date": "2026-10-22",
+  "compatibility_flags": [
+    "nodejs_compat",
+    "global_fetch_strictly_public"
+  ],
+  "workers_dev": true,
+  "keep_names": false,
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "services": [
+    {
+      "binding": "WORKER_SELF_REFERENCE",
+      "service": "codebyleon-next"
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "SUBMISSION_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 10,
+        "period": 60
+      }
+    }
+  ],
+  "observability": {
+    "enabled": true
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "codebyleon-submissions",
+      "database_id": "f4575801-f182-4972-b4a6-2e028d32c1db"
+    }
+  ],
+  "routes": [
+    {
+      "pattern": "codebyleon.com/*",
+      "zone_name": "codebyleon.com"
+    },
+    {
+      "pattern": "www.codebyleon.com/*",
+      "zone_name": "codebyleon.com"
+    }
+  ]
+}
